@@ -1,0 +1,17 @@
+@props(['title' => 'La ciencia de la mejora'])
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>{{ 'Arete - ' . $title ?? 'La ciencia de la mejora' }}</title>
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <script src="{{ mix('/js/app.js') }}"></script>
+    @stack('head-script')
+</head>
+<body>
+{{ $slot }}
+@stack('foot-script')
+</body>
+</html>
