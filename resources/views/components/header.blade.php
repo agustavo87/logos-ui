@@ -24,8 +24,11 @@
 
     <nav class="p-1 hidden sm:block" :class="{'hidden':!open}" >
         <div class="text-sm px-2 pt-2 pb-4 sm:flex sm:p-0">
-            <x-nav-item href="/">Link 1</x-nav-item>
-            <x-nav-item href="#">Link 2</x-nav-item>
+            {{ $slot }}
+
+            {{-- Account Dropdown sm+ --}}
+            <x-account-dropdown />
+
         </div>
     </nav>
 

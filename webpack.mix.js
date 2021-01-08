@@ -15,4 +15,5 @@ mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('tailwindcss')
     ])
-    .copyDirectory('resources/images/copy', 'public/images' );
+    .copyDirectory('resources/images/copy', 'public/images' )
+    .browserSync('localhost:8000');
