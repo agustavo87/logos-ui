@@ -1,4 +1,7 @@
-<div class="relative" x-data="{ open:false }">
+<div 
+  {{ $attributes->merge(['class' => 'relative'])}}
+  x-data="{ open:false }"
+>
     {{-- profile image button --}}
     <button @click="open = true" class="block h-8 w-8 rounded-full overflow-hidden border-2 border-white border-opacity-50 hover:border-opacity-100 focus:outline-none focus:border-opacity-100" @click="isOpen = !isOpen">
       <img src="{{ asset('images/panther-profile.png') }}" alt="Gustavo" class="relative z-10 h-full w-full object-cover">

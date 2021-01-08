@@ -1,6 +1,6 @@
 <header
-  class="bg-gray-900 sm:flex sm:justify-between sm:px-4 sm:py-3 sm:items-center"
-  x-data="{ open: false }"
+  class="bg-gray-900 sm:flex sm:justify-between sm:px-4 sm:py-2 sm:items-center"
+  x-data="{ open: true }"
 >
     <div
     class="flex justify-between items-center px-4 py-3 sm:p-0"
@@ -23,13 +23,53 @@
     </div>
 
     <nav class="p-1 hidden sm:block" :class="{'hidden':!open}" >
-        <div class="text-sm px-2 pt-2 pb-4 sm:flex sm:p-0">
+        <div class="text-sm px-2 pt-2 pb-4 sm:flex sm:items-center sm:p-0">
+            
+            {{-- Nav Items --}}
             {{ $slot }}
 
-            {{-- Account Dropdown sm+ --}}
-            <x-account-dropdown />
+            {{-- Account Menu Dropdown sm+  --}}
+            <x-account-dropdown class="hidden sm:block sm:ml-6"/>
 
         </div>
+
+        {{-- Account Menu sm- --}}
+        <div class="px-4 py-5 border-t border-gray-800 sm:hidden">
+            
+            {{-- Imagen de perfil --}}
+            <div class="flex items-center">
+                <img src="{{ asset('images/panther-profile.png') }}" alt="Gustavo" class="h-8 w-8 rounded-full border-2 border-gray-600 object-cover">
+                <span class="ml-3 text-white font-semibold">Invitado</span>
+            </div>
+
+            {{-- Items --}}
+            <div class="mt-4 text-sm">
+                {{-- El primero tiene más margen arriba --}}
+                <x-account-mobile-item href="/" class="mt-3">
+                    Actual
+                </x-account-mobile-item>
+                <x-account-mobile-item href="#">
+                    Iniciar Sesión
+                </x-account-mobile-item>
+                <x-account-mobile-item href="#">
+                    Registrarse
+                </x-account-mobile-item>
+                <x-account-mobile-item href="#">
+                    Mostrar Perfil
+                </x-account-mobile-item>
+                <x-account-mobile-item href="#">
+                    Editar Perfil
+                </x-account-mobile-item>
+                <x-account-mobile-item href="#">
+                    Salir
+                </x-account-mobile-item>
+            </div>
+
+
+        </div>
+
+
+
     </nav>
 
 </header>
