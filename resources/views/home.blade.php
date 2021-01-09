@@ -3,7 +3,8 @@
 >
   <x-container>
     <x-main-header>
-      Bienvenido! estas opciones tenemos para ofrecerte
+      Bienvenido! [nombre de usuario]
+      {{-- Poner nombre de usuario cuando se realice la autenticacíon --}}
     </x-main-header>
     <p>
       Esto es una prueba

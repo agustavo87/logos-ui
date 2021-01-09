@@ -44,20 +44,17 @@
 
             {{-- Items --}}
             <div class="mt-4 text-sm">
-                {{-- El primero tiene más margen arriba --}}
-                <x-header.account-mobile-item href="/" class="mt-3">
-                    Actual
-                </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="#">
+                <x-header.account-mobile-item href="#" class="mt-3">
                     Iniciar Sesión
                 </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="#">
+                <x-header.account-mobile-item href="{{ route('user.create') }}">
                     Registrarse
                 </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="#">
+                {{-- Poner de hecho el usuario logeado cuando se establezca --}}
+                <x-header.account-mobile-item href="{{ route('user.show', ['user'=> 1]) }}">
                     Mostrar Perfil
                 </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="#">
+                <x-header.account-mobile-item href="{{ route('user.edit', ['user'=> 1]) }}">
                     Editar Perfil
                 </x-header.account-mobile-item>
                 <x-header.account-mobile-item href="#">

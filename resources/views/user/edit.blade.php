@@ -1,9 +1,9 @@
 <x-layout.default
-  title="Bienvenido a tu lugar de mejora"
+  title="Editar información de usuario"
 >
   <x-container>
     <x-main-header>
-      Bienvenido! estas opciones tenemos para ofrecerte
+      Editar información de usuario
     </x-main-header>
     <p>
       Esto es una prueba

@@ -1,9 +1,9 @@
 <x-layout.default
-  title="Bienvenido a tu lugar de mejora"
+  title="Índice de usuarios"
 >
   <x-container>
     <x-main-header>
-      Bienvenido! estas opciones tenemos para ofrecerte
+      Índice de usuarios
     </x-main-header>
     <p>
       Esto es una prueba
