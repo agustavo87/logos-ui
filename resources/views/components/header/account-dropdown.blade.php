@@ -10,11 +10,11 @@
     {{-- dropdown menu --}}
     <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
         {{-- Solo para mostrar como es un link desactivado --}}
-        <x-account-dropdown-item href="/">Portada</x-account-dropdown-item> 
-        <x-account-dropdown-item href="#">Iniciar Sesión</x-account-dropdown-item>
-        <x-account-dropdown-item href="#">Registrarse</x-account-dropdown-item>
-        <x-account-dropdown-item href="#">Mostrar Perfil</x-account-dropdown-item>
-        <x-account-dropdown-item href="#">Editar Perfil</x-account-dropdown-item>
-        <x-account-dropdown-item href="#">Salir</x-account-dropdown-item>
+        <x-header.account-dropdown-item href="/">Portada</x-header.account-dropdown-item> 
+        <x-header.account-dropdown-item href="#">Iniciar Sesión</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="#">Registrarse</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="#">Mostrar Perfil</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="#">Editar Perfil</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="#">Salir</x-header.account-dropdown-item>
     </div>
 </div>

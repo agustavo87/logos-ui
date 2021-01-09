@@ -1,8 +1,8 @@
 <x-layout title="Bienvenido!">
     <x-header>
-        <x-nav-item href="/">Portada</x-nav-item>
-        <x-nav-item href="#">Inicio</x-nav-item>
-        <x-nav-item href="#">Logos</x-nav-item>
+        <x-header.nav-item href="/">Portada</x-header.nav-item>
+        <x-header.nav-item href="#">Inicio</x-header.nav-item>
+        <x-header.nav-item href="#">Logos</x-header.nav-item>
         <x-dropdown>
             <x-slot name="caption">
                 <div class="flex justify-between text-white py-1 mx-auto" >

@@ -29,7 +29,7 @@
             {{ $slot }}
 
             {{-- Account Menu Dropdown sm+  --}}
-            <x-account-dropdown class="hidden sm:block sm:ml-6"/>
+            <x-header.account-dropdown class="hidden sm:block sm:ml-6"/>
 
         </div>
 
@@ -45,24 +45,24 @@
             {{-- Items --}}
             <div class="mt-4 text-sm">
                 {{-- El primero tiene más margen arriba --}}
-                <x-account-mobile-item href="/" class="mt-3">
+                <x-header.account-mobile-item href="/" class="mt-3">
                     Actual
-                </x-account-mobile-item>
-                <x-account-mobile-item href="#">
+                </x-header.account-mobile-item>
+                <x-header.account-mobile-item href="#">
                     Iniciar Sesión
-                </x-account-mobile-item>
-                <x-account-mobile-item href="#">
+                </x-header.account-mobile-item>
+                <x-header.account-mobile-item href="#">
                     Registrarse
-                </x-account-mobile-item>
-                <x-account-mobile-item href="#">
+                </x-header.account-mobile-item>
+                <x-header.account-mobile-item href="#">
                     Mostrar Perfil
-                </x-account-mobile-item>
-                <x-account-mobile-item href="#">
+                </x-header.account-mobile-item>
+                <x-header.account-mobile-item href="#">
                     Editar Perfil
-                </x-account-mobile-item>
-                <x-account-mobile-item href="#">
+                </x-header.account-mobile-item>
+                <x-header.account-mobile-item href="#">
                     Salir
-                </x-account-mobile-item>
+                </x-header.account-mobile-item>
             </div>
 
 
