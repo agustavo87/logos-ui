@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -26,7 +28,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        return view('user.create',[
+            'locale' => config('locale')
+        ]);
     }
 
     /**
@@ -37,7 +41,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // $data = $request->only('email', 'name', 'country', 'locale');
+        $data = $request->validate([
+            'email' => 'required|email', 
+            'name' => 'required|min:2|max:255',
+            'country' => 'required|size:2', 
+            ]);
         
+        $data['password'] = Hash::make($request->password);
+        
+
+        $user = User::create($data);
+        Auth::login($user, true);
+        
+        return redirect()->route('home');
     }
 
     /**
@@ -49,7 +66,8 @@ class UserController extends Controller
     public function show(User $user)
     {
         return view('user.show', [
-            'user' => $user
+            'user' => $user,
+            'country' => config('locale.countries')[$user->country]
         ]);
     }
 
@@ -62,7 +80,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return view('user.edit', [
-            'user' => $user
+            'user' => $user,
+            'locale' => config('locale')
         ]);
     }
 
@@ -75,7 +94,14 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        
+        $data = $request->validate([
+            'name' =>  [ 'min:2', 'max:255'],
+            'country' => ['size:2'],
+            ]);        
+
+        $user->update($data);
+
+        return redirect('home');
     }
 
     /**

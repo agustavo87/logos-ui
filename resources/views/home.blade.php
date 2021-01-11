@@ -3,7 +3,14 @@
 >
   <x-container>
     <x-main-header>
-      Bienvenido! [nombre de usuario]
+      Bienvenido
+      @auth
+      {{auth()->user()->name}}!
+      @endauth
+      @guest
+      Invitado!
+      @endguest
+      
       {{-- Poner nombre de usuario cuando se realice la autenticacíon --}}
     </x-main-header>
     <p>

@@ -20,18 +20,22 @@ return [
 
     'countries' => [
         'AR' => [
+            '.key' => 'AR',
             'name' => 'Argentina',
             'language' => 'es'
         ],
         'ES' => [
+            '.key' => 'ES',
             'name' => 'España',
             'language' => 'es'
         ],
         'CO' => [
+            '.key' => 'CO',
             'name' => 'Colombia',
             'language' => 'es'
         ],
         'US' => [
+            '.key' => 'US',
             'name' => 'United States',
             'language' => 'en'
         ]

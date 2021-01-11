@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\{
+    AuthController,
     UserController
 };
 
@@ -49,19 +50,8 @@ Route::name('user.')->group(function () {
         ->name('delete');
 });
 
-
-// Route::get('home', function () {
-//     return Inertia::render('Welcome', [
-//      'msg' => 'Hola Gustavo',
-//     ]);
-// })->name('home');
-
-
-// Route::get('login', [AuthController::class, 'show'])
-//     ->name('auth.show');
-
-// Route::post('login', [AuthController::class, 'authenticate'])
-//     ->name('auth.login');
-
-// Route::get('logout', [AuthController::class, 'logout'])
-//     ->name('auth.logout');
+Route::name('auth.')->group(function () {
+    Route::get('login', [AuthController::class, 'login'])->name('login');
+    Route::post('identify', [AuthController::class, 'identify'])->name('identify');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+});

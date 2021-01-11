@@ -39,27 +39,39 @@
             {{-- Imagen de perfil --}}
             <div class="flex items-center">
                 <img src="{{ asset('images/panther-profile.png') }}" alt="Gustavo" class="h-8 w-8 rounded-full border-2 border-gray-600 object-cover">
-                <span class="ml-3 text-white font-semibold">Invitado</span>
+                <span class="ml-3 text-white font-semibold">
+                    @auth
+                        {{auth()->user()->name}}
+                    @endauth
+
+                    @guest
+                        Invitado
+                    @endguest
+                </span>
             </div>
 
             {{-- Items --}}
             <div class="mt-4 text-sm">
-                <x-header.account-mobile-item href="#" class="mt-3">
+                @guest
+                <x-header.account-mobile-item href="{{ route('auth.login') }}" class="mt-3">
                     Iniciar Sesión
                 </x-header.account-mobile-item>
                 <x-header.account-mobile-item href="{{ route('user.create') }}">
                     Registrarse
                 </x-header.account-mobile-item>
+                @endguest
                 {{-- Poner de hecho el usuario logeado cuando se establezca --}}
-                <x-header.account-mobile-item href="{{ route('user.show', ['user'=> 1]) }}">
+                @auth
+                <x-header.account-mobile-item href="{{ route('user.show', auth()->user()->id) }}">
                     Mostrar Perfil
                 </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="{{ route('user.edit', ['user'=> 1]) }}">
+                <x-header.account-mobile-item href="{{ route('user.edit', auth()->user()->id) }}">
                     Editar Perfil
                 </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="#">
+                <x-header.account-mobile-item href="{{ route('auth.logout') }}">
                     Salir
                 </x-header.account-mobile-item>
+                @endauth
             </div>
 
 
