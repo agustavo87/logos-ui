@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -13,12 +14,14 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      * Solo accesible por el admin
-     *
+     * 
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('user.index');
+        $this->authorize('viewAny', User::class);
+        return view('users.index');
     }
 
     /**
@@ -28,7 +31,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create',[
+        return view('users.create',[
             'locale' => config('locale')
         ]);
     }
@@ -42,8 +45,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // $data = $request->only('email', 'name', 'country', 'locale');
+        $this->authorize('create', User::class);
         $data = $request->validate([
-            'email' => 'required|email', 
+            'email' => 'required|email|unique:users', 
             'name' => 'required|min:2|max:255',
             'country' => 'required|size:2', 
             ]);
@@ -65,7 +69,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('user.show', [
+        // Gate::authorize('view-user', $user);
+
+        return view('users.show', [
             'user' => $user,
             'country' => config('locale.countries')[$user->country]
         ]);
@@ -79,7 +85,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('user.edit', [
+        // Gate::authorize('update-user', $user);
+
+        return view('users.edit', [
             'user' => $user,
             'locale' => config('locale')
         ]);
@@ -94,6 +102,12 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        // if (! Gate::allows('update-user', $user)) {
+        //     abort(403);
+        // }
+        // Gate::authorize('update-user', $user);
+        
+        $this->authorize('update', $user);
         $data = $request->validate([
             'name' =>  [ 'min:2', 'max:255'],
             'country' => ['size:2'],
@@ -112,6 +126,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        
+        $this->authorize('delete', $user);   
     }
 }

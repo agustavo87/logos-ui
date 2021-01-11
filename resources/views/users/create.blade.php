@@ -19,7 +19,7 @@
     @endif 
     --}}
 
-    <x-form.sm action="{{ route('user.register') }}" method="POST">
+    <x-form.sm action="{{ route('users.register') }}" method="POST">
       <x-form.field name="name" label="Nombre" type="text" placeholder="Juan Perez" required />
       <x-form.field name="email" label="E-mail" type="email" placeholder="juanp@example.com" required />
       <x-form.field name="password" label="Password" value='' type="password" required />

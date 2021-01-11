@@ -15,7 +15,7 @@ class AuthController extends Controller
      *
      * @return Response
      */
-    public function login(Request $request)
+    public function show(Request $request)
     {
         return view('auth.login');
     }
@@ -27,7 +27,7 @@ class AuthController extends Controller
      *
      * @return Response
      */
-    public function identify(Request $request)
+    public function login(Request $request)
     {
         $credentials = $request->validate([
             'email' => 'required|email',

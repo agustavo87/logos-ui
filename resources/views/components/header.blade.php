@@ -1,3 +1,8 @@
+@auth
+    @if (auth()->user()->isAdministrator())
+        <div class=" w-full h-1 bg-green-500 z-50 absolute top-0 left-0"></div>
+    @endif
+@endauth
 <header
   class="bg-gray-900 sm:flex sm:justify-between sm:px-4 sm:py-2 sm:items-center"
   x-data="{ open: true }"
@@ -53,19 +58,19 @@
             {{-- Items --}}
             <div class="mt-4 text-sm">
                 @guest
-                <x-header.account-mobile-item href="{{ route('auth.login') }}" class="mt-3">
+                <x-header.account-mobile-item href="{{ route('auth.show') }}" class="mt-3">
                     Iniciar Sesión
                 </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="{{ route('user.create') }}">
+                <x-header.account-mobile-item href="{{ route('users.create') }}">
                     Registrarse
                 </x-header.account-mobile-item>
                 @endguest
                 {{-- Poner de hecho el usuario logeado cuando se establezca --}}
                 @auth
-                <x-header.account-mobile-item href="{{ route('user.show', auth()->user()->id) }}">
+                <x-header.account-mobile-item href="{{ route('users.show', auth()->user()->id) }}">
                     Mostrar Perfil
                 </x-header.account-mobile-item>
-                <x-header.account-mobile-item href="{{ route('user.edit', auth()->user()->id) }}">
+                <x-header.account-mobile-item href="{{ route('users.edit', auth()->user()->id) }}">
                     Editar Perfil
                 </x-header.account-mobile-item>
                 <x-header.account-mobile-item href="{{ route('auth.logout') }}">

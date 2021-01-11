@@ -26,32 +26,49 @@ Route::get('home', function (Request $request) {
     return view('home');
 })->name('home');
 
+Route::group([
+    'prefix' => 'users',
+    'as' => 'users.'
+], function () {
 
-Route::name('user.')->group(function () {
-    Route::get('user/index', [UserController::class, 'index'])
-        ->name('index');
+    Route::get('/create', [UserController::class, 'create'])
+        ->name('create')
+        ->middleware('guestonly');
 
-    Route::get('user/create', [UserController::class, 'create'])
-        ->name('create');
-
-    Route::post('user', [UserController::class, 'store'])
+    Route::post('', [UserController::class, 'store'])
         ->name('register');
 
-    Route::get('user/{user}', [UserController::class, 'show'])
-        ->name('show');
+        
+    Route::middleware('auth')->group(function () {
+        Route::get('', [UserController::class, 'index'])
+            ->name('index')
+            ->middleware('can:viewAny,App\Model\User');
+            
+        Route::get('/{user}', [UserController::class, 'show'])
+            ->name('show')
+            ->middleware('can:view,user');
 
-    Route::get('user/{user}/edit', [UserController::class, 'edit'])
-        ->name('edit');
-
-    Route::put('user/{user}', [UserController::class, 'update'])
-        ->name('update');
-
-    Route::delete('user/{user}', [UserController::class, 'destroy'])
-        ->name('delete');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])
+            ->name('edit')
+            ->middleware('can:update,user');
+        
+        Route::put('/{user}', [UserController::class, 'update'])
+            ->name('update');
+        
+        Route::delete('/{user}', [UserController::class, 'destroy'])
+            ->name('delete');
+        
+    });
 });
 
 Route::name('auth.')->group(function () {
-    Route::get('login', [AuthController::class, 'login'])->name('login');
-    Route::post('identify', [AuthController::class, 'identify'])->name('identify');
-    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('login', [AuthController::class, 'show'])
+        ->name('show')
+        ->middleware('guestonly');
+    Route::post('login', [AuthController::class, 'login'])
+        ->name('login')
+        ->middleware('guestonly');
+    Route::get('logout', [AuthController::class, 'logout'])
+        ->name('logout')
+        ->middleware('auth');
 });

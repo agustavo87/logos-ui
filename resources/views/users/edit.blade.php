@@ -11,7 +11,7 @@
     </x-main-header>
 
 
-    <x-form.sm action="{{ route('user.update', ['user' => $user->id]) }}" method="POST">
+    <x-form.sm action="{{ route('users.update', ['user' => $user->id]) }}" method="POST">
       @method('PUT')
       <x-form.field name="name" label="Nombre" type="text" value="{{ old('name') ?? $user->name }}" placeholder="Juan Perez" required />
       <x-form.select name="country" label="País">

@@ -10,12 +10,12 @@
     {{-- dropdown menu --}}
     <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
         @guest
-        <x-header.account-dropdown-item href="{{ route('auth.login') }}">Iniciar Sesión</x-header.account-dropdown-item>
-        <x-header.account-dropdown-item href="{{ route('user.create') }}">Registrarse</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('auth.show') }}">Iniciar Sesión</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('users.create') }}">Registrarse</x-header.account-dropdown-item>
         @endguest
         @auth
-        <x-header.account-dropdown-item href="{{ route('user.show', auth()->user()->id) }}">Mostrar Perfil</x-header.account-dropdown-item>
-        <x-header.account-dropdown-item href="{{ route('user.edit', auth()->user()->id) }}">Editar Perfil</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('users.show', auth()->user()->id) }}">Mostrar Perfil</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('users.edit', auth()->user()->id) }}">Editar Perfil</x-header.account-dropdown-item>
         <x-header.account-dropdown-item href="{{ route('auth.logout') }}">Salir</x-header.account-dropdown-item>
         @endauth
     </div>

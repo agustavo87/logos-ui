@@ -16,7 +16,7 @@
     </div>
     @endif
 
-    <x-form.sm action="{{ route('auth.identify') }}" method="POST">
+    <x-form.sm action="{{ route('auth.login') }}" method="POST">
       <x-form.field name="email" label="E-mail" value='' type="email" placeholder="juanp@example.com" required />
       <x-form.field name="password" label="Password" value='' type="password" required />
       <x-form.checkbox name="remember" label="Recordar" />
