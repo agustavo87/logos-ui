@@ -15,7 +15,7 @@ class AuthController extends Controller
      *
      * @return Response
      */
-    public function show(Request $request)
+    public function show(Request $request, $lang)
     {
         return view('auth.login');
     }
@@ -27,7 +27,7 @@ class AuthController extends Controller
      *
      * @return Response
      */
-    public function login(Request $request)
+    public function login(Request $request, $lang)
     {
         $credentials = $request->validate([
             'email' => 'required|email',
@@ -39,7 +39,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('home');
+            // ddd(route('home'));
+            return redirect(route('home'));
         }
 
         return back()->withErrors([
@@ -55,9 +56,10 @@ class AuthController extends Controller
      *
      * @return Response
      */
-    public function logout(Request $request)
+    public function logout(Request $request, $lang)
     {
         Auth::logout();
+        // ddd(route('home'));
         return redirect()->route('home');
     }
 

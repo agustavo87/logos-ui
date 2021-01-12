@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\{
     AuthController,
-    UserController
+    UserController,
+    LocaleController
 };
 
 /*
@@ -18,57 +19,69 @@ use App\Http\Controllers\{
 |
 */
 
-Route::get('/', function () {
-    return view('landing');
-})->name('landing');
-
-Route::get('home', function (Request $request) {
-    return view('home');
-})->name('home');
-
 Route::group([
-    'prefix' => 'users',
-    'as' => 'users.'
+    'prefix' => '{locale?}',
+    'where' => ['locale' => '[a-z]{2}'],
+    'middleware' => ['setDefaultLocaleURL', 'setLocale']
 ], function () {
+    
+    Route::get('/', function () {
+        return view('landing');
+    })->name('landing');
+    
+    Route::get('home', function (Request $request) {
+        return view('home');
+    })->name('home');
 
-    Route::get('/create', [UserController::class, 'create'])
-        ->name('create')
-        ->middleware('guestonly');
-
-    Route::post('', [UserController::class, 'store'])
-        ->name('register');
-
-        
-    Route::middleware('auth')->group(function () {
-        Route::get('', [UserController::class, 'index'])
-            ->name('index')
-            ->middleware('can:viewAny,App\Model\User');
-            
-        Route::get('/{user}', [UserController::class, 'show'])
+    Route::name('auth.')->group(function () {
+        Route::get('login', [AuthController::class, 'show'])
             ->name('show')
-            ->middleware('can:view,user');
+            ->middleware('guestonly');
+        Route::post('login', [AuthController::class, 'login']) // add throttle limit
+            ->name('login')
+            ->middleware('guestonly');
+        Route::get('logout', [AuthController::class, 'logout'])
+            ->name('logout')
+            ->middleware('auth');
+    });
+    
+    Route::group([
+        'prefix' => 'users',
+        'as' => 'users.'
+    ], function () {
 
-        Route::get('/{user}/edit', [UserController::class, 'edit'])
-            ->name('edit')
-            ->middleware('can:update,user');
-        
-        Route::put('/{user}', [UserController::class, 'update'])
-            ->name('update');
-        
-        Route::delete('/{user}', [UserController::class, 'destroy'])
-            ->name('delete');
-        
+        Route::get('/create', [UserController::class, 'create'])
+            ->name('create')
+            ->middleware('guestonly');
+
+        Route::post('', [UserController::class, 'store'])
+            ->name('register'); // limit somehow
+
+            
+        Route::middleware('auth')->group(function () {
+            Route::get('', [UserController::class, 'index'])
+                ->name('index')
+                ->middleware('can:viewAny,App\Model\User');
+                
+            Route::get('/{user}', [UserController::class, 'show'])
+                ->name('show')
+                ->middleware('can:view,user');
+
+            Route::get('/{user}/edit', [UserController::class, 'edit'])
+                ->name('edit')
+                ->middleware('can:update,user');
+            
+            Route::put('/{user}', [UserController::class, 'update'])
+                ->name('update');
+            
+            Route::delete('/{user}', [UserController::class, 'destroy'])
+                ->name('delete');
+            
+        });
     });
 });
 
-Route::name('auth.')->group(function () {
-    Route::get('login', [AuthController::class, 'show'])
-        ->name('show')
-        ->middleware('guestonly');
-    Route::post('login', [AuthController::class, 'login'])
-        ->name('login')
-        ->middleware('guestonly');
-    Route::get('logout', [AuthController::class, 'logout'])
-        ->name('logout')
-        ->middleware('auth');
-});
+Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
+
+
+

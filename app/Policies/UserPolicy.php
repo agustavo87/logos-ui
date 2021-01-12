@@ -40,12 +40,12 @@ class UserPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\User  $user = null
      * @return mixed
      */
-    public function create(?User $user)
+    public function create(User $user = null)
     {
-        return !optional($user) || optional($user)->isAdministrator();
+        return !$user || optional($user)->isAdministrator();
     }
 
     /**

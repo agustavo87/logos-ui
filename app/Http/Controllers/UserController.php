@@ -18,7 +18,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $lang)
     {
         $this->authorize('viewAny', User::class);
         return view('users.index');
@@ -42,7 +42,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $lang)
     {
         // $data = $request->only('email', 'name', 'country', 'locale');
         $this->authorize('create', User::class);
@@ -67,13 +67,14 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($lang, User $user)
     {
         // Gate::authorize('view-user', $user);
 
         return view('users.show', [
             'user' => $user,
-            'country' => config('locale.countries')[$user->country]
+            'country' => config('locale.countries')[$user->country],
+            'language' => config('locale.languages.names')[$user->language]
         ]);
     }
 
@@ -83,7 +84,7 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($lang, User $user)
     {
         // Gate::authorize('update-user', $user);
 
@@ -100,7 +101,7 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $lang, User $user)
     {
         // if (! Gate::allows('update-user', $user)) {
         //     abort(403);
@@ -115,7 +116,7 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return redirect('home');
+        return redirect(route('home'));
     }
 
     /**
@@ -124,7 +125,7 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($lang, User $user)
     {
         $this->authorize('delete', $user);   
     }
