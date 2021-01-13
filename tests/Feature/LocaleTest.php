@@ -308,7 +308,6 @@ class LocaleTest extends TestCase
     {
         $response = $this->get('/home');
         $this->logStatus($response, 302);
-        $response->assertRedirect();
     }
 
 }
