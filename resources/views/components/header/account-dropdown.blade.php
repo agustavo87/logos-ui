@@ -10,13 +10,13 @@
     {{-- dropdown menu --}}
     <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
         @guest
-        <x-header.account-dropdown-item href="{{ route('auth.show') }}">Iniciar Sesión</x-header.account-dropdown-item>
-        <x-header.account-dropdown-item href="{{ route('users.create') }}">Registrarse</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('auth.show') }}"> {{ __('messages.header.account.start') }} </x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('users.create') }}"> {{ __('messages.header.account.register') }} </x-header.account-dropdown-item>
         @endguest
         @auth
-        <x-header.account-dropdown-item href="{{ route('users.show', auth()->user()->id) }}">Mostrar Perfil</x-header.account-dropdown-item>
-        <x-header.account-dropdown-item href="{{ route('users.edit', auth()->user()->id) }}">Editar Perfil</x-header.account-dropdown-item>
-        <x-header.account-dropdown-item href="{{ route('auth.logout') }}">Salir</x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('users.show', auth()->user()->id) }}"> {{ __('messages.header.account.profile') }} </x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('users.edit', auth()->user()->id) }}"> {{ __('messages.header.account.edit-profile') }} </x-header.account-dropdown-item>
+        <x-header.account-dropdown-item href="{{ route('auth.logout') }}"> {{ __('messages.header.account.logout') }} </x-header.account-dropdown-item>
         @endauth
     </div>
 </div>

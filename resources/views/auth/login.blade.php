@@ -2,9 +2,9 @@
   title="Iniciar Sesión"
 >
   <x-container>
-    <x-main-header>
+    <x-main-heading>
       Iniciar Sesión
-    </x-main-header>
+    </x-main-heading>
 
     @if ($errors->any())
     <div class="bg-red-400 p-8 my-5">

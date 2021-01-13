@@ -3,13 +3,12 @@
 namespace App\Logos;
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Utils;
 
 // Hacer funciones estáticas
 class Locale
 {
-
     public $langPattern = "/^[a-z]{2}$/";
 
     public $langsSupported;
@@ -72,6 +71,13 @@ class Locale
         return in_array($locale, $this->langsSupported);
     }
 
+    public function getSupportedUriLocale()
+    {
+        return $this->supported(
+            $inUri = $this->inURL()
+        ) ? $inUri : false;
+    }
+
     /**
      * Validator 'language_valid' rule
      *
@@ -90,5 +96,17 @@ class Locale
     public function validateSupportedLanguage($attribute, $value, $parameters, $validator)
     {
         return $this->supported($value);
+    }
+
+    public function getLocale() {
+        
+        if (Auth::check()) {
+            return Auth::user()->language;
+        } else if (session()->has('language')) {
+            return session('language');
+        } else if ($inUri = $this->getSupportedUriLocale()) {
+            return $inUri;
+        }
+        return config('locale.languages.default');
     }
 }

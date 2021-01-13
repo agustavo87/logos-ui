@@ -28,25 +28,14 @@ class SetLocale
     public function handle(Request $request, Closure $next)
     {
         $uriLocale = $this->locale->inURL();
-        $locale = $uriLocale;
+        $estimatedLocale = $this->locale->getLocale();
 
-        if (Auth::check()) {
-            $locale = Auth::user()->language;
-            if ($locale != $uriLocale) {
-                return redirect($this->locale->replaceLocaleInCurrentURI($locale));
-            }
-        } elseif ($request->session()->has('language')) {
-            $locale = $request->session()->get('language');
-            if ( $locale != $uriLocale) {
-                return redirect($this->locale->replaceLocaleInCurrentURI($locale));
-            }
-        } else {
-            if (!$this->locale->supported($uriLocale)) {
-                return redirect($this->locale->replaceLocaleInCurrentURI(config('locale.languages.default')));
-            }
+        if ($uriLocale !== $estimatedLocale) {
+            return redirect($this->locale->replaceLocaleInCurrentURI($estimatedLocale));
         }
-
-        app()->setLocale($locale);
+        
+        app()->setLocale($uriLocale);
         return $next($request);
     }
+
 }

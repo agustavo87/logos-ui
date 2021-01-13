@@ -1,20 +1,16 @@
+@php
+    $user = auth()->check() ? auth()->user()->name : __('messages.guest')
+@endphp
+
 <x-layout.default
-  title="Bienvenido a tu lugar de mejora"
+  title="{{ __('messages.home.title')}}"
 >
   <x-container>
-    <x-main-header>
-      Bienvenido
-      @auth
-      {{auth()->user()->name}}!
-      @endauth
-      @guest
-      Invitado!
-      @endguest
-      
-      {{-- Poner nombre de usuario cuando se realice la autenticacíon --}}
-    </x-main-header>
+    <x-main-heading>
+      {{__('messages.greet.someone', ['name' => $user])}}
+    </x-main-heading>
     <p>
-      Esto es una prueba
+      {{ __('messages.test') }}.
     </p>
   </x-container>
 </x-layout.default>

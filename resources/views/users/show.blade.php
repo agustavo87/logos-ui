@@ -2,9 +2,9 @@
   title="Información de usuario"
 >
   <x-container>
-    <x-main-header>
+    <x-main-heading>
       Información de usuario
-    </x-main-header>
+    </x-main-heading>
     <ul>
       <li><strong>Nombre:</strong> {{ $user->name }}</li>
       <li><strong>E-Mail:</strong> {{ $user->email }}</li>

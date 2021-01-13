@@ -3,9 +3,9 @@
   title="Registro de usuario"
 >
   <x-container>
-    <x-main-header>
+    <x-main-heading>
       Registro de usuario
-    </x-main-header>
+    </x-main-heading>
 
     {{-- 
     @if ($errors->any())

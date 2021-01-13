@@ -6,9 +6,9 @@
   title="Editar información de usuario"
 >
   <x-container>
-    <x-main-header>
+    <x-main-heading>
       Editar información de usuario
-    </x-main-header>
+    </x-main-heading>
 
 
     <x-form.sm action="{{ route('users.update', ['user' => $user->id]) }}" method="POST">

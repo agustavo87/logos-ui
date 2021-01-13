@@ -2,9 +2,9 @@
   title="Bienvenido a tu lugar de mejora"
 >
   <x-container>
-    <x-main-header>
+    <x-main-heading>
       Bienvenido! estas opciones tenemos para ofrecerte
-    </x-main-header>
+    </x-main-heading>
     <p>
       Esto es una prueba
     </p>

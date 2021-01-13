@@ -2,9 +2,9 @@
   title="Índice de usuarios"
 >
   <x-container>
-    <x-main-header>
+    <x-main-heading>
       Índice de usuarios
-    </x-main-header>
+    </x-main-heading>
     <p>
       Esto es una prueba
     </p>

@@ -13,6 +13,10 @@ return [
     |
     */
 
+    // Custom Validation Rules
+    'language_valid'        => 'The language was invalid.',
+    'language_supported'    => 'Sorry, that language is currently not supported.',
+
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',
     'after' => 'The :attribute must be a date after :date.',
