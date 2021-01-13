@@ -13,11 +13,17 @@ class LocaleTest extends TestCase
     protected static string $languageA = 'es';
     protected static string $languageB = 'en';
     protected static $userId;
-    public static bool $verbose = false;
-    public static bool $debug = false;
+    public static bool $verbose = true;
+    public static bool $debug = true;
 
     protected User $user;
     protected Locale $locale;
+
+    public function logStatus($response, int $expected = 200): void {
+
+        $statusCode = $response->getStatusCode();
+        $this->log("$statusCode: {$response->getStatusText()}", $statusCode == $expected);
+    }
 
     /**
      * Crea un modelo de usuario para ser usado en los tests.
@@ -26,10 +32,17 @@ class LocaleTest extends TestCase
      */
     protected static function beforeAll(): void
     {
+
+        \Illuminate\Testing\TestResponse::macro('getStatusText', function () {
+            return \Illuminate\Http\Response::$statusTexts[$this->getStatusCode()];
+        });
+
         self::$userId = User::factory()->create([
             'language' => self::$languageA
         ])->id;
     }
+
+
 
     /**
      * Limpia la BD del modelo de usuario creado.
@@ -291,5 +304,11 @@ class LocaleTest extends TestCase
         $this->assertEquals($path, $newPath);
     }
 
+    public function testRedirigeHomeSinLocale(): void
+    {
+        $response = $this->get('/home');
+        $this->logStatus($response, 302);
+        $response->assertRedirect();
+    }
 
 }

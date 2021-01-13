@@ -19,6 +19,8 @@ use App\Http\Controllers\{
 |
 */
 
+Route::redirect('home', config('locale.languages.default') . '/home');
+
 Route::group([
     'prefix' => '{locale?}',
     'where' => ['locale' => '[a-z]{2}'],
@@ -36,10 +38,10 @@ Route::group([
     Route::name('auth.')->group(function () {
         Route::get('login', [AuthController::class, 'show'])
             ->name('show')
-            ->middleware('guestonly');
+            ->middleware('guest');
         Route::post('login', [AuthController::class, 'login']) // add throttle limit
             ->name('login')
-            ->middleware('guestonly');
+            ->middleware('guest');
         Route::get('logout', [AuthController::class, 'logout'])
             ->name('logout')
             ->middleware('auth');
@@ -52,7 +54,7 @@ Route::group([
 
         Route::get('/create', [UserController::class, 'create'])
             ->name('create')
-            ->middleware('guestonly');
+            ->middleware('guest');
 
         Route::post('', [UserController::class, 'store'])
             ->name('register'); // limit somehow
