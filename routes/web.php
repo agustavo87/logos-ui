@@ -19,9 +19,8 @@ use App\Http\Controllers\{
 |
 */
 
-// Redirigir desde el path oficial del 
+// Redirigir desde el path oficial del RouteServiceProvider::HOME
 Route::redirect('home', app('locale')->getLocale() . '/home');
-// Route::redirect('home', config('locale.languages.default') . '/home');
 
 Route::group([
     'prefix' => '{locale?}',

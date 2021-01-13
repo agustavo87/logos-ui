@@ -15,7 +15,7 @@ return [
             'en' => 'English',
             'es' => 'Español'
         ],
-        'default' => 'en'
+        'default' => 'es'
     ],    
 
     'countries' => [

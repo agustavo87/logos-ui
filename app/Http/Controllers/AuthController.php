@@ -40,7 +40,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // ddd(route('home'));
-            return redirect(route('home'));
+            return redirect(route('home', [ 'locale' => app('locale')->getLocale()] ));
         }
 
         return back()->withErrors([
