@@ -1,9 +1,9 @@
 <x-layout.default
-  title="Iniciar Sesión"
+  title="{{ __('messages.users.session') }}"
 >
   <x-container>
     <x-main-heading>
-      Iniciar Sesión
+      {{ __('messages.users.session') }}
     </x-main-heading>
 
     @if ($errors->any())
@@ -18,11 +18,11 @@
 
     <x-form.sm action="{{ route('auth.login') }}" method="POST">
       <x-form.field name="email" label="E-mail" value='' type="email" placeholder="juanp@example.com" required />
-      <x-form.field name="password" label="Password" value='' type="password" required />
-      <x-form.checkbox name="remember" label="Recordar" />
+      <x-form.field name="password" label="{{ __('messages.users.pass') }}" value='' type="password" required />
+      <x-form.checkbox name="remember" label="{{ __('messages.users.remember') }}" />
       <div class="flex justify-end">  
-        <x-form.button type="submit" class="m-2">Enviar</x-form.button>
-        <x-form.button type="reset" class="m-2">Borrar</x-form.button>
+        <x-form.button type="submit" class="m-2">{{ __('messages.users.send') }}</x-form.button>
+        <x-form.button type="reset" class="m-2">{{ __('messages.users.clear') }}</x-form.button>
       </div>
     </x-form.sm>
   </x-container>

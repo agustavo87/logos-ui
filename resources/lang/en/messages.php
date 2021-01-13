@@ -5,6 +5,7 @@ return [
         'me' => 'Hello!',
         'someone' => 'Hello :name!',
         'people' =>'Hello Ekcel!|Hello everyone!',
+        'wellcome' => 'Wellcome'
     ],
     'test' => 'This is a test',
     'guest' => 'guest',
@@ -29,5 +30,25 @@ return [
 
     'home' => [
         'title' => 'Welcome to your place to improve'
+    ],
+
+    'landing' => [
+        'title' => 'The space to improve',
+        'options' => 'These are the options we have for you'
+    ],
+
+    'users' => [
+        'info' => 'User info',
+        'name' => 'Name',
+        'country' => 'Country',
+        'lang' => 'Language',
+        'edit' => 'Edit user info',
+        'fake-name' => 'John Doe',
+        'send' => 'Send',
+        'clear' => 'Clear',
+        'register' => 'User register',
+        'pass' => 'Password',
+        'session' => 'Login',
+        'remember' => 'Remember'
     ]
 ];

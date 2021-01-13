@@ -1,12 +1,12 @@
 <x-layout.default
-  title="Bienvenido a tu lugar de mejora"
+  title="{{ __('messages.landing.title') }}"
 >
   <x-container>
     <x-main-heading>
-      Bienvenido! estas opciones tenemos para ofrecerte
+      {{ __('messages.greet.wellcome') }}, {{ __('messages.landing.options') }}
     </x-main-heading>
     <p>
-      Esto es una prueba
+      {{ __('messages.test') }}.
     </p>
   </x-container>
 </x-layout.default>

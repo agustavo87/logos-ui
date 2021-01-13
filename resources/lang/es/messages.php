@@ -5,6 +5,7 @@ return [
         'me' => '¡Hola!',
         'someone' => '¡Hola :name!',
         'people' =>'¡Hola!|¡Hola a todos!',
+        'wellcome' => 'Bienvenido'
     ],
     'guest' => 'invitado',
     'test' => 'Esto es una prueba',
@@ -29,5 +30,26 @@ return [
 
     'home' => [
         'title' => 'Bienvenido a tu lugar de mejora'
+    ],
+
+    'landing' => [
+        'title' => 'El lugar para mejorar',
+        'options' => 'Estas opciones tenemos para tí'
+    ],
+
+    'users' => [
+        'info' => 'Información de usuario',
+        'name' => 'Nombre',
+        'country' => 'País',
+        'lang' => 'Lenguaje',
+        'edit' => 'Editar información de usuario',
+        'fake-name' => 'Juan Perez',
+        'send' => 'Enviar',
+        'clear' => 'Borrar',
+        'register' => 'Registro de usuario',
+        'pass' => 'Contraseña',
+        'session' => 'Iniciar Sesión',
+        'remember' => 'Recordar'
+
     ]
 ];

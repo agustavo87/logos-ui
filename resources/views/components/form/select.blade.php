@@ -1,5 +1,5 @@
 @props(['name', 'label'])
-<x-form.label :for=$name> {{$label}} </x-form.label>
+<x-form.label :for=$name> {{$label}}: </x-form.label>
 <select 
   {{ $attributes->merge([
     'name' => $name,
