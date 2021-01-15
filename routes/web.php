@@ -82,9 +82,16 @@ Route::group([
             
         });
     });
+
+    Route::view('logos', 'logos.create')
+        ->name('logos');
 });
 
 Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
+
+Route::get('/view/{viewname}', function ($viewname) {
+    return view($viewname);
+});
 
 
 

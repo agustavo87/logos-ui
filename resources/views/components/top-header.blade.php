@@ -5,7 +5,7 @@
 @endauth
 <header
   class="bg-gray-900 sm:flex sm:justify-between sm:px-4 sm:py-2 sm:items-center"
-  x-data="{ open: true }"
+  x-data="{ open: false }"
 >
     <div
     class="flex justify-between items-center px-4 py-3 sm:p-0"
@@ -27,7 +27,7 @@
 
     </div>
 
-    <nav class="p-1 hidden sm:block" :class="{'hidden':!open}" >
+    <nav class="p-1 sm:block" :class="{'hidden':!open}" >
         <div class="text-sm px-2 pt-2 pb-4 sm:flex sm:items-center sm:p-0">
             
             {{-- Nav Items --}}
