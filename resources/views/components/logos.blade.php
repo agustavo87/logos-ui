@@ -16,8 +16,8 @@
             left: 15px;
             background-color: yellow;
             border: 1px solid green;
-        }
- */
+        } */
+
  
     #sidebar-controls {
         display: none;
@@ -30,20 +30,31 @@
         padding: 0;
     }
     #sidebar-controls i.fa {
-        background-color: #fff;
-        border: 1px solid #111;
+        background-color: #444e;
+        /* border-radius: 25px; */
+        color: #ccc;
+        /* background-color: #fff; */
+        /* border: 1px solid #111; */
         border-radius: 50%;
-        color: #111;
-        width: 32px;
-        height: 32px;
-        line-height: 32px;
+        /* padding: 2%; */
+        /* color: #111; */
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+    }
+    #sidebar-controls i.fa:hover {
+        color: #fff;
     }
     #sidebar-controls .controls {
         display: none; 
         margin-left: 15px;
     }
     #sidebar-controls #show-controls i.fa::before {
+      
         content: "\f067";   
+    }
+    #sidebar-controls #show-controls i.fa {
+      padding: 4%;
     }
     #sidebar-controls.active .controls {
         display: inline-block;
@@ -51,14 +62,17 @@
     #sidebar-controls.active #show-controls i.fa::before {
         content: "\f00d";
     }
+    #sidebar-controls.active #show-controls i.fa {
+        padding: 0;
+    }
 
     #sidebar-controls button {
         cursor: pointer;
         display: inline-block;
-        font-size: 18px;
+        font-size: 16px;
         padding: 0;
-        height: 32px;
-        width: 32px;
+        height: 35px;
+        width: 35px;
         text-align: center;
     }
     #sidebar-controls button:active, #sidebar-controls button:focus {
@@ -73,12 +87,13 @@
 <script>
   var quill = new Quill('#quill-container', {
   modules: {
-    toolbar: [
-      [{ header: [1, 2, false] }],
-      ['bold', 'italic', 'underline'],
-      ['image', 'code-block'],
-      ['link']
-    ]
+      toolbar: '#toolbar'
+    // toolbar: [
+    //   [{ header: [1, 2, false] }],
+    //   ['bold', 'italic', 'underline'],
+    //   ['image', 'code-block'],
+    //   ['link']
+    // ]
   },
 //   scrollingContainer: '#scrolling-container', 
   placeholder: 'Compose an epic...',
@@ -160,6 +175,27 @@ quill.on(Quill.events.EDITOR_CHANGE, function(eventType, range) {
 
 </script>
 @endpush
+
+<div id="toolbar">
+    <!-- Add font size dropdown -->
+    <span class="ql-formats">
+        <select class="ql-size">
+          <option value="small"></option>
+          <!-- Note a missing, thus falsy value, is used to reset to default -->
+          <option selected></option>
+          <option value="large"></option>
+          <option value="huge"></option>
+        </select>
+    </span>
+    <span class="ql-formats">
+        <!-- Add a bold button -->
+        <button class="ql-bold"></button>
+        <!-- Add subscript and superscript buttons -->
+        <button class="ql-script" value="sub"></button>
+        <button class="ql-script" value="super"></button>
+    </span>
+  </div>
+  <div id="editor"></div>
 
 <div {{ $attributes }} id="quill-wrapp">
     <div id="sidebar-controls">
