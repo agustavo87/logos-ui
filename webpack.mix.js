@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+require('./resources/js/quill/quill.mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -16,6 +17,7 @@ mix
     .postCss('resources/css/app.css', 'public/css', [
         require('tailwindcss')
     ])
+    .editor(__dirname)
     .js('resources/js/logos.js', 'public/js')
     .css('resources/css/logos.css', 'public/css')
     .copyDirectory('resources/images/copy', 'public/images' )

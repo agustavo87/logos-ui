@@ -1,19 +1,9 @@
 @import 'quill/dist/quill.core.css';
-@import 'quill/dist/quill.bubble.css';
+@import 'quill/dist/quill.snow.css';
 
 .ql-picker:focus {
     outline: none;
 }
-
-/* 
-.ql-editor {
-    padding: 0.5rem;
-}
-
-.ql-editor.ql-blank::before {
-    left: 0.5rem;
-    right: auto;
-} */
 
 html {
     scroll-behavior: smooth;
