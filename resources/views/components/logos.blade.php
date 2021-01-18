@@ -7,6 +7,7 @@
       display: none;
       position: absolute;
       z-index: 5;
+      
   }
   #sidebar-controls button {
       background-color: transparent;
@@ -39,10 +40,15 @@
   #sidebar-controls .controls button {
     margin-left: 13px;
   }
-  #sidebar-controls #show-controls .h-icon::before {
-      content: "mas";   
+
+  #sidebar-controls #show-controls {
+   
   }
+
+
   #sidebar-controls #show-controls .h-icon {
+    transition: all 100ms ease-out;
+    transform-origin: center;
     color: #4444;
     background-color: transparent;
   }
@@ -50,17 +56,16 @@
     color:white;
     background-color: #444e;
   }
+
   #sidebar-controls.active .controls {
-      display: inline-block;
-      
+    display: inline-block;
   }
-  #sidebar-controls.active #show-controls .h-icon::before {
-      content: "cerrar";
-  }
+
   #sidebar-controls.active #show-controls .h-icon {
       margin: auto 0;
       background-color: #444e;
       color:#ccc;
+      transform: rotate(45deg);
   }
 
   #sidebar-controls.active #show-controls .h-icon:hover {
@@ -147,6 +152,9 @@
             sideControls.style.display = 'none';
             sideControls.classList.remove('active')
           }
+        } else {
+          sideControls.style.display = 'none';
+          sideControls.classList.remove('active')
         }
         // console.log("Event '%s'\nrange:%o\noldRange:%o\nsource:%s", 
         //     eventType, range, oldRange, source)
