@@ -1,7 +1,7 @@
 @import 'quill/dist/quill.core.css';
-@import 'quill/dist/quill.snow.css';
+@import 'quill/dist/quill.bubble.css';
 
-.ql-picker:focus {
+.ql-picker:focus, .ql-picker-label:focus{
     outline: none;
 }
 
