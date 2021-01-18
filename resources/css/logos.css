@@ -8,3 +8,18 @@
 html {
     scroll-behavior: smooth;
 }
+
+.ql-editor .citation {
+    background: #deac61;
+    font-size: 8px;
+    font-style: normal;
+    vertical-align: super;
+    padding: 2px 3px;
+    border-radius: 5px;
+    font-weight: 600;
+    color: white;
+}
+
+.ql-editor .citation::after {
+    content: attr(data-n);
+}

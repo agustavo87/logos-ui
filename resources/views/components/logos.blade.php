@@ -95,12 +95,21 @@
   
   let quill = new Quill(quillContainer,{
       modules: {
-          toolbar: '#toolbar'
-        //   toolbar: ['bold', 'italic', {'header':2}]
-      },
+          toolbar: '#toolbar',
+          citations: {
+            type: SourceTypes.CITATION_VANCOUVER,
+            class: 'citation',
+            handlers: {
+                create: function (node, data, controller) {
+                    node.setAttribute('title', data.key)
+                }
+            }}
+        },
       theme:'bubble',
       placeholder: "Escribe algo épico..."
   });
+
+  const Citations = quill.getModule('citations');
 
 
   quill.addContainer(sideControls);
