@@ -16,18 +16,11 @@
   }
   #sidebar-controls .h-icon {
       background-color: #444e;
-      /* border-radius: 25px; */
       color: #ccc;
-      /* background-color: #fff; */
-      /* border: 1px solid #111; */
       border-radius: 50%;
-      
-      /* color: #111; */
       padding: 7px;
-      /* margin-left: 1px; */
       width: 20px;
       height: 20px;
-      /* line-height: 20px; */
       box-sizing: content-box;
   }
   #sidebar-controls .h-icon:hover {
@@ -41,17 +34,20 @@
     margin-left: 13px;
   }
 
-  #sidebar-controls #show-controls {
-   
-  }
-
-
   #sidebar-controls #show-controls .h-icon {
-    transition: all 100ms ease-out;
+    transition: all 50ms;
     transform-origin: center;
-    color: #4444;
+    color: #4449;
     background-color: transparent;
   }
+  
+  #sidebar-controls.active #show-controls .h-icon {
+      margin: auto 0;
+      background-color: #444e;
+      color:#ccc;
+      transform: rotate(45deg);
+  }
+
   #sidebar-controls #show-controls .h-icon:hover {
     color:white;
     background-color: #444e;
@@ -61,12 +57,6 @@
     display: inline-block;
   }
 
-  #sidebar-controls.active #show-controls .h-icon {
-      margin: auto 0;
-      background-color: #444e;
-      color:#ccc;
-      transform: rotate(45deg);
-  }
 
   #sidebar-controls.active #show-controls .h-icon:hover {
     color:white;
@@ -75,8 +65,6 @@
   #sidebar-controls button {
       cursor: pointer;
       display: inline-block;
-      /* font-size: 16px; */
-      /* padding: 0; */
       height: 20px;
       width: 20px;
       text-align: center;
@@ -144,7 +132,7 @@
             console.log("Descendientes:\nblock: %o\noffset: %i",block, offset);
             let lineBounds = quill.getBounds(range);
             sideControls.style.display = 'block'
-            sideControls.style.left = lineBounds.left - 50 + "px"
+            sideControls.style.left = lineBounds.left - 42 + "px"
             console.log(lineBounds)
             sideControls.style.top = lineBounds.top - 7  + "px"
           } else {
