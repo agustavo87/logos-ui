@@ -1,6 +1,74 @@
 
 @push('head-script')
-    <link rel="stylesheet" href="{{ asset('css/logos.css') }}">
+<link rel="stylesheet" href="{{ asset('css/logos.css') }}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<style>
+  #sidebar-controls {
+      display: none;
+      position: absolute;
+      z-index: 5;
+  }
+  #sidebar-controls button {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+  }
+  #sidebar-controls i.fa {
+      background-color: #444e;
+      /* border-radius: 25px; */
+      color: #ccc;
+      /* background-color: #fff; */
+      /* border: 1px solid #111; */
+      border-radius: 50%;
+      
+      /* color: #111; */
+      padding: 4%;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+      box-sizing: content-box;
+  }
+  #sidebar-controls i.fa:hover {
+      color: #fff;
+  }
+  #sidebar-controls .controls {
+    display: none; 
+    margin-left: 12px;
+  }
+  #sidebar-controls .controls button {
+    margin-left: 3px;
+  }
+  #sidebar-controls #show-controls i.fa::before {
+      content: "\f067";   
+  }
+  #sidebar-controls #show-controls i.fa {
+    /* padding: 4%; */
+    /* background-color: #4445; */
+  }
+  #sidebar-controls.active .controls {
+      display: inline-block;
+  }
+  #sidebar-controls.active #show-controls i.fa::before {
+      content: "\f00d";
+  }
+  #sidebar-controls.active #show-controls i.fa {
+      /* padding: 0; */
+  }
+
+  #sidebar-controls button {
+      cursor: pointer;
+      display: inline-block;
+      font-size: 16px;
+      padding: 0;
+      height: 32px;
+      width: 32px;
+      text-align: center;
+  }
+  #sidebar-controls button:active, #sidebar-controls button:focus {
+      outline: none;  
+  }
+
+</style>
 
 @endpush
 
@@ -8,8 +76,18 @@
 <script src="{{ asset('js/logos.js') }}"></script>
 
 <script>
+  let Block = Quill.import('blots/block');
 
-  let quillContainer = document.querySelector('#quill-container')
+
+  let sideControls = document.querySelector('#sidebar-controls');
+  let quillContainer = document.querySelector('#quill-container');
+  let btnShowSideControls = document.querySelector('#show-controls');
+
+  btnShowSideControls.addEventListener('click', function() {
+    sideControls.classList.toggle('active')
+    quill.focus();
+  })
+  
   let quill = new Quill(quillContainer,{
       modules: {
           toolbar: '#toolbar'
@@ -18,6 +96,9 @@
       theme:'bubble',
       placeholder: "Escribe algo épico..."
   });
+
+
+  quill.addContainer(sideControls);
 
   quill.on('editor-change', function(eventType, ...args) {
     if (eventType === 'text-change') {
@@ -37,6 +118,24 @@
 
     } else if (eventType === 'selection-change') {
         const [range, oldRange, source] = args;
+        if(range == null) return;
+        if(range.length === 0) {
+          console.log("Event '%s'\nrange:%o\noldRange:%o\nsource:%s", 
+            eventType, range, oldRange, source);
+          const [block, offset] = quill.scroll.descendant(Block, range.index);
+          if(block != null && block.domNode.firstChild instanceof HTMLBRElement) {
+            console.log("Descendientes:\nblock: %o\noffset: %i",block, offset);
+            let lineBounds = quill.getBounds(range);
+            sideControls.style.display = 'block'
+            sideControls.style.left = lineBounds.left - 50 + "px"
+            console.log(lineBounds)
+            sideControls.style.top = lineBounds.top - 7  + "px"
+          } else {
+            console.log('escondiendo');
+            sideControls.style.display = 'none';
+            sideControls.classList.remove('active')
+          }
+        }
         // console.log("Event '%s'\nrange:%o\noldRange:%o\nsource:%s", 
         //     eventType, range, oldRange, source)
 
@@ -54,13 +153,6 @@
     if (cursorBottom + margin > screenBottom ) {
       window.scrollTo(0, cursorBottom + margin * 3 - window.innerHeight)
     }
-    // positioner.style.top = bounds.top + quillContainer.offsetTop + 'px';
-    // positioner.style.height = bounds.height + 'px';
-    // positioner.style.width = 5 + 'px';
-    // positioner.style.left = 25 + 'px';
-
-    // scPositioner.style.top = screenBottom - 1 + 'px';
-
   }
 </script>
 @endpush
@@ -77,6 +169,16 @@
         <button class="ql-bold"></button>
         <button class="ql-italic"></button>
     </span>
+</div>
+
+<div id="sidebar-controls">
+  <button id="show-controls" type="button"><i class="fa fa-plus"></i></button>
+  <span class="controls">
+    <button id="image-button" type="button"><i class="fa fa-camera"></i></button>
+    <button id="video-button" type="button"><i class="fa fa-play"></i></button>
+    <button id="tweet-button" type="button"><i class="fa fa-twitter"></i></button>
+    <button id="divider-button" type="button"><i class="fa fa-minus"></i></button>
+  </span>
 </div>
 
 <div {{ $attributes }} id="quill-wrapp">
