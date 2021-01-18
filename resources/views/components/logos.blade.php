@@ -22,10 +22,10 @@
       border-radius: 50%;
       
       /* color: #111; */
-      padding: 4%;
-      width: 32px;
-      height: 32px;
-      line-height: 32px;
+      padding: 0;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
       box-sizing: content-box;
   }
   #sidebar-controls i.fa:hover {
@@ -36,23 +36,34 @@
     margin-left: 12px;
   }
   #sidebar-controls .controls button {
-    margin-left: 3px;
+    /* margin-left: ; */
   }
   #sidebar-controls #show-controls i.fa::before {
       content: "\f067";   
   }
   #sidebar-controls #show-controls i.fa {
-    /* padding: 4%; */
-    /* background-color: #4445; */
+    color: #4444;
+    background-color: transparent;
+  }
+  #sidebar-controls #show-controls i.fa:hover {
+    color:white;
+    background-color: #444e;
   }
   #sidebar-controls.active .controls {
       display: inline-block;
+      
   }
   #sidebar-controls.active #show-controls i.fa::before {
       content: "\f00d";
   }
   #sidebar-controls.active #show-controls i.fa {
-      /* padding: 0; */
+      margin: auto 0;
+      background-color: #444e;
+      color:#ccc;
+  }
+
+  #sidebar-controls.active #show-controls i.fa:hover {
+    color:white;
   }
 
   #sidebar-controls button {
@@ -60,8 +71,8 @@
       display: inline-block;
       font-size: 16px;
       padding: 0;
-      height: 32px;
-      width: 32px;
+      height: 36px;
+      width: 36px;
       text-align: center;
   }
   #sidebar-controls button:active, #sidebar-controls button:focus {
