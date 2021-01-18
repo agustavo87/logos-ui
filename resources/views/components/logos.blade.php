@@ -13,7 +13,7 @@
       border: none;
       padding: 0;
   }
-  #sidebar-controls i.fa {
+  #sidebar-controls .h-icon {
       background-color: #444e;
       /* border-radius: 25px; */
       color: #ccc;
@@ -22,30 +22,31 @@
       border-radius: 50%;
       
       /* color: #111; */
-      padding: 0;
-      width: 36px;
-      height: 36px;
-      line-height: 36px;
+      padding: 7px;
+      /* margin-left: 1px; */
+      width: 20px;
+      height: 20px;
+      /* line-height: 20px; */
       box-sizing: content-box;
   }
-  #sidebar-controls i.fa:hover {
+  #sidebar-controls .h-icon:hover {
       color: #fff;
   }
   #sidebar-controls .controls {
     display: none; 
-    margin-left: 12px;
+    margin-left: 5px;
   }
   #sidebar-controls .controls button {
-    /* margin-left: ; */
+    margin-left: 13px;
   }
-  #sidebar-controls #show-controls i.fa::before {
-      content: "\f067";   
+  #sidebar-controls #show-controls .h-icon::before {
+      content: "mas";   
   }
-  #sidebar-controls #show-controls i.fa {
+  #sidebar-controls #show-controls .h-icon {
     color: #4444;
     background-color: transparent;
   }
-  #sidebar-controls #show-controls i.fa:hover {
+  #sidebar-controls #show-controls .h-icon:hover {
     color:white;
     background-color: #444e;
   }
@@ -53,26 +54,26 @@
       display: inline-block;
       
   }
-  #sidebar-controls.active #show-controls i.fa::before {
-      content: "\f00d";
+  #sidebar-controls.active #show-controls .h-icon::before {
+      content: "cerrar";
   }
-  #sidebar-controls.active #show-controls i.fa {
+  #sidebar-controls.active #show-controls .h-icon {
       margin: auto 0;
       background-color: #444e;
       color:#ccc;
   }
 
-  #sidebar-controls.active #show-controls i.fa:hover {
+  #sidebar-controls.active #show-controls .h-icon:hover {
     color:white;
   }
 
   #sidebar-controls button {
       cursor: pointer;
       display: inline-block;
-      font-size: 16px;
-      padding: 0;
-      height: 36px;
-      width: 36px;
+      /* font-size: 16px; */
+      /* padding: 0; */
+      height: 20px;
+      width: 20px;
       text-align: center;
   }
   #sidebar-controls button:active, #sidebar-controls button:focus {
@@ -183,12 +184,29 @@
 </div>
 
 <div id="sidebar-controls">
-  <button id="show-controls" type="button"><i class="fa fa-plus"></i></button>
+  <button id="show-controls" type="button">
+    <svg class="h-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+    </svg>
+  </button>
   <span class="controls">
-    <button id="image-button" type="button"><i class="fa fa-camera"></i></button>
-    <button id="video-button" type="button"><i class="fa fa-play"></i></button>
-    <button id="tweet-button" type="button"><i class="fa fa-twitter"></i></button>
-    <button id="divider-button" type="button"><i class="fa fa-minus"></i></button>
+    <button id="image-button" type="button">
+      <svg class="h-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <button id="video-button" type="button">      
+      <svg class="h-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+      </svg>
+    </button>
+    <button id="tweet-button" type="button">      
+      <svg class="h-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">    <path d="M28,6.937c-0.957,0.425-1.985,0.711-3.064,0.84c1.102-0.66,1.947-1.705,2.345-2.951c-1.03,0.611-2.172,1.055-3.388,1.295 c-0.973-1.037-2.359-1.685-3.893-1.685c-2.946,0-5.334,2.389-5.334,5.334c0,0.418,0.048,0.826,0.138,1.215 c-4.433-0.222-8.363-2.346-10.995-5.574C3.351,6.199,3.088,7.115,3.088,8.094c0,1.85,0.941,3.483,2.372,4.439 c-0.874-0.028-1.697-0.268-2.416-0.667c0,0.023,0,0.044,0,0.067c0,2.585,1.838,4.741,4.279,5.23 c-0.447,0.122-0.919,0.187-1.406,0.187c-0.343,0-0.678-0.034-1.003-0.095c0.679,2.119,2.649,3.662,4.983,3.705 c-1.825,1.431-4.125,2.284-6.625,2.284c-0.43,0-0.855-0.025-1.273-0.075c2.361,1.513,5.164,2.396,8.177,2.396 c9.812,0,15.176-8.128,15.176-15.177c0-0.231-0.005-0.461-0.015-0.69C26.38,8.945,27.285,8.006,28,6.937z"/></svg>    </button>
+    <button id="divider-button" type="button">
+      <svg class="h-icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+      </svg>
+    </button>
   </span>
 </div>
 
