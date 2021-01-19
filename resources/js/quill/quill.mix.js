@@ -56,7 +56,7 @@ class QuillMix {
             return useIndex < 0 ? false : true;
         })
 
-        console.log('indice',svgImageLoaderIndex)
+        // console.log('indice',svgImageLoaderIndex)
         // 2do. se excluye al directorio quill de dichas reglas.
         webpackConfig.module.rules[svgImageLoaderIndex].exclude = /(quill).*\.svg$/;
 
