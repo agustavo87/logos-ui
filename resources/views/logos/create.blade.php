@@ -13,7 +13,7 @@
   <x-container>
     {{-- <form action="/logos" method="POST"> --}}
     <div class="flex flex-col mx-auto logos-container mt-3 max-w-screen-lg">
-      <input type="text" name="title" id="title" placeholder="Título" class="ml-2 text-3xl font-bold mb-2 focus:outline-none text-gray-800">
+      <input type="text" name="title" id="title" placeholder="Título" autocomplete="off" class="ml-2 text-3xl font-bold mb-2 focus:outline-none text-gray-800">
       <x-logos  />
     </div>
     {{-- </form> --}}
