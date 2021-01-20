@@ -21,4 +21,5 @@ mix
     .js('resources/js/logos.js', 'public/js')
     .css('resources/css/logos.css', 'public/css')
     .copyDirectory('resources/images/copy', 'public/images' )
+    .sourceMaps()
     .browserSync('localhost:8000');
