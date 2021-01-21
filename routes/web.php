@@ -93,5 +93,8 @@ Route::get('/view/{viewname}', function ($viewname) {
     return view($viewname);
 });
 
+Route::get('/api-test', function () {
+    return view('api-test');
+});
 
 

@@ -17,3 +17,25 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('test', function (Request $request) {
+    if (!$request->has('action')) {
+        return $request->all();
+    }
+    switch ($request->action) {
+        case 'get':
+            return [
+                'data' => $request->session()->get('data', 'unfound')
+            ];
+            break;
+        case 'set':
+            $request->session()->put('data', $request->data);
+            return 'set';
+            break;
+        case 'echo': 
+            return $request->all();
+        default: 
+            return 'unknownn';
+    }
+});
