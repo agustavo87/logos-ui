@@ -1,3 +1,4 @@
+// import Quill from 'quill'
 import Quill, {SourceTypes} from './quill/quill'
 
 window.Quill = Quill;

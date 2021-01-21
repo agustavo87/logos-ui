@@ -1,6 +1,8 @@
 
 @push('head-script')
 <link rel="stylesheet" href="{{ asset('css/logos.css') }}">
+<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" defer></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
 <style>
   #sidebar-controls {
       display: none;
@@ -198,6 +200,12 @@
   <span class="ql-formats">
     <button class="ql-bold"></button>
     <button class="ql-italic"></button>
+    <button class="ql-list" value="ordered"></button>
+    <button class="ql-list" value="bullet"></button>
+    <button class="ql-script" value="sub"></button>
+    <button class="ql-script" value="super"></button>
+    <button class="ql-formula"></button>
+    <button class="ql-blockquote"></button>
     <button id="add-source" class="lg-btn">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
         <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
