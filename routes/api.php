@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,3 +40,13 @@ Route::post('test', function (Request $request) {
             return 'unknownn';
     }
 });
+
+
+
+Route::post('/articles', [ArticleController::class, 'store'])
+    ->name('articles.store')
+    ->middleware('auth:sanctum');
+
+Route::get('/articles/search', [ArticleController::class, 'search'])
+    ->name('articles.search')
+    ->middleware('auth:sanctum');

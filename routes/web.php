@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\{
+    ArticleController,
     AuthController,
     UserController,
     LocaleController
@@ -83,6 +84,20 @@ Route::group([
         });
     });
 
+    Route::resource('articles', ArticleController::class)->except([
+        'store', 'show', 'index'// 'store' via api; 'show', 'index', will be public
+    ])->middleware('auth:sanctum');
+
+    Route::group([
+        'prefix' => 'articles',
+        'as' => 'articles.'
+    ], function () {
+        Route::get('/{article}', [ArticleController::class, 'show'])
+        ->name('articles.show');
+        Route::get('', [ArticleController::class, 'index'])
+        ->name('articles.index');
+    });
+
     Route::view('logos', 'logos.create')
         ->name('logos');
 });
@@ -96,5 +111,7 @@ Route::get('/view/{viewname}', function ($viewname) {
 Route::get('/api-test', function () {
     return view('api-test');
 });
+
+
 
 

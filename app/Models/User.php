@@ -51,6 +51,10 @@ class User extends Authenticatable
         return $this->hasMany(Source::class);
     }
 
+    public function articles() {
+        return $this->hasMany(Article::class);
+    }
+
     public function isAdministrator()
     {
         return $this->email === 'agustavo87@gmail.com';
