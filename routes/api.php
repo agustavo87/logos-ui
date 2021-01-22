@@ -50,3 +50,7 @@ Route::post('/articles', [ArticleController::class, 'store'])
 Route::get('/articles/search', [ArticleController::class, 'search'])
     ->name('articles.search')
     ->middleware('auth:sanctum');
+
+Route::get('myhost', function (Request $request) {
+    return $request->ip();
+});
