@@ -20,9 +20,11 @@ class CreateSourcesTable extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');;
-            $table->char('key',25);
+            $table->string('key',25);
             $table->unique(['user_id','key']);
-            $table->string('data', 500);
+            $table->string('type',50);
+            $table->json('data');
+            
         });
     }
 

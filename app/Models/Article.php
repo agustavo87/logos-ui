@@ -29,4 +29,12 @@ class Article extends Model
     public function user() {
         return $this->belongsTo('App\User');
     }
+
+    /**
+     * The sources of the article
+     */
+    public function sources()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 }

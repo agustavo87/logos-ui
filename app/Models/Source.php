@@ -26,4 +26,12 @@ class Source extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * The users that belong to the role.
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
