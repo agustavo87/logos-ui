@@ -81,7 +81,6 @@ Route::group([
             
             Route::delete('/{user}', [UserController::class, 'destroy'])
                 ->name('delete');
-            
         });
     });
 
