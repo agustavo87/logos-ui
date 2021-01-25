@@ -112,13 +112,7 @@ Route::get('/api-test', function () {
     return view('api-test');
 });
 
-Route::group([
-    'prefix' => 'xhr',
-], function () {
-    Route::apiResource('users.sources', UserSourceController::class)->scoped([
-        'source' => 'key'
-    ])->middleware('auth'); // ver que significa auth:api
-});
+
 
 
 

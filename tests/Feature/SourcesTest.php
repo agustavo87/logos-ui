@@ -3,19 +3,18 @@
 namespace Tests\Feature;
 
 use Tests\FixturableTestCase as TestCase;
-
 use App\Models\{
     User,
     Source
 };
+use Laravel\Sanctum\Sanctum;
 
 class SourcesTest extends TestCase
 {
-
-    protected static $userId;
     public static bool $verbose = true;
     public static bool $debug = true;
 
+    protected static $userId;
     protected User $user;
     protected array $sources;
 
@@ -29,13 +28,21 @@ class SourcesTest extends TestCase
         \Illuminate\Testing\TestResponse::macro('getStatusText', function () {
             return \Illuminate\Http\Response::$statusTexts[$this->getStatusCode()];
         });
-        // self::$userId = User::factory()->create()->id;
+
         self::$userId  = Source::factory()
             ->count(10)
             ->for(User::factory())
             ->create()[0]->user->id;
-        // $user = $sources[0]->user;
-        // self::$userId = $user->id;
+    }
+
+    /**
+     * Obtiene el usuario y lo guarda para uso posterior.
+     *
+     * @return void
+     */
+    public function beforeEach(): void
+    {
+        $this->user = User::find(self::$userId);
     }
 
     /**
@@ -49,29 +56,18 @@ class SourcesTest extends TestCase
     }
 
     /**
-     * Obtiene el usuario y lo guarda para uso posterior.
-     *
-     * @return void
-     */
-    public function beforeEach(): void
-    {
-        $this->user = User::where('id', self::$userId)->first();
-        // $this->locale = $this->app->make('locale');
-    }
-
-    /**
      * Logs Status.
      * 
      * Depends on
      * - getStatusText macro
      * - LogsInformation trait
+     * 
      * @param \Illuminate\Testing\TestResponse $response
      * @param int $expected 
-     *
      * @return string
      */
-    public function logStatus($response, int $expected = 200): void {
-
+    public function logStatus($response, int $expected = 200): void 
+    {
         $statusCode = $response->getStatusCode();
         $this->log("$statusCode: {$response->getStatusText()}", $statusCode == $expected);
     }
@@ -86,18 +82,13 @@ class SourcesTest extends TestCase
         $key = 'gus2020';
         $data = 'Gustavo, A. (2020). El ocaso del menemismo amarillo. Viñeta2: Buenos Aires.';
         $response = $this
-            // ->actingAs($this->user)
             ->postJson(route('users.sources.store', ['user' => $this->user->id]), [
                 'key' => $key,
                 'data' => $data
         ]);
 
-        
         $this->logStatus($response, 401);
-
-        $response
-            ->assertStatus(401); // UnAuthorized.
-
+        $response->assertStatus(401); // Unauthorized.
     }
 
 
@@ -110,15 +101,14 @@ class SourcesTest extends TestCase
     {
         $key = 'gus2020';
         $data = 'Gustavo, A. (2020). El ocaso del menemismo amarillo. Viñeta2: Buenos Aires.';
+
+        Sanctum::actingAs($this->user);
         $response = $this
-            ->actingAs($this->user)
-            // ->postJson("/users/{$this->user->id}/sources", [
+            // ->actingAs($this->user)
             ->postJson(route('users.sources.store', ['user' => $this->user->id]), [
                 'key' => $key,
                 'data' => $data
         ]);
-
-        
         $this->logStatus($response, 201);
 
         $response
@@ -135,19 +125,18 @@ class SourcesTest extends TestCase
 
     /**
      * Get a source data.
+     * 
      * @depends test_posts_a_source
      * @param string $key
      * @return string
      */
     public function test_gets_a_source(string $key): string
     {
-        // $key = 'gus2020';
+        Sanctum::actingAs($this->user);
         $response = $this
-            ->actingAs($this->user)
-            // ->getJson("/users/{$this->user->id}/sources/$key");
+            // ->actingAs($this->user)
             ->getJson(route('users.sources.show', ['user' => $this->user->id, 'source' => $key]));
 
-        
         $this->logStatus($response, 200);
 
         $response
@@ -158,11 +147,11 @@ class SourcesTest extends TestCase
             ]);
 
         return $key;
-
     }
 
     /**
      * Updates a source data.
+     * 
      * @depends test_gets_a_source
      * @param string $key
      * @return string
@@ -170,9 +159,10 @@ class SourcesTest extends TestCase
     public function test_updates_a_source(string $key): string
     {
         $newData = "Gustavo R., A. (2020). El resultado siniestro. Arkadia: Buenos Aires.";
+
+        Sanctum::actingAs($this->user);
         $response = $this
-            ->actingAs($this->user)
-            // ->putJson("/users/{$this->user->id}/sources/$key", [
+            // ->actingAs($this->user)
             ->putJson(route('users.sources.update', ['user' => $this->user->id, 'source' => $key]), [
                 'data' => $newData
             ]);
@@ -194,20 +184,21 @@ class SourcesTest extends TestCase
     /**
      * Deletes a source data.
      * @depends test_updates_a_source
+     * 
      * @param string $key
      * @return string
      */
     public function test_deletes_a_source(string $key): string
     {
         $this->assertTrue($this->user->sources->contains('key', $key));
+
+        Sanctum::actingAs($this->user);
         $response = $this
-            ->actingAs($this->user)
-            // ->deleteJson("/users/{$this->user->id}/sources/$key");
+            // ->actingAs($this->user)
             ->deleteJson(route('users.sources.destroy', ['user' => $this->user->id, 'source' => $key]));
 
         $this->logStatus($response, 200);
-        $response
-        ->assertStatus(200); // ok
+        $response->assertStatus(200); // ok
         $this->user->refresh();
         $this->assertFalse($this->user->sources->contains('key', $key));
 
@@ -218,27 +209,22 @@ class SourcesTest extends TestCase
      * Get a source data.
      * @depends test_updates_a_source
      * 
-     * @todo clean database 
-     * 
      * @param string $key
      * @return string
      */
     public function test_index_sources(string $key): string
     {
-        // $sources = Source::factory()
-        //     ->count(3)
-        //     ->for(User::factory())
-        //     ->create();
-        // $user = $sources[0]->user;
-
         $perPage = 3;
+
+        Sanctum::actingAs($this->user);
         $response = $this
-            ->actingAs($this->user)
-            // ->getJson("users/{$this->user->id}/sources?perpage={$perPage}");
-            // ->getJson("users/{$this->user->id}/sources?perpage={$perPage}");
-            ->getJson(route('users.sources.index', ['user' => $this->user->id, 'perpage' => $perPage]));
+            // ->actingAs($this->user)
+            ->getJson(
+                route('users.sources.index', 
+                ['user' => $this->user->id, 'perpage' => $perPage]
+            ));
+
         $this->logStatus($response, 200);
-        $response->dump();
         $response->assertOk();
         $response->assertJsonStructure([
             'data',
@@ -263,17 +249,11 @@ class SourcesTest extends TestCase
                 ]
             ],
         ]);
+
         $this->user->sources->take($perPage)->each(function ($item) use ($response) {
             $response->assertJsonFragment(['key' => $item->key]);
         });
 
-
-
-        // $this->user->sources->each(function ($source) use ($response) {
-        //     $response->assertJsonFragment([
-        //         'key' => $source->key
-        //     ]); 
-        // });
         return $key;
     }
 
