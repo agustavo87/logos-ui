@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateArticlesTable extends Migration
+class CreateCreatorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,22 @@ class CreateArticlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('creators', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            
-            $table->string('title',250);
-            $table->text('html');
-            $table->json('delta');
-            $table->json('meta');
-    
-            $table->foreignId('user_id')
+
+            $table
+                ->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            $table->string('key', 50);
+            $table->unique(['user_id', 'key']);
+
+            $table->string('type',50);
+            $table->string('schema', 50);
+            $table->json('data');
         });
     }
 
@@ -36,6 +39,6 @@ class CreateArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('creators');
     }
 }

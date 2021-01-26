@@ -23,18 +23,25 @@ class SourceFactory extends Factory
      */
     public function definition()
     {
-        $lastName = $this->faker->lastName;
         $year = $this->faker->unique()->numberBetween(1970, 2021);
         
-        $nameInitial = Str::upper($this->faker->randomLetter);
+        // $lastName = $this->faker->lastName; // by the creators relationship
+        // $name = $this->faker->firstName();
         $title = Str::title($this->faker->sentence);
         $editorial = Str::title($this->faker->word);
         $city = Str::title($this->faker->city);
 
         return [
             'user_id' => User::factory(),
-            'key' => "$lastName$year",
-            'data' => "$lastName, $nameInitial. ($year). $title $editorial: $city."
+            'key' => "doe$year",
+            'type' => 'citation.book',
+            'schema' => '0.0.1',
+            'data' => [
+                'year' => $year,
+                'title' => $title,
+                'editorial' => $editorial,
+                'city' => $city
+            ]
         ];
     }
 }

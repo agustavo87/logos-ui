@@ -19,6 +19,10 @@ class Source extends Model
         'data'
     ];
 
+    protected $casts = [
+        'data' => 'array'
+    ];
+
     /**
      * Get the user that owns the source.
      */
@@ -28,10 +32,18 @@ class Source extends Model
     }
 
     /**
-     * The users that belong to the role.
+     * The articles that belong to the role.
      */
-    public function users()
+    public function articles()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(Article::class);
+    }
+
+    /**
+     * The creators that belong to the role.
+     */
+    public function creators()
+    {
+        return $this->belongsToMany(Creator::class);
     }
 }

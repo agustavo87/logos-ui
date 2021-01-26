@@ -16,15 +16,18 @@ class CreateSourcesTable extends Migration
         Schema::create('sources', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');;
-            $table->string('key',25);
+
+            $table->string('key',50);
             $table->unique(['user_id','key']);
+
             $table->string('type',50);
+            $table->string('schema',50);
             $table->json('data');
-            
         });
     }
 

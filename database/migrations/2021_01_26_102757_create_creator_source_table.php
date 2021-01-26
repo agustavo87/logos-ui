@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ArticleSource extends Migration
+class CreateCreatorSourceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class ArticleSource extends Migration
      */
     public function up()
     {
-        Schema::create('article_source', function (Blueprint $table) {
-            $table->unsignedBigInteger('article_id');
+        Schema::create('creator_source', function (Blueprint $table) {
+            $table->unsignedBigInteger('creator_id');
             $table->unsignedBigInteger('source_id');
-            $table->unique(['article_id', 'source_id']);
+            $table->unique(['creator_id', 'source_id']);
         });
-            
     }
 
     /**
@@ -28,6 +27,6 @@ class ArticleSource extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('article_source');
+        Schema::dropIfExists('creator_source');
     }
 }

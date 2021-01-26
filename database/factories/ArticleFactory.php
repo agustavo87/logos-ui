@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Article;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ArticleFactory extends Factory
@@ -24,6 +25,7 @@ class ArticleFactory extends Factory
         $h2 = $this->faker->sentence();
         $p = $this->faker->paragraph();
         return [
+            'user_id' => User::factory(),
             'title' => $this->faker->sentence(),
             'html' => "<h2> $h2 <h2> <p> $p </p>",
             'delta' => [

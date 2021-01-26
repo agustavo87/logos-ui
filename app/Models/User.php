@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -52,9 +52,22 @@ class User extends Authenticatable
         return $this->hasMany(Source::class);
     }
 
-    public function articles() {
+    /**
+     * Get the articles of the user.
+     */
+    public function articles() 
+    {
         return $this->hasMany(Article::class);
     }
+
+    /**
+     * Get the creators of the user.
+     */
+    public function creators() 
+    {
+        return $this->hasMany(Creator::class);
+    }
+
 
     public function isAdministrator()
     {

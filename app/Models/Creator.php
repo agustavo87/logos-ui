@@ -5,25 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Creator extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title', 
-        'delta', 
-        'html',  
-        'meta'
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
-        'meta' => 'array',
-        'delta' => 'array'
+        'data' => 'array'
     ];
 
     /**
@@ -35,10 +22,12 @@ class Article extends Model
     }
 
     /**
-     * The sources of the article
+     * The sources that belong to the role.
      */
     public function sources()
     {
         return $this->belongsToMany(Source::class);
     }
+
+    
 }
