@@ -8,7 +8,7 @@
     </button>
 
     {{-- dropdown menu --}}
-    <div x-show.transition="open" @click.away="open = false" class="absolute z-20 right-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
+    <div x-show.transition="open" @click.away="open = false" x-cloak  class="absolute z-20 right-0 mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
         @guest
         <x-header.account-dropdown-item href="{{ route('auth.show') }}"> {{ __('messages.header.account.start') }} </x-header.account-dropdown-item>
         <x-header.account-dropdown-item href="{{ route('users.create') }}"> {{ __('messages.header.account.register') }} </x-header.account-dropdown-item>
