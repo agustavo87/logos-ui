@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <script src="{{ mix('/js/app.js') }}"></script>
     @stack('head-script')
-</head>
-<body>
-{{ $slot }}
-@stack('foot-script')
+  </head>
+  <body>
+    {{ $slot }}
+    @stack('foot-script')
 </body>
 </html>
