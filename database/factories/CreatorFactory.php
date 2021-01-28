@@ -28,7 +28,7 @@ class CreatorFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'key'   => Str::lower($name . Str::substr($lastName, 0, 1)),
+            'key'   => Str::lower($lastName . Str::substr($name, 0, 1)),
             'type' => 'author',
             'schema' => '0.0.1',
             'data' => [

@@ -8,6 +8,7 @@
     
     <title>{{ 'Arete - ' . $title ?? 'La ciencia de la mejora' }}</title>
 
+    @livewireStyles
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @stack('head-script')
   </head>
@@ -15,6 +16,7 @@
 
     {{ $slot }}
 
+    @livewireScripts
     <script src="{{ mix('/js/app.js') }}"></script>
     @stack('foot-script')
 </body>

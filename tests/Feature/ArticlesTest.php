@@ -8,7 +8,7 @@ use App\Models\{
 };
 use Laravel\Sanctum\Sanctum;
 
-class SourcesTest extends TestCase
+class ArticlesTest extends TestCase
 {
     public static bool $verbose = true;
     public static bool $debug = true;

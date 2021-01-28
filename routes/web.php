@@ -7,7 +7,6 @@ use App\Http\Controllers\{
     AuthController,
     UserController,
     LocaleController,
-    UserSourceController
 };
 
 /*
@@ -100,6 +99,8 @@ Route::group([
 
     Route::view('logos', 'logos.create')
         ->name('logos');
+
+
 });
 
 Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
@@ -112,10 +113,5 @@ Route::get('/api-test', function () {
     return view('api-test');
 });
 
-
-
-
-
-
-
+Route::view('livewire', 'livewire');
 

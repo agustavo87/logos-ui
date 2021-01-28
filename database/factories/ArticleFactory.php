@@ -27,7 +27,7 @@ class ArticleFactory extends Factory
         return [
             'user_id' => User::factory(),
             'title' => $this->faker->sentence(),
-            'html' => "<h2> $h2 <h2> <p> $p </p>",
+            'html' => "<h2> $h2 </h2> <p> $p </p>",
             'delta' => [
                 "ops" => [
                     ["insert" => $h2],
