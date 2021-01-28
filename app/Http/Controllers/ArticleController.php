@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
@@ -18,6 +19,33 @@ class ArticleController extends Controller
     {
         return Article::all();
     }
+    
+    /**
+     * Display a listing of the articles that belongs to the
+     * specified user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexBy($lang, User $user)
+    {
+        return view('articles.index_by', [
+            'articles' => $user->articles,
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Display a listing of the articles that belongs to the
+     * logged user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function mine($lang)
+    {
+        return view('articles.mine');
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -65,15 +93,15 @@ class ArticleController extends Controller
         return $article;
     }
 
-    public function search(Request $request)
-    {
-        if (!$request->has('q')) abort(Response::HTTP_BAD_REQUEST, "No query");
-        if((int) $request->input('exact', 0 ) ) {
-            return Article::whereJsonContains('meta->sources', $request->q)->get();
-        }
-        return Article::where('meta->sources', 'like', "%{$request->q}%")
-            ->get();
-    }
+    // public function search(Request $request)
+    // {
+    //     if (!$request->has('q')) abort(Response::HTTP_BAD_REQUEST, "No query");
+    //     if((int) $request->input('exact', 0 ) ) {
+    //         return Article::whereJsonContains('meta->sources', $request->q)->get();
+    //     }
+    //     return Article::where('meta->sources', 'like', "%{$request->q}%")
+    //         ->get();
+    // }
 
     public function sources(Request $request)
     {

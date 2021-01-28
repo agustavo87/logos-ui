@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    ArticleController,
     UserSourceController
 };
 
@@ -23,42 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('test', function (Request $request) {
-    if (!$request->has('action')) {
-        return $request->all();
-    }
-    switch ($request->action) {
-        case 'get':
-            return [
-                'data' => $request->session()->get('data', 'unfound')
-            ];
-            break;
-        case 'set':
-            $request->session()->put('data', $request->data);
-            return 'set';
-            break;
-        case 'echo': 
-            return $request->all();
-        default: 
-            return 'unknownn';
-    }
-});
-
-
-
-Route::post('/articles', [ArticleController::class, 'store'])
-    ->name('articles.store')
-    ->middleware('auth:sanctum');
-
-Route::get('/articles/search', [ArticleController::class, 'search'])
-    ->name('articles.search')
-    ->middleware('auth:sanctum');
-
 Route::get('myhost', function (Request $request) {
     return $request->ip();
 });
 
 
-Route::apiResource('users.sources', UserSourceController::class)->scoped([
-    'source' => 'key'
-])->middleware('auth:sanctum');
+// Route::apiResource('users.sources', UserSourceController::class)->scoped([
+//     'source' => 'key'
+// ])->middleware('auth:sanctum');

@@ -20,10 +20,10 @@ class UserSeeder extends Seeder
     {
 
         $users = User::factory()
-            ->hasArticles(3)
-            ->hasSources(5)
-            ->hasCreators(6)
-            ->count(3)
+            ->hasArticles(30)
+            ->hasSources(6)
+            ->hasCreators(15)
+            ->count(7)
             ->create();
 
         $this->relateArticles($users);

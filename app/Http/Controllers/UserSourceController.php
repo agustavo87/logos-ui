@@ -22,10 +22,6 @@ class UserSourceController extends Controller
      */
     public function index(Request $request, User $user)
     {
-        // return $user->sources->map(function ($source) {
-        //     return collect($source->toArray())
-        //         ->except(['id', 'user_id', 'data']);
-        // });
         $perPage = $request->input('perpage',2);
         $sources_paginated = DB::table('sources')->where('user_id', $user->id)->paginate($perPage);
         return new SourceCollection($sources_paginated, $user);

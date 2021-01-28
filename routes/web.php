@@ -36,6 +36,7 @@ Route::group([
     Route::get('home', function (Request $request) {
         return view('home');
     })->name('home');
+    
 
     Route::name('auth.')->group(function () {
         Route::get('login', [AuthController::class, 'show'])
@@ -62,7 +63,7 @@ Route::group([
             ->name('register'); // limit somehow
 
             
-        Route::middleware('auth')->group(function () {
+        Route::middleware('auth:sanctum')->group(function () {
             Route::get('', [UserController::class, 'index'])
                 ->name('index')
                 ->middleware('can:viewAny,App\Model\User');
@@ -83,20 +84,15 @@ Route::group([
         });
     });
 
-    Route::resource('articles', ArticleController::class)->except([
-        'store', 'show', 'index'// 'store' via api; 'show', 'index', will be public
-    ])->middleware('auth:sanctum');
-
     Route::group([
-        'prefix' => 'articles',
+        'prefix' => '/articles',
         'as' => 'articles.'
     ], function () {
-        Route::get('/{article}', [ArticleController::class, 'show'])
-        ->name('articles.show');
-        Route::get('', [ArticleController::class, 'index'])
-        ->name('articles.index');
+        route::get('/by/{user}', [ArticleController::class, 'indexBy'])
+            ->name('by');
+        route::get('/mine', [ArticleController::class, 'mine'])->middleware('auth:sanctum');
     });
-
+   
     Route::view('logos', 'logos.create')
         ->name('logos');
 
@@ -104,14 +100,4 @@ Route::group([
 });
 
 Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
-
-Route::get('/view/{viewname}', function ($viewname) {
-    return view($viewname);
-});
-
-Route::get('/api-test', function () {
-    return view('api-test');
-});
-
-Route::view('livewire', 'livewire');
 
