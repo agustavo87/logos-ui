@@ -90,7 +90,9 @@ class ArticleController extends Controller
      */
     public function show($lang, Article $article)
     {
-        return $article;
+        return view('articles.show', [
+            'article' => $article
+        ]);
     }
 
     // public function search(Request $request)

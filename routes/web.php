@@ -88,9 +88,13 @@ Route::group([
         'prefix' => '/articles',
         'as' => 'articles.'
     ], function () {
-        route::get('/by/{user}', [ArticleController::class, 'indexBy'])
+        Route::get('/by/{user}', [ArticleController::class, 'indexBy'])
             ->name('by');
-        route::get('/mine', [ArticleController::class, 'mine'])->middleware('auth:sanctum');
+        Route::get('/mine', [ArticleController::class, 'mine'])
+            ->middleware('auth:sanctum')
+            ->name('mine');
+        Route::get('/{article}', [ArticleController::class, 'show'])
+            ->name('show');
     });
    
     Route::view('logos', 'logos.create')
