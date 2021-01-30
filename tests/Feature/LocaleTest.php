@@ -26,7 +26,10 @@ class LocaleTest extends TestCase
     }
 
     /**
-     * Crea un modelo de usuario para ser usado en los tests.
+     * Inicializa el entorno de todos los tests.
+     * 
+     * - Crea un macro para obtener el texto del status.
+     * - Crea un usuario a ser usado durante los tests.
      *
      * @return void
      */
@@ -42,10 +45,10 @@ class LocaleTest extends TestCase
         ])->id;
     }
 
-
-
     /**
-     * Limpia la BD del modelo de usuario creado.
+     * Ejectua acciones luego de terminados los tests.
+     * 
+     * - Limpia la BD del modelo de usuario creado.
      *
      * @return void
      */
@@ -55,7 +58,9 @@ class LocaleTest extends TestCase
     }
 
     /**
-     * Obtiene el usuario y lo guarda para uso posterior.
+     * Ejectua acciones antes de cada test.
+     * 
+     * - Obtiene el usuario y lo guarda para uso posterior.
      *
      * @return void
      */
@@ -98,7 +103,7 @@ class LocaleTest extends TestCase
     }
 
     /**
-     * Actualiza el Lenguaje del usuario mediante una solicitud JSON.
+     * Actualiza lenguaje en usuario no registrado
      *
      * @return void
      */
@@ -126,7 +131,6 @@ class LocaleTest extends TestCase
         ]);
 
         $response->assertSessionHas('language', $otherLanguage);
-
     }
 
 
