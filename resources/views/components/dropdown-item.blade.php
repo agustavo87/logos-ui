@@ -1,5 +1,5 @@
 @props([
-    'base' => 'block px-4 py-2 text-gray-200 sm:text-gray-800 focus:outline-none w-full text-left',
+    'base' => 'block px-4 py-2 text-gray-200 sm:text-gray-800 focus:outline-none w-max text-left',
     'active' => 'hover:bg-gray-700 sm:hover:bg-indigo-500 hover:text-white',
     'inactive' => 'font-medium cursor-default',
     'disabled' => 0,

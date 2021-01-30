@@ -1,8 +1,10 @@
 @props([
     'caption' => 'Dropdown',
-    'captionStyle'=> 'relative focus:outline-none text-white font-medium py-1 px-2 rounded mt-1 sm:mt-0 w-full sm:ml-2 cursor-pointer opacity-75 hover:bg-gray-800 hover:opacity-100 active:opacity-100 active:bg-gray-700'
+    'captionStyle'=> 'relative focus:outline-none text-white font-medium py-1 px-2 rounded mt-1 sm:mt-0 w-full sm:ml-2 cursor-pointer opacity-75 hover:bg-gray-800 hover:opacity-100 active:opacity-100 active:bg-gray-700 text-left sm:text-center'
 ])
-<div class="relative" x-data="{ open: false }">
+<div {{ $attributes->merge([
+    'class' => 'relative'
+]) }} x-data="{ open: false }">
     
     {{-- Button --}}
     <button @@click="open = true" class="{{ $captionStyle }}" >

@@ -17,7 +17,6 @@
                 </x-dropdown-item>
             </form>
         </x-dropdown>
-
         @endauth
     </x-top-header>
         
