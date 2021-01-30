@@ -26,7 +26,8 @@ Route::redirect('home', app('locale')->getLocale() . '/home');
 Route::group([
     'prefix' => '{locale?}',
     'where' => ['locale' => '[a-z]{2}'],
-    'middleware' => ['setDefaultLocaleURL', 'setLocale']
+    'middleware' => ['setLocale']
+    // 'middleware' => ['setDefaultLocaleURL', 'setLocale']
 ], function () {
     
     Route::get('/', function () {

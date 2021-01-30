@@ -28,6 +28,7 @@ class SetLocale
     public function handle(Request $request, Closure $next)
     {
         $uriLocale = $this->locale->inURL();
+        
         $estimatedLocale = $this->locale->getLocale();
 
         if ($uriLocale !== $estimatedLocale) {
