@@ -7,13 +7,13 @@
         @auth
         <x-dropdown>
             <x-slot name="caption">
-                Logos
+                {{ __('articles.articles') }}
             </x-slot>
                 <x-dropdown-item href="{{ route('logos') }}" >
-                    Crear
+                    Logos
                 </x-dropdown-item>
                 <x-dropdown-item href="{{ route('articles.mine') }}">
-                    Mis Artículos
+                    {{ __('articles.my') }}
                 </x-dropdown-item>
             </form>
         </x-dropdown>

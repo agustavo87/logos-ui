@@ -3,7 +3,7 @@ title="Mostrar Artículos"
 >
 <x-container>
   <x-main-heading>
-    Artículos de {{ $user->name}}
+    {{ __('articles.by', ['name' => $user->name]) }}
   </x-main-heading>
 
   Crear Artículo
