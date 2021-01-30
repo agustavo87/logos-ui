@@ -12,7 +12,7 @@
     </button>
 
     {{-- Dropdown --}}
-    <div @@click.away="open = false" x-show.transition="open" x-cloak class="relative mt-2 py-2 bg-gray-800 flex-col rounded-lg sm:absolute sm:bg-white sm:shadow-xl">
+    <div @@click.away="open = false" x-show.transition="open" x-cloak class="relative mt-2 py-2 bg-gray-800 flex flex-col rounded-lg sm:absolute sm:bg-white sm:shadow-xl">
         {{ $slot }}
     </div>
 
