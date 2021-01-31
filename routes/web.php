@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     UserController,
     LocaleController,
 };
+use App\Logos\Locale;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,10 @@ Route::group([
     'middleware' => ['setLocale']
     // 'middleware' => ['setDefaultLocaleURL', 'setLocale']
 ], function () {
+
+    Route::get('test-locale', function(Request $request, Locale $locale) {
+        return $locale->getBestAvailableLocaleFromHTTP() ?? 'naranja';
+    });
     
     Route::get('/', function () {
         return view('landing');

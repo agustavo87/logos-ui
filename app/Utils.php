@@ -20,6 +20,17 @@ class Utils
     }
 
     /**
+     * Trim each element of an array
+     * 
+     * @param string[] $array
+     * @return string[]
+     */
+    public static function array_trim(array $array)
+    {
+        return array_map(fn($x) => trim($x), $array);
+    }
+
+    /**
      * Filter array and returns values ordered.
      *
      * @param string $path
