@@ -13,8 +13,8 @@ class LocaleTest extends TestCase
     protected static string $languageA = 'es';
     protected static string $languageB = 'en';
     protected static $userId;
-    public static bool $verbose = true;
-    public static bool $debug = true;
+    public static bool $verbose = false;
+    public static bool $debug = false;
 
     protected User $user;
     protected Locale $locale;
@@ -140,11 +140,51 @@ class LocaleTest extends TestCase
         $this->assertTrue(is_callable([$locale, 'validateSupportedLanguage']));
     }
 
+    /**
+     * Redirige solicitudes a la raiz del host a lenguaje por defecto
+     *
+     * @return void
+     */
+    public function testRedirectsHostRootRequest(): void
+    {
+
+        $response = $this->withHeader('Accept-Language', '')
+                        ->get('/');
+        
+        $response->assertRedirect('/' . config('locale.languages.default'));
+    }
+
     public function testRedirigeHomeSinLocale(): void
     {
         $response = $this->get('/home');
-        $response->assertRedirect();
+        $route = route('home');
+        $this->log($route);
+        $response->assertRedirect($route);
         $this->logStatus($response, 302);
+    }
+
+    /**
+     * Redireccionamiento de acuerdo a HTTP 'Accept-Language'
+     *
+     * @return void
+     */
+    public function testRedirectsToHttpPreference(): void
+    {
+        $language = 'en';
+
+        $response = $this->withHeader('Accept-Language', $language)
+                            ->get('/');
+        
+        $response->assertRedirect('/' . $language);
+        $response->assertHeader('Content-Language', $language);
+        $response->assertHeader('Vary', 'Accept-Language');
+        
+        $language = 'es';
+
+        $response = $this->withHeader('Accept-Language', $language)
+                            ->get('/');
+        
+        $response->assertRedirect('/' . $language);
     }
 
     /**
