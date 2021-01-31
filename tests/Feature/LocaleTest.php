@@ -71,6 +71,115 @@ class LocaleTest extends TestCase
     }
 
     /**
+     * Obtiene el lenguaje en la URI.
+     *
+     * @return void
+     */
+    public function testIdentificaLenguageEnUri(): void
+    {
+        $testLanguage = 'es';
+        $response = $this->get('/' . $testLanguage);
+
+        $locale = $this->app->make('locale');
+        $URL_Language = $locale->inURL();
+        $this->assertEquals($URL_Language, $testLanguage);
+    }
+
+    /**
+     * Reemplaza el lenguaje en la Path que se le pasa
+     *
+     * @return void
+     */
+    public function testRemplazaLenguajeEnPath(): void
+    {
+        $path = route('home', 'es', false);
+        $language = 'en';
+        $newPath = $this->locale->replaceLanguageInPath($path, $language);
+        $this->log($path);
+        $this->log($newPath);
+        $this->assertEquals($newPath, route('home', $language, false));
+
+        $path = '/';
+        $newPath = $this->locale->replaceLanguageInPath($path, $language);
+        $this->log($path);
+        $this->log($newPath);
+        $this->assertEquals($path, $newPath);
+    }
+
+    /**
+     * Reemplaza el lenguaje en la URI Actual.
+     *
+     * @return void
+     */
+    public function testRemplazaLenguajeEnUriActual(): void
+    {
+        $originalLanguage = 'es';
+        $replaceLanguage = 'en';
+        $originalRoute = route('home', ['locale' => $originalLanguage], false);
+        $this->log($originalRoute);
+        $response = $this->get($originalRoute);
+
+        $locale = $this->app->make('locale');
+        $newRoute = $locale->replaceLocaleInCurrentURI($replaceLanguage);
+        $this->log($newRoute);
+        $this->assertNotEquals($originalRoute, $newRoute);
+
+        $lenguajeEnNuevaRuta = Utils::segments($newRoute)[0];
+        $this->assertEquals($replaceLanguage, $lenguajeEnNuevaRuta);
+    }
+
+    /**
+     * The validators are callable.
+     *
+     * @return void
+     */
+    public function testValidatorsAreCallable(): void
+    {
+        $locale = $this->app->make('locale');
+        $this->assertTrue(is_callable([$locale, 'validateValidLanguage']));
+        $this->assertTrue(is_callable([$locale, 'validateSupportedLanguage']));
+    }
+
+    public function testRedirigeHomeSinLocale(): void
+    {
+        $response = $this->get('/home');
+        $response->assertRedirect();
+        $this->logStatus($response, 302);
+    }
+
+    /**
+     * El invitado es redireccionado de acuerdo al lenguaje configurado en su
+     * sesión.
+     *
+     * @return void
+     */
+    public function testRedirectsToSessionLanguage(): void
+    {
+        $language = self::$languageA;
+
+        $response = $this->withSession(['language' => $language])
+                            ->get('/');
+        
+        $response->assertRedirect();
+        $response->assertLocation('/' . $language);
+    }
+
+    /**
+     * El usuario es redireccionado de acuerdo a su lenguaje configurado.
+     *
+     * @return void
+     */
+    public function testRedirectsToUserLanguage(): void
+    {
+        $language = $this->user->language;
+
+        $response = $this->actingAs($this->user)
+                         ->get('/');
+
+        $response->assertRedirect();
+        $response->assertLocation('/' . $language);
+    }
+    /**
      * Actualiza el Lenguaje del usuario mediante una solicitud JSON.
      *
      * @return void
@@ -133,7 +242,6 @@ class LocaleTest extends TestCase
         $response->assertSessionHas('language', $otherLanguage);
     }
 
-
     /**
      * Actualiza el Lenguaje del usuario mediante una solicitud HTTP Standard.
      *
@@ -169,18 +277,7 @@ class LocaleTest extends TestCase
         $this->ok('ok');
     }
 
-    /**
-     * The validators are callable.
-     *
-     * @return void
-     */
-    public function testValidatorsAreCallable(): void
-    {
-        $locale = $this->app->make('locale');
-        $this->assertTrue(is_callable([$locale, 'validateValidLanguage']));
-        $this->assertTrue(is_callable([$locale, 'validateSupportedLanguage']));
-    }
-
+  
     /**
      * Valida que el lenguaje tenga un formato válido y/o sea soportado por
      * la aplicación.
@@ -217,101 +314,5 @@ class LocaleTest extends TestCase
         $this->assertEquals($content->errors->language[0], __('validation.language_supported'));
     }
 
-    /**
-     * El usuario es redireccionado de acuerdo a su lenguaje configurado.
-     *
-     * @return void
-     */
-    public function testRedirectsToUserLanguage(): void
-    {
-        $language = $this->user->language;
-
-        $response = $this->actingAs($this->user)
-                         ->get('/');
-
-        $response->assertRedirect();
-        $response->assertLocation('/' . $language);
-    }
-
-    /**
-     * El invitado es redireccionado de acuerdo al lenguaje configurado en su
-     * sesión.
-     *
-     * @return void
-     */
-    public function testRedirectsToSessionLanguage(): void
-    {
-        $language = self::$languageA;
-
-        $response = $this->withSession(['language' => $language])
-                            ->get('/');
-        
-        $response->assertRedirect();
-        $response->assertLocation('/' . $language);
-    }
-
-    /**
-     * Obtiene el lenguaje en la URI.
-     *
-     * @return void
-     */
-    public function testIdentificaLenguageEnUri(): void
-    {
-        $testLanguage = 'es';
-        $response = $this->get('/' . $testLanguage);
-
-        $locale = $this->app->make('locale');
-        $URL_Language = $locale->inURL();
-        $this->assertEquals($URL_Language, $testLanguage);
-    }
-
-    /**
-     * Reemplaza el lenguaje en la URI Actual.
-     *
-     * @return void
-     */
-    public function testRemplazaLenguajeEnUriActual(): void
-    {
-        $originalLanguage = 'es';
-        $replaceLanguage = 'en';
-        $originalRoute = route('home', ['locale' => $originalLanguage], false);
-        $this->log($originalRoute);
-        $response = $this->get($originalRoute);
-
-        $locale = $this->app->make('locale');
-        $newRoute = $locale->replaceLocaleInCurrentURI($replaceLanguage);
-        $this->log($newRoute);
-        $this->assertNotEquals($originalRoute, $newRoute);
-
-        $lenguajeEnNuevaRuta = Utils::segments($newRoute)[0];
-        $this->assertEquals($replaceLanguage, $lenguajeEnNuevaRuta);
-    }
-
-    /**
-     * Reemplaza el lenguaje en la Path que se le pasa
-     *
-     * @return void
-     */
-    public function testRemplazaLenguajeEnPath(): void
-    {
-        $path = route('home', 'es', false);
-        $language = 'en';
-        $newPath = $this->locale->replaceLanguageInPath($path, $language);
-        $this->log($path);
-        $this->log($newPath);
-        $this->assertEquals($newPath, route('home', $language, false));
-
-        $path = '/';
-        $newPath = $this->locale->replaceLanguageInPath($path, $language);
-        $this->log($path);
-        $this->log($newPath);
-        $this->assertEquals($path, $newPath);
-    }
-
-    public function testRedirigeHomeSinLocale(): void
-    {
-        $response = $this->get('/home');
-        $this->logStatus($response, 302);
-    }
 
 }

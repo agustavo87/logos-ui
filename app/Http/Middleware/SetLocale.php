@@ -44,7 +44,6 @@ class SetLocale
         $response = $next($request);
 
         $response->header('Content-Language', $uriLocale);
-            // ->header('Vary', 'Accept-Language');
 
         return $response;
     }

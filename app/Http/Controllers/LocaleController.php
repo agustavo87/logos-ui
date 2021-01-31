@@ -20,6 +20,7 @@ class LocaleController extends Controller
     /** @todo agregar autorización */
     public function update(Request $request)
     {
+        // Parte de esta lógica podría ir a la clase locale
         $data = $request->validate([
             "language" => ["bail", "required", 'language_valid', 'language_supported']
         ]);
