@@ -32,11 +32,26 @@ class SetLocale
         $estimatedLocale = $this->locale->getLocale();
 
         if ($uriLocale !== $estimatedLocale) {
-            return redirect($this->locale->replaceLocaleInCurrentURI($estimatedLocale));
+            $response = redirect($this->locale->replaceLocaleInCurrentURI($estimatedLocale))
+                            ->header('Content-Language', $estimatedLocale);
+            if ($this->locale->HTTPlanguageConsidered) $response->header('Vary', 'Accept-Language');
+            
+            return $response;
         }
         
         app()->setLocale($uriLocale);
-        return $next($request);
+
+        $response = $next($request);
+
+        $response->header('Content-Language', $uriLocale);
+            // ->header('Vary', 'Accept-Language');
+
+        return $response;
+    }
+
+    public function setLocaleHeaders(Request $request, string $locale)
+    {
+        
     }
 
 }

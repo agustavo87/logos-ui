@@ -13,6 +13,8 @@ class Locale
 
     public $langsSupported;
 
+    public $HTTPlanguageConsidered = false;
+
     public function __construct()
     {
         $this->langsSupported = config('locale.languages.supported');
@@ -106,6 +108,7 @@ class Locale
         } else if ($inUri = $this->getSupportedUriLocale()) {
             return $inUri;
         } else if ($inHTTP = $this->getBestAvailableLocaleFromHTTP()) {
+            $this->HTTPlanguageConsidered = true;
             return $inHTTP['language'];
         }
         return config('locale.languages.default');
