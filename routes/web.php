@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     AuthController,
     UserController,
     LocaleController,
+    SourceController,
 };
 use App\Logos\Locale;
 
@@ -105,6 +106,14 @@ Route::group([
    
     Route::view('logos', 'logos.create')
         ->name('logos');
+
+    Route::group([
+        'prefix' => '/sources',
+        'as' => 'sources.'
+    ], function() {
+        Route::get('/', [SourceController::class, 'index'])->name('index');
+        Route::get('/{source}/edit', [SourceController::class, 'edit'])->name('edit');
+    });
 
 
 });

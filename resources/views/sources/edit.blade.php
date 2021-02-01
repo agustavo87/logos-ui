@@ -1,12 +1,10 @@
 <x-layout.default
-title="Mostrar Artículos"
+title="Editar Fuentes"
 >
 <x-container>
   <x-main-heading>
-    Mostrar Artículos
+    Editar Fuente: {{ $source->id .':'. $source->key}}
   </x-main-heading>
-
-  Crear Artículo
 
 
 </x-container>

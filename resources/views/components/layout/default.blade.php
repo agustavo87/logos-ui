@@ -15,6 +15,9 @@
                 <x-dropdown-item href="{{ route('articles.mine') }}">
                     {{ __('articles.my') }}
                 </x-dropdown-item>
+                <x-dropdown-item href="{{ route('sources.index') }}">
+                    Fuentes
+                </x-dropdown-item>
             </form>
         </x-dropdown>
         @endauth

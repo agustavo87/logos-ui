@@ -14,7 +14,7 @@ class SourceController extends Controller
      */
     public function index()
     {
-        //
+        return view('sources.index');
     }
 
     /**
@@ -60,5 +60,16 @@ class SourceController extends Controller
     public function destroy(Source $source)
     {
         //
+    }
+    
+    /**
+     * Show the view to edit the source
+     *
+     * @param  \App\Models\Source  $source
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($lang, Source $source)
+    {
+        return view('sources.edit', ['source' => $source]);
     }
 }
