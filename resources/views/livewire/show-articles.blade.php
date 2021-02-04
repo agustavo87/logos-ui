@@ -15,8 +15,8 @@
             <thead class="bg-gray-800 text-white">
                 <tr>
                   <th class="text-left py-3 px-4 w-2 uppercase font-semibold text-sm">id</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm" >title</th>
-                  <th class="text-center py-3 px-4 uppercase font-semibold text-sm" >Opciones</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm" >{{ __('articles.title') }}</th>
+                  <th class="text-center py-3 px-4 uppercase font-semibold text-sm" > {{ ucfirst(__('ui.options')) }} </th>
                 </tr>
             </thead>
             <tbody class="text-gray-700">
@@ -26,7 +26,7 @@
                     <td class="text-left py-3 px-4">{{ $article->title }}</td>
                     <td class="text-left py-3 px-4" >
                         <div class="flex flex-row justify-center align-middle">
-                            <x-link base="" active="" class="hover:text-blue-500 pb-3 h-1" href="{{ route('articles.show', ['article' => $article->id]) }}">
+                            <x-link base="" active=""  class="hover:text-blue-500 pb-3 h-1" href="{{ route('articles.show', ['article' => $article->id]) }}">
                                 <svg class="h-5 w-5 fill-current"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                                     <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
@@ -46,7 +46,7 @@
                                 accept: () => $wire.destroy(article)
                               })
                             "> 
-                                <svg class="h-5 w-5 fill-current"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <svg class="h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                                 </svg>
                             </x-link>
@@ -65,12 +65,12 @@
     <div wire:loading>
         <div   class=" flex items-center content-center mt-1" >
             <span class="ring-loader-xs"></span>
-            <span class=" ml-2 text-xs text-gray-600">Procesando...</span>
+            <span class=" ml-2 text-xs text-gray-600">{{ ucfirst(__('ui.processing')) }}...</span>
         </div>
     </div>
 
-<x-modal.alert name="article-delete" title="Borrar artículo">
-    ¿Estas seguro que deseas borrar este artículo?
+<x-modal.alert name="article-delete" title="{{ ucfirst(__('articles.delete')) }}">
+    {{ __('articles.delete-warn') }}
 </x-modal.alert>
 
 

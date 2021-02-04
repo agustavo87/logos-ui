@@ -13,12 +13,12 @@
         <table class=" table-fixed min-w-full bg-white stripped">
             <thead class="bg-gray-800 text-white">
                 <tr>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Clave</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm" >Año</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Título</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Editorial</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Ciudad</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm"></th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.key')) }}</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm" >{{ ucfirst(__('sources.year')) }}</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.title')) }}</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.editorial')) }}</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.city')) }}</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('ui.options')) }}</th>
                 </tr>
             </thead>
             <tbody class="text-gray-700">
@@ -67,9 +67,8 @@
         </div>
     </div>
 
-<x-modal.alert name="source-delete" title="Borrar fuente">
-  ¿Estas seguro que desas borrar esta fuente? La misma desaparecerá también de todos los
-    documentos en la que se encuentre inserta.
+<x-modal.alert name="source-delete" title="{{ ucfirst(__('sources.delete')) }}">
+  {{ __('sources.delete-warn') }}
 </x-modal.alert>
 
 </div>
