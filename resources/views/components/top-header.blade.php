@@ -9,9 +9,10 @@
 >
     <div
     class="flex justify-between items-center px-4 py-3 sm:p-0"
-    >
+    > 
+        <x-svg.logo class="h-10 py-2 fill-current text-blue-200" />
         <!-- Logo -->
-        <img class="h-8" src="/images/logo-cuadrado.png" alt="Mandala">
+        {{-- <img class="h-8" src="/images/logo-cuadrado.png" alt="Mandala"> --}}
     
         <!-- xs Menú Button -->
         <div class="sm:hidden" >
