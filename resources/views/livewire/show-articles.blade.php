@@ -1,5 +1,6 @@
 {{-- <div class="h-96 flex flex-col justify-between"> --}}
 <div>
+
     {{-- <ul>
         @foreach ($articles as $article)
             <li class=" list-disc ml-2">{{$article->title}} <x-link href="{{ route('articles.show', ['article' => $article->id]) }}">Ver</x-link> </li>
@@ -56,13 +57,22 @@
                 @endforeach
             </tbody>
         </table>
+        
         <div class="rounded-b px-1 py-1 border-t ">
             {{ $articles->links() }}
+        </div>
+    </div>
+    <div wire:loading>
+        <div   class=" flex items-center content-center mt-1" >
+            <span class="ring-loader-xs"></span>
+            <span class=" ml-2 text-xs text-gray-600">Procesando...</span>
         </div>
     </div>
 
 <x-modal.alert name="article-delete" title="Borrar artículo">
     ¿Estas seguro que deseas borrar este artículo?
 </x-modal.alert>
+
+
 
 </div>

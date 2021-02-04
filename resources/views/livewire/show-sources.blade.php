@@ -60,6 +60,12 @@
             {{ $sources->links() }}
         </div>
     </div>
+    <div wire:loading>
+        <div   class=" flex items-center content-center mt-1" >
+            <span class="ring-loader-xs"></span>
+            <span class=" ml-2 text-xs text-gray-600">Procesando...</span>
+        </div>
+    </div>
 
 <x-modal.alert name="source-delete" title="Borrar fuente">
   ¿Estas seguro que desas borrar esta fuente? La misma desaparecerá también de todos los
