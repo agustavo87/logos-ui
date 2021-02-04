@@ -119,4 +119,3 @@ Route::group([
 });
 
 Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
-

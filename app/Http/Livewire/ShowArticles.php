@@ -19,4 +19,9 @@ class ShowArticles extends Component
             'articles' =>  Article::where('user_id', $this->userId)->paginate(8)
         ]);
     }
+
+    public function destroy(Article $article)
+    {
+        $article->delete();
+    }
 }
