@@ -26,6 +26,14 @@ class UserSeeder extends Seeder
             ->count(7)
             ->create();
 
+        $me = $users->first();
+        $me->email = 'agustavo87@gmail.com';
+        $me->save();
+
+        $doe = $users[1];
+        $doe->email = 'doe.j@example.com';
+        $doe->save();
+
         $this->relateArticles($users);
     }
 
