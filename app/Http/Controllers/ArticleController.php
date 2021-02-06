@@ -54,7 +54,10 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        return view('articles.create');
+        return view('articles.edit', [
+            'title' => "Crear Artículo",
+            'id' => null
+        ]);
     }
 
     /**
@@ -116,9 +119,12 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function edit(Article $article)
+    public function edit($lang, Article $article)
     {
-        //
+        return view('articles.edit', [
+            'title' => "Editar artículo",
+            'id' => $article->id
+        ]);
     }
 
     /**

@@ -9,7 +9,6 @@ use App\Http\Controllers\{
     LocaleController,
     SourceController,
 };
-use App\Logos\Locale;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +94,7 @@ Route::group([
         'prefix' => '/articles',
         'as' => 'articles.'
     ], function () {
+        Route::get('/create', [ArticleController::class, 'create'])->name('create');
         Route::get('/by/{user}', [ArticleController::class, 'indexBy'])
             ->name('by');
         Route::get('/mine', [ArticleController::class, 'mine'])
@@ -102,10 +102,12 @@ Route::group([
             ->name('mine');
         Route::get('/{article}', [ArticleController::class, 'show'])
             ->name('show');
+        Route::get('/{article}/edit', [ArticleController::class, 'edit'])->name('edit');
     });
    
-    Route::view('logos', 'logos.create')
-        ->name('logos');
+    // Route::get('logos', 'logos.create')
+    //     ->name('logos');
+    // Route::get('logos/{article}', )
 
     Route::group([
         'prefix' => '/sources',
@@ -119,3 +121,12 @@ Route::group([
 });
 
 Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
+
+
+/*
+|--------------------------------------------------------------------------
+| Test Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::view('livewire', 'livewire');

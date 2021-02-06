@@ -8,8 +8,8 @@
             <x-slot name="caption">
                 {{ __('articles.articles') }}
             </x-slot>
-                <x-dropdown-item href="{{ route('logos') }}" >
-                    Logos
+                <x-dropdown-item href="{{ route('articles.create') }}" >
+                    {{ __('articles.new') }}
                 </x-dropdown-item>
                 <x-dropdown-item href="{{ route('articles.mine') }}">
                     {{ __('articles.my') }}

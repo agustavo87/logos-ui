@@ -1,6 +1,7 @@
 <?php
 return [
     'articles' => 'Articles',
+    'new' => 'New',
     'my' => 'My articles',
     'create' => 'Create',
     'by' => 'Articles by :name',

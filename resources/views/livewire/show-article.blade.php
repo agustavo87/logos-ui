@@ -55,7 +55,14 @@
             font-size: 1.5rem;
             font-weight: 500;
             line-height: 1em;
-            margin-bottom: 1rem;
+            margin: 1rem auto;
+        }
+
+        .show-article h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1em;
+            margin: 1rem auto;
         }
 
         .show-article footer {
