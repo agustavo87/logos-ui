@@ -23,3 +23,88 @@ html {
 .ql-editor .citation::after {
     content: attr(data-n);
 }
+
+
+.logos #sidebar-controls {
+    display: none;
+    position: absolute;
+    z-index: 5;
+    
+}
+
+.logos #sidebar-controls button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.logos #sidebar-controls .h-icon {
+    background-color: #444e;
+    color: #ccc;
+    border-radius: 50%;
+    padding: 7px;
+    width: 20px;
+    height: 20px;
+    box-sizing: content-box;
+}
+.logos #sidebar-controls .h-icon:hover {
+    color: #fff;
+}
+.logos #sidebar-controls .controls {
+  display: none; 
+  margin-left: 5px;
+}
+.logos #sidebar-controls .controls button {
+  margin-left: 13px;
+}
+
+.logos #sidebar-controls #show-controls .h-icon {
+  transition: all 50ms;
+  transform-origin: center;
+  color: #4449;
+  background-color: transparent;
+}
+
+.logos #sidebar-controls.active #show-controls .h-icon {
+    margin: auto 0;
+    background-color: #444e;
+    color:#ccc;
+    transform: rotate(45deg);
+}
+
+.logos #sidebar-controls #show-controls .h-icon:hover {
+  color:white;
+  background-color: #444e;
+}
+
+.logos #sidebar-controls.active .controls {
+  display: inline-block;
+}
+
+
+.logos #sidebar-controls.active #show-controls .h-icon:hover {
+  color:white;
+}
+
+.logos #sidebar-controls button {
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    text-align: center;
+}
+.logos #sidebar-controls button:active, #sidebar-controls button:focus {
+    outline: none;  
+}
+
+.logos #toolbar .ql-formats .lg-btn {
+  color:#fffa;
+}
+
+.logos #toolbar .ql-formats .lg-btn:hover {
+  color:#ffff;
+}
+
+.logos #toolbar .ql-formats .lg-btn:focus {
+  outline: none;
+}
