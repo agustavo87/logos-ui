@@ -3,6 +3,7 @@
 
 @push('head-script')
 <link rel="stylesheet" href="{{ asset('css/logos.css') }}">
+<script src="{{ asset('js/logos.js') }}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" defer></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
 <style>
@@ -91,7 +92,6 @@
 @endpush
 
 @push('foot-script')
-<script src="{{ asset('js/logos.js') }}"></script>
 
 <script>
 

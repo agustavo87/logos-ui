@@ -3,10 +3,11 @@
     'active' => 'hover:bg-gray-700 sm:hover:bg-indigo-500 hover:text-white',
     'inactive' => 'font-medium cursor-default',
     'disabled' => 0,
-    'button' => 0
+    'button' => 0,
+    'dontDisable' => false
 ])
     <x-link
-        :base=$base :active=$active :inactive=$inactive :disabled=$disabled :button=$button
+        :base=$base :active=$active :inactive=$inactive :disabled=$disabled :button=$button :dont-disable="$dontDisable"
         {{ $attributes }}
     >
         {{ $slot }}

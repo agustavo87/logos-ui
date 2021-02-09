@@ -17,6 +17,7 @@
         "browser-sync-webpack-plugin": "^2.3.0",
         "dsm": "github:agustavo87/dsm#quill-2",
         "laravel-mix": "^6.0.10",
+        "lodash": "^4.17.20",
         "postcss": "^8.2.4",
         "quill": "github:agustavo87/quill#dist",
         "tailwindcss": "^2.0.2",

@@ -22,4 +22,4 @@ mix
     .css('resources/css/logos.css', 'public/css')
     .copyDirectory('resources/images/copy', 'public/images' )
     .sourceMaps()
-    .browserSync('localhost:8000');
+    .browserSync('test.arete.com');
