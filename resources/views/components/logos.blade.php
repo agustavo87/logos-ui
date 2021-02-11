@@ -10,16 +10,36 @@
 
 @push('foot-script')
 <script>
+
+const LogosUI = {
+    eventCall: (name, callback) => new CustomEvent(name, {
+      detail: {
+        resolve:callback
+      }
+    }),
+    getSource: function () {
+      return new Promise((resolve, reject) => {
+        window.dispatchEvent(this.eventCall('get-source', resolve))
+      })
+    }
+  }
+
   Logos.init({
     initialDelta: @json($initialDelta),
     sideControls: '#sidebar-controls',
     quillContainer: '#quill-container',
-    btnShowSideControls: '#show-controls'
+    btnShowSideControls: '#show-controls',
+    addCitationHandler: LogosUI.getHandler
   });
+// hola
+
+// window.addEventListener('get-citation', e => {
+//   e.detail.resolve('pete!')
+// })
 </script>
 @endpush
 
-<div wire:ignore class="logos">
+<div wire:ignore class="logos" x-cloak>
   <div id="toolbar">
     <span class="ql-formats">
         <select class="ql-header">
@@ -88,6 +108,16 @@
   
       </div>
   </div>
+  <div x-data>
+    <button 
+    @click="LogosUI.getSource().then(r => console.log(r))"
+    class="px-4 py-2 rounded bg-gray-800 text-white"
+    >Seleccionar Fuente</button>
+  </div>
+  <livewire:select-source />
+
+  
+
 </div>
 
 

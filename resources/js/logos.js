@@ -16,17 +16,10 @@ const Logos = {
     },
     Citations: null,
 
-    // events: {
-    //   quillInputEvent: 
-    // },
-
     ui: {
         sideControls: null,
         quillContainer: null,
         btnShowSideControls: null
-        // sideControls: document.querySelector('#sidebar-controls'),
-        // quillContainer: document.querySelector('#quill-container'),
-        // btnShowSideControls: document.querySelector('#show-controls')
     },
 
     initialDelta: null,
@@ -140,11 +133,7 @@ const Logos = {
         }
     }
 };
-
 window.Logos = Logos;
-
-
-
 
 
 console.log('logos.js cargado')
