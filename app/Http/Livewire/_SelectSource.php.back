@@ -8,14 +8,15 @@ use Livewire\WithPagination;
 
 class SelectSource extends Component
 {
-    use WithPagination;
+
 
     public $listen = 'get-source';
 
     public function render()
     {
+
         return view('livewire.select-source', [
-            'sources' => Source::paginate(5)
+            'sources' =>  Source::paginate(4)
         ]);
     }
 }

@@ -108,9 +108,13 @@ const LogosUI = {
   
       </div>
   </div>
-  <div x-data>
+  <div x-data="{
+      call: () => {
+        LogosUI.getSource().then(r => console.log(r))
+      }
+    }">
     <button 
-    @click="LogosUI.getSource().then(r => console.log(r))"
+    @click="call"
     class="px-4 py-2 rounded bg-gray-800 text-white"
     >Seleccionar Fuente</button>
   </div>

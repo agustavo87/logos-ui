@@ -42,7 +42,6 @@
                         this.meta = {key: 'value'};
                         this.transactionStatus = 'Modificado'
                         this.save()
-                            
                     },
                     simpleInput: function () {
                         this.transactionStatus = 'Modificado'
