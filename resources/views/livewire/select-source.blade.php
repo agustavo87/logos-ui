@@ -8,9 +8,9 @@
         {{-- modal container --}}
         <div class="relative max-w-lg w-full px-2 py-2">
             {{-- modal --}}
-            <div class="relative bg-white rounded-xl w-full shadow-xl"  x-show="display" @click.away="cancel" >
+            <div class=" relative bg-white rounded-xl w-full shadow-xl"  x-show="display" @click.away="cancel" >
                 <div class="px-5 pt-6">
-                    <table class=" w-full table-fixed border border-separate border-gray-300 rounded-t-md">
+                    <table class="w-full table-fixed border border-separate border-gray-300 rounded-t-md">
                         <thead>
                             <tr class="ml-2">
                                 <th class="w-2/6">
@@ -21,9 +21,10 @@
                                                 </svg>
                                             </label >
                                             <input type="text" autocomplete="off" 
-                                                id="key"
+                                                id="key" x-ref="key"
                                                 class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm w-0"
                                                 placeholder="key"
+                                                wire:model.debounce.500ms="searchFields.key"
                                                 >
                                         </div>
                                 </th>
@@ -38,6 +39,7 @@
                                             id="title" 
                                             class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm  w-0"
                                             placeholder="title"
+                                            wire:model.debounce.500ms="searchFields.title"
                                     </div>
                                 </th>
                             </tr>
@@ -57,7 +59,7 @@
                     </table>
                     {{-- pagination --}}
                     <div class="px-1">
-                        @if ($sources->hasPages())
+                        @if ($sources->hasPages() && $sources->count())
                             <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
                                 <span>
                                     {{-- Previous Page Link --}}
@@ -72,9 +74,13 @@
                                     @endif
                                 </span>
 
-                                <span class="text-sm item-center">
+
+                                @if ($sources->count())
+                                <span class="text-xs leading-5 tracking-widest font-medium text-gray-600">
                                     {{ "{$sources->currentPage()}:{$sources->lastPage()}" }}
                                 </span>
+                                @endif
+                                
                     
                                 <span>
                                     {{-- Next Page Link --}}
@@ -113,8 +119,9 @@
                respond: a => console.log(a),
                handleInvocation: function (e) {
                    this.respond = e.detail.resolve
-                   
                    this.display = true;
+                   this.$refs.key.value = '';
+                   this.$nextTick(() => this.$refs.key.focus());
                },
                solve: function () {
                    this.display = false;
