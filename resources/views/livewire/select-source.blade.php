@@ -1,15 +1,16 @@
 <div x-data="modalCitation()" 
     x-show="display" x-on:{{ $listen }}.window="handleInvocation"
+    x-on:keydown.escape.window="handleEscape"
     class="fixed z-10 inset-0 flex flex-col justify-center items-center">
 
     <div class="absolute inset-0 bg-gray-700 opacity-40"></div>
 
     {{-- modal container --}}
-    <template x-if="showModal">
-        <div class="relative max-w-lg w-full px-2 py-2">
+    {{-- <template x-if="showModal"> --}}
+        <div class="relative max-w-lg w-full px-2 py-2" x-show="showModal">
             {{-- modal --}}
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
-             @click.away="cancel" x-on:keydown.escape.window="cancel">
+             @click.away="cancel">
                 <div class="px-5 pt-6">
                     <table class="w-full table-fixed border border-separate border-gray-300 rounded-t-md">
                         <thead>
@@ -104,16 +105,21 @@
                         @endif
                     </div>
                 </div>
-                <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end">
-                    <x-form.button @click="newReference" class="mr-2">Nueva</x-form.button>
-                    <x-form.button @click="solve" class="mr-2">Agregar</x-form.button>
+                <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end items-center">
+                    <button @click="newReference" title="Agregar"
+                    class="h-9 w-9 flex justify-center items-center bg-green-200 text-blue-900 rounded-full mr-2">
+                        <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                    </button>
+                    <x-form.button @click="solve" class="mr-2">Insertar</x-form.button>
                     <x-form.button @click="cancel"
                         class="bg-gray-500 font-bold py-2 px-4 rounded-lg text-white focus:outline-none hover:bg-gray-400 active:bg-gray-600"
                         replace>Cancelar</x-form.button>
                 </div>
             </div>
         </div>
-    </template>
+    {{-- </template> --}}
     <script>
         console.log(@json($sources))
     </script>
@@ -125,7 +131,7 @@
                     showModal: false,
                     ui: null, 
                     seleccionar: function (e) {
-                        console.log(e.currentTarget.dataset['key']);
+                        // console.log(e.currentTarget.dataset['key']);
                         this.selected = e.currentTarget.dataset['key']
                     },
                     respond: a => console.log(a),
@@ -167,6 +173,11 @@
                         this.$wire.resetPage();
                         this.$wire.reiniciarFields()
                         this.selected = ''
+                    },
+                    handleEscape: function () {
+                        if (this.showModal) {
+                            this.cancel();
+                        }
                     }
                 }
             }
