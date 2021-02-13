@@ -12,14 +12,15 @@
 <script>
 
 const LogosUI = {
-    eventCall: (name, callback) => new CustomEvent(name, {
+    eventCall: (name, callback, params = []) => new CustomEvent(name, {
       detail: {
-        resolve:callback
+        resolve:callback,
+        ...params
       }
     }),
-    getSource: function () {
+    dialogGet: function (name, params) {
       return new Promise((resolve, reject) => {
-        window.dispatchEvent(this.eventCall('get-source', resolve))
+        window.dispatchEvent(this.eventCall(name, resolve, params))
       })
     }
   }
@@ -109,16 +110,26 @@ const LogosUI = {
       </div>
   </div>
   <div x-data="{
-      call: () => {
-        LogosUI.getSource().then(r => console.log(r))
+      getSource: () => {
+        LogosUI.dialogGet('get-source', {ui: LogosUI}).then(r => console.log(r))
+      },
+      getEditSource: () => {
+        LogosUI.dialogGet('edit-source', {withBg: true, ui: LogosUI}).then(r => console.log(r))
       }
     }">
     <button 
-    @click="call"
+    @click="getSource"
     class="px-4 py-2 rounded bg-gray-800 text-white"
     >Seleccionar Fuente</button>
+    <button 
+    @click="getEditSource"
+    class="px-4 py-2 rounded bg-gray-800 text-white"
+    >Editar Fuente</button>
   </div>
   <livewire:select-source />
+  <livewire:edit-source />
+
+ 
 
   
 
