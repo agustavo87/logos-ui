@@ -6,6 +6,9 @@ use App\Models\Source;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+/**
+ * @todo Hacer que muestre solo las fuentes del usuario
+ */
 class SelectSource extends Component
 {
     use WithPagination;
