@@ -40,4 +40,8 @@ class SelectSource extends Component
     public function updatingSearchFields() {
         $this->resetPage();
     }
+
+    public function reiniciarFields() {
+        $this->reset(['searchFields']);
+    }
 }
