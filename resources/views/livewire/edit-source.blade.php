@@ -25,7 +25,7 @@
             <code>
                 {{ json_encode($data, JSON_PRETTY_PRINT) }}
             </code>
-            <div x-on:cambio="$wire.set('data', $event.detail)">
+            <div x-on:cambio.debounce.750ms="$wire.set('data', $event.detail)">
                 <div x-data="sourceFiller()">
                     <div>
                         <input type="hidden" x-ref="secretary">
