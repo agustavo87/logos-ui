@@ -13,6 +13,7 @@
         <table class=" table-fixed min-w-full bg-white stripped">
             <thead class="bg-gray-800 text-white">
                 <tr>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm"> ID </th>
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.key')) }}</th>
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm" >{{ ucfirst(__('sources.year')) }}</th>
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.title')) }}</th>
@@ -24,6 +25,7 @@
             <tbody class="text-gray-700">
                 @foreach ($sources as $source)
                 <tr x-data="{source: {{ $source->id }}}">
+                    <td class="text-left py-3 px-4"> {{ $source->id }}</td>
                     <td class="text-left py-3 px-4"> {{ $source->key }}</td>
                     <td class="text-left py-3 px-4">{{ $source->data['year'] }}</td>
                     <td class="text-left py-3 px-4"> {{ $source->data['title'] }}</td>

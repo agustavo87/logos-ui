@@ -120,9 +120,7 @@
             </div>
         </div>
     {{-- </template> --}}
-    <script>
-        console.log(@json($sources))
-    </script>
+
     <script>
         function modalCitation() {
                 return {
