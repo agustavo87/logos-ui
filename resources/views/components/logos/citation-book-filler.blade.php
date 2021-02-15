@@ -15,7 +15,6 @@
     <h4 class="font-medium">Libro</h4>
 
     <div class="flex flex-col items-stretch">
-        <input type="hidden" x-ref="secretary">
         <input class="border my-1 px-3 py-2"
             type="text" name="title" placeholder="title" 
             x-model="data.title"

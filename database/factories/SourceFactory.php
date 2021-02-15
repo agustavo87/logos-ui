@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Source;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SourceFactory extends Factory
@@ -23,17 +24,54 @@ class SourceFactory extends Factory
      */
     public function definition()
     {
-        $year = $this->faker->unique()->numberBetween(1970, 2021);
+        if(rand(0,1)) {
+            return $this->journalArticle();
+        } else {
+            return $this->book();
+        }
+    }
+
+    public function journalArticle()
+    {
+        $year = $this->faker->numberBetween(1980, 2021);
+
+        $name = $this->faker->firstName;
+        $key = $this->getKey($name, $year);
         
-        // $lastName = $this->faker->lastName; // by the creators relationship
-        // $name = $this->faker->firstName();
+        $title = Str::title($this->faker->sentence);
+        $journal = Str::title($this->faker->sentence);
+        $volume = $this->faker->numberBetween(1,60);
+        $issue = $this->faker->numberBetween(1,4);
+        
+
+        return [
+            'user_id' => User::factory(),
+            'key' => $key,
+            'type' => 'citation.article',
+            'schema' => '0.0.1',
+            'data' => [
+                'year' => $year,
+                'title' => $title,
+                'journal' => $journal,
+                'volume' => $volume,
+                'issue' => $issue
+            ]
+        ];
+    }
+
+    public function book()
+    {
+        $year = $this->faker->numberBetween(1930, 2021);
+        $name = $this->faker->firstName;
+        $key = $this->getKey($name, $year);
+        
         $title = Str::title($this->faker->sentence);
         $editorial = Str::title($this->faker->word);
         $city = Str::title($this->faker->city);
 
         return [
             'user_id' => User::factory(),
-            'key' => "doe$year",
+            'key' => $key,
             'type' => 'citation.book',
             'schema' => '0.0.1',
             'data' => [
@@ -43,5 +81,17 @@ class SourceFactory extends Factory
                 'city' => $city
             ]
         ];
+    }
+
+    public function getKey ($name, $year)
+    {
+        $abc = "abcdefghijkmnopqrstuvwxyz0123456789"; // soporta solo unas cuantas repeticiones.
+        $base = "{$name}{$year}";
+        $try = $base;
+        $i = 0;
+       while (DB::table('sources')->where('key', $try)->exists()) {
+           $try = $base . $abc[$i++];
+       }
+       return $try;
     }
 }

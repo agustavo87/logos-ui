@@ -9,15 +9,8 @@ class Source extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'key',
-        'data'
-    ];
+
+    protected $guarded = [];
 
     protected $casts = [
         'data' => 'array'

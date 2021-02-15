@@ -20,9 +20,9 @@ class UserSeeder extends Seeder
     {
 
         $users = User::factory()
-            ->hasArticles(30)
-            ->hasSources(6)
-            ->hasCreators(15)
+            ->hasArticles(12)
+            ->hasSources(19)
+            ->hasCreators(30)
             ->count(7)
             ->create();
 
@@ -40,7 +40,8 @@ class UserSeeder extends Seeder
     public function relateArticles($users)
     {
         foreach ($users as $i => $user) {
-        
+
+            // Relaciona las fuentes con los creadores
             $user->sources->each(function ($source, $key) use ($user) {
                 $usedCreators = [];
                 for ($i=0; $i < 2; $i++) { 
@@ -53,6 +54,7 @@ class UserSeeder extends Seeder
                 $source->save();
             });
             
+            // Relaciona los artículos con las fuentes
             $user->articles->each(function ($article, $key) use ($user) {
                 $usedSources = [];
                 for ($i=0; $i < 3; $i++) { 
