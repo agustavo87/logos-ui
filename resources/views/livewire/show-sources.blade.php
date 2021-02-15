@@ -15,10 +15,11 @@
                 <tr>
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm"> ID </th>
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.key')) }}</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm" >{{ ucfirst(__('sources.year')) }}</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm" > Representación </th>
+                  {{--<th class="text-left py-3 px-4 uppercase font-semibold text-sm" >{{ ucfirst(__('sources.year')) }}</th>
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.title')) }}</th>
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.editorial')) }}</th>
-                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.city')) }}</th>
+                  <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('sources.city')) }}</th> --}}
                   <th class="text-left py-3 px-4 uppercase font-semibold text-sm">{{ ucfirst(__('ui.options')) }}</th>
                 </tr>
             </thead>
@@ -27,10 +28,11 @@
                 <tr x-data="{source: {{ $source->id }}}">
                     <td class="text-left py-3 px-4"> {{ $source->id }}</td>
                     <td class="text-left py-3 px-4"> {{ $source->key }}</td>
-                    <td class="text-left py-3 px-4">{{ $source->data['year'] }}</td>
+                    <td class="text-left py-3 px-4"> {{ $source->render() }}</td>
+                    {{-- <td class="text-left py-3 px-4">{{ $source->data['year'] }}</td>
                     <td class="text-left py-3 px-4"> {{ $source->data['title'] }}</td>
                     <td class="text-left py-3 px-4">{{ $source->data['editorial'] }}</td>
-                    <td class="text-left py-3 px-4">{{ $source->data['city'] }}</td>
+                    <td class="text-left py-3 px-4">{{ $source->data['city'] }}</td> --}}
                     <td class="text-left py-3 px-4" >
                         <div class="flex flex-row justify-center align-middle">
                             <x-link base="" active="" class="hover:text-blue-500 " href="{{ route('sources.edit', ['source' => $source->id]) }}">

@@ -4,17 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Logos\Sources; // Luego implementarlo en el service provider de logos
 
 class Source extends Model
 {
     use HasFactory;
 
 
+    public Sources $sourceManager;
+
     protected $guarded = [];
 
     protected $casts = [
         'data' => 'array'
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->sourceManager = new Sources();
+    }
 
     /**
      * Get the user that owns the source.
@@ -38,5 +47,10 @@ class Source extends Model
     public function creators()
     {
         return $this->belongsToMany(Creator::class);
+    }
+
+    public function render()
+    {
+        return $this->sourceManager->render($this);
     }
 }
