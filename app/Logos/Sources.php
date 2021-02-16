@@ -6,7 +6,14 @@ use App\Models\Source;
 
 class Sources 
 {
-    public function render(Source $source)
+    /**
+     * Devuelve una representación estilo APA de una fuente
+     * según su tipo
+     * 
+     * @param \App\Models\Source $source
+     * @return string
+     */
+    public function render(Source $source): string
     {
         
         switch ($source->type . ':' . $source->schema) {
@@ -23,18 +30,32 @@ class Sources
         }
     }
 
-    public function renderBook($source)
+    /**
+     * Devuelve un render estilo APA fuente tipo book 
+     * esquema
+     * 
+     * @param \App\Models\Source $book
+     * @return string
+     */
+    public function renderBook($book)
     {
-        list('year' => $year, 'title' => $title, 'editorial' => $editorial, 'city' => $city) = $source->data;
-        return "{$this->renderCreatorsAPA($source->creators)} ({$year}). {$title}. {$editorial}: {$city}.";
+        list('year' => $year, 'title' => $title, 'editorial' => $editorial, 'city' => $city) = $book->data;
+        return "{$this->renderCreatorsAPA($book->creators)} ({$year}). {$title}. {$editorial}: {$city}.";
     }
 
-    public function renderArticle($source)
+    /**
+     * Devuelve un render estilo APA fuente tipo article 
+     * esquema
+     * 
+     * @param \App\Models\Source $article
+     * @return string
+     */    
+    public function renderArticle($article)
     {
         list('year' => $year, 'title' => $title, 'journal' => $journal, 'volume' => $vol, 
-            'issue' => $issue, 'firstPage' => $pageInit, 'lastPage' => $pageEnd) = $source->data;
+            'issue' => $issue, 'firstPage' => $pageInit, 'lastPage' => $pageEnd) = $article->data;
 
-        return "{$this->renderCreatorsAPA($source->creators)} ({$year}). {$title}. {$journal}, vol. {$vol}({$issue}), {$pageInit}-{$pageEnd}.";
+        return "{$this->renderCreatorsAPA($article->creators)} ({$year}). {$title}. {$journal}, vol. {$vol}({$issue}), {$pageInit}-{$pageEnd}.";
     }
 
     /**
@@ -57,8 +78,36 @@ class Sources
         return $creatorsAPA;
     }
 
-    public function renderDefault($source)
+
+    /**
+     * Devuelve un render por defecto de una fuente sin depender del 
+     * esquema
+     * 
+     * @param \App\Models\Source $source
+     * @return string
+     */
+    public function renderDefault($source): string
     {
-        return $source->data['title'];
+        $creators = $source->creators;
+        $render = $creators->count() ? $this->renderCreatorsAPA($creators) : '';
+        $render .= $source->data['year'] ? "({$source->data['year'] }). " : '';
+        $render .= $source->data['title'] ? "{$source->data['title']}." : '';
+        $render .= $render === '' ? $source->key : '';
+        return $render;
     }
+
+    /**
+     * Devuelve el nombre legible del tipo de fuente
+     * 
+     * @param \App\Models\Source $source
+     * @return string
+     */
+    public function name($source): string
+    {
+        return [
+            'citation.article' => 'Artículo',
+            'citation.book' => 'Libro'
+            ][$source->type];
+    }
+
 }

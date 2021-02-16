@@ -19,6 +19,12 @@ class SourcesTest extends TestCase
 
     public const bookRender = 'Perez, J. & Zamudio, P. (2018). La inefable levedad del ser. Sor Maria Turgencia Inc.: Málaga.';
     public const articleRender = 'Perez, J. & Zamudio, P. (2019). Efectos del automonitoreo en la ansiedad social en la escuela. Perspectiva en Trastornos de Ansiedad, vol. 13(2), 110-122.';
+    public const defaultBookRender = 'Perez, J. & Zamudio, P.(2018). La inefable levedad del ser.';
+
+    public static $articleName = "Artículo";    // son variables porque
+    public static $bookName = "Libro";          // eventualmente luego 
+                                                // pueden cambiar según idioma.
+
 
     public static $userId;
     public static $creator1Id;
@@ -156,6 +162,11 @@ class SourcesTest extends TestCase
             $this->sourceManager->render($this->book),
             self::bookRender
         );
+
+        $this->assertEquals(
+            $this->sourceManager->renderDefault($this->book),
+            self::defaultBookRender
+        );
     }
 
     /**
@@ -176,4 +187,30 @@ class SourcesTest extends TestCase
             self::bookRender
         );
     }
+
+    /**
+     * Prueba si devuelve adecuadamente el nombre legible de la fuente
+     */
+    public function testDevuelveElNombreDeLaFuente(): void
+    {
+        $this->assertEquals(
+            $this->sourceManager->name($this->article),
+            self::$articleName
+        );
+        $this->assertEquals(
+            $this->sourceManager->name($this->book),
+            self::$bookName
+        );
+
+        $this->assertEquals(
+            $this->article->name(),
+            self::$articleName
+        );
+        $this->assertEquals(
+            $this->book->name(),
+            self::$bookName
+        );
+       
+    }
+
 }

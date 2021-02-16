@@ -27,6 +27,8 @@ class Source extends Model
 
     /**
      * Get the user that owns the source.
+     * 
+     * @return \App\Models\User
      */
     public function user()
     {
@@ -35,6 +37,8 @@ class Source extends Model
 
     /**
      * The articles that belong to the role.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function articles()
     {
@@ -43,14 +47,31 @@ class Source extends Model
 
     /**
      * The creators that belong to the role.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function creators()
     {
         return $this->belongsToMany(Creator::class);
     }
 
-    public function render()
+    /**
+     * Return a string representation of the Source
+     * 
+     * @return string
+     */
+    public function render(): string
     {
         return $this->sourceManager->render($this);
+    }
+
+    /**
+     * Return a readable name of the type of the source
+     * 
+     * @return string
+     */
+    public function name(): string
+    {
+        return $this->sourceManager->name($this);
     }
 }

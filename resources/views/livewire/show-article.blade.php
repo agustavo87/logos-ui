@@ -15,16 +15,7 @@
         <h2>Referencias</h2>
         <ul class="references">
             @foreach ($article->sources as $source)
-            @php
-                $data = (object) $source->data;
-                $creators = $source->creators;
-
-                $creatorsSection = '';
-                foreach ($creators as $key => $creator) {
-                    $creatorsSection .=  ($key === 0 ? '' : ', ') . $creator->data['last_name'] .', ' . strtoupper($creator->data['name'][0]);
-                }
-            @endphp
-                <li>{!!" $creatorsSection ($data->year). <i>{$data->title}</i> {$data->city}: {$data->editorial}. "!!}</li>
+                <li>{{ $source->render() }}</li>
             @endforeach
         </ul>
         @endif

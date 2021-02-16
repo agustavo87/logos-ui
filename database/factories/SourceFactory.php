@@ -38,8 +38,8 @@ class SourceFactory extends Factory
         $name = $this->faker->firstName;
         $key = $this->getKey($name, $year);
         
-        $title = Str::title($this->faker->sentence);
-        $journal = Str::title($this->faker->sentence);
+        $title = substr(Str::title($this->faker->sentence),0,-1); // substr quita el punto final
+        $journal = substr(Str::title($this->faker->sentence),0,-1);
         $volume = $this->faker->numberBetween(1,60);
         $issue = $this->faker->numberBetween(1,4);
         $pageInit = $this->faker->numberBetween(7,488);
@@ -69,7 +69,7 @@ class SourceFactory extends Factory
         $name = $this->faker->firstName;
         $key = $this->getKey($name, $year);
         
-        $title = Str::title($this->faker->sentence);
+        $title = substr(Str::title($this->faker->sentence),0,-1);
         $editorial = Str::title($this->faker->word);
         $city = Str::title($this->faker->city);
 
