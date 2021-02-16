@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Creator;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class CreatorFactory extends Factory
 {
@@ -28,7 +28,8 @@ class CreatorFactory extends Factory
 
         return [
             'user_id' => User::factory(),
-            'key'   => Str::lower($lastName . Str::substr($name, 0, 1)),
+            'key'   => $this->getKey($name, $lastName),
+            // 'key'   => Str::lower($lastName . Str::substr($name, 0, 1)),
             'type' => 'author',
             'schema' => '0.0.1',
             'data' => [
@@ -36,5 +37,16 @@ class CreatorFactory extends Factory
                 'last_name' => $lastName
             ]
         ];
+    }
+
+    public function getKey ($name, $lastname)
+    {
+        $base = "{$name}{$lastname[0]}";
+        $try = $base;
+        $i = 0;
+       while (DB::table('creators')->where('key', $try)->exists()) {
+           $try = $base . $i++;
+       }
+       return strtolower($try);
     }
 }

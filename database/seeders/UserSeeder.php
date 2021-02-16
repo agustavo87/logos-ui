@@ -50,7 +50,8 @@ class UserSeeder extends Seeder
                     $usedCreators[] = $pickedCreator;
                     $source->creators()->attach($pickedCreator);
                 }
-                $source->key = Str::lower($usedCreators[0]->data['last_name']) . $source->data['year'];
+                // $source->key = Str::lower($usedCreators[0]->data['last_name']) . $source->data['year'];
+                $source->key = Source::factory()->getKey(Str::lower($usedCreators[0]->data['last_name']), $source->data['year']);
                 $source->save();
             });
             

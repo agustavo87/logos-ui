@@ -42,6 +42,8 @@ class SourceFactory extends Factory
         $journal = Str::title($this->faker->sentence);
         $volume = $this->faker->numberBetween(1,60);
         $issue = $this->faker->numberBetween(1,4);
+        $pageInit = $this->faker->numberBetween(7,488);
+        $length = $this->faker->numberBetween(0,20);
         
 
         return [
@@ -54,7 +56,9 @@ class SourceFactory extends Factory
                 'title' => $title,
                 'journal' => $journal,
                 'volume' => $volume,
-                'issue' => $issue
+                'issue' => $issue,
+                'firstPage' => $pageInit,
+                'lastPage' => $pageInit + $length
             ]
         ];
     }

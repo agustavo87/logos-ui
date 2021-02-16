@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use Tests\FixturableTestCase as TestCase;
 use App\Logos\Sources;
-use App\Models\Creator;
-use App\Models\Source;
-use App\Models\User;
+use App\Models\{
+    Creator,
+    Source,
+    User
+};
 
 use Illuminate\Support\Str;
 
@@ -15,13 +17,20 @@ class SourcesTest extends TestCase
     public static bool $verbose = true;
     public static bool $debug = true;
 
+    public const bookRender = 'Perez, J. & Zamudio, P. (2018). La inefable levedad del ser. Sor Maria Turgencia Inc.: Málaga.';
+    public const articleRender = 'Perez, J. & Zamudio, P. (2019). Efectos del automonitoreo en la ansiedad social en la escuela. Perspectiva en Trastornos de Ansiedad, vol. 13(2), 110-122.';
+
     public static $userId;
-    public static $creatorId;
-    public static $sourceId;
+    public static $creator1Id;
+    public static $creator2Id;
+    public static $bookId;
+    public static $articleId;
 
     public User $user;
-    public Creator $creator;
-    public Source $source;
+    public Creator $creator1;
+    public Creator $creator2;
+    public Source $book;
+    public Source $article;
     public Sources $sourceManager;
 
     
@@ -46,7 +55,7 @@ class SourcesTest extends TestCase
         ]);
         self::$userId = $user->id;
         
-        self::$creatorId = $user->creators()->create([
+        $creator1 = $user->creators()->create([
             'key'   => 'perezj',
             'type' => 'author',
             'schema' => '0.0.1',
@@ -54,9 +63,21 @@ class SourcesTest extends TestCase
                 'name' => 'Juan',
                 'last_name' => 'Perez'
             ]
-        ])->id;
+        ]);
+        self::$creator1Id = $creator1->id;
+        
+        $creator2 = $user->creators()->create([
+            'key'   => 'zamudiop',
+            'type' => 'author',
+            'schema' => '0.0.1',
+            'data' => [
+                'name' => 'Pablo',
+                'last_name' => 'Zamudio'
+            ]
+        ]);
+        self::$creator2Id = $creator2->id;
 
-        self::$sourceId = $user->sources()->create([
+        $book = $user->sources()->create([
             'key' => 'perez2018',
             'type' => 'citation.book',
             'schema' => '0.0.1',
@@ -66,7 +87,28 @@ class SourcesTest extends TestCase
                 'editorial' => 'Sor Maria Turgencia Inc.',
                 'city' => 'Málaga'
             ]
-        ])->id;
+        ]);
+        $book->creators()->attach([$creator1->id, $creator2->id]);
+        
+        self::$bookId = $book->id;
+
+        $article = $user->sources()->create([
+            'key' => 'perez2019',
+            'type' => 'citation.article',
+            'schema' => '0.0.1',
+            'data' => [
+                'year' => 2019,
+                'title' => "Efectos del automonitoreo en la ansiedad social en la escuela",
+                'journal' => 'Perspectiva en Trastornos de Ansiedad',
+                'volume' => 13,
+                'issue' => 2,
+                'firstPage' => 110,
+                'lastPage' => 122
+            ]
+        ]);
+        $article->creators()->attach([$creator2->id, $creator1->id]);
+        self::$articleId = $article->id;
+
     }
 
     /**
@@ -91,19 +133,47 @@ class SourcesTest extends TestCase
     public function beforeEach(): void
     {
         $this->user = User::find(self::$userId);
-        $this->creator = Creator::find(self::$creatorId);
-        $this->source =  Source::find(self::$sourceId);
+        $this->creator1 = Creator::find(self::$creator1Id);
+        $this->creator2 = Creator::find(self::$creator2Id);
+        $this->book =  Source::find(self::$bookId);
+        $this->article =  Source::find(self::$articleId);
         $this->sourceManager = new Sources();
     }
 
-
-
-
-    public function testElTestFunciona():void
+    /**
+     * Verifica que la función render() del SourceManager identifique
+     * adecuadametne el tipo de fuente y devuelva el tipo de representación
+     * adecuado
+     */
+    public function testRenderDevuelveAdecuadamenteLaRepresentacionDeUnTipoDeFuente():void
     {
-        $this->log($this->sourceManager->render($this->source));
-        $this->assertTrue(true);
-    }
-    
+        $this->assertEquals(
+            $this->sourceManager->render($this->article),
+            self::articleRender
+        );
 
+        $this->assertEquals(
+            $this->sourceManager->render($this->book),
+            self::bookRender
+        );
+    }
+
+    /**
+     * Chequea que el modelo Source tenga un método render()
+     * ej. $source->render
+     * 
+     * @return void
+     */
+    public function testSourceTieneMetodoRenderQueFunciona(): void
+    {
+        $this->assertEquals(
+            $this->article->render(),
+            self::articleRender
+        );
+
+        $this->assertEquals(
+            $this->book->render(),
+            self::bookRender
+        );
+    }
 }
