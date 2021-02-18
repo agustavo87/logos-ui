@@ -22,7 +22,7 @@ class EditSource extends Component
         'citation.article:0.0.1' => "Artículo de Revista Académica"
     ];
 
-    public function mount($sourceId = 30)
+    public function mount($sourceId = 25)
     {
         if ($sourceId) {
             $this->source = Source::findOrFail($sourceId);

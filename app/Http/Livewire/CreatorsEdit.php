@@ -5,31 +5,37 @@ namespace App\Http\Livewire;
 use App\Models\Creator;
 use App\Models\Source;
 use Livewire\Component;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class CreatorsEdit extends Component
 {
     public Source $source;
-    protected $creators;
-    public $arrCreators;
+    protected $rules = [
+        'creators.*.data.name' => 'string',
+        'creators.*.data.last_name' => 'string',
+        'creators.*.type' => 'string',
+        'creators.*.key' => 'string'
+    ];
+    public $creators;
 
-    public function mount() {
-        if ($this->source) {
+    public function mount($source = null) {
+        if ($source) {
             $this->creators = $this->source->creators;
         } else {
-            $this->creators = collect([
+            $this->creators = new EloquentCollection([
                 new Creator([
+                    'id' => 0,
                     'user_id' => null,
                     'key' => null,
                     'type' => null,
                     'schema' => null,
                     'data' => [
-                        'name' => null,
+                        'name' => 'prueba',
                         'last_name' => null
                     ]
                 ])
             ]);
         }
-        $this->arrCreators = $this->creators->toArray();
     }
 
     public function render()

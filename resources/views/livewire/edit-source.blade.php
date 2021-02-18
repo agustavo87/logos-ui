@@ -16,15 +16,15 @@
         x-on:keydown.escape.window="handleEscape">
         <div class="py-5 px-5 w-full">
             <div>
-                <h3>Autores</h3>
-                <livewire:creators-edit :source="$source" />
+                <h3 class="font-medium">Creadores</h3>
+                <livewire:creators-edit  :source="$source" />
             </div>
             <div>
-                <x-form.select name="schema" label="Tipo" x-model="sourceSchema">
+                <select name="schema" label="Tipo" x-model="sourceSchema" class="border rounded border-gray-400 text-sm px-2 py-1 focus:outline-none">
                     @foreach ($supportedSchemas as $schemaTag => $schemaName)
                         <option value="{{$schemaTag}}" {{ $schemaName === $sourceSchema ? 'selected' : ''}}> {{ $schemaName}} </option>
                     @endforeach
-                </x-form.select>
+                </select>
             </div>
             <div class=" h-64 overflow-y-auto" x-on:data-change.debounce.750ms="$wire.set('data', $event.detail)">
                 <x-logos.citation-book-filler />
