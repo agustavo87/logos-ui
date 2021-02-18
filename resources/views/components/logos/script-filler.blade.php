@@ -4,21 +4,19 @@
             display: false,
             schema: schema,
             data: dataModel,
-            handleInput: function ($e, $d) {
-                this.data[$e.target.name] = $e.target.value
-                $d('cambio', this.data);
-            },
-            handleSetSchema: function (e) {
-                console.log('manejando set-schema', e)
-                console.log(e.detail.schema, '===', this.schema, '?')
-                if (e.detail.schema !== this.schema) {
+            bootData: bootDataFunc,
+            handleSetSchema: function ($event) {
+                if ($event.detail.schema !== this.schema) {
                     this.display = false;
                     return;
                 };
-                this.bootData(e.detail.data)
+                this.bootData($event.detail.data)
                 this.display = true
             },
-            bootData: bootDataFunc
+            handleInput: function ($event, $dispatch) {
+                this.data[$event.target.name] = $event.target.value
+                $dispatch('data-change', this.data);
+            }
         }
     }
 </script>

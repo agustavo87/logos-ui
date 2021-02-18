@@ -127,12 +127,6 @@ const LogosUI = {
     >Editar Fuente</button>
   </div>
   <livewire:select-source />
-  <livewire:edit-source :sourceId="10" />
-
- 
-
-  
+  <livewire:edit-source />
 
 </div>
-
-

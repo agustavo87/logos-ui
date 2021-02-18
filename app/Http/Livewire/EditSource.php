@@ -4,15 +4,17 @@ namespace App\Http\Livewire;
 
 use App\Models\Source;
 use Livewire\Component;
+use Faker\Generator;
 
 class EditSource extends Component
 {
     public $listen = 'edit-source';
-    public $withBg = true;
+    public $key;
     public $data;
-
-    public Source $source;
     public $sourceSchema; // schema tag = type:version
+    public Source $source;
+    public $withBg = true;
+
 
     protected const SUPPORTED_SCHEMAS = [
         // schema tag => name
@@ -20,31 +22,44 @@ class EditSource extends Component
         'citation.article:0.0.1' => "Artículo de Revista Académica"
     ];
 
-    public function mount($sourceId = null)
+    public function mount($sourceId = 30)
     {
         if ($sourceId) {
             $this->source = Source::findOrFail($sourceId);
-            $this->sourceSchema = "{$this->source->type}:{$this->source->schema}";
-            $this->data = $this->source->data;
         } else {
-            $this->source = new Source();
+            $this->source = new Source([
+                'type' => 'citation.article',
+                'schema' => '0.0.1',
+                'data' => []
+            ]);
         }
+        $this->sourceSchema = "{$this->source->type}:{$this->source->schema}";
+        $this->data = $this->source->data;
+        $this->creators = $this->source->creators;
     }
 
     public function render()
     {
         return view('livewire.edit-source', [
-            'supportedSchemas' => self::SUPPORTED_SCHEMAS
+            'supportedSchemas' => self::SUPPORTED_SCHEMAS,
         ]);
     }
 
     public function save()
     {
+        $faker = app(Generator::class);
         list($type, $schema) = explode(':',$this->sourceSchema);
         $this->source->type = $type;
         $this->source->schema = $schema;
         $this->source->data = $this->data;
-        // dd($this->source);
+        if (!$this->key) {
+            $this->source->key = $faker->firstName . $this->data['year'];
+        }
+        if (!$this->source->user) {
+            auth()->user()->sources()->save($this->source);
+            return;
+        }
         $this->source->save();
+        dd($this->source);
     }
 }

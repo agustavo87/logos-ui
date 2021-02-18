@@ -16,7 +16,7 @@ class ShowSources extends Component
     public function render()
     {
         return view('livewire.show-sources', [
-            'sources' =>  Source::where('user_id', $this->userId)->paginate(2),
+            'sources' =>  Source::where('user_id', $this->userId)->latest()->paginate(2),
             'user' => User::find($this->userId)
             ]
         );
