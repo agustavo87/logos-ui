@@ -12,7 +12,7 @@
     </template>
 
     {{-- modal --}}
-    <div class="rounded-lg bg-white relative w-2/3" x-show="showModal" @click.away="cancel"
+    <div class="rounded-lg bg-white relative" x-show="showModal" @click.away="cancel"
         x-on:keydown.escape.window="handleEscape">
         <div class="py-5 px-5 w-full">
             <div>

@@ -1,9 +1,7 @@
 <div>
     <div class="flex flex-col pb-4">
         @foreach ($creators as $index => $creator)
-        
             <livewire:edit-creator :creator="$creator" :key="$creator->id">
-                <hr>
         @endforeach
         <div 
             class="flex flex-row">
