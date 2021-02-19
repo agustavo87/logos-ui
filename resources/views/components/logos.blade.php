@@ -32,11 +32,7 @@ const LogosUI = {
     btnShowSideControls: '#show-controls',
     addCitationHandler: LogosUI.getHandler
   });
-// hola
-
-// window.addEventListener('get-citation', e => {
-//   e.detail.resolve('pete!')
-// })
+  
 </script>
 @endpush
 
@@ -111,10 +107,10 @@ const LogosUI = {
   </div>
   <div x-data="{
       getSource: () => {
-        LogosUI.dialogGet('get-source', {ui: LogosUI}).then(r => console.log(r))
+        LogosUI.dialogGet('source-get', {ui: LogosUI}).then(r => console.log(r))
       },
       getEditSource: () => {
-        LogosUI.dialogGet('edit-source', {withBg: true, ui: LogosUI}).then(r => console.log(r))
+        LogosUI.dialogGet('source-edit', {withBg: true, ui: LogosUI}).then(r => console.log(r))
       }
     }">
     <button 
@@ -126,7 +122,7 @@ const LogosUI = {
     class="px-4 py-2 rounded bg-gray-800 text-white"
     >Editar Fuente</button>
   </div>
-  <livewire:select-source />
-  <livewire:edit-source />
+  <livewire:source-select />
+  <livewire:source-edit />
 
 </div>

@@ -1,4 +1,4 @@
-<div class="show-article">
+<div class="article-show">
     <div class="data">
         <h1 class="title">
             {{$article->title}}
@@ -22,51 +22,51 @@
     </footer>
     @push('head-script')
     <style>
-        .show-article {
+        .article-show {
             max-width: 800px;
             margin: 0 auto;
         }
 
-        .show-article .data {
+        .article-show .data {
             margin: 5rem auto 2rem auto;
         }
 
-        .show-article .data  .author {
+        .article-show .data  .author {
             color: #555;
             margin-top:0.25rem;
         }
 
-        .show-article .data h1.title {
+        .article-show .data h1.title {
             font-size: 2rem;
             font-weight: 800;
             line-height: 1em;
         }
 
-        .show-article h2 {
+        .article-show h2 {
             font-size: 1.5rem;
             font-weight: 500;
             line-height: 1em;
             margin: 1rem auto;
         }
 
-        .show-article h3 {
+        .article-show h3 {
             font-size: 1rem;
             font-weight: 500;
             line-height: 1em;
             margin: 1rem auto;
         }
 
-        .show-article footer {
+        .article-show footer {
             margin-top: 2rem;
         }
         
-        .show-article footer h2 {
+        .article-show footer h2 {
             margin-top: 2rem;
             font-size: 1.5rem;
             font-weight: 500;
         }
 
-        .show-article footer .references li {
+        .article-show footer .references li {
             font-size: 0.85rem;
             margin-left:1rem;
             text-indent: -1rem;

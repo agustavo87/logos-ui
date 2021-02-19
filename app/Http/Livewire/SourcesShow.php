@@ -7,7 +7,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ShowSources extends Component
+class SourcesShow extends Component
 {
     use WithPagination;
 
@@ -15,7 +15,7 @@ class ShowSources extends Component
 
     public function render()
     {
-        return view('livewire.show-sources', [
+        return view('livewire.sources-show', [
             'sources' =>  Source::where('user_id', $this->userId)->latest()->paginate(2),
             'user' => User::find($this->userId)
             ]

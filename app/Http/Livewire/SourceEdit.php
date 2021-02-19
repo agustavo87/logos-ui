@@ -6,9 +6,9 @@ use App\Models\Source;
 use Livewire\Component;
 use Faker\Generator;
 
-class EditSource extends Component
+class SourceEdit extends Component
 {
-    public $listen = 'edit-source';
+    public $listen = 'source-edit';
     public $key;
     public $data;
     public $sourceSchema; // schema tag = type:version
@@ -40,7 +40,7 @@ class EditSource extends Component
 
     public function render()
     {
-        return view('livewire.edit-source', [
+        return view('livewire.source-edit', [
             'supportedSchemas' => self::SUPPORTED_SCHEMAS,
         ]);
     }

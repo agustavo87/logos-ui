@@ -154,14 +154,14 @@
                     },
                     newReference: function () {
                         this.showModal = false;
-                        this.ui.dialogGet('edit-source', {withBg:false, ui:this.ui})
+                        this.ui.dialogGet('source-edit', {withBg:false, ui:this.ui})
                             .then((r) => {
                                 console.log(r);
                                 this.showModal = true;
                             })
                     },
                     cancel: function () {
-                        console.log('select-source canceling')
+                        console.log('source-select canceling')
                         this.close()
                         this.respond(null);
                     },

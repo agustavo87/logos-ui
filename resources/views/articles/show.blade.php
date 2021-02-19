@@ -2,7 +2,7 @@
 :title="$article->title"
 >
 <x-container>
-  <livewire:show-article :article-id="$article->id"/>
+  <livewire:article-show :article-id="$article->id"/>
 </x-container>
 
 

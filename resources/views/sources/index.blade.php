@@ -7,7 +7,7 @@ title="Mostrar Fuentes"
   </x-main-heading>
 
   <div class="py-9">
-    <livewire:show-sources :user-id="auth()->user()->id">
+    <livewire:sources-show :user-id="auth()->user()->id">
   </div>
 
 

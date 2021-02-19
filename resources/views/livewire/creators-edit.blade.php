@@ -1,7 +1,7 @@
 <div>
     <div class="flex flex-col pb-4">
         @foreach ($creators as $index => $creator)
-            <livewire:edit-creator :creator="$creator" :key="$creator->id">
+            <livewire:creator-edit :creator="$creator" :key="$creator->id">
         @endforeach
         <div 
             class="flex flex-row">
@@ -18,7 +18,7 @@
             <div class="flex flex-col pt-1 ml-1">
                 <select name="creator-add-type" id="creator-add-type"
                     placeholder="Type"
-                    class="border rounded border-gray-400 text-sm px-2 py-1 focus:outline-none">
+                    class="border rounded border-gray-400 text-xs px-2 py-1 focus:outline-none">
                     <option value="author">Author</option>
                 </select>
             </div>

@@ -7,7 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
 
-class ShowArticles extends Component
+class ArticlesShow extends Component
 {
     use WithPagination;
 
@@ -15,7 +15,7 @@ class ShowArticles extends Component
    
     public function render()
     {
-        return view('livewire.show-articles', [
+        return view('livewire.articles-show', [
             'articles' =>  Article::where('user_id', $this->userId)->latest()->paginate(8)
         ]);
     }

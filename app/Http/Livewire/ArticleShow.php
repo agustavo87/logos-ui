@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Article;
 use Livewire\Component;
 
-class ShowArticle extends Component
+class ArticleShow extends Component
 {
     public Article $article;
     public $articleId;
@@ -18,7 +18,7 @@ class ShowArticle extends Component
 
     public function render()
     {
-        return view('livewire.show-article', [
+        return view('livewire.article-show', [
             'article' => $this->article
         ]);
     }

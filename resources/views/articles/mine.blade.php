@@ -6,7 +6,7 @@ title="Mostrar Artículos"
     {{ __('articles.by', ['name' => auth()->user()->name]) }}
   </x-main-heading>
 
-  <livewire:show-articles :user-id="auth()->user()->id"/>
+  <livewire:articles-show :user-id="auth()->user()->id"/>
   
 
 </x-container>

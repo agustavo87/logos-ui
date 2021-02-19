@@ -74,6 +74,8 @@
 
                 solve: function() {
                     this.display = false;
+                    this.showModal = false;
+                    this.resolve('ok') 
                 },
 
                 cancel: function() {

@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-class EditCreator extends Component
+class CreatorEdit extends Component
 {
     public $name;
     public $lastName;
@@ -21,6 +21,6 @@ class EditCreator extends Component
 
     public function render()
     {
-        return view('livewire.edit-creator');
+        return view('livewire.creator-edit');
     }
 }

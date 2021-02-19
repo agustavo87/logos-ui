@@ -9,11 +9,11 @@ use Livewire\WithPagination;
 /**
  * @todo Hacer que muestre solo las fuentes del usuario
  */
-class SelectSource extends Component
+class SourceSelect extends Component
 {
     use WithPagination;
 
-    public $listen = 'get-source';
+    public $listen = 'source-get';
 
     public $searchFields = [
         'key' => '',
@@ -35,7 +35,7 @@ class SelectSource extends Component
             }
         }
 
-        return view('livewire.select-source', [
+        return view('livewire.source-select', [
             'sources' => $sources->latest()->paginate(5)
         ]);
     }
