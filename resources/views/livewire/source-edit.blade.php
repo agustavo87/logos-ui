@@ -12,7 +12,7 @@
     </template>
 
     {{-- modal --}}
-    <div class="rounded-lg bg-white relative" x-show="showModal" @click.away="cancel"
+    <div class="source-edit-modal rounded-lg bg-white relative" x-show="showModal" @click.away="cancel"
         x-on:keydown.escape.window="handleEscape">
         <div class="py-5 px-5 w-full">
             <div>
@@ -92,4 +92,11 @@
             }
         }
     </script>
+    @push('head-script')
+        <style>
+            .source-edit-modal {
+                width: 580px;
+            }
+        </style>
+    @endpush
 </div>
