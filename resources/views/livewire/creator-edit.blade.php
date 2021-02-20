@@ -24,17 +24,17 @@
         </div>
     </div>
     <div x-show="isEditing" class="flex-grow flex items-center">
-        <form x-on:submit.preven="save" class="flex flex-row justify-between w-full">
+        <form x-on:submit.prevent="save" class="flex flex-row justify-between w-full">
             <div class="flex-grow flex flex-row">
                 <input type="text" name="creator-{{$creatorId}}-name" id="creator-{{$creatorId}}-name"
                     wire:model="name" placeholder="Name"
-                    class="border-b border-gray-400 text-sm px-2 py-1 focus:outline-none flex-grow mr-1">
+                    class="border-b border-gray-200 text-sm px-2 py-1 focus:outline-none flex-grow mr-1">
                 <input type="text" name="creator-{{$creatorId}}-last_name" id="creator-{{$creatorId}}-last_name"
                     wire:model="lastName" placeholder="Last Name"
-                    class="border-b border-gray-400 text-sm px-2 py-1 focus:outline-none mr-1">
+                    class="border-b border-gray-200 text-sm px-2 py-1 focus:outline-none mr-1">
                 <select name="creator-{{ $creatorId}}-type" id="creator-{{ $creatorId}}-type"
                     wire:model="type" placeholder="Type"
-                    class="border-b border-gray-400 text-xs text-gray-500 px-2 py-1 focus:outline-none">
+                    class="border-b border-gray-200 text-xs text-gray-500 px-2 py-1 focus:outline-none">
                     <option value="author">Author</option>
                 </select>
             </div>
