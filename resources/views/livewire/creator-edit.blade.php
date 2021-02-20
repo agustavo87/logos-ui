@@ -36,6 +36,7 @@
                     wire:model="type" placeholder="Type"
                     class="border-b border-gray-200 text-xs text-gray-500 px-2 py-1 focus:outline-none">
                     <option value="author">Author</option>
+                    <option value="editor">Editor</option>
                 </select>
             </div>
             <div class="flex items-center w-16 justify-end">
