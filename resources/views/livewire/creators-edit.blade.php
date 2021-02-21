@@ -70,7 +70,8 @@
             
         </form>
         <div class="relative">
-            <div class="absolute bg-white p-2 shadow-lg rounded-b-xl w-full" x-show="isEditing">
+            <div class="absolute bg-white p-2 shadow-lg rounded-b-xl w-full max-h-52 overflow-y-auto" 
+                x-show="isEditing">
                 <table class="w-full text-xs">
                     @foreach ($suggestedCreators as $suggestedCreator)
                     <tr class="hover:bg-blue-100 cursor-pointer"

@@ -58,6 +58,9 @@ class CreatorsEdit extends Component
 
     public function save($isDirty = true)
     {
+        /**
+         * @todo agregar un chequeo de si el creador ya existe
+         */
         if ($isDirty) {
             $validatedData = $this->validate();
             $creatorData = [
