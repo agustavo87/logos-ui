@@ -11,12 +11,19 @@ class CreatorsEdit extends Component
 {
     public ?Source $source = null;
     public $creators = [];
+    public $suggestedCreators = [];
     
-    public $name;
-    public $last_name;
-    public $type = "author"; // default
+    public ?Creator $creator = null;
+    public $name = '';
+    public $last_name = '';
+    public $type = 'author'; // default
 
     protected const SCHEMA = "0.0.1";
+
+    protected $listeners = [
+        // 'creatorDeleted' => 'handleCreatorDeleted'
+        'creatorDetach' => 'handleCreatorDetach'
+    ];
 
     public $rules = [
         'name' => 'required',
@@ -24,9 +31,15 @@ class CreatorsEdit extends Component
         'type'=> 'required'
     ];
 
+    public function logea()
+    {
+        dd('hola');
+    }
+
     public function mount($source = null) 
     {
-        $this->loadCreators($source); 
+        $this->loadCreators($source);
+        $this->loadSuggestedCreators(); 
     }
 
     protected function loadCreators($source = null)
@@ -43,23 +56,34 @@ class CreatorsEdit extends Component
         return view('livewire.creators-edit');
     }
 
-    public function save()
+    public function save($isDirty = true)
     {
-        $validatedData = $this->validate();
-        $creatorData = [
-            'name' => $validatedData['name'],
-            'last_name' => $validatedData['last_name']
-        ];
-        $creator = new Creator([
-            'key' => Creator::factory()->getKey($creatorData['name'], $creatorData['last_name']),
-            'type' => $validatedData['type'],
-            'schema' => self::SCHEMA,
-            'data' => $creatorData
-        ]);
+        if ($isDirty) {
+            $validatedData = $this->validate();
+            $creatorData = [
+                'name' => $validatedData['name'],
+                'last_name' => $validatedData['last_name']
+            ];
+            $creator = new Creator([
+                'key' => Creator::factory()->getKey($creatorData['name'], $creatorData['last_name']),
+                'type' => $validatedData['type'],
+                'schema' => self::SCHEMA,
+                'data' => $creatorData
+            ]);
+            $user = auth()->user();
+            $creator = $user->creators()->save($creator);
 
-        $user = auth()->user();
+        } elseif ($this->creator) {
 
-        $creator = $user->creators()->save($creator);
+            $creator = $this->creator;
+
+        } else {
+
+            return 'error no hay creador';
+
+        }
+
+       
         // dd($this->source);
         if (!$this->source) {
             $this->source = $user->sources()->create([
@@ -74,8 +98,50 @@ class CreatorsEdit extends Component
                 ]
             ]);
         }
+        $this->reset(['name', 'last_name', 'type', 'creator']);
         $this->source->creators()->attach($creator);
         $this->source->refresh();
         $this->loadCreators();
     }
+
+    /**
+     * Actualiza la vista de los creadores luego de que se borró un creador.
+     */
+    public function handleCreatorDetach($id)
+    {
+        // dd('creator deleted');
+        $this->source->creators()->detach($id);
+        $this->source->refresh();  // it's neccesary?
+        $this->loadCreators();
+    }
+
+    /**
+     * Updates the suggestion options
+     */
+    public function handleInput()
+    {
+        $this->loadSuggestedCreators();
+    }
+
+
+    public function loadSuggestedCreators()
+    {
+        $query = Creator::where('user_id', auth()->user()->id);
+        if ($this->name !== '') {
+            $query = $query->where('data->name', 'like', "%{$this->name}%");
+        };
+        if ($this->last_name !== '') {
+            $query = $query->where('data->last_name', 'like', "%{$this->last_name}%");
+        };
+        $this->suggestedCreators = $query->get();
+    }
+
+
+    public function select($id)
+    {
+        $this->creator = Creator::findOrFail($id);
+        $this->name = $this->creator->data['name'];
+        $this->last_name = $this->creator->data['last_name'];
+    }
+
 }

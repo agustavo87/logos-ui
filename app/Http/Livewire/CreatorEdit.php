@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Creator;
 use Livewire\Component;
 
 class CreatorEdit extends Component
@@ -22,5 +23,12 @@ class CreatorEdit extends Component
     public function render()
     {
         return view('livewire.creator-edit');
+    }
+
+    public function delete()
+    {
+        // $ok = Creator::findOrFail($this->creatorId)->delete();
+
+        $this->emitUp('creatorDetach', $this->creatorId);
     }
 }
