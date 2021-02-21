@@ -16,7 +16,8 @@ class CreatorsEdit extends Component
     public ?Creator $creator = null;
     public $name = '';
     public $last_name = '';
-    public $type = 'author'; // default
+    public $type = 'person';    // default
+                                // faltaría además la especificación del rol.
 
     protected const SCHEMA = "0.0.1";
 
@@ -101,8 +102,12 @@ class CreatorsEdit extends Component
                 ]
             ]);
         }
+
         $this->reset(['name', 'last_name', 'type', 'creator']);
-        $this->source->creators()->attach($creator);
+        $this->source->creators()->attach($creator, [
+            'type' => 'author', 
+            'relevance' =>  $this->source->creators->count()
+        ]);
         $this->source->refresh();
         $this->loadCreators();
     }

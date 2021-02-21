@@ -9,14 +9,17 @@ class CreatorEdit extends Component
 {
     public $name;
     public $lastName;
-    public $type;
+    public $type; // tiene que pasarse el rol también más que solo el tipo.
+    public $role;
     public $creatorId;
 
     public function mount($creator)
     {
+        // dd($rol);
         $this->name = $creator->data['name'];
         $this->lastName = $creator->data['last_name'];
         $this->type = $creator->type;
+        $this->role = $creator->role;
         $this->creatorId = $creator->id;
     }
 

@@ -28,8 +28,9 @@ class Creator extends Model
      */
     public function sources()
     {
-        return $this->belongsToMany(Source::class);
+        return $this->belongsToMany(Source::class)
+            ->withPivot('type','relevance')
+            ->using(CreatorSource::class)
+            ->as('role');
     }
-
-    
 }

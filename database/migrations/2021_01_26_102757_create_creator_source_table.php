@@ -14,9 +14,12 @@ class CreateCreatorSourceTable extends Migration
     public function up()
     {
         Schema::create('creator_source', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('creator_id');
             $table->unsignedBigInteger('source_id');
-            $table->unique(['creator_id', 'source_id']);
+            // $table->unique(['creator_id', 'source_id']);
+            $table->string('type', 50)->default('person');
+            $table->integer('relevance')->default(0);
         });
     }
 

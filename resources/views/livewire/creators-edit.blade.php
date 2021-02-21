@@ -28,8 +28,8 @@
                     @enderror
                     <select placeholder="Type" wire:model.defer="type"
                         class="border-b border-gray-200 text-xs text-gray-500 px-2 py-1 focus:outline-none">
-                        <option value="author">Author</option>
-                        <option value="editor">Editor</option>
+                        <option value="person">Person</option>
+                        <option value="org">Organization</option>
                     </select>
                     @error('type')
                     <span>{{$message}}</span>

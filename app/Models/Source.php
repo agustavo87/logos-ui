@@ -52,7 +52,10 @@ class Source extends Model
      */
     public function creators()
     {
-        return $this->belongsToMany(Creator::class);
+        return $this->belongsToMany(Creator::class)
+            ->withPivot('type','relevance')
+            ->using(CreatorSource::class)
+            ->as('role');
     }
 
     /**

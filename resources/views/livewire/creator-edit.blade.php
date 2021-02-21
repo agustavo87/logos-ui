@@ -1,7 +1,7 @@
 <div x-data="EditCreatorComponent()" class="creator-component flex h-7 items-center">
     <div x-show="!isEditing" class="creator-c-label flex-grow flex flex-row justify-between items-center">
         <span class="text-sm font-medium text-gray-600 flex-grow">
-            {{ $name }}, {{ $lastName }} <small class="text-gray-600 italic ml-1"> {{ $type }} </small>
+            {{ $name }}, {{ $lastName }} <small class="text-gray-600 italic ml-1"> {{ $role->type }} </small>
         </span>
         <div class="creator-c-control flex w-16 items-center justify-end">
             <button
@@ -32,11 +32,11 @@
                 <input type="text" name="creator-{{$creatorId}}-last_name" id="creator-{{$creatorId}}-last_name"
                     wire:model="lastName" placeholder="Last Name"
                     class="border-b border-gray-200 text-sm px-2 py-1 focus:outline-none mr-1">
-                <select name="creator-{{ $creatorId}}-type" id="creator-{{ $creatorId}}-type"
+                <select name="creator-{{ $creatorId }}-type" id="creator-{{ $creatorId }}-type"
                     wire:model="type" placeholder="Type"
                     class="border-b border-gray-200 text-xs text-gray-500 px-2 py-1 focus:outline-none">
-                    <option value="author">Author</option>
-                    <option value="editor">Editor</option>
+                    <option value="person">Person</option>
+                    <option value="org">Organization</option>
                 </select>
             </div>
             <div class="flex items-center w-16 justify-end">
@@ -58,6 +58,9 @@
                 </button>
             </div>
         </form>
+        <script>
+            console.log(@json($role));
+        </script>
     </div>
     @once
     @push('head-script')

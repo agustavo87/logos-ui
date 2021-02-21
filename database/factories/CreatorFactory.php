@@ -30,8 +30,9 @@ class CreatorFactory extends Factory
             'user_id' => User::factory(),
             'key'   => $this->getKey($name, $lastName),
             // 'key'   => Str::lower($lastName . Str::substr($name, 0, 1)),
-            'type' => 'author',
-            'schema' => '0.0.1',
+            'type' => 'person',     /** @todo actualizar la lógica, el tipo define junto con
+                                    schema el tipo de data */
+            'schema' => '0.0.1',    
             'data' => [
                 'name' => $name,
                 'last_name' => $lastName

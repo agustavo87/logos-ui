@@ -48,9 +48,8 @@ class UserSeeder extends Seeder
                     $availableCreators = $user->creators->diff($usedCreators);
                     $pickedCreator = $availableCreators->random();
                     $usedCreators[] = $pickedCreator;
-                    $source->creators()->attach($pickedCreator);
+                    $source->creators()->attach($pickedCreator, ['type' => 'author', 'relevance' => $i]);
                 }
-                // $source->key = Str::lower($usedCreators[0]->data['last_name']) . $source->data['year'];
                 $source->key = Source::factory()->getKey(Str::lower($usedCreators[0]->data['last_name']), $source->data['year']);
                 $source->save();
             });

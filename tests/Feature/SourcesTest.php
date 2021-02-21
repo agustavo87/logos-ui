@@ -63,7 +63,7 @@ class SourcesTest extends TestCase
         
         $creator1 = $user->creators()->create([
             'key'   => 'perezj',
-            'type' => 'author',
+            'type' => 'person',
             'schema' => '0.0.1',
             'data' => [
                 'name' => 'Juan',
@@ -74,7 +74,7 @@ class SourcesTest extends TestCase
         
         $creator2 = $user->creators()->create([
             'key'   => 'zamudiop',
-            'type' => 'author',
+            'type' => 'person',
             'schema' => '0.0.1',
             'data' => [
                 'name' => 'Pablo',
