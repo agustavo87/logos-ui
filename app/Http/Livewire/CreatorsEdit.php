@@ -9,33 +9,87 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class CreatorsEdit extends Component
 {
+    /**
+     * The source than has the creators
+     * 
+     * @var Source|null
+     */
     public ?Source $source = null;
+    
+    /**
+     * The creators of the source
+     * 
+     * @var array
+     */
     public $creators = [];
+
+
+    /**
+     * The suggested creators when the user inputs
+     * in the new creator fields.
+     * 
+     * @var array 
+     */
     public $suggestedCreators = [];
     
+    /**
+     * The current editing creator
+     * 
+     * @var Creator|null
+     */
     public ?Creator $creator = null;
+
+    /**
+     * The name of the creator
+     * @var string
+     */
     public $name = '';
+
+    /**
+     * The last name of the creator
+     * 
+     * @var string
+     */
     public $last_name = '';
+    
+    /**
+     * The type of the creator
+     * 
+     * @var string
+     */
     public $type = 'person';    // default
                                 // faltaría además la especificación del rol.
 
+    /**
+     * Defines the schema of the the creator.
+     * 
+     * @var string 
+     */
     protected const SCHEMA = "0.0.1";
 
-    protected $listeners = [
-        // 'creatorDeleted' => 'handleCreatorDeleted'
-        'creatorDetach' => 'handleCreatorDetach'
-    ];
-
+    /**
+     * Defines the rules of the specified fields.
+     * 
+     * @todo esto se podría enlazar directamente al modelo
+     * 
+     * @var string 
+     */
     public $rules = [
         'name' => 'required',
         'last_name' => 'required',
         'type'=> 'required'
     ];
 
-    public function logea()
-    {
-        dd('hola');
-    }
+    /**
+     * Defines the events and its listeners
+     * 
+     * @var string 
+     */
+    protected $listeners = [
+        // 'creatorDeleted' => 'handleCreatorDeleted'
+        'creatorDetach' => 'handleCreatorDetach'
+    ];
+
 
     public function mount($source = null) 
     {
@@ -56,12 +110,19 @@ class CreatorsEdit extends Component
     {
         return view('livewire.creators-edit');
     }
+    
 
-    public function save($isDirty = true)
+    /**
+     * Saves the creator
+     * 
+     * @todo agregar un chequeo de si el creador ya existe
+     * 
+     * @param bool $isDirty
+     * @return void|string
+     */
+    public function save(bool $isDirty = true)
     {
-        /**
-         * @todo agregar un chequeo de si el creador ya existe
-         */
+
         if ($isDirty) {
             $validatedData = $this->validate();
             $creatorData = [
@@ -87,8 +148,7 @@ class CreatorsEdit extends Component
 
         }
 
-       
-        // dd($this->source);
+
         if (!$this->source) {
             $this->source = $user->sources()->create([
                 'key' => Source::factory()->getKey($creatorData['last_name'], 0000),
@@ -111,13 +171,16 @@ class CreatorsEdit extends Component
         $this->source->refresh();
         $this->loadCreators();
     }
+   
 
     /**
-     * Actualiza la vista de los creadores luego de que se borró un creador.
+     * Manages the detaching of a creator
+     *  
+     * @param int $id The id of the detached creator.
+     * @return void
      */
-    public function handleCreatorDetach($id)
+    public function handleCreatorDetach(int $id): void
     {
-        // dd('creator deleted');
         $this->source->creators()->detach($id);
         $this->source->refresh();  // it's neccesary?
         $this->loadCreators();
