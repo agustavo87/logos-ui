@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\FixturableTestCase as TestCase;
-use App\Logos\Sources;
+use App\Services\Logos\Sources;
 use App\Models\{
     Creator,
     Source,

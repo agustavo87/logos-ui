@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Logos\Sources; // Luego implementarlo en el service provider de logos
+use App\Services\Logos\Sources; // Luego implementarlo en el service provider de logos
 
 class Source extends Model
 {
