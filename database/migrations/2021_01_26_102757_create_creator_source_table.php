@@ -17,8 +17,9 @@ class CreateCreatorSourceTable extends Migration
             $table->id();
             $table->unsignedBigInteger('creator_id');
             $table->unsignedBigInteger('source_id');
-            // $table->unique(['creator_id', 'source_id']);
-            $table->string('type', 50)->default('person');
+
+            // Role parameters
+            $table->string('type', 50)->default('author'); 
             $table->integer('relevance')->default(0);
         });
     }

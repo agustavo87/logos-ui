@@ -18,6 +18,14 @@ class SourceFactory extends Factory
     protected $model = Source::class;
 
     /**
+     * Keys that are already used in the current run,
+     * and may not be persisted yet.
+     * 
+     * @var array
+     */
+    public static array $usedKeys = [];
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -45,9 +53,13 @@ class SourceFactory extends Factory
         $pageInit = $this->faker->numberBetween(7,488);
         $length = $this->faker->numberBetween(0,20);
         
+        
+        // $count = User::count();
+        // $first = User::first();
+        // echo "journal|count: {$count}, first: " . ($count ? $first->id : 'null') . "\n";
 
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::count() ? User::first()->id : User::factory(),
             'key' => $key,
             'type' => 'citation.article',
             'schema' => '0.0.1',
@@ -73,8 +85,12 @@ class SourceFactory extends Factory
         $editorial = Str::title($this->faker->word);
         $city = Str::title($this->faker->city);
 
+        // $count = User::count();
+        // $first = User::first();
+        // echo "book|count: {$count}, first: " . ($count ? $first->id : 'null') . "\n";
+
         return [
-            'user_id' => User::factory(),
+            'user_id' => User::count() ? User::first() : User::factory(),
             'key' => $key,
             'type' => 'citation.book',
             'schema' => '0.0.1',
@@ -93,9 +109,13 @@ class SourceFactory extends Factory
         $base = "{$name}{$year}";
         $try = $base;
         $i = 0;
-       while (DB::table('sources')->where('key', $try)->exists()) {
+       while (
+           in_array($try, self::$usedKeys) 
+           || DB::table('sources')->where('key', $try)->exists()
+           ) {
            $try = $base . $abc[$i++];
        }
+       self::$usedKeys[] = $try;
        return $try;
     }
 }

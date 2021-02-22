@@ -25,7 +25,8 @@ class ArticleFactory extends Factory
         $h2 = $this->faker->sentence();
         $p = $this->faker->paragraph();
         return [
-            'user_id' => User::factory(),
+            // 'user_id' => User::factory(),
+            'user_id' => User::count() ? User::first()->id : User::factory(),
             'title' => $this->faker->sentence(),
             'html' => "<h2> $h2 </h2> <p> $p </p>",
             'delta' => [
