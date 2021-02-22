@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Article;
-use App\Models\Creator;
 use App\Models\Source;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -37,32 +34,29 @@ class UserSeeder extends Seeder
         $this->relateArticles($users);
     }
 
-    public function relateArticles($users)
+    /**
+     * @param \Illuminate\Database\Eloquent\Collection $users
+     * 
+     * @return void
+     */
+    public function relateArticles($users): void
     {
         foreach ($users as $i => $user) {
-
+            $sources = $user->sources;
+            $creators = $user->creators;
             // Relaciona las fuentes con los creadores
-            $user->sources->each(function ($source, $key) use ($user) {
-                $usedCreators = [];
-                for ($i=0; $i < 2; $i++) { 
-                    $availableCreators = $user->creators->diff($usedCreators);
-                    $pickedCreator = $availableCreators->random();
-                    $usedCreators[] = $pickedCreator;
-                    $source->creators()->attach($pickedCreator, ['type' => 'author', 'relevance' => $i]);
-                }
-                $source->key = Source::factory()->getKey(Str::lower($usedCreators[0]->data['last_name']), $source->data['year']);
+            $sources->each(function ($source) use ($creators) {
+                $sourceCreators = $creators->random(rand(1,5));
+                $sourceCreators->each(fn ($creator) => $creator->sources()->attach($source->id));
+                $source->key = Source::factory()->getKey( strtolower($sourceCreators[0]->data['last_name']), $source->data['year']);
                 $source->save();
             });
             
             // Relaciona los artículos con las fuentes
-            $user->articles->each(function ($article, $key) use ($user) {
-                $usedSources = [];
-                for ($i=0; $i < 3; $i++) { 
-                    $availableSources = $user->sources->diff($usedSources);
-                    $pickedSource = $availableSources->random();
-                    $usedSources[] = $pickedSource;
-                    $article->sources()->attach($pickedSource);
-                }
+            $user->articles->each(function ($article) use ($sources) {
+                $articleSources = $sources->random(rand(2,8));
+                $articleSources->each(fn ($artSource) => $artSource->articles()->attach($article->id));
+
             });
             
         }
