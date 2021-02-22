@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Logos;
+namespace App\Services\Logos;
 
 use App\Models\Source;
 
