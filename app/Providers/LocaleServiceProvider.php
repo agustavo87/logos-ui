@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Services\Logos\Locale;
+use App\Services\Locale;
 use Illuminate\Support\Facades\Validator;
 
 class LocaleServiceProvider extends ServiceProvider

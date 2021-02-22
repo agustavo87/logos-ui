@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Logos;
+namespace App\Services;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
