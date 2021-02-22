@@ -14,8 +14,8 @@ use Illuminate\Support\Str;
 
 class SourcesTest extends TestCase
 {
-    public static bool $verbose = true;
-    public static bool $debug = true;
+    public static bool $verbose = false;
+    public static bool $debug = false;
 
     public const bookRender = 'Perez, J. & Zamudio, P. (2018). La inefable levedad del ser. Sor Maria Turgencia Inc.: Málaga.';
     public const articleRender = 'Perez, J. & Zamudio, P. (2019). Efectos del automonitoreo en la ansiedad social en la escuela. Perspectiva en Trastornos de Ansiedad, vol. 13(2), 110-122.';
@@ -112,7 +112,10 @@ class SourcesTest extends TestCase
                 'lastPage' => 122
             ]
         ]);
-        $article->creators()->attach([$creator2->id, $creator1->id]);
+        $article->creators()->attach([
+            $creator1->id => ['type' => 'author', 'relevance' => 1],
+            $creator2->id => ['type' => 'author', 'relevance' => 0]
+            ]);
         self::$articleId = $article->id;
 
     }
@@ -153,18 +156,24 @@ class SourcesTest extends TestCase
      */
     public function testRenderDevuelveAdecuadamenteLaRepresentacionDeUnTipoDeFuente():void
     {
+        $articleRender = $this->sourceManager->render($this->article);
+        $this->log($articleRender);
         $this->assertEquals(
-            $this->sourceManager->render($this->article),
+            $articleRender,
             self::articleRender
         );
 
+        $bookRender = $this->sourceManager->render($this->book);
+        $this->log($bookRender);
         $this->assertEquals(
-            $this->sourceManager->render($this->book),
+            $bookRender,
             self::bookRender
         );
 
+        $defaultBookRender = $this->sourceManager->renderDefault($this->book);
+        $this->log($defaultBookRender);
         $this->assertEquals(
-            $this->sourceManager->renderDefault($this->book),
+            $defaultBookRender,
             self::defaultBookRender
         );
     }
@@ -177,13 +186,17 @@ class SourcesTest extends TestCase
      */
     public function testSourceTieneMetodoRenderQueFunciona(): void
     {
+        $articleRender = $this->article->render();
+        $this->log($articleRender);
         $this->assertEquals(
-            $this->article->render(),
+            $articleRender,
             self::articleRender
         );
 
+        $bookRender = $this->book->render();
+        $this->log($bookRender);
         $this->assertEquals(
-            $this->book->render(),
+            $bookRender,
             self::bookRender
         );
     }

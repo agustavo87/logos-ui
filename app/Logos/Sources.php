@@ -54,8 +54,12 @@ class Sources
     {
         list('year' => $year, 'title' => $title, 'journal' => $journal, 'volume' => $vol, 
             'issue' => $issue, 'firstPage' => $pageInit, 'lastPage' => $pageEnd) = $article->data;
+        
+        $creators = $article->creators->sortByDesc(function ($creator) {
+            return $creator->role->relevance;
+        });
 
-        return "{$this->renderCreatorsAPA($article->creators)} ({$year}). {$title}. {$journal}, vol. {$vol}({$issue}), {$pageInit}-{$pageEnd}.";
+        return "{$this->renderCreatorsAPA($creators)} ({$year}). {$title}. {$journal}, vol. {$vol}({$issue}), {$pageInit}-{$pageEnd}.";
     }
 
     /**
