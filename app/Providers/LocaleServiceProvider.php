@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Services\Logos\Locale;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class LocaleServiceProvider extends ServiceProvider
