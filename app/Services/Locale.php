@@ -37,10 +37,10 @@ class Locale
     /**
      * Remplaza el lenguaje en el path actual en la primera ocurrencia válida.
      * 
-     * @param string $path
-     * @param string $language
-     * @return mixed new path if any valid language parameter are found. 
-     *               Null otherwise.
+     * @param   string  $path
+     * @param   string  $language
+     * @return  mixed   new path if any valid language parameter are found. 
+     *                  Null otherwise.
      */
     public function replaceLanguageInPath(string $path, string $language): ?string
     {
@@ -158,8 +158,8 @@ class Locale
     /**
      * Parsea el contenido de HTTP Accept-Language
      * 
-     * @param string $httpLangs
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param   string  $httpLangs
+     * @return  \Illuminate\Database\Eloquent\Collection
      */
     public function parseHTTPLocale ($httpLangs)
     {
@@ -174,8 +174,8 @@ class Locale
     /**
      * Devuelve la información de lenguaje de la solicitud HTTP
      * 
-     * @param bool $first Si devolver solo el primer valor o toda la colección.
-     * @return \Illuminate\Database\Eloquent\Collection|array|null
+     * @param   bool $first Si devolver solo el primer valor o toda la colección.
+     * @return  \Illuminate\Database\Eloquent\Collection|array|null
      */
     public function getLocaleFromHTTP(bool $first = false)
     {
