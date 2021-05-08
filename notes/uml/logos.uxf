@@ -1,0 +1,15 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>390</x><y>380</y><w>100</w><h>30</h></coordinates><panel_attributes>/Logos Source/
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>80</y><w>260</w><h>190</h></coordinates><panel_attributes>&lt;&lt;Mapeable&gt;&gt;
+--
+-Format : SourceFormat
+--
+/+map(data: LogosData): FormatData/
+/+unMap(data: FormatData)/
+/+mapAttr(attr: LogosAttr)/
+/+unMap(attr: FormatAttr)/
+/
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>260</y><w>230</w><h>150</h></coordinates><panel_attributes>lt=&lt;.
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>10;10;10;130;210;130</additional_attributes></element></diagram>

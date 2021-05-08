@@ -28,6 +28,8 @@ class CreatorsEdit extends Component
      * The suggested creators when the user inputs
      * in the new creator fields.
      * 
+     * @todo Limitar el número de sugerencias
+     * 
      * @var array 
      */
     public $suggestedCreators = [];
@@ -182,7 +184,7 @@ class CreatorsEdit extends Component
     public function handleCreatorDetach(int $id): void
     {
         $this->source->creators()->detach($id);
-        $this->source->refresh();  // it's neccesary?
+        $this->source->refresh();  // it's neccesary??
         $this->loadCreators();
     }
 
