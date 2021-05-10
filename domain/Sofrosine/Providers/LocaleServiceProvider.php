@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Arete\Sofrosine\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Arete\Sofrosine\Services\Locale;

@@ -174,7 +174,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\LocaleServiceProvider::class,
+        Arete\Sofrosine\Providers\LocaleServiceProvider::class,
         Arete\Logos\Providers\LogosServiceProvider::class
     ],
 
