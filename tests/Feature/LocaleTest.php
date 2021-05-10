@@ -6,7 +6,7 @@ use Tests\FixturableTestCase as TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Arete\Sofrosine\Support\Utils;
-use App\Services\Locale;
+use Arete\Sofrosine\Services\Locale;
 
 class LocaleTest extends TestCase
 {

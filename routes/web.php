@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Services\Locale;
+use Arete\Sofrosine\Services\Locale;
 use App\Http\Controllers\{
     ArticleController,
     AuthController,

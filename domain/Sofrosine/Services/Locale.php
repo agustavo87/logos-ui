@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace Arete\Sofrosine\Services;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;

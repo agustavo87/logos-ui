@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\Locale;
+use Arete\Sofrosine\Services\Locale;
 
 class SetLocale
 {
