@@ -10,7 +10,7 @@
 
     <x-form.sm action="{{ route('users.register') }}" method="POST">
       <x-form.field name="name" label="{{ __('messages.users.name') }}" type="text" placeholder="{{ __('messages.users.fake-name') }}" required />
-      <x-form.field name="email" label="E-mail" type="email" placeholder="juanp@example.com" required />
+      <x-form.field name="email" label="{{ __('messages.users.mail') }}" type="email" placeholder="juanp@example.com" required />
       <x-form.field name="password" label="{{ __('messages.users.pass') }}" value='' type="password" required />
       <x-form.select name="country" label="{{ __('messages.users.country') }}">
         @foreach ($locale['countries'] as $country)

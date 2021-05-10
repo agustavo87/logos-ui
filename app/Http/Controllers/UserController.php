@@ -21,7 +21,9 @@ class UserController extends Controller
     public function index(Request $request, $lang)
     {
         $this->authorize('viewAny', User::class);
-        return view('users.index');
+        return view('users.index', [
+            'users' => User::all()
+        ]);
     }
 
     /**

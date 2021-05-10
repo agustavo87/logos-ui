@@ -5,8 +5,6 @@
     <x-main-heading>
       Índice de usuarios
     </x-main-heading>
-    <p>
-      Esto es una prueba
-    </p>
+    <livewire:user.index />
   </x-container>
 </x-layout.default>

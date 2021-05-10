@@ -7,5 +7,5 @@
         'aria-label' => $label,
         'type' => 'checkbox',
         ]) }} />
-    <x-form.label :for=$name>{{ $label }}: </x-form.label>
+    <x-form.label :for=$name>{{ $label }}</x-form.label>
 </div>

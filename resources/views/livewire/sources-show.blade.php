@@ -8,7 +8,7 @@
         }
     </style>
 @endpush
-<div class="md:px-32 py-8 w-full">
+<div class="md:px-32  pt-4 pb-10 w-full">
     <div class="shadow overflow-hidden rounded border-b border-gray-200">
         <table class=" table-fixed min-w-full bg-white stripped">
             <thead class="bg-gray-800 text-white">

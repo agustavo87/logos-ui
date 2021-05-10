@@ -29,7 +29,6 @@ class Locale
     {
         $parameters = Route::getCurrentRoute()->originalParameters();
         $parameters['locale'] = $locale;
-        // ddd($parameters);
         $newLocaleRoute = url()->toRoute(request()->route(), $parameters, false);
         return $newLocaleRoute;
     }

@@ -14,6 +14,6 @@ class CreatorSeeder extends Seeder
      */
     public function run()
     {
-        Creator::factory()->count(140)->create();
+        Creator::factory()->count(225)->create();
     }
 }

@@ -56,7 +56,7 @@ class ArticlesRelationsSeeder extends Seeder
             $creators = $user->creators;
             $creatorsCount = $creators->count();
 
-            // Relaciona las fuentes con los creadores, si los hay
+            // Attach creators of the sources
             if ($creatorsCount && $sourcesCount) {
                 $sources->each(function ($source) use ($creators, $creatorsCount) {
                     $i = 0;
@@ -69,20 +69,12 @@ class ArticlesRelationsSeeder extends Seeder
                             ]
                         );
                     }
-                    // $sourceCreators->each(
-                    //     function ($creator) use ($i) { $creator->sources()->attach(
-                    //         $source->id, [
-                    //             'type' => 'author', 
-                    //             'relevance' => $creator->sources->count()]
-                    //         )
-                    //     }
-                    // );
                     $source->key = Source::factory()->getKey( strtolower($sourceCreators[0]->data['last_name']), $source->data['year']);
                     $source->save();
                 });
             }
             
-            // Relaciona los artículos con las fuentes
+            // Attach sources to articles
             if ($sourcesCount) {
                 $user->articles->each(function ($article) use ($sources, $sourcesCount) {
                     $articleSources = $sources->random(rand(1,  $sourcesCount < 5 ? $sourcesCount : 5));

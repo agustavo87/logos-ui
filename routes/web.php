@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Services\Locale;
 use App\Http\Controllers\{
     ArticleController,
     AuthController,
@@ -48,7 +49,7 @@ Route::group([
         Route::get('login', [AuthController::class, 'show'])
             ->name('show')
             ->middleware('guest');
-        Route::post('login', [AuthController::class, 'login']) // add throttle limit
+        Route::post('login', [AuthController::class, 'login']) /** @todo add throttle limit */ 
             ->name('login')
             ->middleware('guest');
         Route::get('logout', [AuthController::class, 'logout'])
@@ -105,10 +106,6 @@ Route::group([
         Route::get('/{article}/edit', [ArticleController::class, 'edit'])->name('edit');
     });
    
-    // Route::get('logos', 'logos.create')
-    //     ->name('logos');
-    // Route::get('logos/{article}', )
-
     Route::group([
         'prefix' => '/sources',
         'as' => 'sources.'
@@ -117,11 +114,9 @@ Route::group([
         Route::get('/{source}/edit', [SourceController::class, 'edit'])->name('edit');
     });
 
-
 });
 
 Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
-
 
 /*
 |--------------------------------------------------------------------------

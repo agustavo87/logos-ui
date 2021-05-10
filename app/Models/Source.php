@@ -10,7 +10,6 @@ class Source extends Model
 {
     use HasFactory;
 
-
     public Sources $sourceManager;
 
     protected $guarded = [];

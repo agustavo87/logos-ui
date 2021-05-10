@@ -40,6 +40,7 @@ return [
     'users' => [
         'info' => 'Información de usuario',
         'name' => 'Nombre',
+        'mail' => 'E-Mail',
         'country' => 'País',
         'lang' => 'Lenguaje',
         'edit' => 'Editar información de usuario',
@@ -49,7 +50,8 @@ return [
         'register' => 'Registro de usuario',
         'pass' => 'Contraseña',
         'session' => 'Iniciar Sesión',
-        'remember' => 'Recordar'
-
-    ]
+        'remember' => 'Recordar',
+        'delete' => "Eliminar usuario",
+        'delete-warn' => '¿Seguro que deseas eliminar este usuario?'
+    ],
 ];

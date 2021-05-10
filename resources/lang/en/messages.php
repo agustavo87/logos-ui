@@ -20,7 +20,7 @@ return [
             'lang' => 'Language'
         ],
         'account' => [
-            'start' => 'Start Sessión',
+            'start' => 'Start Session',
             'register' => 'Register',
             'profile' => 'Show Profile',
             'edit-profile' => 'Edit Profile',
@@ -40,6 +40,7 @@ return [
     'users' => [
         'info' => 'User info',
         'name' => 'Name',
+        'mail' => 'E-Mail',
         'country' => 'Country',
         'lang' => 'Language',
         'edit' => 'Edit user info',
@@ -49,6 +50,9 @@ return [
         'register' => 'User register',
         'pass' => 'Password',
         'session' => 'Login',
-        'remember' => 'Remember'
+        'remember' => 'Remember',
+        'delete' => "Delete user",
+        'delete-warn' => '¿Are you sure you want to delete this user?'
+
     ]
 ];
