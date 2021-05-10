@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Providers;
+namespace Arete\Logos\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use App\Services\Logos\Sources;
+use Arete\Logos\Services\Sources;
 
 class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
 {

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\FixturableTestCase as TestCase;
-use App\Services\Logos\Sources;
+use Arete\Logos\Services\Sources;
 use App\Models\{
     Creator,
     Source,
@@ -25,7 +25,6 @@ class SourcesTest extends TestCase
     public static $bookName = "Libro";          // eventualmente luego 
                                                 // pueden cambiar según idioma.
 
-
     public static $userId;
     public static $creator1Id;
     public static $creator2Id;
@@ -37,9 +36,7 @@ class SourcesTest extends TestCase
     public Creator $creator2;
     public Source $book;
     public Source $article;
-    public Sources $sourceManager;
-
-    
+    public Sources $sourceManager;   
 
     /**
      * Inicializa el entorno de todos los tests.
@@ -146,7 +143,7 @@ class SourcesTest extends TestCase
         $this->creator2 = Creator::find(self::$creator2Id);
         $this->book =  Source::find(self::$bookId);
         $this->article =  Source::find(self::$articleId);
-        $this->sourceManager = new Sources();
+        $this->sourceManager = $this->app->make(Sources::class); /** @todo cambiar por interface */
     }
 
     /**
@@ -223,7 +220,5 @@ class SourcesTest extends TestCase
             $this->book->name(),
             self::$bookName
         );
-       
     }
-
 }
