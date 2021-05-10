@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\App;
 use App\Services\Locale;
-use App\Utils;
+use Arete\Sofrosine\Support\Utils;
 
 class LocaleController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Arete\Sofrosine\Support;
 
 class Utils
 {

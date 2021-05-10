@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\FixturableTestCase as TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
-use App\Utils;
+use Arete\Sofrosine\Support\Utils;
 use App\Services\Locale;
 
 class LocaleTest extends TestCase

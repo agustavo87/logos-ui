@@ -37,6 +37,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Arete\\": "domain/",
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
