@@ -1,38 +1,37 @@
 @props(['initialDelta' => null])
 
 @push('head-script')
-<link rel="stylesheet" href="{{ asset('css/logos.css') }}">
-<script src="{{ asset('js/logos.js') }}"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" defer></script>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
+  <link rel="stylesheet" href="{{ asset('css/logos.css') }}">
+  <script src="{{ asset('js/logos.js') }}"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" defer></script>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css">
 @endpush
 
 @push('foot-script')
-<script>
-
-const LogosUI = {
-    newEventCall: (name, resolve, params = []) => new CustomEvent(name, {
-      detail: {
-        resolve:resolve,
-        ...params
+  <script>
+    const LogosUI = {
+      newEventCall: (name, resolve, params = []) => new CustomEvent(name, {
+        detail: {
+          resolve:resolve,
+          ...params
+        }
+      }),
+      dialogGet: function (dialogName, params) {
+        return new Promise((resolve, reject) => {
+          window.dispatchEvent(this.newEventCall(dialogName, resolve, params))
+        })
       }
-    }),
-    dialogGet: function (dialogName, params) {
-      return new Promise((resolve, reject) => {
-        window.dispatchEvent(this.newEventCall(dialogName, resolve, params))
-      })
     }
-  }
 
-  const myLogos =  new Logos({
-    initialDelta: @json($initialDelta),
-    sideControls: '#sidebar-controls',
-    quillContainer: '#quill-container',
-    btnShowSideControls: '#show-controls',
-    addCitationHandler: LogosUI.getHandler
-  });
-  
-</script>
+    const myLogos =  new Logos({
+      initialDelta: @json($initialDelta),
+      sideControls: '#sidebar-controls',
+      quillContainer: '#quill-container',
+      btnShowSideControls: '#show-controls',
+      addCitationHandler: LogosUI.getHandler
+    });
+    
+  </script>
 @endpush
 
 <div wire:ignore class="logos" x-cloak>
@@ -122,5 +121,4 @@ const LogosUI = {
       }
     }
   </script>
-  
 </div>
