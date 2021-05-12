@@ -108,3 +108,7 @@ html {
 .logos #toolbar .ql-formats .lg-btn:focus {
   outline: none;
 }
+
+table.sources-table tr:active {
+  background-color: rgba(199, 210, 254, var(--tw-bg-opacity));
+}

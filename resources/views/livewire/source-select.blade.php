@@ -12,7 +12,7 @@
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
              @click.away="cancel">
                 <div class="px-5 pt-6">
-                    <table class="w-full table-fixed border border-separate border-gray-300 rounded-t-md">
+                    <table class="sources-table w-full table-fixed border border-separate border-gray-300 rounded-t-md">
                         <thead>
                             <tr class="ml-2">
                                 <th class="w-2/6">
@@ -45,12 +45,14 @@
                                             placeholder="title" wire:model.debounce.500ms="searchFields.title" </div> </th>
                                             </tr> </thead> <tbody>
                                         @forelse ($sources as $source)
-                            <tr class=" cursor-pointer hover:bg-gray-100" data-key="{{ $source->key }}"
-                                x-on:click="seleccionar"
-                                :class="{'bg-indigo-100 hover:bg-indigo-100' : selected === '{{ $source->key }}'}">
+                            <tr class="cursor-pointer hover:bg-indigo-100" data-key="{{ $source->key }}"
+                                x-on:mouseup="seleccionar"
+                                :class="{'bg-indigo-100' : selected === '{{ $source->key }}'}"
+                            >
                                 <td class="text-sm px-2 py-1 border-b border-gray-100">{{ $source->key }}</td>
                                 <td class="text-sm px-2 py-1 border-b border-gray-100" title="{{$source->data['title']}}">
-                                    {{  \Illuminate\Support\Str::limit($source->data['title'], 35) }}</td>
+                                    {{  \Illuminate\Support\Str::limit($source->data['title'], 35) }}
+                                </td>
                             </tr>
                             @empty
                             <tr>
@@ -180,4 +182,10 @@
                 }
             }
     </script>
+
+@push('head-script')
+
+    </style>
+@endpush
+
 </div>
