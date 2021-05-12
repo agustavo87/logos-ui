@@ -68,17 +68,15 @@ const Logos = {
         this.quill.on('editor-change', (eventType, ...args) => {
             if (eventType === 'text-change') {
                 const [delta, oldDelta, source] = args;
-
                 if (source == 'user') {
                     // check if the editor has to scroll-down.
                     delta.forEach((op) => {
                         if (op.insert == "\n") {
                             // Evaluates in next 'tick', after quill updates.
-                            new Promise((resolve, reject) => {
-                                resolve();
-                            }).then(this.corregirOffset.bind(this));
+                            window.setTimeout(this.fixOffset.bind(this))
                         }
                     });
+                    // notifies an input that can be handled by parent
                     this.ui.quillContainer.dispatchEvent(new CustomEvent('quill-input', {
                         bubbles: true,
                         detail: {
@@ -89,21 +87,18 @@ const Logos = {
                     }))
                 }
 
-            } else if (eventType === 'selection-change') {
+            } else if (eventType === 'selection-change') { // check if has to show floating/side toolbar
                 const [range, oldRange, source] = args;
                 if (range == null) return;
-                if (range.length === 0) {
-
+                if (range.length === 0) { // there's nothing selected
                     const [block, offset] = this.quill.scroll.descendant(this.imports['blots/block'], range.index);
+                    // check if the only element in the line is a line break, so show side tools.
                     if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
-                        // console.log("Descendientes:\nblock: %o\noffset: %i",block, offset);
                         let lineBounds = this.quill.getBounds(range);
                         this.ui.sideControls.style.display = 'block'
                         this.ui.sideControls.style.left = lineBounds.left - 42 + "px"
-                        // console.log(lineBounds)
                         this.ui.sideControls.style.top = lineBounds.top - 7 + "px"
                     } else {
-                        // console.log('escondiendo');
                         this.ui.sideControls.style.display = 'none';
                         this.ui.sideControls.classList.remove('active')
                     }
@@ -111,21 +106,17 @@ const Logos = {
                     this.ui.sideControls.style.display = 'none';
                     this.ui.sideControls.classList.remove('active')
                 }
-                // console.log("Event '%s'\nrange:%o\noldRange:%o\nsource:%s", 
-                //     eventType, range, oldRange, source)
-
             }
         })
     },
 
-    corregirOffset: function () {
-        // console.log('corrigiendo offset');
+    fixOffset: function () {
+
         let bounds = this.quill.getBounds(this.quill.getSelection().index);
-        let margin = bounds.height * 5; // px
-        // console.log(bounds);
+        let margin = bounds.height * 5;
         let screenBottom = window.pageYOffset + window.innerHeight;
         let cursorBottom = bounds.bottom + this.ui.quillContainer.offsetTop
-        // console.log('screen bottom: ' + screenBottom + ': cursorBottom: ' + cursorBottom);
+
         if (cursorBottom + margin > screenBottom) {
             window.scrollTo(0, cursorBottom + margin * 3 - window.innerHeight)
         }
