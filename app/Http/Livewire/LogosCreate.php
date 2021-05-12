@@ -8,10 +8,6 @@ use Livewire\Component;
 class LogosCreate extends Component
 {
     public Article $article;
-    public $title;
-    public $html;
-    public $delta;
-    public $meta;
 
     protected $rules = [
         'article.title' => 'string',
@@ -32,19 +28,10 @@ class LogosCreate extends Component
                 'meta' => []
             ]);
         }
-        $this->delta = $this->article->delta;
-        $this->meta = $this->article->meta;
-        $this->html = $this->article->html;
-        $this->title = $this->article->title;
     }
 
     public function save() 
     {   
-        $this->article->delta = $this->delta;
-        $this->article->meta = $this->meta;
-        $this->article->title = $this->title;
-        $this->article->html = $this->html;
-
         if($this->article->user == null) {
             auth()->user()->articles()->save($this->article);
         } else {
