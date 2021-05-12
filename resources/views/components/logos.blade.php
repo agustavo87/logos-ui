@@ -1,4 +1,3 @@
-
 @props(['initialDelta' => null])
 
 @push('head-script')

@@ -7,6 +7,10 @@ window.Quill = Quill;
 window.SourceTypes = SourceTypes;
 window.debounce = debounce;
 
+
+/**
+ * @todo convert to class
+ */
 const Logos = {
     quill: null,
 
