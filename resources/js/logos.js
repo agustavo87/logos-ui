@@ -68,9 +68,9 @@ const Logos = {
         this.quill.on('editor-change', (eventType, ...args) => {
             if (eventType === 'text-change') {
                 const [delta, oldDelta, source] = args;
-                // console.log("Event '%s'\nrange:%o\noldRange:%o\nsource:%s", 
-                //     eventType, delta, oldDelta, source)
+
                 if (source == 'user') {
+                    // check if the editor has to scroll-down.
                     delta.forEach((op) => {
                         if (op.insert == "\n") {
                             // Evaluates in next 'tick', after quill updates.
@@ -93,8 +93,7 @@ const Logos = {
                 const [range, oldRange, source] = args;
                 if (range == null) return;
                 if (range.length === 0) {
-                    // console.log("Event '%s'\nrange:%o\noldRange:%o\nsource:%s", 
-                    //   eventType, range, oldRange, source);
+
                     const [block, offset] = this.quill.scroll.descendant(this.imports['blots/block'], range.index);
                     if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
                         // console.log("Descendientes:\nblock: %o\noffset: %i",block, offset);
