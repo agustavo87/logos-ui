@@ -11,20 +11,20 @@
 <script>
 
 const LogosUI = {
-    eventCall: (name, callback, params = []) => new CustomEvent(name, {
+    newEventCall: (name, resolve, params = []) => new CustomEvent(name, {
       detail: {
-        resolve:callback,
+        resolve:resolve,
         ...params
       }
     }),
-    dialogGet: function (name, params) {
+    dialogGet: function (dialogName, params) {
       return new Promise((resolve, reject) => {
-        window.dispatchEvent(this.eventCall(name, resolve, params))
+        window.dispatchEvent(this.newEventCall(dialogName, resolve, params))
       })
     }
   }
 
-  Logos.init({
+  const myLogos =  new Logos({
     initialDelta: @json($initialDelta),
     sideControls: '#sidebar-controls',
     quillContainer: '#quill-container',

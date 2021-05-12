@@ -7,50 +7,29 @@ window.Quill = Quill;
 window.SourceTypes = SourceTypes;
 window.debounce = debounce;
 
-
-/**
- * @todo convert to class
- */
-const Logos = {
-    quill: null,
-
-    imports: {
-        'blots/block': Quill.import('blots/block')
-    },
-    Citations: null,
-
-    ui: {
-        sideControls: null,
-        quillContainer: null,
-        btnShowSideControls: null
-    },
-
-    initialDelta: null,
-    meta: [],
-
-    init: function (options) {
-        this.initialDelta = options.initialDelta;
+class Logos { 
+    constructor(options) {
+        this.ui = {};
         this.ui.sideControls = document.querySelector(options.sideControls)
         this.ui.quillContainer = document.querySelector(options.quillContainer)
         this.ui.btnShowSideControls = document.querySelector(options.btnShowSideControls)
         
-        // inicalizar quill
+        this.initialDelta = options.initialDelta;
+        this.meta = [];
+
+        this.imports = {
+            'blots/block': Quill.import('blots/block')
+        };
         this.initQuill()
-
+        this.bindUIHandlers() 
         this.Citations = this.quill.getModule('citations');
-
-        this.quill.addContainer(this.ui.sideControls);
-        this.ui.btnShowSideControls.addEventListener('click', () => {
-            this.ui.sideControls.classList.toggle('active')
-            this.quill.focus()
-        })
 
         if (this.initialDelta) {
             this.quill.setContents(this.initialDelta, 'api');
         }
-    },
+    }
 
-    initQuill: function () {
+    initQuill () {
         this.quill = new Quill(this.ui.quillContainer, {
             modules: {
                 toolbar: '#toolbar',
@@ -65,7 +44,6 @@ const Logos = {
                 }
             },
             theme: 'bubble',
-            // debug:'info',
             placeholder: "Escribe algo épico..."
         });
 
@@ -95,9 +73,11 @@ const Logos = {
                 const [range, oldRange, source] = args;
                 if (range == null) return;
                 if (range.length === 0) { // there's nothing selected
+                    console.log('cambio de seleccion, viendo si es una linea vacía')
                     const [block, offset] = this.quill.scroll.descendant(this.imports['blots/block'], range.index);
                     // check if the only element in the line is a line break, so show side tools.
                     if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
+                        console.log('es una linea vacía')
                         let lineBounds = this.quill.getBounds(range);
                         this.ui.sideControls.style.display = 'block'
                         this.ui.sideControls.style.left = lineBounds.left - 42 + "px"
@@ -112,10 +92,17 @@ const Logos = {
                 }
             }
         })
-    },
+    }
 
-    fixOffset: function () {
+    bindUIHandlers() {
+        this.quill.addContainer(this.ui.sideControls);
+        this.ui.btnShowSideControls.addEventListener('click', () => {
+            this.ui.sideControls.classList.toggle('active')
+            this.quill.focus()
+        })
+    }
 
+    fixOffset () {
         let bounds = this.quill.getBounds(this.quill.getSelection().index);
         let margin = bounds.height * 5;
         let screenBottom = window.pageYOffset + window.innerHeight;
@@ -126,7 +113,5 @@ const Logos = {
         }
     }
 };
+
 window.Logos = Logos;
-
-
-console.log('logos.js cargado')
