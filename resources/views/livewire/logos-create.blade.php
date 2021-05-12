@@ -13,7 +13,7 @@
     <div class="max-w-screen-md mx-auto mt-3 h-5">
         <span class=" ml-2 text-xs text-gray-400" x-text="transactionStatus"></span>
     </div>
-    <div  @quill-input="handleInput"  class="flex flex-col mx-auto logos-container mt-1 max-w-screen-md">
+    <div  @quill-input="quillInput"  class="flex flex-col mx-auto logos-container mt-1 max-w-screen-md">
         <input type="text" wire:model.defer="article.title" @input="simpleInput" placeholder="Título" autocomplete="off" class="ml-2 text-3xl font-bold mb-2 focus:outline-none text-gray-800">
         <x-logos :initial-delta="$article->delta" />
     </div>
@@ -36,7 +36,7 @@
                     meta: entangles.meta,
                     html: entangles.html,
                     transactionStatus: 'Listo',
-                    handleInput: function (event) {
+                    quillInput: function (event) {
                         this.delta = event.detail.delta();
                         this.html = event.detail.html();
                         this.meta = {key: 'value'};
