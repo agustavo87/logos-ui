@@ -55,7 +55,4 @@
             }
         </script>
     @endpush
-    
-
-
 </div>

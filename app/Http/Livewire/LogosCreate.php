@@ -8,10 +8,10 @@ use Livewire\Component;
 class LogosCreate extends Component
 {
     public Article $article;
-    public $delta;
-    public $html;
-    public $meta;
     public $title;
+    public $html;
+    public $delta;
+    public $meta;
 
     protected $rules = [
         'article.title' => 'string',

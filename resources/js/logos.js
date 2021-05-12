@@ -7,7 +7,6 @@ window.Quill = Quill;
 window.SourceTypes = SourceTypes;
 window.debounce = debounce;
 
-
 const Logos = {
     quill: null,
 

@@ -44,6 +44,9 @@ class ArticlesRelationsSeeder extends Seeder
     }
 
     /**
+     * Relate the articles, sources, and creator of the passed
+     * users.
+     * 
      * @param \Illuminate\Database\Eloquent\Collection $users
      * 
      * @return void
