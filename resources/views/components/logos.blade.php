@@ -94,24 +94,33 @@ const LogosUI = {
   
       </div>
   </div>
-  <div x-data="{
-      getSource: () => {
-        LogosUI.dialogGet('source-get', {ui: LogosUI}).then(r => console.log(r))
-      },
-      getEditSource: () => {
-        LogosUI.dialogGet('source-edit', {withBg: true, ui: LogosUI}).then(r => console.log(r))
-      }
-    }">
+  <div x-data="newDialogs()">
     <button 
-    @click="getSource"
-    class="px-4 py-2 rounded bg-gray-800 text-white"
-    >Seleccionar Fuente</button>
+      @click="getSource"
+      class="px-4 py-2 rounded bg-gray-800 text-white"
+    >
+      Seleccionar Fuente
+    </button>
     <button 
-    @click="getEditSource"
-    class="px-4 py-2 rounded bg-gray-800 text-white"
-    >Editar Fuente</button>
+      @click="getEditSource"
+      class="px-4 py-2 rounded bg-gray-800 text-white"
+    >
+      Editar Fuente
+    </button>
   </div>
   <livewire:source-select />
   <livewire:source-edit />
+  <script>
+    function newDialogs() {
+      return {
+        getSource: () => {
+          LogosUI.dialogGet('source-get', {ui: LogosUI}).then(r => console.log(r))
+        },
+        getEditSource: () => {
+          LogosUI.dialogGet('source-edit', {withBg: true, ui: LogosUI}).then(r => console.log(r))
+        }
+      }
+    }
+  </script>
   
 </div>
