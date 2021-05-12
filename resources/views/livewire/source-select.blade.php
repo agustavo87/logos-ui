@@ -18,12 +18,7 @@
                                 <th class="w-2/6">
                                     <div class="flex flex-row items-stretch text-gray-500">
                                         <label for="key" class=" flex-none py-2 bg-gray-100 px-2 rounded-l-md">
-                                            <svg class="w-3 h-3 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
+                                            <x-icons.lupa  class="w-3 h-3 fill-current" />
                                         </label>
                                         <input type="text" autocomplete="off" id="key" x-ref="key"
                                             class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm w-0"
@@ -33,12 +28,7 @@
                                 <th class=" w-4/6">
                                     <div class="flex flex-row items-stretch text-gray-500">
                                         <label for="key" class=" flex-none py-2 bg-gray-100 px-2 rounded-l-md">
-                                            <svg class="w-3 h-3 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
+                                            <x-icons.lupa  class="w-3 h-3 fill-current" />
                                         </label>
                                         <input type="text" autocomplete="off" id="title"
                                             class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm  w-0"
@@ -110,9 +100,10 @@
                 <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end items-center">
                     <button @click="newReference" title="Agregar"
                     class="h-9 w-9 flex justify-center items-center bg-green-200 text-blue-900 rounded-full mr-2">
-                        <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <x-icons.cross class="w-5 h-5" />
+                        {{-- <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
+                        </svg> --}}
                     </button>
                     <x-form.button @click="solve" class="mr-2">Insertar</x-form.button>
                     <x-form.button @click="cancel"

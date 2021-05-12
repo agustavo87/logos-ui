@@ -68,20 +68,20 @@
   
   <div id="sidebar-controls">
     <button id="show-controls" type="button">
-      <x-icons.cross />
+      <x-icons.cross class="h-icon" />
     </button>
     <span class="controls">
       <button id="image-button" type="button">
-        <x-icons.camera />
+        <x-icons.camera class="h-icon" />
       </button>
       <button id="video-button" type="button">      
-        <x-icons.video />
+        <x-icons.video class="h-icon"  />
       </button>
       <button id="tweet-button" type="button">      
-        <x-icons.tweeter />
+        <x-icons.tweeter class="h-icon" />
       </button>
       <button id="divider-button" type="button">
-        <x-icons.horizontal-dots />
+        <x-icons.horizontal-dots class="h-icon" />
       </button>
     </span>
   </div>
