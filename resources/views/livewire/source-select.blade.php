@@ -1,4 +1,5 @@
-<div x-data="modalCitation()" 
+<div 
+    x-data="modalCitation()" 
     x-show="display" x-on:{{ $listen }}.window="handleInvocation"
     x-on:keydown.escape.window="handleEscape"
     class="fixed z-10 inset-0 flex flex-col justify-center items-center">
