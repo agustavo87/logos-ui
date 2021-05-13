@@ -38,22 +38,39 @@
                             </tr> 
                         </thead> 
                         <tbody>
-                            @forelse ($sources as $source)
-                                <tr class="cursor-pointer hover:bg-indigo-200" data-key="{{ $source->key }}"
-                                    x-on:mouseup="seleccionar"
-                                    :class="{'bg-indigo-100' : selected === '{{ $source->key }}'}"
-                                >
-                                    <td class="text-sm px-2 py-1 border-b border-gray-100">{{ $source->key }}</td>
-                                    <td class="text-sm px-2 py-1 border-b border-gray-100" title="{{$source->data['title']}}">
-                                        {{  \Illuminate\Support\Str::limit($source->data['title'], 35) }}
-                                    </td>
-                                </tr>
-                            @empty
-                            <tr>
-                                <td colspan="2" class="text-sm px-2 text-center font-bold text-gray-400 py-4"> No se
-                                    encontraron registros.</td>
-                            </tr>
-                            @endforelse
+                            @for ($row = 1; $row <= $max_rows; $row++)
+                                @if($row <= $sources->count())
+                                    <?php $source = $sources[$row-1] ?>
+                                    <tr class="cursor-pointer hover:bg-indigo-200" data-key="{{ $source->key }}"
+                                        x-on:mouseup="seleccionar"
+                                        :class="{'bg-indigo-100' : selected === '{{ $source->key }}'}"
+                                    >
+                                        <td class="text-sm px-2 py-1 border-b border-gray-100">
+                                            {{ $source->key }}
+                                        </td>
+                                        <td class="text-sm px-2 py-1 border-b border-gray-100" title="{{$source->data['title']}}">
+                                            {{  \Illuminate\Support\Str::limit($source->data['title'], 35) }}
+                                        </td>
+                                    </tr>
+                                @else
+                                    @if ($sources->count())
+                                        <tr>
+                                            <td class="text-sm px-2 py-1 border-b border-gray-100">
+                                                &nbsp;
+                                            </td>
+                                            <td class="text-sm px-2 py-1 border-b border-gray-100">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td class="text-sm px-2 py-1 border-b border-gray-100 text-gray-500 text-center" colspan="2">
+                                                @if($row == 1) <i>No se encontraron registros.</i> @endif &nbsp;
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endif
+                            @endfor
                         </tbody>
                     </table>
                     {{-- pagination --}}

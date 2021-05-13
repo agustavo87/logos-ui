@@ -10,6 +10,7 @@ class SourceSelect extends Component
 {
     use WithPagination;
 
+    public $max_rows = 8;
     public $listen = 'source-get';
 
     public $searchFields = [
@@ -34,7 +35,7 @@ class SourceSelect extends Component
         }
 
         return view('livewire.source-select', [
-            'sources' => $sources->latest()->paginate(5)
+            'sources' => $sources->latest()->paginate( $this->max_rows )
         ]);
     }
 
