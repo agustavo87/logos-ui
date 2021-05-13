@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'a' => 'a'
-]
+    'no-records' => 'No se encontraron registros.'
+];

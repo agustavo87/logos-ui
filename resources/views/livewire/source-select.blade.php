@@ -65,7 +65,7 @@
                                     @else
                                         <tr>
                                             <td class="text-sm px-2 py-1 border-b border-gray-100 text-gray-500 text-center" colspan="2">
-                                                @if($row == 1) <i>No se encontraron registros.</i> @endif &nbsp;
+                                                @if($row == 1) <i> {{ __('logos.no-records') }}</i> @endif &nbsp;
                                             </td>
                                         </tr>
                                     @endif
@@ -91,15 +91,11 @@
                                         </button>
                                     @endif
                                 </span>
-        
-        
                                 @if ($sources->count())
                                     <span class="text-xs leading-5 tracking-widest font-medium text-gray-600">
                                         {{ "{$sources->currentPage()}:{$sources->lastPage()}" }}
                                     </span>
                                 @endif
-        
-        
                                 <span>
                                     {{-- Next Page Link --}}
                                     @if ($sources->hasMorePages())
@@ -121,20 +117,16 @@
                     </div>
                 </div>
                 <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end items-center">
-                    <button @click="newReference" title="Agregar"
-                    class="h-9 w-9 flex justify-center items-center bg-green-200 text-blue-900 rounded-full mr-2">
-                    <x-icons.cross class="w-5 h-5" />
-                        {{-- <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg> --}}
+                    <button @click="newReference" title=" {{ __('ui.new') }}"
+                        class="h-9 w-9 flex justify-center items-center bg-green-200 text-blue-900 rounded-full mr-2">
+                        <x-icons.cross class="w-5 h-5" />
                     </button>
                     <x-form.button @click="solve" class="mr-2">
-                        Insertar
+                        {{ __('ui.insert') }}
                     </x-form.button>
                     <x-form.button @click="cancel"
-                        class="bg-gray-500 font-bold py-2 px-4 rounded-lg text-white focus:outline-none hover:bg-gray-400 active:bg-gray-600"
-                        replace>
-                        Cancelar
+                        class="bg-gray-500 font-bold py-2 px-4 rounded-lg text-white focus:outline-none hover:bg-gray-400 active:bg-gray-600" replace>
+                        {{ __('ui.cancel') }}
                     </x-form.button>
                 </div>
             </div>
