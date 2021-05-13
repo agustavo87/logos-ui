@@ -75,8 +75,8 @@
                     </table>
                     {{-- pagination --}}
                     <div class="px-1">
-                        @if ($sources->hasPages() && $sources->count())
-                            <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
+                        <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
+                            @if ($sources->hasPages() && $sources->count())
                                 <span>
                                     {{-- Previous Page Link --}}
                                     @if ($sources->onFirstPage())
@@ -114,8 +114,10 @@
                                         </span>
                                     @endif
                                 </span>
-                            </nav>
-                        @endif
+                            @else
+                                <span>&nbsp;</span>
+                            @endif
+                        </nav>
                     </div>
                 </div>
                 <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end items-center">
