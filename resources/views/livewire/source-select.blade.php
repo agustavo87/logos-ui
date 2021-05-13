@@ -10,7 +10,7 @@
         <div class="relative max-w-lg w-full px-2 py-2" x-show="showModal">
             {{-- modal --}}
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
-             @click.away="cancel">
+                @click.away="cancel">
                 <div class="px-5 pt-6">
                     <table class="sources-table w-full table-fixed border border-separate border-gray-300 rounded-t-md">
                         <thead>
@@ -32,68 +32,72 @@
                                         </label>
                                         <input type="text" autocomplete="off" id="title"
                                             class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm  w-0"
-                                            placeholder="title" wire:model.debounce.500ms="searchFields.title" </div> </th>
-                                            </tr> </thead> <tbody>
-                                        @forelse ($sources as $source)
-                            <tr class="cursor-pointer hover:bg-indigo-100" data-key="{{ $source->key }}"
-                                x-on:mouseup="seleccionar"
-                                :class="{'bg-indigo-100' : selected === '{{ $source->key }}'}"
-                            >
-                                <td class="text-sm px-2 py-1 border-b border-gray-100">{{ $source->key }}</td>
-                                <td class="text-sm px-2 py-1 border-b border-gray-100" title="{{$source->data['title']}}">
-                                    {{  \Illuminate\Support\Str::limit($source->data['title'], 35) }}
-                                </td>
-                            </tr>
+                                            placeholder="title" wire:model.debounce.500ms="searchFields.title">
+                                    </div> 
+                                </th>
+                            </tr> 
+                        </thead> 
+                        <tbody>
+                            @forelse ($sources as $source)
+                                <tr class="cursor-pointer hover:bg-indigo-200" data-key="{{ $source->key }}"
+                                    x-on:mouseup="seleccionar"
+                                    :class="{'bg-indigo-100' : selected === '{{ $source->key }}'}"
+                                >
+                                    <td class="text-sm px-2 py-1 border-b border-gray-100">{{ $source->key }}</td>
+                                    <td class="text-sm px-2 py-1 border-b border-gray-100" title="{{$source->data['title']}}">
+                                        {{  \Illuminate\Support\Str::limit($source->data['title'], 35) }}
+                                    </td>
+                                </tr>
                             @empty
                             <tr>
                                 <td colspan="2" class="text-sm px-2 text-center font-bold text-gray-400 py-4"> No se
                                     encontraron registros.</td>
                             </tr>
                             @endforelse
-                            </tbody>
+                        </tbody>
                     </table>
                     {{-- pagination --}}
                     <div class="px-1">
                         @if ($sources->hasPages() && $sources->count())
-                        <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
-                            <span>
-                                {{-- Previous Page Link --}}
-                                @if ($sources->onFirstPage())
-                                <span
-                                    class="relative inline-flex items-center text-sm font-medium text-gray-400 cursor-default leading-5 rounded-md">
-                                    {!! __('pagination.previous') !!}
+                            <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
+                                <span>
+                                    {{-- Previous Page Link --}}
+                                    @if ($sources->onFirstPage())
+                                        <span
+                                            class="relative inline-flex items-center text-sm font-medium text-gray-400 cursor-default leading-5 rounded-md">
+                                            {!! __('pagination.previous') !!}
+                                        </span>
+                                    @else
+                                        <button wire:click="previousPage" wire:loading.attr="disabled" rel="prev"
+                                            class="relative inline-flex items-center text-sm font-medium text-gray-700 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
+                                            {!! __('pagination.previous') !!}
+                                        </button>
+                                    @endif
                                 </span>
-                                @else
-                                <button wire:click="previousPage" wire:loading.attr="disabled" rel="prev"
-                                    class="relative inline-flex items-center text-sm font-medium text-gray-700 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                                    {!! __('pagination.previous') !!}
-                                </button>
+        
+        
+                                @if ($sources->count())
+                                    <span class="text-xs leading-5 tracking-widest font-medium text-gray-600">
+                                        {{ "{$sources->currentPage()}:{$sources->lastPage()}" }}
+                                    </span>
                                 @endif
-                            </span>
-    
-    
-                            @if ($sources->count())
-                            <span class="text-xs leading-5 tracking-widest font-medium text-gray-600">
-                                {{ "{$sources->currentPage()}:{$sources->lastPage()}" }}
-                            </span>
-                            @endif
-    
-    
-                            <span>
-                                {{-- Next Page Link --}}
-                                @if ($sources->hasMorePages())
-                                <button wire:click="nextPage" wire:loading.attr="disabled" rel="next"
-                                    class="relative inline-flex items-center text-sm font-medium text-gray-700  leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                                    {!! __('pagination.next') !!}
-                                </button>
-                                @else
-                                <span
-                                    class="relative inline-flex items-center text-sm font-medium text-gray-400 cursor-default leading-5 rounded-md">
-                                    {!! __('pagination.next') !!}
+        
+        
+                                <span>
+                                    {{-- Next Page Link --}}
+                                    @if ($sources->hasMorePages())
+                                        <button wire:click="nextPage" wire:loading.attr="disabled" rel="next"
+                                            class="relative inline-flex items-center text-sm font-medium text-gray-700  leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
+                                            {!! __('pagination.next') !!}
+                                        </button>
+                                    @else
+                                        <span
+                                            class="relative inline-flex items-center text-sm font-medium text-gray-400 cursor-default leading-5 rounded-md">
+                                            {!! __('pagination.next') !!}
+                                        </span>
+                                    @endif
                                 </span>
-                                @endif
-                            </span>
-                        </nav>
+                            </nav>
                         @endif
                     </div>
                 </div>
@@ -105,10 +109,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg> --}}
                     </button>
-                    <x-form.button @click="solve" class="mr-2">Insertar</x-form.button>
+                    <x-form.button @click="solve" class="mr-2">
+                        Insertar
+                    </x-form.button>
                     <x-form.button @click="cancel"
                         class="bg-gray-500 font-bold py-2 px-4 rounded-lg text-white focus:outline-none hover:bg-gray-400 active:bg-gray-600"
-                        replace>Cancelar</x-form.button>
+                        replace>
+                        Cancelar
+                    </x-form.button>
                 </div>
             </div>
         </div>
@@ -122,7 +130,6 @@
                     showModal: false,
                     ui: null, 
                     seleccionar: function (e) {
-                        // console.log(e.currentTarget.dataset['key']);
                         this.selected = e.currentTarget.dataset['key']
                     },
                     respond: a => console.log(a),
@@ -173,10 +180,4 @@
                 }
             }
     </script>
-
-@push('head-script')
-
-    </style>
-@endpush
-
 </div>

@@ -29,7 +29,6 @@ class SourceSelect extends Component
                     $sources->where($field, 'LIKE', "%{$value}%");
                 } elseif ($field == 'title') {
                     $sources->whereRaw('LCASE(data->"$.title") LIKE "%' . strtolower($value) . '%"');
-                    // $sources->where('data->title', 'LIKE', "%{$value}%");
                 }
             }
         }
