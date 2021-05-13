@@ -6,9 +6,6 @@ use App\Models\Source;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-/**
- * @todo Hacer que muestre solo las fuentes del usuario
- */
 class SourceSelect extends Component
 {
     use WithPagination;
@@ -23,6 +20,8 @@ class SourceSelect extends Component
     public function render()
     {
         $sources = Source::select('key', 'data');
+
+        $sources->where('user_id', auth()->user()->id);
 
         foreach ($this->searchFields as $field => $value) {
             if(!empty($value)) {
