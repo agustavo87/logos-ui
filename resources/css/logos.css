@@ -112,3 +112,9 @@ html {
 table.sources-table tbody tr:active {
   background-color: rgba(224, 231, 255, var(--tw-bg-opacity));
 }
+
+.text-ellipsis {
+  white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

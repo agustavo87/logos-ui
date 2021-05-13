@@ -48,8 +48,8 @@
                                         <td class="text-sm px-2 py-1 border-b border-gray-100">
                                             {{ $source->key }}
                                         </td>
-                                        <td class="text-sm px-2 py-1 border-b border-gray-100" title="{{$source->data['title']}}">
-                                            {{  \Illuminate\Support\Str::limit($source->data['title'], 35) }}
+                                        <td class="text-sm px-2 py-1 border-b border-gray-100 text-ellipsis" title="{{$source->data['title']}}">
+                                            {{ $source->data['title'] }}
                                         </td>
                                     </tr>
                                 @else
