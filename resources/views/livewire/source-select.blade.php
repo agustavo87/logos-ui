@@ -42,7 +42,7 @@
                             @for ($row = 1; $row <= $max_rows; $row++)
                                 @if($row <= $sources->count())
                                     <?php $source = $sources[$row-1] ?>
-                                    <tr class="cursor-pointer hover:bg-indigo-200" data-key="{{ $source->key }}"
+                                    <tr class="cursor-pointer hover:bg-indigo-200" data-key="{{ $source->key }}" data-id="{{ $source->id }}"
                                         x-on:mouseup="seleccionar"
                                         :class="{'bg-indigo-100' : selected === '{{ $source->key }}'}"
                                     >
@@ -118,11 +118,14 @@
                     </div>
                 </div>
                 <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end items-center">
+                    <x-form.button @click="edit" title="Edit Source" class="mr-2 disabled:cursor-default disabled:pointer-events-none disabled:opacity-50 " x-bind:disabled="!selected_id" >
+                        Edit
+                    </x-form.button>
                     <button @click="newReference" title=" {{ __('ui.new') }}"
                         class="h-9 w-9 flex justify-center items-center bg-green-200 text-blue-900 rounded-full mr-2">
                         <x-icons.cross class="w-5 h-5" />
                     </button>
-                    <x-form.button @click="solve" class="mr-2">
+                    <x-form.button @click="solve"  class="mr-2">
                         {{ __('ui.insert') }}
                     </x-form.button>
                     <x-form.button @click="cancel"
@@ -138,11 +141,13 @@
         function modalCitation() {
                 return {
                     selected: null,
+                    selected_id: null,
                     display: false,
                     showModal: false,
                     ui: null, 
                     seleccionar: function (e) {
-                        this.selected = e.currentTarget.dataset['key']
+                        this.selected = e.currentTarget.dataset.key
+                        this.selected_id = e.currentTarget.dataset.id
                     },
                     respond: a => console.log(a),
                     handleInvocation: function (e) {
@@ -166,7 +171,23 @@
                     },
                     newReference: function () {
                         this.showModal = false;
-                        this.ui.dialogGet('source-edit', {withBg:false, ui:this.ui})
+                        this.ui.dialogGet('source-edit', {
+                            withBg:false, 
+                            ui:this.ui,
+                            source_id: null
+                        })
+                            .then((r) => {
+                                console.log(r);
+                                this.showModal = true;
+                            })
+                    },
+                    edit: function() {
+                        this.showModal = false;
+                        this.ui.dialogGet('source-edit', {
+                            withBg: false,
+                            ui: this.ui,
+                            source_id: this.selected_id
+                        })
                             .then((r) => {
                                 console.log(r);
                                 this.showModal = true;
@@ -183,6 +204,7 @@
                         this.$wire.resetPage();
                         this.$wire.reiniciarFields()
                         this.selected = ''
+                        this.selected_id = null
                     },
                     handleEscape: function () {
                         if (this.showModal) {

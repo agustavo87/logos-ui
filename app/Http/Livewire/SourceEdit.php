@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use App\Models\Source;
 use Livewire\Component;
-use Faker\Generator;
 
 class SourceEdit extends Component
 {
@@ -14,7 +13,7 @@ class SourceEdit extends Component
     public $sourceSchema; // schema tag = type:version
     public Source $source;
     public $withBg = true;
-
+    public $source_id;
 
     protected const SUPPORTED_SCHEMAS = [
         // schema tag => name
@@ -22,20 +21,19 @@ class SourceEdit extends Component
         'citation.article:0.0.1' => "Artículo de Revista Académica"
     ];
 
-    public function mount($sourceId = 52)
+    public function mount($source_id = null)
     {
-        if ($sourceId) {
-            $this->source = Source::findOrFail($sourceId);
-        } else {
-            $this->source = new Source([
-                'type' => 'citation.article',
-                'schema' => '0.0.1',
-                'data' => []
-            ]);
-        }
-        $this->sourceSchema = "{$this->source->type}:{$this->source->schema}";
-        $this->data = $this->source->data;
-        $this->creators = $this->source->creators;
+        if ($source_id) {
+            $this->setSource($source_id);
+            return;
+        } 
+
+        $this->source = new Source([
+            'type' => 'citation.article',
+            'schema' => '0.0.1',
+            'data' => []
+        ]);
+        $this->fillSourceData();
     }
 
     public function render()
@@ -45,9 +43,23 @@ class SourceEdit extends Component
         ]);
     }
 
+    public function setSource(int $id)
+    {
+        $this->source_id = $id;
+        $this->source = Source::findOrFail($id);
+        $this->fillSourceData();
+    }
+
+    protected function fillSourceData()
+    {
+        $this->sourceSchema = "{$this->source->type}:{$this->source->schema}";
+        $this->data = $this->source->data;
+        $this->creators = $this->source->creators;
+    }
+
     public function save()
     {
-        $faker = app(Generator::class);
+        $faker = app('\Faker\Generator');
         list($type, $schema) = explode(':',$this->sourceSchema);
         $this->source->type = $type;
         $this->source->schema = $schema;
@@ -57,6 +69,7 @@ class SourceEdit extends Component
         }
         if (!$this->source->user) {
             auth()->user()->sources()->save($this->source);
+            $this->source_id = $this->source_id->id;
             return;
         }
         $this->source->save();

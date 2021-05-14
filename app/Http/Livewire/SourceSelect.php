@@ -20,7 +20,7 @@ class SourceSelect extends Component
 
     public function render()
     {
-        $sources = Source::select('key', 'data');
+        $sources = Source::select('id', 'key', 'data');
 
         $sources->where('user_id', auth()->user()->id);
 
