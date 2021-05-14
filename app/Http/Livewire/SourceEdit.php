@@ -27,13 +27,7 @@ class SourceEdit extends Component
             $this->setSource($source_id);
             return;
         } 
-
-        $this->source = new Source([
-            'type' => 'citation.article',
-            'schema' => '0.0.1',
-            'data' => []
-        ]);
-        $this->fillSourceData();
+        $this->setNewSource();
     }
 
     public function render()
@@ -43,13 +37,29 @@ class SourceEdit extends Component
         ]);
     }
 
+    /**
+     * Set the state of the controller to a 
+     * certain source alredy known (has id & key)
+     * 
+     * @param   int     $id
+     * 
+     * @return  void
+     */
     public function setSource(int $id)
     {
-        $this->source_id = $id;
+        $this->source_id = $this->source->id;
         $this->source = Source::findOrFail($id);
+        $this->key = $this->source->key;
         $this->fillSourceData();
     }
-
+    
+    /**
+     * Fill controller cache of model attributes.
+     * 
+     * Except id & key
+     * 
+     * @return  void
+     */
     protected function fillSourceData()
     {
         $this->sourceSchema = "{$this->source->type}:{$this->source->schema}";
@@ -57,19 +67,40 @@ class SourceEdit extends Component
         $this->creators = $this->source->creators;
     }
 
+    /**
+     * Sets the state of the controller to a new source
+     * 
+     * But not yet stored.
+     * 
+     * @return void
+     */
+    public function setNewSource()
+    {
+        $this->source = new Source([
+            'key' => '',
+            'type' => 'citation.article',
+            'schema' => '0.0.1',
+            'data' => []
+        ]);
+        $this->source_id = null;
+        $this->key = null;
+        $this->fillSourceData();
+    }
+
     public function save()
     {
-        $faker = app('\Faker\Generator');
         list($type, $schema) = explode(':',$this->sourceSchema);
         $this->source->type = $type;
         $this->source->schema = $schema;
         $this->source->data = $this->data;
         if (!$this->key) {
-            $this->source->key = $faker->firstName . $this->data['year'];
+            /** @todo use the creators last_names */
+            $this->source->key = $this->source->generateKey();
+            $this->key = $this->source->key;
         }
         if (!$this->source->user) {
             auth()->user()->sources()->save($this->source);
-            $this->source_id = $this->source_id->id;
+            $this->source_id = $this->source->id;
             return;
         }
         $this->source->save();

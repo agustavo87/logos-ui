@@ -63,10 +63,6 @@
                 resolve: r => console.log(r),
 
                 init: function ($dispatch) {
-                    // this.$nextTick(() => $dispatch('set-schema', {
-                    //     schema: this.sourceSchema,
-                    //     data: this.data
-                    // }))
                     this.$watch('sourceSchema', v => {
                         this.schemaChange(v, $dispatch)
                     })
