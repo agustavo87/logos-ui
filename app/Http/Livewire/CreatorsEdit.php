@@ -89,17 +89,29 @@ class CreatorsEdit extends Component
      */
     protected $listeners = [
         // 'creatorDeleted' => 'handleCreatorDeleted'
-        'creatorDetach' => 'handleCreatorDetach'
+        'creatorDetach' => 'handleCreatorDetach',
+        'sourceEditView'    => 'handleSourceEditView' 
     ];
 
+    public function mount(?Source $source = null) 
+    {
+        if ($source) {
+            $this->setSource($source);
+        }
+    }
 
-    public function mount($source = null) 
+    public function handleSourceEditView(Source $source)
+    {
+        $this->setSource($source);
+    }
+
+    public function setSource(Source $source)
     {
         $this->loadCreators($source);
         $this->loadSuggestedCreators(); 
     }
 
-    protected function loadCreators($source = null)
+    protected function loadCreators(?Source $source = null)
     {
         if ($source) {
             $this->creators = $source->creators;
