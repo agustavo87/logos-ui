@@ -16,8 +16,7 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
     public function register()
     {
         /** @todo vincular a una interfaz más bien */
-        $this->app->bind(Sources::class, function ($app)
-        {
+        $this->app->bind(Sources::class, function ($app) {
             return new Sources();
         });
 
@@ -34,5 +33,3 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
         return [Sources::class];
     }
 }
-
-

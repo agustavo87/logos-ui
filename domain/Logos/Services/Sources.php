@@ -4,18 +4,17 @@ namespace Arete\Logos\Services;
 
 use App\Models\Source;
 
-class Sources 
+class Sources
 {
     /**
      * Devuelve una representación estilo APA de una fuente
      * según su tipo
-     * 
+     *
      * @param \App\Models\Source $source
      * @return string
      */
     public function render(Source $source): string
     {
-        
         switch ($source->type . ':' . $source->schema) {
             case 'citation.book:0.0.1':
                 return $this->renderBook($source);
@@ -23,7 +22,6 @@ class Sources
             case 'citation.article:0.0.1':
                 return $this->renderArticle($source);
                 break;
-            
             default:
                 return $this->renderDefault($source);
                 break;
@@ -31,9 +29,9 @@ class Sources
     }
 
     /**
-     * Devuelve un render estilo APA fuente tipo book 
+     * Devuelve un render estilo APA fuente tipo book
      * esquema
-     * 
+     *
      * @param \App\Models\Source $book
      * @return string
      */
@@ -44,15 +42,15 @@ class Sources
     }
 
     /**
-     * Devuelve un render estilo APA fuente tipo article 
+     * Devuelve un render estilo APA fuente tipo article
      * esquema
-     * 
+     *
      * @param \App\Models\Source $article
      * @return string
-     */    
+     */
     public function renderArticle($article)
     {
-        list('year' => $year, 'title' => $title, 'journal' => $journal, 'volume' => $vol, 
+        list('year' => $year, 'title' => $title, 'journal' => $journal, 'volume' => $vol,
             'issue' => $issue, 'firstPage' => $pageInit, 'lastPage' => $pageEnd) = $article->data;
 
         return "{$this->renderCreatorsAPA($article->creators)} ({$year}). {$title}. {$journal}, vol. {$vol}({$issue}), {$pageInit}-{$pageEnd}.";
@@ -60,7 +58,7 @@ class Sources
 
     /**
      * Render creators in standard APA style
-     * 
+     *
      * @param \Illuminate\Database\Eloquent\Collection  $creators The \App\Models\Creator collection
      * @return string
      */
@@ -70,8 +68,8 @@ class Sources
         $creatorsAPA = '';
         $creatorsLength = $creators->count();
         foreach ($creators as $creator) {
-            if(++$i) {
-                $creatorsAPA .= $i + 1 == $creatorsLength ? ' & ': ', ';
+            if (++$i) {
+                $creatorsAPA .= $i + 1 == $creatorsLength ? ' & ' : ', ';
             }
             $creatorsAPA .= $creator->data['last_name'] . ', ' . strtoupper($creator->data['name'][0]) . '.';
         }
@@ -80,9 +78,9 @@ class Sources
 
 
     /**
-     * Devuelve un render por defecto de una fuente sin depender del 
+     * Devuelve un render por defecto de una fuente sin depender del
      * esquema
-     * 
+     *
      * @param \App\Models\Source $source
      * @return string
      */
@@ -98,7 +96,7 @@ class Sources
 
     /**
      * Devuelve el nombre legible del tipo de fuente
-     * 
+     *
      * @param \App\Models\Source $source
      * @return string
      */
@@ -114,5 +112,4 @@ class Sources
     {
         return resource_path();
     }
-
 }

@@ -25,3 +25,7 @@ the attributes are recovered.
 - The sources can be of diferent types.
 - The types have diferent attributes.
 - The types or attributes can change in the type and gave differents versions.
+
+
+## Attributes
+- Dinamic Object, can have properties set/get.
