@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\FixturableTestCase as TestCase;
-use App\Models\{
-    User,
-};
+use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 
 class ArticlesTest extends TestCase
@@ -56,16 +54,16 @@ class ArticlesTest extends TestCase
 
     /**
      * Logs Status.
-     * 
+     *
      * Depends on
      * - getStatusText macro
      * - LogsInformation trait
-     * 
+     *
      * @param \Illuminate\Testing\TestResponse $response
-     * @param int $expected 
+     * @param int $expected
      * @return string
      */
-    public function logStatus($response, int $expected = 200): void 
+    public function logStatus($response, int $expected = 200): void
     {
         $statusCode = $response->getStatusCode();
         $this->log("$statusCode: {$response->getStatusText()}", $statusCode == $expected);
@@ -76,7 +74,7 @@ class ArticlesTest extends TestCase
      *
      * @return void
      */
-    public function test_return_error_on_post_a_source_unauthenticated() 
+    public function test_return_error_on_post_a_source_unauthenticated()
     {
         $key = 'gus2020';
         $data = 'Gustavo, A. (2020). El ocaso del menemismo amarillo. Viñeta2: Buenos Aires.';
@@ -119,12 +117,11 @@ class ArticlesTest extends TestCase
             ]);
 
         return $key;
-
     }
 
     /**
      * Get a source data.
-     * 
+     *
      * @depends test_posts_a_source
      * @param string $key
      * @return string
@@ -150,7 +147,7 @@ class ArticlesTest extends TestCase
 
     /**
      * Updates a source data.
-     * 
+     *
      * @depends test_gets_a_source
      * @param string $key
      * @return string
@@ -183,7 +180,7 @@ class ArticlesTest extends TestCase
     /**
      * Deletes a source data.
      * @depends test_updates_a_source
-     * 
+     *
      * @param string $key
      * @return string
      */
@@ -207,7 +204,7 @@ class ArticlesTest extends TestCase
     /**
      * Get a source data.
      * @depends test_updates_a_source
-     * 
+     *
      * @param string $key
      * @return string
      */
@@ -219,9 +216,11 @@ class ArticlesTest extends TestCase
         $response = $this
             // ->actingAs($this->user)
             ->getJson(
-                route('users.sources.index', 
-                ['user' => $this->user->id, 'perpage' => $perPage]
-            ));
+                route(
+                    'users.sources.index',
+                    ['user' => $this->user->id, 'perpage' => $perPage]
+                )
+            );
 
         $this->logStatus($response, 200);
         $response->assertOk();
@@ -255,5 +254,4 @@ class ArticlesTest extends TestCase
 
         return $key;
     }
-
 }
