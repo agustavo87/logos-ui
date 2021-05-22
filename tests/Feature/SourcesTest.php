@@ -9,7 +9,6 @@ use App\Models\{
     Source,
     User
 };
-
 use Illuminate\Support\Str;
 
 class SourcesTest extends TestCase
@@ -17,12 +16,12 @@ class SourcesTest extends TestCase
     public static bool $verbose = false;
     public static bool $debug = false;
 
-    public const bookRender = 'Perez, J. & Zamudio, P. (2018). La inefable levedad del ser. Sor Maria Turgencia Inc.: Málaga.';
-    public const articleRender = 'Perez, J. & Zamudio, P. (2019). Efectos del automonitoreo en la ansiedad social en la escuela. Perspectiva en Trastornos de Ansiedad, vol. 13(2), 110-122.';
-    public const defaultBookRender = 'Perez, J. & Zamudio, P.(2018). La inefable levedad del ser.';
+    public const BOOK_RENDER = 'Perez, J. & Zamudio, P. (2018). La inefable levedad del ser. Sor Maria Turgencia Inc.: Málaga.';
+    public const ARTICLE_RENDER = 'Perez, J. & Zamudio, P. (2019). Efectos del automonitoreo en la ansiedad social en la escuela. Perspectiva en Trastornos de Ansiedad, vol. 13(2), 110-122.';
+    public const DEFAULT_BOOK_RENDER = 'Perez, J. & Zamudio, P.(2018). La inefable levedad del ser.';
 
     public static $articleName = "Artículo";    // son variables porque
-    public static $bookName = "Libro";          // eventualmente luego 
+    public static $bookName = "Libro";          // eventualmente luego
                                                 // pueden cambiar según idioma.
 
     public static $userId;
@@ -36,11 +35,11 @@ class SourcesTest extends TestCase
     public Creator $creator2;
     public Source $book;
     public Source $article;
-    public Sources $sourceManager;   
+    public Sources $sourceManager;
 
     /**
      * Inicializa el entorno de todos los tests.
-     * 
+     *
      * - Crea una fuente de prueba
      *
      * @return void
@@ -57,7 +56,7 @@ class SourcesTest extends TestCase
             'country' => 'AR'
         ]);
         self::$userId = $user->id;
-        
+
         $creator1 = $user->creators()->create([
             'key'   => 'perezj',
             'type' => 'person',
@@ -68,7 +67,7 @@ class SourcesTest extends TestCase
             ]
         ]);
         self::$creator1Id = $creator1->id;
-        
+
         $creator2 = $user->creators()->create([
             'key'   => 'zamudiop',
             'type' => 'person',
@@ -92,7 +91,7 @@ class SourcesTest extends TestCase
             ]
         ]);
         $book->creators()->attach([$creator1->id, $creator2->id]);
-        
+
         self::$bookId = $book->id;
 
         $article = $user->sources()->create([
@@ -114,12 +113,11 @@ class SourcesTest extends TestCase
             $creator2->id => ['type' => 'author', 'relevance' => 0]
             ]);
         self::$articleId = $article->id;
-
     }
 
     /**
      * Ejectua acciones luego de terminados los tests.
-     * 
+     *
      * - Limpia la BD del modelo de usuario creado.
      *
      * @return void
@@ -131,7 +129,7 @@ class SourcesTest extends TestCase
 
     /**
      * Ejectua acciones antes de cada test.
-     * 
+     *
      * - Obtiene el usuario y lo guarda para uso posterior.
      *
      * @return void
@@ -151,34 +149,34 @@ class SourcesTest extends TestCase
      * adecuadametne el tipo de fuente y devuelva el tipo de representación
      * adecuado
      */
-    public function testRenderDevuelveAdecuadamenteLaRepresentacionDeUnTipoDeFuente():void
+    public function testRenderDevuelveAdecuadamenteLaRepresentacionDeUnTipoDeFuente(): void
     {
         $articleRender = $this->sourceManager->render($this->article);
         $this->log($articleRender);
         $this->assertEquals(
             $articleRender,
-            self::articleRender
+            self::ARTICLE_RENDER
         );
 
         $bookRender = $this->sourceManager->render($this->book);
         $this->log($bookRender);
         $this->assertEquals(
             $bookRender,
-            self::bookRender
+            self::BOOK_RENDER
         );
 
         $defaultBookRender = $this->sourceManager->renderDefault($this->book);
         $this->log($defaultBookRender);
         $this->assertEquals(
             $defaultBookRender,
-            self::defaultBookRender
+            self::DEFAULT_BOOK_RENDER
         );
     }
 
     /**
      * Chequea que el modelo Source tenga un método render()
      * ej. $source->render
-     * 
+     *
      * @return void
      */
     public function testSourceTieneMetodoRenderQueFunciona(): void
@@ -187,14 +185,14 @@ class SourcesTest extends TestCase
         $this->log($articleRender);
         $this->assertEquals(
             $articleRender,
-            self::articleRender
+            self::ARTICLE_RENDER
         );
 
         $bookRender = $this->book->render();
         $this->log($bookRender);
         $this->assertEquals(
             $bookRender,
-            self::bookRender
+            self::BOOK_RENDER
         );
     }
 
