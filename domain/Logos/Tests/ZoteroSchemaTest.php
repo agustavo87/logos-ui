@@ -35,7 +35,7 @@ class ZoteroSchemaTest extends TestCase
             ])
         ]);
 
-        print_r($schema->csl);
+        // print_r($schema->csl);
 
         $this->checkSchemaDataStructure($schema);
         $this->assertEquals(2, $schema->version);
