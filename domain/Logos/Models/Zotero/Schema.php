@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Models\Zotero;
 
-use Arete\Common\FillsProperties;
+use Arete\Common\FillableProperties;
 
-class Schema
+class Schema extends FillableProperties
 {
-    use FillsProperties;
-
     public int $version;
 
     /**
@@ -20,14 +18,6 @@ class Schema
     public array $meta;
 
     public CSLMap $csl;
-
-    protected $defaultAttributes = [];
-
-    public function __construct(?array $attributes = [])
-    {
-        $this->fillDefaultsAttributes();
-        $this->fill($attributes);
-    }
 
     public function fillDefaultsAttributes()
     {

@@ -16,7 +16,7 @@ trait FillsProperties
 
     public function mergeIfDefaults($attributes)
     {
-        if (!$this->defaultAttributes) {
+        if ((!isset($this->defaultAttributes)) || !$this->defaultAttributes) {
             return $attributes;
         }
 
