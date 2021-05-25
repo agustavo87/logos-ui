@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Arete\Logos\Models\Zotero;
+
+class CreatorType
+{
+    public string $creatorType;
+    public bool $primary;
+}
