@@ -19,8 +19,8 @@ class TypeTest extends FixturableTestCase
 
         $validFields = ['title', 'abstractNote']
         foreach ($type->names as $code) {
-           $attr = $type->$code;
-           $this->assertContains($attr->code, $validFields);
+            $attr = $type->$code;
+            $this->assertContains($attr->code, $validFields);
         }
     }
 }
