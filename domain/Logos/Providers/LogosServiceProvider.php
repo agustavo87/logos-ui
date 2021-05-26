@@ -21,6 +21,13 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
         });
 
         $this->app->alias(Sources::class, 'sources');
+
+        if ($this->app->environment('testing')) {
+            $this->app->bind(
+                \Arete\Logos\Services\Zotero\SchemaLoaderInterface::class,
+                \Arete\Logos\Services\Zotero\SimpleSchemaLoader::class
+            );
+        }
     }
 
      /**
