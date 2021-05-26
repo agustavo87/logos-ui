@@ -17,7 +17,7 @@ class TypeTest extends FixturableTestCase
         $this->assertEquals('Journal Article', $type->label());
         $this->assertEquals('1.0', $type->version());
 
-        $validFields = ['title', 'abstractNote']
+        $validFields = ['title', 'abstractNote'];
         foreach ($type->names as $code) {
             $attr = $type->$code;
             $this->assertContains($attr->code, $validFields);
