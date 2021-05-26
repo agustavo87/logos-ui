@@ -21,7 +21,7 @@ class Utils
 
     /**
      * Trim each element of an array
-     * 
+     *
      * @param string[] $array
      * @return string[]
      */
@@ -92,33 +92,37 @@ class Utils
      * @param string $path
      * @param string $replacement
      * @param \Closure $callback that returns if the param is to be replaced.
-     * 
+     *
      * @return string|null path replaced or null if no match found.
      */
     public static function replaceFirstSegment(
-        string $path, 
-        string $replacement, 
+        string $path,
+        string $replacement,
         \Closure $callback
     ): ?string {
         $path = trim($path);
         $segments = self::segments($path);
         $i = self::indexesOf($segments, $callback);
-        if (!count($i)) return null;
+        if (!count($i)) {
+            return null;
+        }
         $segments[$i[0]] = $replacement;
-        return '/'.implode('/', $segments);
+        return '/' . implode('/', $segments);
     }
 
     /**
-     * Return the path of a full $url. If invalid, return null. 
+     * Return the path of a full $url. If invalid, return null.
      * If no path, '/'.
-     * 
+     *
      * @param string $url
      * @return string|null
      */
     public static function path($url): ?string
     {
         $url = Utils::validateURL($url);
-        if (!$url) return null;
+        if (!$url) {
+            return null;
+        }
         $url = parse_url($url, PHP_URL_PATH);
 
         return $url ? $url : '/';
@@ -127,8 +131,8 @@ class Utils
     /**
      * Sanitizes and checks if the $url is valid. If so, returns
      * the sanitized url, null otherwise.
-     * 
-     * @param string $url 
+     *
+     * @param string $url
      * @return string|null
      */
     public static function validateURL($url): ?string
