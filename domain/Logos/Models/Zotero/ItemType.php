@@ -19,12 +19,48 @@ class ItemType extends FillableProperties
      */
     public array $creatorTypes;
 
-    public function fillDefaultsAttributes()
+    protected function fillDefaultsAttributes()
     {
         $this->defaultAttributes = [
             'itemType' => '',
             'fields' => [],
             'creatorTypes' => []
         ];
+    }
+
+    /**
+     * Add fields
+     *
+     * E.g. [['field' => 'title']]
+     * Merge values with defaults
+     *
+     * @param   array $data of item $attributes
+     *
+     * @return  self
+     */
+    public function addFields(array $data): self
+    {
+        foreach ($data as $attributes) {
+            $this->fields[] = new Field($attributes);
+        }
+        return $this;
+    }
+
+    /**
+     * Add Creator Types
+     *
+     * * E.g. [['creatorType' => 'author']]
+     * Merge values with defaults
+     *
+     * @param   array $data of item $attributes
+     *
+     * @return  self
+     */
+    public function addCreatorTypes(array $data): self
+    {
+        foreach ($data as $attributes) {
+            $this->creatorTypes[] = new CreatorType($attributes);
+        }
+        return $this;
     }
 }

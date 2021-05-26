@@ -16,5 +16,5 @@ abstract class FillableProperties
         $this->fill($attributes);
     }
 
-    abstract function fillDefaultsAttributes();
+    abstract protected function fillDefaultsAttributes();
 }

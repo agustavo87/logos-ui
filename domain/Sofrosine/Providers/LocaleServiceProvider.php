@@ -16,7 +16,7 @@ class LocaleServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Locale::class, function ($app) {
-            return new Locale;
+            return new Locale();
         });
 
         $this->app->alias(Locale::class, 'locale');
@@ -32,6 +32,4 @@ class LocaleServiceProvider extends ServiceProvider
         Validator::extend('language_valid', [$locale, 'validateValidLanguage']);
         Validator::extend('language_supported', [$locale, 'validateSupportedLanguage']);
     }
-
-
 }
