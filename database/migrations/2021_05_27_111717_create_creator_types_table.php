@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBaseAttributesTable extends Migration
+class CreateCreatorTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateBaseAttributesTable extends Migration
      */
     public function up()
     {
-        Schema::create('base_attributes', function (Blueprint $table) {
-            $table->string('code_name', 50)->primary();
-            $table->enum('value_type', config('logos.valueTypes'));
+        Schema::create('creator_types', function (Blueprint $table) {
             $table->timestamps();
+
+            $table->string('code_name', 50)->primary();
+            $table->string('label', 100);
         });
     }
 
@@ -27,6 +28,6 @@ class CreateBaseAttributesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('base_attributes');
+        Schema::dropIfExists('creator_types');
     }
 }

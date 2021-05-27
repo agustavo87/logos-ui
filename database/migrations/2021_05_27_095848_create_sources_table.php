@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class CreateSourcesTable extends Migration
 {
@@ -16,8 +17,9 @@ class CreateSourcesTable extends Migration
         Schema::create('sources', function (Blueprint $table) {
 
             $usersTable = config('usersTable', 'users');
+            $SingularTableName = Str::singular($usersTable);
             $usersPK = config('usersPK', 'id');
-            $usersFK = "{$usersTable}_{$usersPK}";
+            $usersFK = "{$SingularTableName}_{$usersPK}";
 
             $table->id();
             $table->timestamps();

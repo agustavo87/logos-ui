@@ -2,5 +2,6 @@
 
 return [
     'usersTable'    => 'users',
-    'usersPK'       => 'id'
+    'usersPK'       => 'id',
+    'valueTypes'    => ['text', 'number', 'date', 'complex']
 ];

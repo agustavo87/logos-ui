@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBaseAttributesTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,15 @@ class CreateBaseAttributesTable extends Migration
      */
     public function up()
     {
-        Schema::create('base_attributes', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->string('code_name', 50)->primary();
-            $table->enum('value_type', config('logos.valueTypes'));
+            $table->string('source_type_code_name');
+            $table->foreign('source_type_code_name')
+                  ->references('code_name')
+                  ->on('source_types')
+                  ->onDelete('cascade');
+            $table->string('label', 100);
+            $table->boolean('primary');
             $table->timestamps();
         });
     }
@@ -27,6 +33,6 @@ class CreateBaseAttributesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('base_attributes');
+        Schema::dropIfExists('roles');
     }
 }
