@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ArticleSource extends Migration
+class CreateBaseAttributesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class ArticleSource extends Migration
      */
     public function up()
     {
-        Schema::create('article_source', function (Blueprint $table) {
-            $table->unsignedBigInteger('article_id');
-            $table->unsignedBigInteger('source_id');
-            $table->unique(['article_id', 'source_id']);
+        Schema::create('base_attributes', function (Blueprint $table) {
+            $table->string('code_name', 50)->primary();
+            $table->string('value_type');
+            $table->timestamps();
         });
-            
     }
 
     /**
@@ -28,6 +27,6 @@ class ArticleSource extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('article_source');
+        Schema::dropIfExists('base_attributes');
     }
 }

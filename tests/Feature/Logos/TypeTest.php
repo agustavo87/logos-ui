@@ -17,7 +17,7 @@ class TypeTest extends FixturableTestCase
     public function test_get_zotero_basic_jorunal_article_type(): SourceType
     {
         $types = app('\Arete\Logos\Repository\TypeRepositoryInterface');
-        $type = $type->get('journalArticle');
+        $type = $types->get('journalArticle');
         $this->assertInstanceOf(SourceType::class, $type);
         $this->assertEquals('journalArticle', $type->code());
         $this->assertEquals('journalArticle', (string) $type);

@@ -30,6 +30,8 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
         }
     }
 
+
+
      /**
      * Get the services provided by the provider.
      *
