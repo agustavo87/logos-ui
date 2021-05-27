@@ -14,12 +14,18 @@ class CreateSourcesTable extends Migration
     public function up()
     {
         Schema::create('sources', function (Blueprint $table) {
+
+            $usersTable = config('usersTable', 'users');
+            $usersPK = config('usersPK', 'id');
+            $usersFK = "{$usersTable}_{$usersPK}";
+
             $table->id();
             $table->timestamps();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
+
+            $table->unsignedBigInteger($usersFK);
+            $table->foreign($usersFK)
+                  ->references($usersPK)
+                  ->on($usersTable)
                   ->onDelete('cascade');
 
             $table->string('surce_type_code_name', 50);

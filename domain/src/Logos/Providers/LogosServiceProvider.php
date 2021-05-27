@@ -28,9 +28,21 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
                 \Arete\Logos\Services\Zotero\SimpleSchemaLoader::class
             );
         }
+
+        $this->mergeConfigFrom(__DIR__  . '/../../../config/logos.php', 'logos');
     }
 
-
+    /**
+     * Bootstrap any package services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/../../../config/logos.php' => config_path('logos.php'),
+        ]);
+    }
 
      /**
      * Get the services provided by the provider.
