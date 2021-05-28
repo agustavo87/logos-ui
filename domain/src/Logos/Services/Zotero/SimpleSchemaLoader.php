@@ -12,6 +12,16 @@ class SimpleSchemaLoader implements SchemaLoaderInterface
     {
         return (new Schema([
             'version' => 1,
+            'meta' => [
+                'fields' => [
+                    'date' => [
+                        'type' => 'date'
+                    ],
+                    'fillingDate' => [
+                        'type' => 'date'
+                    ]
+                ]
+            ]
         ]))->addItemTypes([
             [
                 'itemType' => 'annotation'
