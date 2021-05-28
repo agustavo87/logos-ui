@@ -20,14 +20,13 @@ class SourceTypeSeeder extends Seeder
 
         $this->fieldsProperties = $schema->meta['fields'];
         $itemTypes = $schema->itemTypes;
-        print_r($itemTypes);
         foreach ($itemTypes as $itemType) {
             $sourceTypeCodeName = $itemType->itemType;
-            echo "type\n";
-            print_r($sourceTypeCodeName);
-            // DB::table('source_types')->insert([
-            //     'code_name' => $sourceTypeCodeName
-            // ]);
+            DB::table('source_types')->insert([
+                'code_name' => $sourceTypeCodeName,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
             // $this->createSchema()
         }
     }

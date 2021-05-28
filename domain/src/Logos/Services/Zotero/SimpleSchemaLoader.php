@@ -150,7 +150,7 @@ class SimpleSchemaLoader implements SchemaLoaderInterface
                     ['creatorType' => 'reviewedAuthor'],
                 ]
             ],
-        ]);
+        ], true);
 
         return $schema;
     }
