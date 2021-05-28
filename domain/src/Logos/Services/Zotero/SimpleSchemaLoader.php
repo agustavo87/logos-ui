@@ -10,7 +10,7 @@ class SimpleSchemaLoader implements SchemaLoaderInterface
 {
     public function load(): Schema
     {
-        return (new Schema([
+        $schema = new Schema([
             'version' => 1,
             'meta' => [
                 'fields' => [
@@ -22,7 +22,9 @@ class SimpleSchemaLoader implements SchemaLoaderInterface
                     ]
                 ]
             ]
-        ]))->addItemTypes([
+        ]);
+
+        $schema->addItemTypes([
             [
                 'itemType' => 'annotation'
             ],[
@@ -149,5 +151,7 @@ class SimpleSchemaLoader implements SchemaLoaderInterface
                 ]
             ],
         ]);
+
+        return $schema;
     }
 }

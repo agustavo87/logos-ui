@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Arete\Logos\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Tests\LogsInformation;
 use Arete\Logos\Tests\Traits\ChecksZoteroSchemaDataStructure;
-use Arete\Logos\Models\Zotero\{Schema, Field, CreatorType, CSLMap};
+use Arete\Logos\Models\Zotero\{Schema, CSLMap};
 
 class SimpleZoteroSchemaLoaderTest extends TestCase
 {
+    use LogsInformation;
     use ChecksZoteroSchemaDataStructure;
 
     public function testSchemaHaveExpectedDataStructure()
@@ -76,6 +78,28 @@ class SimpleZoteroSchemaLoaderTest extends TestCase
         $meta = $schema->meta;
         $this->assertArrayHasKey('fields', $meta);
         $this->assertArrayHasKey('type', $meta['fields']['date']);
+        return $schema;
+    }
+
+    /**
+     * @depends testSchemaMetaHaveBasicDataTypes
+     *
+     * @param mixed $schema
+     *
+     * @return [type]
+     */
+    public function testSchemaHaveSomeData(Schema $schema): Schema
+    {
+        // $this->log($schema);
+        $itemTypes = $schema->itemTypes;
+        $expectedTypes = ['annotation', 'blogPost', 'book', 'bookSection', 'journalArticle'];
+        // print_r($itemTypes);
+        foreach ($expectedTypes as $expType) {
+            $matches = array_filter($itemTypes, function ($type) use ($expType) {
+                return $type->itemType == $expType;
+            });
+            $this->assertGreaterThan(0, count($matches));
+        }
         return $schema;
     }
 }

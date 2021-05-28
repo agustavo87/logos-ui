@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Tests;
 
+use PHPUnit\Framework\TestCase;
+use Tests\LogsInformation;
 use Arete\Logos\Models\Zotero\{CreatorType, CSLMap, Field, ItemType, Schema};
 use Arete\Logos\Tests\Traits\ChecksZoteroSchemaDataStructure;
-use PHPUnit\Framework\TestCase;
+
+use function Arete\Common\var_dump_ret;
 
 class ZoteroSchemaTest extends TestCase
 {
     use ChecksZoteroSchemaDataStructure;
+    use LogsInformation;
 
     public function testSchemaCreatesWithDefaults()
     {
@@ -93,5 +97,49 @@ class ZoteroSchemaTest extends TestCase
         $this->assertIsString($itemType->itemType);
         $this->assertContainsOnlyInstancesOf(Field::class, $itemType->fields);
         $this->assertContainsOnlyInstancesOf(CreatorType::class, $itemType->creatorTypes);
+    }
+
+    public function testSchemaAddsMasiveItems()
+    {
+        $schema = new Schema([
+            'version' => 2,
+            'meta' => [
+                'some-key' => 'some-value'
+            ]
+        ]);
+        $typesData = [
+            [
+                'itemType' => 'journajArticle',
+                'fields' => [
+                    ['field' => 'title'],
+                    ['field' => 'abstractNote'],
+                ],
+                'creatorTypes' => [
+                    ['creatorType' => 'author', 'primary' => true],
+                    ['creatorType' => 'contributor']
+                ]
+            ],[
+                'itemType' => 'book',
+                'fields' => [
+                    ['field' => 'title'],
+                    ['field' => 'ISBN'],
+                ],
+                'creatorTypes' => [
+                    ['creatorType' => 'author', 'primary' => true],
+                    ['creatorType' => 'editor']
+                ]
+            ]
+
+        ];
+        $schema->addItemTypes($typesData, true);
+        // $this->log($schema);
+        foreach ($typesData as $typeData) {
+            // $this->log("Buscando ItemType: {$typeData['itemType']}");
+            $results = array_filter($schema->itemTypes, function (ItemType $item) use ($typeData) {
+                // $this->log("analizando {$item->itemType}");
+                return $item->itemType == $typeData['itemType'];
+            });
+            $this->assertGreaterThan(0, count($results));
+        }
     }
 }

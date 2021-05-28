@@ -16,7 +16,7 @@ class CreateSourceTypesTable extends Migration
         Schema::create('source_types', function (Blueprint $table) {
             $table->timestamps();
             $table->string('code_name', 50)->primary();
-            $table->string('label', 100);
+            $table->string('label', 100)->nullable();
         });
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Arete;
+namespace Tests\Feature\Arete;
 
 use Tests\FixturableTestCase;
 

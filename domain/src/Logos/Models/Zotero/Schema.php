@@ -36,13 +36,17 @@ class Schema extends FillableProperties
      *
      * @return self
      */
-    public function addItemTypes(array $data): self
+    public function addItemTypes(array $data, $reset = false): self
     {
+        if ($reset) {
+            $this->itemTypes = [];
+        }
+
         foreach ($data as $itemAttributes) {
             $simpleAttributes = array_filter_keys($itemAttributes, ['itemType']);
             $itemType = new ItemType($simpleAttributes);
-            foreach (array_filter_keys($itemAttributes, ['fields', 'creatorTypes']) as $attribueName => $values) {
-                switch ($attribueName) {
+            foreach (array_filter_keys($itemAttributes, ['fields', 'creatorTypes']) as $attributeName => $values) {
+                switch ($attributeName) {
                     case 'fields':
                         $itemType->addFields($values);
                         break;
@@ -50,6 +54,7 @@ class Schema extends FillableProperties
                         $itemType->addCreatorTypes($values);
                 }
             }
+            $this->itemTypes[] = $itemType;
         }
         return $this;
     }

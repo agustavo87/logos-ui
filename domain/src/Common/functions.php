@@ -25,3 +25,21 @@ if (!function_exists(__NAMESPACE__ . '\array_filter_keys')) {
         return array_intersect_key($array, array_flip($keys));
     }
 }
+
+if (!function_exists(__NAMESPACE__ . '\var_dump_ret')) {
+    /**
+     * Returns a string representation of var_dump
+     *
+     * @param null $mixed
+     *
+     * @return string
+     */
+    function var_dump_ret($mixed = null): string
+    {
+        ob_start();
+        var_dump($mixed);
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
+    }
+}
