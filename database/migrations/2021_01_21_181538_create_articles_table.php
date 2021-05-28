@@ -16,12 +16,12 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            
-            $table->string('title',250);
+
+            $table->string('title', 250);
             $table->text('html');
             $table->json('delta');
             $table->json('meta');
-    
+
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')

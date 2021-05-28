@@ -14,8 +14,8 @@ class CreateParticipationsTable extends Migration
     public function up()
     {
         Schema::create('participations', function (Blueprint $table) {
-            $table->unsignedBigInteger('creator_id');
             $table->unsignedBigInteger('source_id');
+            $table->unsignedBigInteger('creator_id');
             $table->primary(['creator_id', 'source_id']);
             $table->foreign('source_id')
                   ->references('id')

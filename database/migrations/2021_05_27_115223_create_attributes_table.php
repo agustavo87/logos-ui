@@ -21,7 +21,7 @@ class CreateAttributesTable extends Migration
             $table->string('base_attribute_code_name');
             $table->foreign('base_attribute_code_name')
                   ->references('code_name')
-                  ->on('base_attribute')
+                  ->on('base_attributes')
                   ->onDelete('cascade');
             $table->unsignedBigInteger('value_id');
             $table->enum('value_type', config('logos.valueTypes'))->index();
