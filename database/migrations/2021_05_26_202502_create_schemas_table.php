@@ -16,7 +16,7 @@ class CreateSchemasTable extends Migration
         Schema::create('schemas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('type_code', 50);
+            $table->string('type_code_name', 50);
             $table->string('type', 200)->index();
             $table->string('version', 50);
         });

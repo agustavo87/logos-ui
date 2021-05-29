@@ -15,7 +15,7 @@ class CreateBaseAttributesTable extends Migration
     {
         Schema::create('base_attributes', function (Blueprint $table) {
             $table->string('code_name', 50)->primary();
-            $table->enum('value_type', config('logos.valueTypes'));
+            $table->enum('value_type', array_keys(config('logos.valueTypes')));
             $table->timestamps();
         });
     }

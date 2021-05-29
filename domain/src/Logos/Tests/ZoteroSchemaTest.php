@@ -142,4 +142,71 @@ class ZoteroSchemaTest extends TestCase
             $this->assertGreaterThan(0, count($results));
         }
     }
+
+    public function testGetItemByType()
+    {
+        $schema = (new Schema())->addItemTypes([
+            [
+                'itemType'  => 'book'
+            ],
+            [
+                'itemType'  => 'journalArticle',
+                'fields'    => [
+                    ['field' => 'journalTitle', 'baseField' => 'publicationTitle']
+                ]
+            ]
+        ], true);
+        $journalType = $schema->getItemType('journalArticle');
+        $this->assertEquals('journalArticle', $journalType->itemType);
+    }
+
+    public function testGetFieldByCode()
+    {
+        $itemType = new ItemType([
+            'itemType'  => 'blogPost',
+            'fields'    => [
+                new Field(['field' => 'title']),
+                new Field(['field' => 'abstractNote']),
+                new Field(['field'  => 'blogTitle', 'baseField' => 'publicationTitle'])
+            ]
+        ]);
+
+        $this->assertEquals('publicationTitle', $itemType->getField('blogTitle')->baseField);
+    }
+
+    public function testSchemaReturnsItemDataType()
+    {
+        $schema = (new Schema([
+            'version'   => 1,
+            'meta'      => [
+                'fields'    => [
+                    'date'          => [
+                        'type'  => 'date'
+                    ],
+                    'onLineDate'    => [
+                        'type'  => 'date'
+                    ]
+                ]
+            ]
+        ]))->addItemTypes([
+            [
+                'itemType'  => 'journalArticle',
+                'fields'    => [
+                    ['field'    => 'title'],
+                    ['field'    => 'onLineDate']
+                ]
+            ]
+        ], true);
+
+        $itemValueType = $schema->valueType(
+            $schema->getItemType('journalArticle')->getField('onLineDate')
+        );
+        $this->assertEquals('date', $itemValueType);
+        $this->assertEquals(
+            'text',             // default value type
+            $schema->valueType(
+                $schema->getItemType('journalArticle')->getField('title')
+            )
+        );
+    }
 }

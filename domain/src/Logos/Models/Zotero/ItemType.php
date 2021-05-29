@@ -63,4 +63,18 @@ class ItemType extends FillableProperties
         }
         return $this;
     }
+
+    /**
+     * Get the first Field that match $name.
+     *
+     * @param string $name
+     *
+     * @return Field|null
+     */
+    public function getField(string $name): ?Field
+    {
+        $results = array_filter($this->fields, fn ($field) => $field->field == $name);
+        // error_log('resultados: ' . count($results));
+        return count($results) ? array_shift($results) : null;
+    }
 }

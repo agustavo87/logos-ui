@@ -24,7 +24,7 @@ class CreateAttributesTable extends Migration
                   ->on('base_attributes')
                   ->onDelete('cascade');
             $table->unsignedBigInteger('value_id');
-            $table->enum('value_type', config('logos.valueTypes'))->index();
+            $table->enum('value_type', array_keys(config('logos.valueTypes')))->index();
         });
     }
 

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SourceTypeSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class SourceTypeSeeder extends Seeder
     protected array $fieldsProperties;
     public function run()
     {
+
         $schemaLoader = app(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
         $schema = $schemaLoader->load();
 
@@ -27,6 +29,30 @@ class SourceTypeSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+            DB::table('schemas')->insert([
+                'type_code_name'     => $sourceTypeCodeName,
+                'type'          => config('logos.schemaTypes.source'),
+                'version'       => 'z.1.0',
+                'created_at'    => now(),
+                'updated_at'    => now()
+            ]);
+
+            foreach ($itemType->fields as $field) {
+                if (!DB::table('base_attributes')->where('code_name', $field->field)->exists()) {
+                    DB::table('base_attributes')->insert([
+                        'code_name'     => $field->field,
+                        'value_type'    => config('logos.valueTypes.text'),
+                        'created_at'    => now(),
+                        'updated_at'    => now()
+                    ]);
+                } else {
+                    Log::notice(
+                        "Base item attribute with code '{$field->field}' already exists.",
+                        ['itemType' => $itemType]
+                    );
+                }
+            }
+
             // $this->createSchema()
         }
     }

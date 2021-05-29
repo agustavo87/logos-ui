@@ -1,3 +1,19 @@
 {
-    "phpcs.standard": "phpcsrules.xml"
+    "phpcs.standard": "phpcsrules.xml",
+
+    "logViewer.watch": [
+        {
+            "title": "Laravel Log",
+            "pattern": "storage/logs/*.log"
+        },
+        {
+            "title": "PHP Log",
+            "pattern": "D:/laragon/tmp/php_errors.log"
+        },
+        {
+            "title": "Apache",
+            "pattern": "D:\\laragon\\bin\\apache\\httpd-2.4.35-win64-VC15\\logs\\error.log"
+        }
+    ]
+
 }

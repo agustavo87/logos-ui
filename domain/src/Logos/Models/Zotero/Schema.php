@@ -21,13 +21,15 @@ class Schema extends FillableProperties
 
     public CSLMap $csl;
 
+    public const DEFAULT_VALUE_TYPE = 'text';
+
     protected function fillDefaultsAttributes()
     {
         $this->defaultAttributes = [
-            'version' => 0,
-            'itemTypes' => [new ItemType()],
-            'meta' => [],
-            'csl' => new CSLMap()
+        'version' => 0,
+        'itemTypes' => [new ItemType()],
+        'meta' => [],
+        'csl' => new CSLMap()
         ];
     }
 
@@ -57,5 +59,35 @@ class Schema extends FillableProperties
             $this->itemTypes[] = $itemType;
         }
         return $this;
+    }
+
+    /**
+     * Get the first ItemType that match $name
+     *
+     * @param string $name
+     *
+     * @return ItemType|null
+     */
+    public function getItemType(string $name): ?ItemType
+    {
+        $results = array_filter($this->itemTypes, fn ($item) => $item->itemType == $name);
+        return count($results) ? array_shift($results) : null;
+    }
+
+    /**
+     * Returns the registered value type in meta
+     *
+     * Or the default value ('text')
+     *
+     * @param Field $field
+     *
+     * @return string
+     */
+    public function valueType(Field $field): string
+    {
+        if (isset($this->meta['fields'][$field->field]['type'])) {
+            $result = $this->meta['fields'][$field->field]['type'];
+        };
+        return  $result ?? self::DEFAULT_VALUE_TYPE;
     }
 }
