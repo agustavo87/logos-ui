@@ -15,6 +15,8 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__  . '/../../../config/logos.php', 'logos');
+
         /** @todo vincular a una interfaz más bien */
         $this->app->bind(Sources::class, function ($app) {
             return new Sources();
@@ -29,7 +31,12 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
             );
         }
 
-        $this->mergeConfigFrom(__DIR__  . '/../../../config/logos.php', 'logos');
+        $this->app->bind(
+            \Arete\Logos\Services\Zotero\LogosMapper::class,
+            function ($app) {
+                return new \Arete\Logos\Services\Zotero\LogosMapper(config('logos.valueTypes'));
+            }
+        );
     }
 
     /**

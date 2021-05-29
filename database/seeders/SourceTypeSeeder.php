@@ -14,11 +14,14 @@ class SourceTypeSeeder extends Seeder
      * @return void
      */
     protected array $fieldsProperties;
+
     public function run()
     {
 
         $schemaLoader = app(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
         $schema = $schemaLoader->load();
+
+        $valueTypeMapper = app(\Arete\Logos\Services\Zotero\LogosMapper::class);
 
         $this->fieldsProperties = $schema->meta['fields'];
         $itemTypes = $schema->itemTypes;
@@ -38,10 +41,11 @@ class SourceTypeSeeder extends Seeder
             ]);
 
             foreach ($itemType->fields as $field) {
+                $logosType = $valueTypeMapper->mapValueType($schema->valueType($field));
                 if (!DB::table('base_attributes')->where('code_name', $field->field)->exists()) {
                     DB::table('base_attributes')->insert([
                         'code_name'     => $field->field,
-                        'value_type'    => config('logos.valueTypes.text'),
+                        'value_type'    => $logosType,
                         'created_at'    => now(),
                         'updated_at'    => now()
                     ]);

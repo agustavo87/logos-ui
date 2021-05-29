@@ -7,7 +7,8 @@ return [
         'text'      => 'text',
         'number'    => 'number',
         'date'      => 'date',
-        'complex'   => 'complex'
+        'complex'   => 'complex',
+        'default'   => 'text'
     ],
     'schemaTypes'    => [
         'source'    => 'source',
