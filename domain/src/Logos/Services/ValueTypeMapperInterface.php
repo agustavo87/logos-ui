@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Services;
 
-interface MapperInterface
+interface ValueTypeMapperInterface
 {
     public function mapValueType(string $codeName): ?string;
 }

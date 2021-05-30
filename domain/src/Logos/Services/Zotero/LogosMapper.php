@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Services\Zotero;
 
-use Arete\Logos\Services\MapperInterface;
+use Arete\Common\Mapper;
+use Arete\Logos\Services\ValueTypeMapperInterface;
 
-class LogosMapper implements MapperInterface
+class LogosMapper extends Mapper implements ValueTypeMapperInterface
 {
-
-    public array $map = [];
-
-    public function __construct(array $logosValueTypes)
+    protected function boot(array $logosValueTypes): bool
     {
         $this->map = [
-            'default' => $logosValueTypes['default'],
             'date'    => $logosValueTypes['date']
         ];
+        $this->default = $logosValueTypes['default'];
+
+        return true;
     }
+
     public function mapValueType(string $codeName): ?string
     {
-        return $this->map[$codeName] ?? $this->map['default'];
+        return $this->map($codeName);
     }
 }

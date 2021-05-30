@@ -14,8 +14,9 @@ class ZoteroLogosMapper extends TestCase
             'default' => 'text',
             'date'    => 'date'
         ]);
-        $this->assertEquals('text', $mapper->mapValueType('default'));
         $this->assertEquals('date', $mapper->mapValueType('date'));
-        $this->assertNull($mapper->mapValueType('no-exist'));
+        $this->assertEquals('text', $mapper->mapValueType('no-exist')); // default
+        $this->assertTrue($mapper->has('date'));
+        $this->assertFalse($mapper->has('number'));
     }
 }
