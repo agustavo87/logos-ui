@@ -42,10 +42,10 @@ class ZoteroSchemaLoaderTest extends FixturableTestCase
      */
     public function testSchemaHaveSomeData($schema)
     {
-        print_r($schema);
+        // print_r($schema);
         $itemTypes = $schema->itemTypes;
         $expectedTypes = ['annotation', 'blogPost', 'book', 'bookSection', 'journalArticle'];
-        print_r($itemTypes);
+        // print_r($itemTypes);
         foreach ($expectedTypes as $expType) {
             $matches = array_filter($itemTypes, function ($type) use ($expType) {
                 return $type->itemType == $expType;
