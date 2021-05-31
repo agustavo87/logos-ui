@@ -8,8 +8,8 @@ use Arete\Common\FillableProperties;
 
 class Field extends FillableProperties
 {
-    public string $field = '';
-    public string $baseField = '';
+    public ?string $field = null;
+    public ?string $baseField = null;
 
     public function fillDefaultsAttributes()
     {

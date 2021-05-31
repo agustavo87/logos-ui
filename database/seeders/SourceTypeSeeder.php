@@ -23,7 +23,6 @@ class SourceTypeSeeder extends Seeder
 
         $valueTypeMapper = app(\Arete\Logos\Services\ZoteroValueTypeMapper::class);
 
-        $this->fieldsProperties = $schema->meta['fields'];
         $itemTypes = $schema->itemTypes;
         foreach ($itemTypes as $itemType) {
             $sourceTypeCodeName = $itemType->itemType;
@@ -32,29 +31,34 @@ class SourceTypeSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-            DB::table('schemas')->insert([
-                'type_code_name'     => $sourceTypeCodeName,
-                'type'          => config('logos.schemaTypes.source'),
-                'version'       => 'z.1.0',
-                'created_at'    => now(),
-                'updated_at'    => now()
+            $schemaVersion = 'z.1.0';
+            $schemaID = DB::table('schemas')->insertGetId([
+                'type_code_name'    => $sourceTypeCodeName,
+                'type'              => config('logos.schemaTypes.source'),
+                'version'           => $schemaVersion,
+                'created_at'        => now(),
+                'updated_at'        => now()
             ]);
 
+            $order = 0;
             foreach ($itemType->fields as $field) {
-                $logosType = $valueTypeMapper->mapValueType($field->field);
-                if (!DB::table('base_attributes')->where('code_name', $field->field)->exists()) {
+                $baseAttritbute = $field->baseField ?? $field->field;
+                $attribute = $field->field;
+                if (!DB::table('base_attributes')->where('code_name', $baseAttritbute)->exists()) {
+                    $logosType = $valueTypeMapper->mapValueType($baseAttritbute);
                     DB::table('base_attributes')->insert([
-                        'code_name'     => $field->field,
+                        'code_name'     => $baseAttritbute,
                         'value_type'    => $logosType,
                         'created_at'    => now(),
                         'updated_at'    => now()
                     ]);
-                } else {
-                    Log::notice(
-                        "Base item attribute with code '{$field->field}' already exists.",
-                        ['itemType' => $itemType]
-                    );
                 }
+                DB::table('schema_attributes')->insert([
+                    'base_attribute_code_name' => $baseAttritbute,
+                    'schema_id' => $schemaID,
+                    'code_name' => "{$attribute}:{$sourceTypeCodeName}:{$schemaVersion}",
+                    'order' => $order++
+                ]);
             }
 
             // $this->createSchema()

@@ -25,7 +25,7 @@ class CreateSchemaAttributesTable extends Migration
                 ->on('base_attributes');
 
             $table->string('code_name', 50)->index()->unique();
-            $table->string('label', 100);
+            $table->string('label', 100)->nullable();
             $table->tinyInteger('order');
 
             $table->timestamps();

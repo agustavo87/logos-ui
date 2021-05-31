@@ -8,7 +8,7 @@ use Arete\Common\FillableProperties;
 
 class CreatorType extends FillableProperties
 {
-    public string $creatorType = '';
+    public ?string $creatorType = null;
     public bool $primary = false;
 
     public function fillDefaultsAttributes()
