@@ -23,5 +23,24 @@ return [
     'schemaTypes'    => [
         'source'    => 'source',
         'creator'   => 'creator'
+    ],
+    'creatorTypes'  => [
+        'version'   => 'l.0.1',
+        'data' => [
+            'person'    => [
+                'label'     => 'Person',
+                'fields'    => [
+                    [ 'name', 'Name'],
+                    [ 'lastName', "Last Name"]
+                ],
+            ],
+            'organization'  => [
+                'label'     => 'Organization',
+                'fields'    => [
+                    ['fullName', 'FullName'],
+                    ['acronim', 'Acronim']
+                ]
+            ]
+        ]
     ]
 ];
