@@ -14,7 +14,7 @@ return [
         'default'           => 'text',
         'date'              => 'date',
         'accessDate'        => 'date',
-        'numPages'          => 'number',
+        'numPages'          => 'text',
         'seriesNumber'      => 'number',
         'volume'            => 'number',
         'numberOfVolumes'   => 'number',
