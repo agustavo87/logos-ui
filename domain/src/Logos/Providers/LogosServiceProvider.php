@@ -37,6 +37,13 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
                 return new \Arete\Logos\Services\Zotero\LogosMapper(config('logos.valueTypes'));
             }
         );
+
+        $this->app->bind(
+            \Arete\Logos\Services\ZoteroValueTypeMapper::class,
+            function ($app) {
+                return new \Arete\Logos\Services\ZoteroValueTypeMapper(config('logos.fieldValueTypes'));
+            }
+        );
     }
 
     /**
