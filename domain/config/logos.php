@@ -37,7 +37,7 @@ return [
             'organization'  => [
                 'label'     => 'Organization',
                 'fields'    => [
-                    ['fullName', 'FullName'],
+                    ['fullName', 'Full Name'],
                     ['acronim', 'Acronim']
                 ]
             ]

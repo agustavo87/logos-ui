@@ -22,18 +22,14 @@ class CreatorTypeSeeder extends Seeder
         $schemaLoader = app(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
         $schema = $schemaLoader->load();
 
-
-
         foreach ($schema->itemTypes as $itemType) {
             $sourceTypeCode = $itemType->itemType;
             foreach ($itemType->creatorTypes as $creatorType) {
                 $roleCode = $creatorType->creatorType;
                 if (!DB::table('roles')->where('code_name', $roleCode)->exists()) {
                     DB::table('roles')->insert([
-                        'code_name'     => $roleCode,
-                        'primary'       => $creatorType->primary,
-                        'created_at'    => now(),
-                        'updated_at'    => now()
+                        'code_name' => $roleCode,
+                        'primary'   => $creatorType->primary
                     ]);
                 }
                 DB::table('participation_types')->insert([
@@ -41,7 +37,6 @@ class CreatorTypeSeeder extends Seeder
                     'role_code_name'        => $roleCode
                 ]);
             }
-            // $this->createSchema()
         }
     }
 
@@ -53,39 +48,32 @@ class CreatorTypeSeeder extends Seeder
         foreach ($creatorTypes as $codeName => $data) {
             DB::table('creator_types')->insert([
                 'code_name' => $codeName,
-                'label'     => $data['label'],
-                'created_at'    => now(),
-                'updated_at'    => now()
+                'label'     => $data['label']
             ]);
             $schemaId = DB::table('schemas')->insertGetId([
-                'type_code_name' => $codeName,
-                'type'           => config('logos.schemaTypes.creator'),
-                'version'        => $version,
-                'created_at'    => now(),
-                'updated_at'    => now()
+                'type_code_name'    => $codeName,
+                'type'              => config('logos.schemaTypes.creator'),
+                'version'           => $version,
+                'created_at'        => now(),
+                'updated_at'        => now()
             ]);
             $order = 0;
             foreach ($data['fields'] as $field) {
                 $fieldCodeName = $field[0];
-                $baseFieldCodeName = $fieldCodeName;
+                $baseFieldCodeName = null;
                 $fieldLabel = $field[1];
                 $type = config('logos.fieldValueTypes')[$baseFieldCodeName] ??
                             config('logos.fieldValueTypes')['default'];
-                DB::table('base_attributes')->insert([
-                    'code_name'     => $baseFieldCodeName,
-                    'value_type'    => $type,
-                    'created_at'    => now(),
-                    'updated_at'    => now()
+                DB::table('attribute_types')->insert([
+                    'code_name'                     => $fieldCodeName,
+                    'base_attribute_type_code_name' => $baseFieldCodeName,
+                    'value_type'                    => $type
                 ]);
                 DB::table('schema_attributes')->insert([
-                    'schema_id' => $schemaId,
-                    'base_attribute_code_name' => $baseFieldCodeName,
-                    'code_name' => "{$fieldCodeName}:{$type}:{$version}",
-                    'front_attribute_code_name' => $fieldCodeName,
-                    'label' => $fieldLabel,
-                    'order' => $order++,
-                    'created_at'    => now(),
-                    'updated_at'    => now()
+                    'schema_id'                 => $schemaId,
+                    'attribute_type_code_name'  => $fieldCodeName,
+                    'label'                     => $fieldLabel,
+                    'order'                     => $order++
                 ]);
             }
         }

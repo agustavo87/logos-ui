@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->string('language',2)
+            $table->string('language', 2)
                 ->default(config('locale.languages.default'));
             $table->string('country', 100)
                 ->nullable();

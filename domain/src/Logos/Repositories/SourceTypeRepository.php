@@ -19,30 +19,28 @@ class SourceTypeRepository implements SourceTypeRepositoryInterface
         Log::info("Source Type '{$codeName}'", ['data' => $sourceType]);
 
         $schema = DB::table('schemas')
-                                ->where('type_code_name', $codeName)
-                                ->where('type', config('logos.schemaTypes.source'))
-                                ->latest()
-                                ->first();
-
+                    ->where('type_code_name', $codeName)
+                    ->where('type', config('logos.schemaTypes.source'))
+                    ->latest()
+                    ->first();
         Log::info("Source Type Schema '{$codeName}'", ['data' => $schema]);
 
         $attributes = DB::table('schema_attributes')
                         ->join(
-                            'base_attributes', 
-                            'schema_attributes.base_attribute_code_name',
+                            'attribute_types',
+                            'schema_attributes.attribute_type_code_name',
                             '=',
-                            'base_attributes.code_name'
+                            'attribute_types.code_name'
                         )
                         ->select(
-                            'schema_attributes.front_attribute_code_name',
-                            'schema_attributes.base_attribute_code_name',
+                            'attribute_types.code_name',
+                            'attribute_types.base_attribute_type_code_name',
+                            'attribute_types.value_type',
                             'schema_attributes.label',
                             'schema_attributes.order',
-                            'base_attributes.value_type'
                         )
                         ->where('schema_attributes.schema_id', $schema->id)
                         ->get();
-
         Log::info("SourceType Attributes '{$codeName}'", ['data' => $attributes]);
 
         $roles = DB::table('participation_types')
@@ -50,9 +48,7 @@ class SourceTypeRepository implements SourceTypeRepositoryInterface
                     ->select('roles.*')
                     ->where('participation_types.source_type_code_name', $codeName)
                     ->get();
-
         Log::info("Roles of '{$codeName}'", ['data' => $roles]);
-
 
         return new SourceType($sourceType, $schema, $attributes, $roles);
     }

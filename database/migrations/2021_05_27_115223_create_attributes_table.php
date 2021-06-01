@@ -18,10 +18,10 @@ class CreateAttributesTable extends Migration
             $table->timestamps();
             $table->unsignedBigInteger('attributable_id');
             $table->string('attributable_type')->index();
-            $table->string('base_attribute_code_name');
-            $table->foreign('base_attribute_code_name')
+            $table->string('attribute_type_code_name');
+            $table->foreign('attribute_type_code_name')
                   ->references('code_name')
-                  ->on('base_attributes')
+                  ->on('attribute_types')
                   ->onDelete('cascade');
             $table->unsignedBigInteger('value_id');
             $table->enum('value_type', array_keys(config('logos.valueTypes')))->index();

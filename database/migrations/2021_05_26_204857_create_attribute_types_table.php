@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCreatorTypesTable extends Migration
+class CreateAttributeTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateCreatorTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('creator_types', function (Blueprint $table) {
+        Schema::create('attribute_types', function (Blueprint $table) {
             $table->string('code_name', 50)->primary();
-            $table->string('label', 100);
+            $table->string('base_attribute_type_code_name', 50)->nullable();
+            $table->enum('value_type', array_keys(config('logos.valueTypes')));
         });
     }
 
@@ -26,6 +27,6 @@ class CreateCreatorTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('creator_types');
+        Schema::dropIfExists('base_attributes');
     }
 }

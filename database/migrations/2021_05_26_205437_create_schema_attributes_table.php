@@ -15,21 +15,16 @@ class CreateSchemaAttributesTable extends Migration
     {
         Schema::create('schema_attributes', function (Blueprint $table) {
             $table->unsignedBigInteger('schema_id');
-            $table->string('base_attribute_code_name', 50);
-            $table->primary(['schema_id', 'base_attribute_code_name']);
+            $table->string('attribute_type_code_name', 50);
+            $table->primary(['schema_id', 'attribute_type_code_name']);
             $table->foreign('schema_id')
                 ->references('id')
                 ->on('schemas');
-            $table->foreign('base_attribute_code_name')
+            $table->foreign('attribute_type_code_name')
                 ->references('code_name')
-                ->on('base_attributes');
-
-            $table->string('code_name', 50)->index()->unique();
-            $table->string('front_attribute_code_name', 50);
+                ->on('attribute_types');
             $table->string('label', 100)->nullable();
             $table->tinyInteger('order');
-
-            $table->timestamps();
         });
     }
 

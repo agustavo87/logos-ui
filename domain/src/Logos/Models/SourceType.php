@@ -24,7 +24,7 @@ class SourceType extends Attributes
         $this->label = $sourceType->label;
         $this->version = $schema->version;
         foreach ($attributes as $attribute) {
-            $this->attributes[$attribute->front_attribute_code_name] = new Attribute($attribute);
+            $this->attributes[$attribute->code_name] = new Attribute($attribute);
         }
         $this->roles = new RoleCollection($roles, $this);
     }

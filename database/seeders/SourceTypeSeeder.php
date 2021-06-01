@@ -17,7 +17,6 @@ class SourceTypeSeeder extends Seeder
 
     public function run()
     {
-
         $schemaLoader = app(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
         $schema = $schemaLoader->load();
 
@@ -28,9 +27,7 @@ class SourceTypeSeeder extends Seeder
             $sourceTypeCodeName = $itemType->itemType;
             DB::table('source_types')->insert([
                 'code_name' => $sourceTypeCodeName,
-                'label'     => config("logos.source.types.{$sourceTypeCodeName}.label"),
-                'created_at' => now(),
-                'updated_at' => now()
+                'label'     => config("logos.source.types.{$sourceTypeCodeName}.label")
             ]);
             $schemaVersion = 'z.1.0';
             $schemaID = DB::table('schemas')->insertGetId([
@@ -43,29 +40,22 @@ class SourceTypeSeeder extends Seeder
 
             $order = 0;
             foreach ($itemType->fields as $field) {
-                $baseAttritbute = $field->baseField ?? $field->field;
+                $baseAttribute = $field->baseField;
                 $attribute = $field->field;
-                if (!DB::table('base_attributes')->where('code_name', $baseAttritbute)->exists()) {
-                    $logosType = $valueTypeMapper->mapValueType($baseAttritbute);
-                    DB::table('base_attributes')->insert([
-                        'code_name'     => $baseAttritbute,
-                        'value_type'    => $logosType,
-                        'created_at'    => now(),
-                        'updated_at'    => now()
+                if (!DB::table('attribute_types')->where('code_name', $attribute)->exists()) {
+                    $logosType = $valueTypeMapper->mapValueType($attribute);
+                    DB::table('attribute_types')->insert([
+                        'code_name'                     => $attribute,
+                        'base_attribute_type_code_name' => $baseAttribute,
+                        'value_type'                    => $logosType,
                     ]);
                 }
                 DB::table('schema_attributes')->insert([
-                    'base_attribute_code_name' => $baseAttritbute,
-                    'schema_id' => $schemaID,
-                    'code_name' => "{$attribute}:{$sourceTypeCodeName}:{$schemaVersion}",
-                    'front_attribute_code_name' => $attribute,
-                    'order' => $order++,
-                    'created_at'    => now(),
-                    'updated_at'    => now()
+                    'attribute_type_code_name'  => $attribute,
+                    'schema_id'                 => $schemaID,
+                    'order'                     => $order++,
                 ]);
             }
-
-            // $this->createSchema()
         }
     }
 }

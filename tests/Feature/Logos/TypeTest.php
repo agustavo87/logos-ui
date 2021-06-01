@@ -70,7 +70,6 @@ class TypeTest extends FixturableTestCase
     {
         $titleAttribute = $type->title;
         $this->assertEquals('title', $titleAttribute->code);
-        $this->assertEquals('title', $titleAttribute->base);
         $this->assertEquals('text', $titleAttribute->type);
         $label = $titleAttribute->label;
         if (!is_null($label)) {

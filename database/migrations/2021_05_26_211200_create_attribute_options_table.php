@@ -15,11 +15,11 @@ class CreateAttributeOptionsTable extends Migration
     {
         Schema::create('attribute_options', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->string('schema_attribute_code_name');
-            $table->foreign('schema_attribute_code_name')
-                  ->references('code_name')
-                  ->on('schema_attributes');
+            $table->unsignedBigInteger('schema_id');
+            $table->string('attribute_type_code_name', 50);
+            $table->foreign(['schema_id', 'attribute_type_code_name'])
+                ->references(['schema_id', 'attribute_type_code_name'])
+                ->on('schema_attributes');
             $table->json('data');
         });
     }
