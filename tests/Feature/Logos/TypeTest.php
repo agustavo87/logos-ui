@@ -14,15 +14,15 @@ class TypeTest extends FixturableTestCase
     /**
      * @return SourceType
      */
-    public function test_get_zotero_basic_jorunal_article_type(): SourceType
+    public function test_get_zotero_basic_journal_article_type(): SourceType
     {
-        $types = app('\Arete\Logos\Repository\TypeRepositoryInterface');
+        $types = app(\Arete\Logos\Repositories\SourceTypeRepositoryInterface::class);
         $type = $types->get('journalArticle');
         $this->assertInstanceOf(SourceType::class, $type);
         $this->assertEquals('journalArticle', $type->code());
         $this->assertEquals('journalArticle', (string) $type);
         $this->assertEquals('Journal Article', $type->label());
-        $this->assertEquals('1.0', $type->version());
+        $this->assertEquals('z.1.0', $type->version());
 
         $validFields = [
             'title', 'abstractNote', 'publicationTitle', 'volume', 'issue',
@@ -32,7 +32,6 @@ class TypeTest extends FixturableTestCase
             'libraryCatalog', 'callNumber', 'rights', 'extra'
         ];
         foreach ($validFields as $field) {
-            $this->assertObjectHasAttribute($field, $type);
             $this->assertInstanceOf(Attribute::class, $type->$field);
         }
 
@@ -54,7 +53,6 @@ class TypeTest extends FixturableTestCase
 
         $validRoles = ['author', 'contributor', 'editor', 'translator', 'reviewedAuthor'];
         foreach ($validRoles as $role) {
-            $this->assertObjectHasAttribute($role, $roles);
             $this->assertInstanceOf(Role::class, $roles->$role);
         }
 
@@ -62,7 +60,7 @@ class TypeTest extends FixturableTestCase
     }
 
     /**
-     * @depends test_journal_article_has_role_collection
+     * @depends test_journal_article_type_has_role_collection
      *
      * @param SourceType $type
      *
@@ -72,9 +70,12 @@ class TypeTest extends FixturableTestCase
     {
         $titleAttribute = $type->title;
         $this->assertEquals('title', $titleAttribute->code);
-        $this->assertEquals('', $titleAttribute->base);
+        $this->assertEquals('title', $titleAttribute->base);
         $this->assertEquals('text', $titleAttribute->type);
-        $this->assertIsString($titleAttribute->label);
+        $label = $titleAttribute->label;
+        if (!is_null($label)) {
+            $this->assertIsString($label);
+        }
         $this->assertIsInt($titleAttribute->order);
 
         return $type;
@@ -92,7 +93,10 @@ class TypeTest extends FixturableTestCase
         $authorRole = $type->roles()->author;
 
         $this->assertEquals('author', $authorRole->code);
-        $this->assertIsString($authorRole->label);
+        $label = $authorRole->label;
+        if (!is_null($label)) {
+            $this->assertIsString($label);
+        }
         $this->assertIsBool($authorRole->primary);
         return $type;
     }

@@ -28,6 +28,7 @@ class SourceTypeSeeder extends Seeder
             $sourceTypeCodeName = $itemType->itemType;
             DB::table('source_types')->insert([
                 'code_name' => $sourceTypeCodeName,
+                'label'     => config("logos.source.types.{$sourceTypeCodeName}.label"),
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -57,7 +58,10 @@ class SourceTypeSeeder extends Seeder
                     'base_attribute_code_name' => $baseAttritbute,
                     'schema_id' => $schemaID,
                     'code_name' => "{$attribute}:{$sourceTypeCodeName}:{$schemaVersion}",
-                    'order' => $order++
+                    'front_attribute_code_name' => $attribute,
+                    'order' => $order++,
+                    'created_at'    => now(),
+                    'updated_at'    => now()
                 ]);
             }
 

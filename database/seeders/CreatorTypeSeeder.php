@@ -69,17 +69,19 @@ class CreatorTypeSeeder extends Seeder
                 $fieldCodeName = $field[0];
                 $baseFieldCodeName = $fieldCodeName;
                 $fieldLabel = $field[1];
+                $type = config('logos.fieldValueTypes')[$baseFieldCodeName] ??
+                            config('logos.fieldValueTypes')['default'];
                 DB::table('base_attributes')->insert([
                     'code_name'     => $baseFieldCodeName,
-                    'value_type'    => config('logos.fieldValueTypes')[$baseFieldCodeName] ??
-                                            config('logos.fieldValueTypes')['default'],
+                    'value_type'    => $type,
                     'created_at'    => now(),
                     'updated_at'    => now()
                 ]);
                 DB::table('schema_attributes')->insert([
                     'schema_id' => $schemaId,
                     'base_attribute_code_name' => $baseFieldCodeName,
-                    'code_name' => $fieldCodeName,
+                    'code_name' => "{$fieldCodeName}:{$type}:{$version}",
+                    'front_attribute_code_name' => $fieldCodeName,
                     'label' => $fieldLabel,
                     'order' => $order++,
                     'created_at'    => now(),

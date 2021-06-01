@@ -42,5 +42,24 @@ return [
                 ]
             ]
         ]
+    ],
+    'source' => [
+        'types' => [
+            'journalArticle' => [
+                'label' => 'Journal Article'
+            ],
+            'annotation'    => [
+                'label' => 'Annotation',
+            ],
+            'blogPost' => [
+                'label' => 'Blog Post'
+            ],
+            'book' => [
+                'label' => 'Book'
+            ],
+            'bookSection' => [
+                'label' => 'Book Section'
+            ]
+        ]
     ]
 ];

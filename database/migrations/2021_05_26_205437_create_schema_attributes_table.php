@@ -25,6 +25,7 @@ class CreateSchemaAttributesTable extends Migration
                 ->on('base_attributes');
 
             $table->string('code_name', 50)->index()->unique();
+            $table->string('front_attribute_code_name', 50);
             $table->string('label', 100)->nullable();
             $table->tinyInteger('order');
 
