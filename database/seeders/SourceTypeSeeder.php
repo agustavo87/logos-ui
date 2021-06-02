@@ -22,13 +22,14 @@ class SourceTypeSeeder extends Seeder
         $schema = $schemaLoader->load();
 
         $valueTypeMapper = app(\Arete\Logos\Services\ZoteroValueTypeMapper::class);
+        $sourceTypeLabelMapper = app(\Arete\Logos\Services\MapsSourceTypeLabels::class);
 
         $itemTypes = $schema->itemTypes;
         foreach ($itemTypes as $itemType) {
             $sourceTypeCodeName = $itemType->itemType;
             DB::table('source_types')->insert([
                 'code_name' => $sourceTypeCodeName,
-                'label'     => config("logos.source.types.{$sourceTypeCodeName}.label")
+                'label'     => $sourceTypeLabelMapper->map($sourceTypeCodeName)
             ]);
             $schemaVersion = 'z.1.0';
             $schemaID = DB::table('schemas')->insertGetId([

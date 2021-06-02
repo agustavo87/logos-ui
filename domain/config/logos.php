@@ -44,22 +44,13 @@ return [
         ]
     ],
     'source' => [
-        'types' => [
-            'journalArticle' => [
-                'label' => 'Journal Article'
-            ],
-            'annotation'    => [
-                'label' => 'Annotation',
-            ],
-            'blogPost' => [
-                'label' => 'Blog Post'
-            ],
-            'book' => [
-                'label' => 'Book'
-            ],
-            'bookSection' => [
-                'label' => 'Book Section'
-            ]
+        'typesLabels' => [
+            'journalArticle'   => 'Journal Article',
+            'annotation'       => 'Annotation',
+            'blogPost'         => 'Blog Post',
+            'book'             => 'Book',
+            'bookSection'      => 'Book Section',
+            'default'          => ''
         ]
     ]
 ];

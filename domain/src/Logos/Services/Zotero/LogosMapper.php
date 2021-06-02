@@ -7,6 +7,9 @@ namespace Arete\Logos\Services\Zotero;
 use Arete\Common\Mapper;
 use Arete\Logos\Services\ValueTypeMapperInterface;
 
+/**
+ * Maps value fields accoring to zotero specifications.
+ */
 class LogosMapper extends Mapper implements ValueTypeMapperInterface
 {
     protected function boot(array $logosValueTypes): bool
