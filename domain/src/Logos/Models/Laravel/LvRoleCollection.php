@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Models\Laravel;
 
 use Illuminate\Support\Collection;
+use Arete\Logos\Models\{RoleCollection, SourceType, Role};
 
 /**
  * Laravel dependent RoleCollection.

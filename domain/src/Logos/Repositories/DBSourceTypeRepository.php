@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Repositories;
 
-use Arete\Logos\Models\{LvSourceType, SourceType};
+use Arete\Logos\Models\SourceType;
+use Arete\Logos\Models\Laravel\LvSourceType;
 use Illuminate\Support\Facades\DB;
 
 class DBSourceTypeRepository implements SourceTypeRepositoryInterface

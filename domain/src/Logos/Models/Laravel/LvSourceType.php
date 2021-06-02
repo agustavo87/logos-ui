@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Models\Laravel;
 
 use stdClass;
 use Illuminate\Support\Collection;
+use Arete\Logos\Models\{SourceType, Attribute};
 
 /**
  * Laravel dependent SourceType
