@@ -12,12 +12,11 @@ class DBSourceTypeRepository implements SourceTypeRepositoryInterface
 
     public function get($codeName): SourceType
     {
-        $schema = $this->getSchema($codeName);
-
         /**
          * @todo asegurarse de no pasar ningún tipo específico de
          * laravel al dominio.
          * */
+        $schema = $this->getSchema($codeName);
         return new SourceType(
             $this->getSourceType($codeName),
             $schema,
