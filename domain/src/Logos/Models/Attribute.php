@@ -12,12 +12,12 @@ class Attribute
     public string $type;
     public int $order;
 
-    public function __construct($attribute)
+    public function __construct(array $attribute)
     {
-        $this->type = $attribute->value_type;
-        $this->code = $attribute->code_name;
-        $this->base = $attribute->base_attribute_type_code_name;
-        $this->label = $attribute->label;
-        $this->order = (int) $attribute->order;
+        $this->type = $attribute['value_type'];
+        $this->code = $attribute['code_name'];
+        $this->base = $attribute['base_attribute_type_code_name'];
+        $this->label = $attribute['label'];
+        $this->order = (int) $attribute['order'];
     }
 }

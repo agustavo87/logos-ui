@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Repositories;
 
-use Arete\Logos\Models\SourceType;
+use Arete\Logos\Models\{LvSourceType, SourceType};
 use Illuminate\Support\Facades\DB;
 
 class DBSourceTypeRepository implements SourceTypeRepositoryInterface
@@ -17,7 +17,7 @@ class DBSourceTypeRepository implements SourceTypeRepositoryInterface
          * laravel al dominio.
          * */
         $schema = $this->getSchema($codeName);
-        return new SourceType(
+        return LvSourceType::fromLvData(
             $this->getSourceType($codeName),
             $schema,
             $this->getAttributes($schema->id),
