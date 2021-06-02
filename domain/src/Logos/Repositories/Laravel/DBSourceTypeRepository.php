@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Repositories;
+namespace Arete\Logos\Repositories\Laravel;
 
+use Arete\Logos\Repositories\SourceTypeRepositoryInterface;
 use Arete\Logos\Models\SourceType;
 use Arete\Logos\Models\Laravel\LvSourceType;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Laravel dependent Data Base based Source Type Repository
+ */
 class DBSourceTypeRepository implements SourceTypeRepositoryInterface
 {
 
     public function get($codeName): SourceType
     {
-        /**
-         * @todo asegurarse de no pasar ningún tipo específico de
-         * laravel al dominio.
-         * */
         $schema = $this->getSchema($codeName);
         return LvSourceType::fromLvData(
             $this->getSourceType($codeName),
