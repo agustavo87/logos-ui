@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Arete\Logos\Models\Schema;
 
 class CreatorTypeSeeder extends Seeder
 {
@@ -52,7 +53,7 @@ class CreatorTypeSeeder extends Seeder
             ]);
             $schemaId = DB::table('schemas')->insertGetId([
                 'type_code_name'    => $codeName,
-                'type'              => config('logos.schemaTypes.creator'),
+                'type'              => Schema::Types['creator'],
                 'version'           => $version,
                 'created_at'        => now(),
                 'updated_at'        => now()

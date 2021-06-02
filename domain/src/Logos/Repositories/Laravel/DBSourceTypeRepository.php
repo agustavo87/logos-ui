@@ -7,6 +7,7 @@ namespace Arete\Logos\Repositories\Laravel;
 use Arete\Logos\Repositories\SourceTypeRepositoryInterface;
 use Arete\Logos\Models\SourceType;
 use Arete\Logos\Models\Laravel\LvSourceType;
+use Arete\Logos\Models\Schema;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -39,7 +40,7 @@ class DBSourceTypeRepository implements SourceTypeRepositoryInterface
     {
         return DB::table('schemas')
             ->where('type_code_name', $codeName)
-            ->where('type', config('logos.schemaTypes.source'))
+            ->where('type', Schema::Types['source'])
             ->latest()
             ->first();
     }

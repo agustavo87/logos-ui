@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Arete\Logos\Models\Schema;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +33,7 @@ class SourceTypeSeeder extends Seeder
             $schemaVersion = 'z.1.0';
             $schemaID = DB::table('schemas')->insertGetId([
                 'type_code_name'    => $sourceTypeCodeName,
-                'type'              => config('logos.schemaTypes.source'),
+                'type'              => Schema::Types['source'],
                 'version'           => $schemaVersion,
                 'created_at'        => now(),
                 'updated_at'        => now()
