@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Arete\Logos\Models\Schema;
+use Arete\Logos\Services\Laravel\DB as LgDB;
 
 class CreatorTypeSeeder extends Seeder
 {
@@ -16,8 +17,12 @@ class CreatorTypeSeeder extends Seeder
      */
     protected array $fieldsProperties;
 
+    protected LgDB $LgDB;
+
     public function run()
     {
+        $this->LgDB = new LgDB();
+
         $this->seedCreatorTypes();
 
         $schemaLoader = app(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
@@ -27,16 +32,10 @@ class CreatorTypeSeeder extends Seeder
             $sourceTypeCode = $itemType->itemType;
             foreach ($itemType->creatorTypes as $creatorType) {
                 $roleCode = $creatorType->creatorType;
-                if (!DB::table('roles')->where('code_name', $roleCode)->exists()) {
-                    DB::table('roles')->insert([
-                        'code_name' => $roleCode,
-                        'primary'   => $creatorType->primary
-                    ]);
+                if (!$this->LgDB->roleExist($roleCode)) {
+                    $this->LgDB->insertRole($roleCode, $creatorType->primary);
                 }
-                DB::table('participation_types')->insert([
-                    'source_type_code_name' => $sourceTypeCode,
-                    'role_code_name'        => $roleCode
-                ]);
+                $this->LgDB->insertParticipationType($sourceTypeCode, $roleCode);
             }
         }
     }
@@ -47,17 +46,17 @@ class CreatorTypeSeeder extends Seeder
         $version = config('logos.creatorTypes.version');
 
         foreach ($creatorTypes as $codeName => $data) {
-            DB::table('creator_types')->insert([
-                'code_name' => $codeName,
-                'label'     => $data['label']
-            ]);
-            $schemaId = DB::table('schemas')->insertGetId([
-                'type_code_name'    => $codeName,
-                'type'              => Schema::Types['creator'],
-                'version'           => $version,
-                'created_at'        => now(),
-                'updated_at'        => now()
-            ]);
+            $this->LgDB->insertCreatorType(
+                $codeName,
+                $data['label']
+            );
+
+            $schemaId = $this->LgDB->insertSchema(
+                $codeName,
+                Schema::Types['creator'],
+                $version
+            );
+
             $order = 0;
             foreach ($data['fields'] as $field) {
                 $fieldCodeName = $field[0];
@@ -65,17 +64,19 @@ class CreatorTypeSeeder extends Seeder
                 $fieldLabel = $field[1];
                 $type = config('logos.fieldValueTypes')[$baseFieldCodeName] ??
                             config('logos.fieldValueTypes')['default'];
-                DB::table('attribute_types')->insert([
-                    'code_name'                     => $fieldCodeName,
-                    'base_attribute_type_code_name' => $baseFieldCodeName,
-                    'value_type'                    => $type
-                ]);
-                DB::table('schema_attributes')->insert([
-                    'schema_id'                 => $schemaId,
-                    'attribute_type_code_name'  => $fieldCodeName,
-                    'label'                     => $fieldLabel,
-                    'order'                     => $order++
-                ]);
+
+                $this->LgDB->insertAttributeType(
+                    $fieldCodeName,
+                    $type,
+                    $baseFieldCodeName
+                );
+
+                $this->LgDB->insertSchemaAttribute(
+                    $fieldCodeName,
+                    $schemaId,
+                    $order++,
+                    $fieldLabel
+                );
             }
         }
     }
