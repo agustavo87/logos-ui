@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Models\Traits;
 
-class Attributes
+trait ExposeAttributes
 {
     protected $attributes = [];
 

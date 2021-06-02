@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Models;
 
-abstract class SourceType extends Attributes
+use Arete\Logos\Models\Traits\ExposeAttributes;
+
+abstract class SourceType
 {
+    use ExposeAttributes;
+
     protected string $code_name;
     protected ?string $label = null;
     protected string $version;
