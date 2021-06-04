@@ -6,23 +6,27 @@ use Illuminate\Database\Seeder;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Services\Laravel\DB as LogosDB;
+use Arete\Logos\Models\Schema as LogosSchema;
 use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
 use Arete\Logos\Services\ZoteroValueTypeMapper;
 
 class CreatorTypeSeeder extends Seeder
 {
     protected LogosDB $db;
-    protected ZoteroSchema $schema;
+    protected ZoteroSchema $zoteroSchema;
     protected ZoteroValueTypeMapper $valueTypes;
+    protected LogosSchema $logosSchema;
 
     public function __construct(
         LogosDB $db,
-        ZoteroSchemaLoader $schemaLoader,
-        ZoteroValueTypeMapper $valueTypes
+        ZoteroSchemaLoader $zoteroSchemaLoader,
+        ZoteroValueTypeMapper $valueTypes,
+        LogosSchema $logosSchema
     ) {
         $this->db = $db;
-        $this->schema = $schemaLoader->load();
+        $this->zoteroSchema = $zoteroSchemaLoader->load();
         $this->valueTypes = $valueTypes;
+        $this->logosSchema = $logosSchema;
     }
 
     public function run()
@@ -30,7 +34,7 @@ class CreatorTypeSeeder extends Seeder
 
         $this->seedCreatorTypes();
 
-        foreach ($this->schema->itemTypes as $itemType) {
+        foreach ($this->zoteroSchema->itemTypes as $itemType) {
             $sourceTypeCode = $itemType->itemType;
             foreach ($itemType->creatorTypes as $creatorType) {
                 $roleCode = $creatorType->creatorType;
@@ -44,10 +48,7 @@ class CreatorTypeSeeder extends Seeder
 
     public function seedCreatorTypes()
     {
-        $creatorTypes = config('logos.creatorTypes.data');
-        $version = config('logos.creatorTypes.version');
-
-        foreach ($creatorTypes as $codeName => $data) {
+        foreach ($this->logosSchema->creatorTypes() as $codeName => $data) {
             $this->db->insertCreatorType(
                 $codeName,
                 $data['label']
@@ -55,21 +56,22 @@ class CreatorTypeSeeder extends Seeder
 
             $schemaId = $this->db->insertSchema(
                 $codeName,
-                Schema::Types['creator'],
-                $version
+                Schema::TYPES['creator'],
+                $this->logosSchema::VERSION
             );
 
             $order = 0;
+
             foreach ($data['fields'] as $field) {
                 $fieldCodeName = $field[0];
-                $baseFieldCodeName = null;
                 $fieldLabel = $field[1];
 
-                $this->db->insertAttributeType(
-                    $fieldCodeName,
-                    $this->valueTypes->mapValueType($fieldCodeName),
-                    $baseFieldCodeName
-                );
+                if (!$this->db->attributeExist($fieldCodeName)) {
+                    $this->db->insertAttributeType(
+                        $fieldCodeName,
+                        $this->valueTypes->mapValueType($fieldCodeName)
+                    );
+                }
 
                 $this->db->insertSchemaAttribute(
                     $fieldCodeName,

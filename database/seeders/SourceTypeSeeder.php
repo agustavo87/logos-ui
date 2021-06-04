@@ -43,7 +43,7 @@ class SourceTypeSeeder extends Seeder
 
             $schemaID = $this->db->insertSchema(
                 $sourceTypeCode,
-                Schema::Types['source'],
+                Schema::TYPES['source'],
                 'z.' . $this->schema->version
             );
 

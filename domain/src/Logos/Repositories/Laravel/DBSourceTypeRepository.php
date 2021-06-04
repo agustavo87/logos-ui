@@ -40,7 +40,7 @@ class DBSourceTypeRepository implements SourceTypeRepositoryInterface
     {
         return DB::table('schemas')
             ->where('type_code_name', $codeName)
-            ->where('type', Schema::Types['source'])
+            ->where('type', Schema::TYPES['source'])
             ->latest()
             ->first();
     }
