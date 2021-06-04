@@ -15,7 +15,6 @@ class CreatorTypeSeeder extends Seeder
      *
      * @return void
      */
-    protected array $fieldsProperties;
 
     protected LgDB $LgDB;
 
