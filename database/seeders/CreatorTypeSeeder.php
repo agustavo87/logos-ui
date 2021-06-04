@@ -7,19 +7,22 @@ use Arete\Logos\Models\Schema;
 use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Services\Laravel\DB as LogosDB;
 use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
+use Arete\Logos\Services\ZoteroValueTypeMapper;
 
 class CreatorTypeSeeder extends Seeder
 {
-
     protected LogosDB $db;
     protected ZoteroSchema $schema;
+    protected ZoteroValueTypeMapper $valueTypes;
 
     public function __construct(
         LogosDB $db,
-        ZoteroSchemaLoader $schemaLoader
+        ZoteroSchemaLoader $schemaLoader,
+        ZoteroValueTypeMapper $valueTypes
     ) {
         $this->db = $db;
         $this->schema = $schemaLoader->load();
+        $this->valueTypes = $valueTypes;
     }
 
     public function run()
@@ -61,12 +64,10 @@ class CreatorTypeSeeder extends Seeder
                 $fieldCodeName = $field[0];
                 $baseFieldCodeName = null;
                 $fieldLabel = $field[1];
-                $type = config('logos.fieldValueTypes')[$baseFieldCodeName] ??
-                            config('logos.fieldValueTypes')['default'];
 
                 $this->db->insertAttributeType(
                     $fieldCodeName,
-                    $type,
+                    $this->valueTypes->mapValueType($fieldCodeName),
                     $baseFieldCodeName
                 );
 
