@@ -3,44 +3,37 @@
 namespace Database\Seeders;
 
 use Arete\Logos\Models\Schema;
-use Arete\Logos\Services\Laravel\DB as LgDB;
-use Arete\Logos\Services\Zotero\SchemaLoaderInterface;
+use Arete\Logos\Services\Laravel\DB as LogosDB;
+use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
+use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Services\ZoteroValueTypeMapper;
 use Arete\Logos\Services\MapsSourceTypeLabels;
 use Illuminate\Database\Seeder;
 
 class SourceTypeSeeder extends Seeder
 {
-
-    protected LgDB $db;
-    protected SchemaLoaderInterface $schema;
+    protected LogosDB $db;
+    protected ZoteroSchema $schema;
     protected ZoteroValueTypeMapper $valueTypes;
     protected MapsSourceTypeLabels $sourceTypeLabels;
 
     public function __construct(
-        LgDB $db,
-        SchemaLoaderInterface $schema,
+        LogosDB $db,
+        ZoteroSchemaLoader $schemaLoader,
         ZoteroValueTypeMapper $valueTypes,
         MapsSourceTypeLabels $sourceTypeLabels
     ) {
         $this->db = $db;
-        $this->schema = $schema;
+        $this->schema = $schemaLoader->load();
         $this->valueTypes = $valueTypes;
         $this->sourceTypeLabels = $sourceTypeLabels;
     }
 
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        $schema = $this->schema->load();
-        $itemTypes = $schema->itemTypes;
+        $itemTypes = $this->schema->itemTypes;
 
         foreach ($itemTypes as $itemType) {
-
             $sourceTypeCode = $itemType->itemType;
 
             $this->db->insertSourceType(
@@ -51,12 +44,11 @@ class SourceTypeSeeder extends Seeder
             $schemaID = $this->db->insertSchema(
                 $sourceTypeCode,
                 Schema::Types['source'],
-                'z.' . $schema->version
+                'z.' . $this->schema->version
             );
 
             $order = 0;
             foreach ($itemType->fields as $field) {
-
                 $baseAttribute = $field->baseField;
                 $attribute = $field->field;
 

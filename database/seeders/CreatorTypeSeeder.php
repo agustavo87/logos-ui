@@ -5,22 +5,17 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
-use Arete\Logos\Services\Laravel\DB as LgDB;
+use Arete\Logos\Services\Laravel\DB as LogosDB;
 use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
 
 class CreatorTypeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
 
-    protected LgDB $db;
+    protected LogosDB $db;
     protected ZoteroSchema $schema;
 
     public function __construct(
-        LgDB $db,
+        LogosDB $db,
         ZoteroSchemaLoader $schemaLoader
     ) {
         $this->db = $db;
