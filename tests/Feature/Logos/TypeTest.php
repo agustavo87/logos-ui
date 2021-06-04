@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Logos;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\FixturableTestCase;
 use Arete\Logos\Models\RoleCollection;
 use Arete\Logos\Models\Role;
@@ -22,7 +21,7 @@ class TypeTest extends FixturableTestCase
         $this->assertEquals('journalArticle', $type->code());
         $this->assertEquals('journalArticle', (string) $type);
         $this->assertEquals('Journal Article', $type->label());
-        $this->assertEquals('z.1.0', $type->version());
+        $this->assertStringContainsString('z', $type->version());
 
         $validFields = [
             'title', 'abstractNote', 'publicationTitle', 'volume', 'issue',

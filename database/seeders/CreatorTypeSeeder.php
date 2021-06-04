@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Arete\Logos\Models\Schema;
+use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Services\Laravel\DB as LgDB;
+use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
 
 class CreatorTypeSeeder extends Seeder
 {
@@ -14,25 +16,30 @@ class CreatorTypeSeeder extends Seeder
      * @return void
      */
 
-    protected LgDB $LgDB;
+    protected LgDB $db;
+    protected ZoteroSchema $schema;
+
+    public function __construct(
+        LgDB $db,
+        ZoteroSchemaLoader $schemaLoader
+    ) {
+        $this->db = $db;
+        $this->schema = $schemaLoader->load();
+    }
 
     public function run()
     {
-        $this->LgDB = new LgDB();
 
         $this->seedCreatorTypes();
 
-        $schemaLoader = app(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
-        $schema = $schemaLoader->load();
-
-        foreach ($schema->itemTypes as $itemType) {
+        foreach ($this->schema->itemTypes as $itemType) {
             $sourceTypeCode = $itemType->itemType;
             foreach ($itemType->creatorTypes as $creatorType) {
                 $roleCode = $creatorType->creatorType;
-                if (!$this->LgDB->roleExist($roleCode)) {
-                    $this->LgDB->insertRole($roleCode, $creatorType->primary);
+                if (!$this->db->roleExist($roleCode)) {
+                    $this->db->insertRole($roleCode, $creatorType->primary);
                 }
-                $this->LgDB->insertParticipationType($sourceTypeCode, $roleCode);
+                $this->db->insertParticipationType($sourceTypeCode, $roleCode);
             }
         }
     }
@@ -43,12 +50,12 @@ class CreatorTypeSeeder extends Seeder
         $version = config('logos.creatorTypes.version');
 
         foreach ($creatorTypes as $codeName => $data) {
-            $this->LgDB->insertCreatorType(
+            $this->db->insertCreatorType(
                 $codeName,
                 $data['label']
             );
 
-            $schemaId = $this->LgDB->insertSchema(
+            $schemaId = $this->db->insertSchema(
                 $codeName,
                 Schema::Types['creator'],
                 $version
@@ -62,13 +69,13 @@ class CreatorTypeSeeder extends Seeder
                 $type = config('logos.fieldValueTypes')[$baseFieldCodeName] ??
                             config('logos.fieldValueTypes')['default'];
 
-                $this->LgDB->insertAttributeType(
+                $this->db->insertAttributeType(
                     $fieldCodeName,
                     $type,
                     $baseFieldCodeName
                 );
 
-                $this->LgDB->insertSchemaAttribute(
+                $this->db->insertSchemaAttribute(
                     $fieldCodeName,
                     $schemaId,
                     $order++,

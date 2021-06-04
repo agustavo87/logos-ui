@@ -4,53 +4,71 @@ namespace Database\Seeders;
 
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Services\Laravel\DB as LgDB;
+use Arete\Logos\Services\Zotero\SchemaLoaderInterface;
+use Arete\Logos\Services\ZoteroValueTypeMapper;
+use Arete\Logos\Services\MapsSourceTypeLabels;
 use Illuminate\Database\Seeder;
 
 class SourceTypeSeeder extends Seeder
 {
+
+    protected LgDB $db;
+    protected SchemaLoaderInterface $schema;
+    protected ZoteroValueTypeMapper $valueTypes;
+    protected MapsSourceTypeLabels $sourceTypeLabels;
+
+    public function __construct(
+        LgDB $db,
+        SchemaLoaderInterface $schema,
+        ZoteroValueTypeMapper $valueTypes,
+        MapsSourceTypeLabels $sourceTypeLabels
+    ) {
+        $this->db = $db;
+        $this->schema = $schema;
+        $this->valueTypes = $valueTypes;
+        $this->sourceTypeLabels = $sourceTypeLabels;
+    }
+
     /**
      * Run the database seeds.
      *
      * @return void
      */
-
     public function run()
     {
-        $schemaLoader = app(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
-        $schema = $schemaLoader->load();
-        $LgDB = new LgDB();
-
-        $valueTypeMapper = app(\Arete\Logos\Services\ZoteroValueTypeMapper::class);
-        $sourceTypeLabelMapper = app(\Arete\Logos\Services\MapsSourceTypeLabels::class);
-
+        $schema = $this->schema->load();
         $itemTypes = $schema->itemTypes;
+
         foreach ($itemTypes as $itemType) {
-            $sourceTypeCodeName = $itemType->itemType;
-            $LgDB->insertSourceType(
-                $sourceTypeCodeName,
-                $sourceTypeLabelMapper->mapSourceTypeLabel($sourceTypeCodeName)
+
+            $sourceTypeCode = $itemType->itemType;
+
+            $this->db->insertSourceType(
+                $sourceTypeCode,
+                $this->sourceTypeLabels->mapSourceTypeLabel($sourceTypeCode)
             );
 
-            $schemaVersion = 'z.1.0';
-            $schemaID = $LgDB->insertSchema(
-                $sourceTypeCodeName,
+            $schemaID = $this->db->insertSchema(
+                $sourceTypeCode,
                 Schema::Types['source'],
-                $schemaVersion,
+                'z.' . $schema->version
             );
 
             $order = 0;
             foreach ($itemType->fields as $field) {
+
                 $baseAttribute = $field->baseField;
                 $attribute = $field->field;
-                if (!$LgDB->attributeExist($attribute)) {
-                    $logosType = $valueTypeMapper->mapValueType($attribute);
-                    $LgDB->insertAttributeType(
+
+                if (!$this->db->attributeExist($attribute)) {
+                    $this->db->insertAttributeType(
                         $attribute,
-                        $logosType,
+                        $this->valueTypes->mapValueType($attribute),
                         $baseAttribute
                     );
                 }
-                $LgDB->insertSchemaAttribute(
+
+                $this->db->insertSchemaAttribute(
                     $attribute,
                     $schemaID,
                     $order++
