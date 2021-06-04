@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Services\Laravel\DB as LgDB;
 
