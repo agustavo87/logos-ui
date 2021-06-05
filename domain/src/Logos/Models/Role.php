@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Models;
 
-class Role
-{
-    public string $code;
-    public ?string $label;
-    public bool $primary;
+use Arete\Common\FillableProperties;
 
-    /**
-     * @param array $role
-     */
-    public function __construct(array $role)
+class Role extends FillableProperties
+{
+    public string $code = '';
+    public ?string $label = null;
+    public bool $primary = false;
+
+    protected function fillDefaultsAttributes()
     {
-        $this->code = $role['code_name'];
-        $this->label = $role['label'];
-        $this->primary = (bool) $role['primary'];
+        //
     }
 
     public function __toString()

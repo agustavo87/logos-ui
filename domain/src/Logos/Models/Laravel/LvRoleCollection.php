@@ -27,7 +27,11 @@ class LvRoleCollection extends RoleCollection
         $new = new static();
         $new->type = $type;
         foreach ($roles as $role) {
-            $new->attributes[$role->code_name] = new Role(get_object_vars($role)) ;
+            $new->attributes[$role->code_name] = new Role([
+                'code' => $role->code_name,
+                'label' => $role->label,
+                'primary' => (bool) $role->primary
+            ]);
         }
         return $new;
     }
