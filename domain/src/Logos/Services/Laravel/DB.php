@@ -7,6 +7,9 @@ namespace Arete\Logos\Services\Laravel;
 use Illuminate\Support\Facades\DB as LvDB;
 use Arete\Logos\Models\Schema;
 
+/**
+ * Laravel depedent DB Access operations
+ */
 class DB
 {
     public function insertSourceType($code, $label = null)
