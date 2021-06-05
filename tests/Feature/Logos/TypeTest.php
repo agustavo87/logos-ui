@@ -7,6 +7,7 @@ use Arete\Logos\Models\RoleCollection;
 use Arete\Logos\Models\Role;
 use Arete\Logos\Models\SourceType;
 use Arete\Logos\Models\Attribute;
+use Arete\Logos\Repositories\SourceTypeRepositoryInterface;
 
 class TypeTest extends FixturableTestCase
 {
@@ -15,7 +16,7 @@ class TypeTest extends FixturableTestCase
      */
     public function test_get_zotero_basic_journal_article_type(): SourceType
     {
-        $types = app(\Arete\Logos\Repositories\SourceTypeRepositoryInterface::class);
+        $types = $this->app->make(SourceTypeRepositoryInterface::class);
         $type = $types->get('journalArticle');
         $this->assertInstanceOf(SourceType::class, $type);
         $this->assertEquals('journalArticle', $type->code());
