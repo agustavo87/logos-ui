@@ -12,7 +12,7 @@ use Tests\FixturableTestCase;
 class CreatorTypeTest extends FixturableTestCase
 {
 
-    public function testGetCreatorType()
+    public function testGetPersonCreatorType()
     {
         $types = $this->app->make(CreatorTypeRepositoryInterface::class);
         $person = $types->get('person');
@@ -22,7 +22,7 @@ class CreatorTypeTest extends FixturableTestCase
     }
 
     /**
-     * @depends testGetCreatorType
+     * @depends testGetPersonCreatorType
      *
      * @param mixed $person
      *
@@ -45,7 +45,7 @@ class CreatorTypeTest extends FixturableTestCase
      *
      * @return CreatorType
      */
-    public function testHaveExpectedAttributes($person)
+    public function testPersonHaveExpectedAttributes($person)
     {
         $expectedAttributes = ['name', 'lastName'];
         foreach ($expectedAttributes as $attribute) {
@@ -56,13 +56,13 @@ class CreatorTypeTest extends FixturableTestCase
     }
 
     /**
-     * @depends testHaveExpectedAttributes
+     * @depends testPersonHaveExpectedAttributes
      *
      * @param mixed $person
      *
      * @return CreatorType
      */
-    public function testAttributesHaveExpectedStructure($person)
+    public function testPersonAttributesHaveExpectedStructure($person)
     {
         $name = $person->name;
 

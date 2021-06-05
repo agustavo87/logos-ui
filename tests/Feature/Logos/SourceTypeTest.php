@@ -9,7 +9,7 @@ use Arete\Logos\Models\SourceType;
 use Arete\Logos\Models\Attribute;
 use Arete\Logos\Repositories\SourceTypeRepositoryInterface;
 
-class TypeTest extends FixturableTestCase
+class SourceTypeTest extends FixturableTestCase
 {
     /**
      * @return SourceType
