@@ -57,7 +57,7 @@ class CreatorTypeSeeder extends Seeder
             $schemaId = $this->db->insertSchema(
                 $codeName,
                 Schema::TYPES['creator'],
-                $this->logosSchema::VERSION
+                Schema::VERSION
             );
 
             $order = 0;
