@@ -44,7 +44,7 @@ m2=*</panel_attributes><additional_attributes>10;10;350;10</additional_attribute
 + {attribute_code}: Attribute
 --
 __toString(): string
-+ lypeCode() :string
++ code() :string
 + label(): string
 + version() :string
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>960</x><y>90</y><w>240</w><h>90</h></coordinates><panel_attributes>PropertyMap
@@ -80,7 +80,7 @@ m2=*</panel_attributes><additional_attributes>10;10;90;10</additional_attributes
 --
 + __get(name :string) :Role
 + __set(name :string, value :Role) :void
-+ names() :array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>350</y><w>80</w><h>330</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;60;40;60;310;10;310</additional_attributes></element><element><id>Relation</id><coordinates><x>609</x><y>169</y><w>480</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>460;10;460;50;10;50;10;90</additional_attributes></element><element><id>UMLNote</id><coordinates><x>1374</x><y>998</y><w>130</w><h>70</h></coordinates><panel_attributes>toString()
++ names() :array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>350</y><w>80</w><h>330</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;60;40;60;310;10;310</additional_attributes></element><element><id>Relation</id><coordinates><x>609</x><y>169</y><w>480</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>460;10;460;50;10;50;10;90</additional_attributes></element><element><id>UMLNote</id><coordinates><x>1374</x><y>998</y><w>170</w><h>70</h></coordinates><panel_attributes>toString()
 return the type_code_name
 del creator.
 bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>314</x><y>623</y><w>160</w><h>150</h></coordinates><panel_attributes>toString()
