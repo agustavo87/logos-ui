@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Models;
 
-class Attribute
-{
-    public string $code;
-    public ?string $base;
-    public ?string $label;
-    public string $type;
-    public int $order;
+use Arete\Common\FillableProperties;
 
-    public function __construct(array $attribute)
+class Attribute extends FillableProperties
+{
+    public string $code = '';
+    public ?string $base  = null;
+    public ?string $label = null;
+    public string $type = '';
+    public int $order = 0;
+
+    protected function fillDefaultsAttributes()
     {
-        $this->type = $attribute['value_type'];
-        $this->code = $attribute['code_name'];
-        $this->base = $attribute['base_attribute_type_code_name'];
-        $this->label = $attribute['label'];
-        $this->order = (int) $attribute['order'];
+        //
     }
 }

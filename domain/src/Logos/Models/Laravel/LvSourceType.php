@@ -34,7 +34,13 @@ class LvSourceType extends SourceType
         $instance->label = $sourceType->label;
         $instance->version = $schema->version;
         foreach ($attributes as $attribute) {
-            $instance->attributes[$attribute->code_name] = new Attribute(get_object_vars($attribute));
+            $instance->attributes[$attribute->code_name] = new Attribute([
+                'type'  => $attribute->value_type,
+                'code'  => $attribute->code_name,
+                'base'  => $attribute->base_attribute_type_code_name,
+                'label' => $attribute->label,
+                'order' => (int) $attribute->order
+            ]);
         }
         $instance->roles = LvRoleCollection::fromLvData($roles, $instance);
         return $instance;
