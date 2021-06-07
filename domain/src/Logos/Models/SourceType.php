@@ -8,7 +8,7 @@ abstract class SourceType extends AbstractType
 {
     protected RoleCollection $roles;
 
-    public function roles(): RoleCollection
+    public function participations(): RoleCollection
     {
         return $this->roles;
     }

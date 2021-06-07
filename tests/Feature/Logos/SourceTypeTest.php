@@ -47,7 +47,7 @@ class SourceTypeTest extends FixturableTestCase
      */
     public function test_journal_article_type_has_role_collection(SourceType $type): SourceType
     {
-        $roles = $type->roles();
+        $roles = $type->participations();
         $this->assertInstanceOf(RoleCollection::class, $roles);
         $this->assertEquals($type, $roles->type());
 
@@ -89,7 +89,7 @@ class SourceTypeTest extends FixturableTestCase
      */
     public function test_journal_article_role_has_expected_structure(SourceType $type): SourceType
     {
-        $authorRole = $type->roles()->author;
+        $authorRole = $type->participations()->author;
 
         $this->assertEquals('author', $authorRole->code);
         $label = $authorRole->label;
