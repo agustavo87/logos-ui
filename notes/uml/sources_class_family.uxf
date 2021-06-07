@@ -4,7 +4,9 @@
 --
 + id() :int
 + type() :SourceType
-+ creators() :ParticipationSet</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>320</x><y>480</y><w>150</w><h>130</h></coordinates><panel_attributes>SourceType
++ participations() :ParticipationSet
+bg=cyan
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>290</x><y>480</y><w>190</w><h>130</h></coordinates><panel_attributes>SourceType
 --
 {attribute_code}
 --
@@ -12,7 +14,7 @@
 + code() :string
 + label() :string
 + version(): string
-+ roles() : RoleCollection</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>540</y><w>110</w><h>30</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>90;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>810</x><y>500</y><w>170</w><h>130</h></coordinates><panel_attributes>Attribute
++ participations() : RoleCollection</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>540</y><w>80</w><h>30</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>60;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>810</x><y>500</y><w>170</w><h>130</h></coordinates><panel_attributes>Attribute
 --
 + code
 + base
@@ -29,15 +31,15 @@ type(): SourceType</panel_attributes><additional_attributes></additional_attribu
 + code
 + label
 + primary :bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>670</y><w>290</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
-m2=*</panel_attributes><additional_attributes>10;10;270;10</additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>530</y><w>370</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
-m2=*</panel_attributes><additional_attributes>10;10;350;10</additional_attributes></element><element><id>Relation</id><coordinates><x>460</x><y>550</y><w>90</w><h>150</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>70;130;40;130;40;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>790</y><w>190</w><h>50</h></coordinates><panel_attributes>ParticipationSet
+m2=*</panel_attributes><additional_attributes>10;10;270;10</additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>530</y><w>360</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=*</panel_attributes><additional_attributes>10;10;340;10</additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>550</y><w>80</w><h>150</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>60;130;30;130;30;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>790</y><w>190</w><h>50</h></coordinates><panel_attributes>ParticipationSet
 --
 + {role_code}: Participation[id]</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>790</y><w>180</w><h>120</h></coordinates><panel_attributes>Participation[id]
 --
 {attribute_code} :mixed
 --
 + id()
-+ type()
++ creatorType()
 + role()
 + relevance() :int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1080</x><y>920</y><w>270</w><h>130</h></coordinates><panel_attributes>CreatorType
 --
@@ -66,7 +68,7 @@ bg=yellow</panel_attributes><additional_attributes></additional_attributes></ele
 --
 + __get(name :string) :Attribute
 + __set(name :string, value :Attribute) :void
-+ names() :array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>849</x><y>169</y><w>240</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>220;10;220;50;10;50;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>459</x><y>350</y><w>350</w><h>180</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>330;10;330;160;10;160</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1120</x><y>260</y><w>240</w><h>100</h></coordinates><panel_attributes>ValueCollection
++ names() :array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>849</x><y>169</y><w>240</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>220;10;220;50;10;50;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>469</x><y>350</y><w>340</w><h>180</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>320;10;320;160;10;160</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1120</x><y>260</y><w>240</w><h>100</h></coordinates><panel_attributes>ValueCollection
 --
 # properties [name =&gt; value :mixed]
 --
@@ -80,7 +82,7 @@ m2=*</panel_attributes><additional_attributes>10;10;90;10</additional_attributes
 --
 + __get(name :string) :Role
 + __set(name :string, value :Role) :void
-+ names() :array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>350</y><w>80</w><h>330</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;60;40;60;310;10;310</additional_attributes></element><element><id>Relation</id><coordinates><x>609</x><y>169</y><w>480</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>460;10;460;50;10;50;10;90</additional_attributes></element><element><id>UMLNote</id><coordinates><x>1374</x><y>998</y><w>170</w><h>70</h></coordinates><panel_attributes>toString()
++ names() :array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>350</y><w>80</w><h>330</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;60;40;60;310;10;310</additional_attributes></element><element><id>Relation</id><coordinates><x>609</x><y>169</y><w>480</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>460;10;460;50;10;50;10;90</additional_attributes></element><element><id>UMLNote</id><coordinates><x>1364</x><y>978</y><w>170</w><h>70</h></coordinates><panel_attributes>toString()
 return the type_code_name
 del creator.
 bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>314</x><y>623</y><w>160</w><h>150</h></coordinates><panel_attributes>toString()
@@ -92,4 +94,8 @@ bd if it is not needed
 if it is. Load it and cache it.
 version() : is the schema 
 version.
-bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>680</x><y>900</y><w>420</w><h>80</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;60;400;60</additional_attributes></element><element><id>Relation</id><coordinates><x>0</x><y>350</y><w>1250</w><h>500</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1230;10;1230;60;10;60;10;480;300;480</additional_attributes></element></diagram>
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>680</x><y>900</y><w>420</w><h>80</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;60;400;60</additional_attributes></element><element><id>Relation</id><coordinates><x>0</x><y>350</y><w>1250</w><h>500</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>1230;10;1230;60;10;60;10;480;300;480</additional_attributes></element><element><id>Relation</id><coordinates><x>740</x><y>720</y><w>340</w><h>150</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>320;10;320;130;10;130</additional_attributes></element><element><id>UMLNote</id><coordinates><x>360</x><y>850</y><w>130</w><h>70</h></coordinates><panel_attributes>Participation[id]
+means Array of 
+Participation objects
+keyed by  its 'id'.
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element></diagram>
