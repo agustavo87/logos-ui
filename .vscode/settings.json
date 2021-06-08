@@ -14,6 +14,8 @@
             "title": "Apache",
             "pattern": "D:\\laragon\\bin\\apache\\httpd-2.4.35-win64-VC15\\logs\\error.log"
         }
-    ]
+    ],
+    "intelephense.environment.phpVersion": "7.4.11",
+    "php.validate.run": "onType"
 
 }
