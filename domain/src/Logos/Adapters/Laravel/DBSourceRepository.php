@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Arete\Logos\Adapters\Laravel;
 
 use Arete\Logos\Ports\Interfaces\SourceRepository as SourceRepositoryPort;
-use Arete\Logos\Repositories\SourceTypeRepositoryInterface;
-use Arete\Logos\Repositories\CreatorTypeRepositoryInterface;
-use Arete\Logos\Services\Laravel\DB;
+use Arete\Logos\Ports\Interfaces\SourceTypeRepository;
+use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
+use Arete\Logos\Adapters\Laravel\Common\DB;
 use Arete\Logos\Models\Source;
 use Arete\Logos\Models\ParticipationSet;
 
 class DBSourceRepository implements SourceRepositoryPort
 {
-    protected SourceTypeRepositoryInterface $sourceTypes;
-    protected CreatorTypeRepositoryInterface $creatorTypes;
+    protected SourceTypeRepository $sourceTypes;
+    protected CreatorTypeRepository $creatorTypes;
     protected DB $db;
 
     public function __construct(
-        SourceTypeRepositoryInterface $sourceTypes,
-        CreatorTypeRepositoryInterface $creatorTypes,
+        SourceTypeRepository $sourceTypes,
+        CreatorTypeRepository $creatorTypes,
         DB $db
     ) {
         $this->sourceTypes = $sourceTypes;
