@@ -16,7 +16,7 @@ class CreateAttributeTypesTable extends Migration
         Schema::create('attribute_types', function (Blueprint $table) {
             $table->string('code_name', 50)->primary();
             $table->string('base_attribute_type_code_name', 50)->nullable();
-            $table->enum('value_type', array_keys(config('logos.valueTypes')));
+            $table->enum('value_type', array_keys(config('sources.valueTypes')));
         });
     }
 

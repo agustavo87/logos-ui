@@ -1,12 +1,11 @@
 <?php
 
-namespace Arete\Logos\Providers;
+namespace Arete\Logos\Adapters\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use Arete\Logos\Services\Sources;
 
-class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
+class SourcesServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Register services.
@@ -15,14 +14,7 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__  . '/../../../config/logos.php', 'logos');
-
-        /** @todo vincular a una interfaz más bien */
-        $this->app->bind(Sources::class, function ($app) {
-            return new Sources();
-        });
-
-        $this->app->alias(Sources::class, 'sources');
+        $this->mergeConfigFrom(__DIR__  . '/../../../../../config/sources.php', 'sources');
 
         if ($this->app->environment('testing')) {
             $this->app->bind(
@@ -87,7 +79,7 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../../config/logos.php' => config_path('logos.php'),
+            __DIR__ . '/../../../config/sources.php' => config_path('sources.php'),
         ]);
     }
 

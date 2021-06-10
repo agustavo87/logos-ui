@@ -10,7 +10,7 @@ class AreteEnvironmentTest extends FixturableTestCase
 {
     public function testConfigValuesAreAccesibles()
     {
-        $this->assertIsString(config('logos.usersTable'));
-        $this->assertIsString(config('logos.usersPK'));
+        $this->assertIsString(config('sources.usersTable'));
+        $this->assertIsString(config('sources.usersPK'));
     }
 }

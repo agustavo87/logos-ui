@@ -7,24 +7,24 @@ namespace Arete\Logos\Adapters\Laravel;
 use Arete\Logos\Ports\Interfaces\SourceRepository as SourceRepositoryPort;
 use Arete\Logos\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
+use Arete\Logos\Adapters\Laravel\Common\DBRepository;
 use Arete\Logos\Adapters\Laravel\Common\DB;
 use Arete\Logos\Models\Source;
 use Arete\Logos\Models\ParticipationSet;
 
-class DBSourceRepository implements SourceRepositoryPort
+class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 {
     protected SourceTypeRepository $sourceTypes;
     protected CreatorTypeRepository $creatorTypes;
-    protected DB $db;
 
     public function __construct(
         SourceTypeRepository $sourceTypes,
         CreatorTypeRepository $creatorTypes,
         DB $db
     ) {
+        parent::__construct($db);
         $this->sourceTypes = $sourceTypes;
         $this->creatorTypes = $creatorTypes;
-        $this->db = $db;
     }
 
     public function createFromArray(array $params): Source
