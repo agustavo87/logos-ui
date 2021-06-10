@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Repositories;
+namespace Arete\Logos\Ports\Interfaces;
 
 use Arete\Logos\Models\CreatorType;
 
-interface CreatorTypeRepositoryInterface
+interface CreatorTypeRepository
 {
     public function get($codeName): CreatorType;
 }

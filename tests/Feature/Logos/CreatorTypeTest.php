@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos;
 
-use Arete\Logos\Repositories\CreatorTypeRepositoryInterface;
+use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Models\CreatorType;
 use Arete\Logos\Models\Attribute;
 use Tests\FixturableTestCase;
@@ -14,7 +14,7 @@ class CreatorTypeTest extends FixturableTestCase
 
     public function testGetPersonCreatorType()
     {
-        $types = $this->app->make(CreatorTypeRepositoryInterface::class);
+        $types = $this->app->make(CreatorTypeRepository::class);
         $person = $types->get('person');
         $this->assertInstanceOf(CreatorType::class, $person);
 

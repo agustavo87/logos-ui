@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Repositories\Laravel;
+namespace Arete\Logos\Adapters\Laravel;
 
-use Arete\Logos\Repositories\CreatorTypeRepositoryInterface;
+use Arete\Logos\Ports\Interfaces\CreatorTypeRepository as CreatorTypeRepositoryPort;
 use Arete\Logos\Models\CreatorType;
 use Arete\Logos\Models\Laravel\LvCreatorType;
 use Arete\Logos\Repositories\Laravel\Conceptual\DBRepository;
@@ -12,7 +12,7 @@ use Arete\Logos\Repositories\Laravel\Conceptual\DBRepository;
 /**
  * Laravel dependent Data Base based Creator Type Repository
  */
-class DBCreatorTypeRepository extends DBRepository implements CreatorTypeRepositoryInterface
+class DBCreatorTypeRepository extends DBRepository implements CreatorTypeRepositoryPort
 {
     public function get($codeName): CreatorType
     {
