@@ -6,7 +6,7 @@ namespace Arete\Logos\Adapters\Laravel\Common;
 
 use Illuminate\Support\Facades\DB as LvDB;
 use Arete\Logos\Models\Schema;
-use Arete\Logos\Services\Interfaces\LogosEnviroment;
+use Arete\Logos\Ports\Interfaces\LogosEnviroment;
 
 /**
  * Laravel depedent DB Access operations

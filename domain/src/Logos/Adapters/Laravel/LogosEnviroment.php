@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services\Laravel;
+namespace Arete\Logos\Adapters\Laravel;
 
-use Arete\Logos\Services\Interfaces\LogosEnviroment;
+use Arete\Logos\Ports\Interfaces\LogosEnviroment as LogosEnviromentPort;
 use Illuminate\Support\Str;
 
-class Logos implements LogosEnviroment
+class LogosEnviroment implements LogosEnviromentPort
 {
     public function getUsersTableData(): \stdClass
     {
-        $usersTable = config('usersTable', 'users');
+        $usersTable = config('sources.usersTable', 'users');
         $SingularTableName = Str::singular($usersTable);
-        $usersPK = config('usersPK', 'id');
+        $usersPK = config('sources.usersPK', 'id');
         $usersFK = "{$SingularTableName}_{$usersPK}";
         return (object) [
             'table' => $usersTable,

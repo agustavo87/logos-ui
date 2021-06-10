@@ -16,7 +16,7 @@ class CreateSourcesTable extends Migration
     {
         Schema::create('sources', function (Blueprint $table) {
 
-            $logos = app(\Arete\Logos\Services\Interfaces\LogosEnviroment::class);
+            $logos = app(\Arete\Logos\Ports\Interfaces\LogosEnviroment::class);
             $users = $logos->getUsersTableData();
 
             $table->id();

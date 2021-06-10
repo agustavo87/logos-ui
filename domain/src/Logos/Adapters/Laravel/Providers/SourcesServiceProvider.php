@@ -48,8 +48,8 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         );
 
         $this->app->bind(
-            \Arete\Logos\Services\Interfaces\LogosEnviroment::class,
-            \Arete\Logos\Services\Laravel\Logos::class
+            \Arete\Logos\Ports\Interfaces\LogosEnviroment::class,
+            \Arete\Logos\Adapters\Laravel\LogosEnviroment::class
         );
 
         $this->app->bind(
