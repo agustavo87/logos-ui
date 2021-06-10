@@ -1,11 +1,19 @@
 <?php
 
+use Arete\Logos\Ports\Interfaces\LogosEnviroment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateCreatorsTable extends Migration
 {
+
+    protected LogosEnviroment $logos;
+
+    public function __construct() {
+        $this->logos = app(LogosEnviroment::class);
+    }
+
     /**
      * Run the migrations.
      *
@@ -15,8 +23,8 @@ class CreateCreatorsTable extends Migration
     {
         Schema::create('creators', function (Blueprint $table) {
 
-            $logos = app(\Arete\Logos\Ports\Interfaces\LogosEnviroment::class);
-            $users = $logos->getUsersTableData();
+            
+            $users = $this->logos->getUsersTableData();
 
             $table->id();
             $table->unsignedBigInteger($users->FK);

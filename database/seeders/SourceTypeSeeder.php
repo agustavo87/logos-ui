@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Arete\Logos\Models\Schema;
-use Arete\Logos\Services\Laravel\DB as LogosDB;
+use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
 use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Services\ZoteroValueTypeMapper;
