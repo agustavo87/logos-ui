@@ -7,7 +7,7 @@ use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
 use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Services\ZoteroValueTypeMapper;
-use Arete\Logos\Services\MapsSourceTypeLabels;
+use Arete\Logos\Ports\Interfaces\MapsSourceTypeLabels;
 use Illuminate\Database\Seeder;
 
 class SourceTypeSeeder extends Seeder

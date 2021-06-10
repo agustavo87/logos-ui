@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services\Zotero;
+namespace Arete\Logos\Adapters\Laravel;
 
 use Arete\Common\Mapper;
-use Arete\Logos\Services\MapsSourceTypeLabels;
+use Arete\Logos\Ports\Interfaces\MapsSourceTypeLabels;
 
 /**
  * Maps Zotero Item Types to Logos Labels.
