@@ -15,7 +15,6 @@ class CreateDateValuesTable extends Migration
     {
         Schema::create('date_values', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->dateTime('data');
         });
     }

@@ -7,7 +7,7 @@ namespace Arete\Logos\Repositories\Laravel;
 use Arete\Logos\Repositories\CreatorTypeRepositoryInterface;
 use Arete\Logos\Models\CreatorType;
 use Arete\Logos\Models\Laravel\LvCreatorType;
-use Arete\Logos\Repositories\Laravel\Partials\DBRepository;
+use Arete\Logos\Repositories\Laravel\Conceptual\DBRepository;
 
 /**
  * Laravel dependent Data Base based Creator Type Repository

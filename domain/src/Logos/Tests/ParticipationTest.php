@@ -35,10 +35,10 @@ class ParticipationTest extends TestCase
         $this->assertInstanceOf(ParticipationInterface::class, $participation);
 
         $this->assertEquals('Gustavo Raúl', $participation->names);
-        $this->assertEquals('Ayala', $participation->lastNames);
-        $this->assertEquals(2, $participation->relevance());
-        $this->assertEquals(21, $participation->creatorId());
+        $this->assertEquals('Ayala',        $participation->lastNames);
+        $this->assertEquals(2,              $participation->relevance());
+        $this->assertEquals(21,             $participation->creatorId());
         $this->assertEquals($sbCreatorType, $participation->creatorType());
-        $this->assertEquals($sbRole, $participation->role());
+        $this->assertEquals($sbRole,        $participation->role());
     }
 }

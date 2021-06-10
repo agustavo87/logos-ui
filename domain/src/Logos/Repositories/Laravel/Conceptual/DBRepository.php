@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Repositories\Laravel\Partials;
+namespace Arete\Logos\Repositories\Laravel\Conceptual;
 
 use Arete\Logos\Services\Laravel\DB;
 

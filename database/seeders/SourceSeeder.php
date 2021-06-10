@@ -2,18 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\Source;
+use Arete\Logos\Models\Schema;
+use Arete\Logos\Services\Laravel\DB as LogosDB;
 use Illuminate\Database\Seeder;
 
-class SourceSeeder extends Seeder
+class SourceTypeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+    protected LogosDB $db;
+
+    public function __construct(
+        LogosDB $db,
+    ) {
+        $this->db = $db;
+    }
+
     public function run()
     {
-        Source::factory()->count(180)->create();
+        //
     }
 }

@@ -6,12 +6,24 @@ namespace Arete\Logos\Services\Laravel;
 
 use Illuminate\Support\Facades\DB as LvDB;
 use Arete\Logos\Models\Schema;
+use Arete\Logos\Services\Interfaces\LogosEnviroment;
 
 /**
  * Laravel depedent DB Access operations
  */
 class DB
 {
+    protected LogosEnviroment $logos;
+    public Schema $schema;
+
+    public function __construct(
+        LogosEnviroment $logos,
+        Schema $schema
+    ) {
+        $this->logos = $logos;
+        $this->schema = $schema;
+    }
+
     public function insertSourceType($code, $label = null)
     {
         LvDB::table('source_types')->insert([
@@ -115,12 +127,12 @@ class DB
 
     public function getSourceSchema($codename)
     {
-        return $this->getSchema($codename, Schema::TYPES['source']);
+        return $this->getSchema($codename, $this->schema::TYPES['source']);
     }
 
     public function getCreatorSchema($codename)
     {
-        return $this->getSchema($codename, Schema::TYPES['creator']);
+        return $this->getSchema($codename, $this->schema::TYPES['creator']);
     }
 
     public function getSourceType($codeName)
@@ -155,5 +167,56 @@ class DB
             )
             ->where('schema_attributes.schema_id', $schemaId)
             ->get();
+    }
+
+    public function insertSource($type, $userId, $updated = null, $created = null): int
+    {
+        $updated = $updated ?? now();
+        $created = $created ?? now();
+        return LvDB::table('sources')->insertGetId([
+            'updated_at' => $updated,
+            'created_at' => $created,
+            $this->logos->getUsersTableData()->FK => $userId,
+            'source_type_code_name' => $type
+        ]);
+    }
+
+    public function getAttributeType($code): \stdClass
+    {
+        return LvDB::table('attribute_types')->where('code_name', $code)->first();
+    }
+
+    public function insertValue($type, $value): int
+    {
+        $valueTables = [
+            'text' => 'text_values',
+            'number' => 'number_values',
+            'date' => 'date_values',
+            'complex' => 'complex_values'
+        ];
+        $valTable = $valueTables[$type];
+        return LvDB::table($valTable)->insertGetId([
+            'data' => $value
+        ]);
+    }
+
+    public function insertAttribute(
+        $attributableId,
+        $attributableType,
+        $attributeType,
+        $value
+    ): ?int {
+        $valueType = $this->getAttributeType($attributeType)->value_type;
+        $valueID = $this->insertValue($valueType, $value);
+        $attributableType = $this->schema::TYPES[$attributableType];
+        $id = LvDB::table('attributes')->insertGetId([
+            'attributable_id' => $attributableId,
+            'attributable_type' => $attributableType,
+            'attribute_type_code_name' => $attributeType,
+            'value_type' => $valueType,
+            'value_id' => $valueID
+        ]);
+
+        return $id;
     }
 }

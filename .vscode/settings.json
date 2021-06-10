@@ -16,6 +16,7 @@
         }
     ],
     "intelephense.environment.phpVersion": "7.4.11",
-    "php.validate.run": "onType"
+    "php.validate.run": "onType",
+    "intelephense.diagnostics.languageConstraints": false
 
 }

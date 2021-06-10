@@ -15,7 +15,6 @@ class CreateAttributesTable extends Migration
     {
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->unsignedBigInteger('attributable_id');
             $table->string('attributable_type')->index();
             $table->string('attribute_type_code_name');

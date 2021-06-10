@@ -6,5 +6,7 @@ namespace Arete\Logos\Models;
 
 interface SourceInterface
 {
-    # code...
+    public function id(): int;
+    public function type(): SourceType;
+    public function participations(): ParticipationSet;
 }

@@ -15,7 +15,6 @@ class CreateTextValuesTable extends Migration
     {
         Schema::create('text_values', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('data');
         });
     }

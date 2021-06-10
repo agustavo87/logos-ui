@@ -15,7 +15,6 @@ class CreateNumberValuesTable extends Migration
     {
         Schema::create('number_values', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->integer('data');
         });
     }

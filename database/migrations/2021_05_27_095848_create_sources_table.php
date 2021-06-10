@@ -16,22 +16,20 @@ class CreateSourcesTable extends Migration
     {
         Schema::create('sources', function (Blueprint $table) {
 
-            $usersTable = config('usersTable', 'users');
-            $SingularTableName = Str::singular($usersTable);
-            $usersPK = config('usersPK', 'id');
-            $usersFK = "{$SingularTableName}_{$usersPK}";
+            $logos = app(\Arete\Logos\Services\Interfaces\LogosEnviroment::class);
+            $users = $logos->getUsersTableData();
 
             $table->id();
             $table->timestamps();
 
-            $table->unsignedBigInteger($usersFK);
-            $table->foreign($usersFK)
-                  ->references($usersPK)
-                  ->on($usersTable)
+            $table->unsignedBigInteger($users->FK);
+            $table->foreign($users->FK)
+                  ->references($users->PK)
+                  ->on($users->table)
                   ->onDelete('cascade');
 
-            $table->string('surce_type_code_name', 50);
-            $table->foreign('surce_type_code_name')
+            $table->string('source_type_code_name', 50);
+            $table->foreign('source_type_code_name')
                   ->references('code_name')
                   ->on('source_types')
                   ->onDelete('cascade');

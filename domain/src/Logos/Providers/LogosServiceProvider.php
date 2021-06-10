@@ -56,6 +56,22 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
         );
 
         $this->app->bind(
+            \Arete\Logos\Services\Interfaces\LogosEnviroment::class,
+            \Arete\Logos\Services\Laravel\Logos::class
+        );
+
+        $this->app->bind(
+            \Arete\Logos\Repositories\Conceptual\SourceRepository::class,
+            function ($app) {
+                return new \Arete\Logos\Repositories\Laravel\DBSourceRepository(
+                    $app->make(\Arete\Logos\Repositories\SourceTypeRepositoryInterface::class),
+                    $app->make(\Arete\Logos\Repositories\CreatorTypeRepositoryInterface::class),
+                    $app->make(\Arete\Logos\Services\Laravel\DB::class)
+                );
+            }
+        );
+
+        $this->app->bind(
             \Arete\Logos\Services\MapsSourceTypeLabels::class,
             function ($app) {
                 return new \Arete\Logos\Services\Zotero\ZoteroSourceTypeLabelsMap(config('logos.source.typesLabels'));
