@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Repositories\Laravel;
+namespace Arete\Logos\Adapters\Laravel;
 
-use Arete\Logos\Repositories\SourceTypeRepositoryInterface;
+use Arete\Logos\Ports\Interfaces\SourceTypeRepository as SourceTypeRepositoryPort;
 use Arete\Logos\Models\SourceType;
 use Arete\Logos\Models\Laravel\LvSourceType;
 use Arete\Logos\Repositories\Laravel\Conceptual\DBRepository;
@@ -12,7 +12,7 @@ use Arete\Logos\Repositories\Laravel\Conceptual\DBRepository;
 /**
  * Laravel dependent Data Base based Source Type Repository
  */
-class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositoryInterface
+class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositoryPort
 {
     public function get($codeName): SourceType
     {
