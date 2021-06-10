@@ -61,9 +61,9 @@ class LogosServiceProvider extends ServiceProvider implements DeferrableProvider
         );
 
         $this->app->bind(
-            \Arete\Logos\Repositories\Conceptual\SourceRepository::class,
+            \Arete\Logos\Ports\Interfaces\SourceRepository::class,
             function ($app) {
-                return new \Arete\Logos\Repositories\Laravel\DBSourceRepository(
+                return new \Arete\Logos\Adapters\Laravel\DBSourceRepository(
                     $app->make(\Arete\Logos\Repositories\SourceTypeRepositoryInterface::class),
                     $app->make(\Arete\Logos\Repositories\CreatorTypeRepositoryInterface::class),
                     $app->make(\Arete\Logos\Services\Laravel\DB::class)

@@ -8,7 +8,7 @@ use Arete\Logos\Models\ParticipationSet;
 use Arete\Logos\Models\SourceInterface;
 use Arete\Logos\Models\SourceType;
 use Tests\TestCase;
-use Arete\Logos\Repositories\Conceptual\SourceRepository;
+use Arete\Logos\Ports\Interfaces\SourceRepository;
 
 class SourceRepositoryTest extends TestCase
 {
@@ -37,6 +37,7 @@ class SourceRepositoryTest extends TestCase
                 'volume' => 20,
                 'issue' => 3
             ]
+            // faltaría el usuario al que estaría asociada la fuente
         ]);
         $this->assertInstanceOf(SourceInterface::class, $source);
         $this->assertIsInt($source->id());
