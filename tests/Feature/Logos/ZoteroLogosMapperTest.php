@@ -10,7 +10,7 @@ class ZoteroLogosMapper extends FixturableTestCase
 {
     public function testZoteroLogosMapperMaps()
     {
-        $mapper = $this->app->make(\Arete\Logos\Services\Zotero\LogosMapper::class);
+        $mapper = $this->app->make(\Arete\Logos\Ports\Interfaces\ValueTypeMapper::class);
         $this->assertEquals('date', $mapper->mapValueType('date'));
         $this->assertEquals('text', $mapper->mapValueType('no-exist'));
     }

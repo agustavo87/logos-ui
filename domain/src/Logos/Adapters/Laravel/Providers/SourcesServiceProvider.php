@@ -24,16 +24,9 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         }
 
         $this->app->bind(
-            \Arete\Logos\Services\Zotero\LogosMapper::class,
+            \Arete\Logos\Ports\Interfaces\ValueTypeMapper::class,
             function ($app) {
-                return new \Arete\Logos\Services\Zotero\LogosMapper(config('sources.valueTypes'));
-            }
-        );
-
-        $this->app->bind(
-            \Arete\Logos\Services\ZoteroValueTypeMapper::class,
-            function ($app) {
-                return new \Arete\Logos\Services\ZoteroValueTypeMapper(config('sources.fieldValueTypes'));
+                return new \Arete\Logos\Adapters\Laravel\ZoteroValueTypeMapper(config('sources.fieldValueTypes'));
             }
         );
 

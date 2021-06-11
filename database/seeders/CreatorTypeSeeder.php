@@ -8,19 +8,19 @@ use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Models\Schema as LogosSchema;
 use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
-use Arete\Logos\Services\ZoteroValueTypeMapper;
+use Arete\Logos\Ports\Interfaces\ValueTypeMapper;
 
 class CreatorTypeSeeder extends Seeder
 {
     protected LogosDB $db;
     protected ZoteroSchema $zoteroSchema;
-    protected ZoteroValueTypeMapper $valueTypes;
+    protected ValueTypeMapper $valueTypes;
     protected LogosSchema $logosSchema;
 
     public function __construct(
         LogosDB $db,
         ZoteroSchemaLoader $zoteroSchemaLoader,
-        ZoteroValueTypeMapper $valueTypes,
+        ValueTypeMapper $valueTypes,
         LogosSchema $logosSchema
     ) {
         $this->db = $db;

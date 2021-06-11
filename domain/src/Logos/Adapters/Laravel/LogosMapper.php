@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services\Zotero;
+namespace Arete\Logos\Adapters\Laravel;
 
 use Arete\Common\Mapper;
-use Arete\Logos\Services\ValueTypeMapperInterface;
+use Arete\Logos\Ports\Interfaces\ValueTypeMapper;
 
 /**
  * Maps value fields accoring to zotero specifications.
  */
-class LogosMapper extends Mapper implements ValueTypeMapperInterface
+class LogosMapper extends Mapper implements ValueTypeMapper
 {
     protected function boot(array $logosValueTypes): bool
     {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services;
+namespace Arete\Logos\Ports\Interfaces;
 
-interface ValueTypeMapperInterface
+interface ValueTypeMapper
 {
     public function mapValueType(string $codeName): ?string;
 }

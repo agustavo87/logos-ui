@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services;
+namespace Arete\Logos\Adapters\Laravel;
 
-use Arete\Logos\Services\Zotero\LogosMapper;
+use Arete\Logos\Adapters\Laravel\LogosMapper;
 
 /**
  * Maps the fields types of Zotero to Logos Value Types
