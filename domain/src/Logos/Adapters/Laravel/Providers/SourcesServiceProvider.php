@@ -57,6 +57,11 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         );
 
         $this->app->bind(
+            \Arete\Logos\Ports\Interfaces\ConfigurationRepository::class,
+            \Arete\Logos\Adapters\Laravel\LvConfigurationRepository::class
+        );
+
+        $this->app->bind(
             \Arete\Logos\Ports\Interfaces\MapsSourceTypeLabels::class,
             function ($app) {
                 return new \Arete\Logos\Adapters\Laravel\ZoteroSourceTypeLabelsMap(
@@ -74,7 +79,7 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../../config/sources.php' => config_path('sources.php'),
+            __DIR__ . '/../../../../../config/sources.php' => config_path('sources.php'),
         ]);
     }
 
