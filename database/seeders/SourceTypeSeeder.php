@@ -7,8 +7,8 @@ use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
 use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
 use Arete\Logos\Interfaces\ValueTypeMapper;
+use Arete\Logos\Interfaces\MapsSourceTypeLabels;
 use Arete\Logos\Ports\Logos;
-use Arete\Logos\Ports\Interfaces\MapsSourceTypeLabels;
 use Illuminate\Database\Seeder;
 
 class SourceTypeSeeder extends Seeder
@@ -20,13 +20,12 @@ class SourceTypeSeeder extends Seeder
 
     public function __construct(
         LogosDB $db,
-        ZoteroSchemaLoader $schemaLoader,
-        MapsSourceTypeLabels $sourceTypeLabels
+        ZoteroSchemaLoader $schemaLoader
     ) {
         $this->db = $db;
         $this->schema = $schemaLoader->load();
         $this->valueTypes = Logos::valueTypes();
-        $this->sourceTypeLabels = $sourceTypeLabels;
+        $this->sourceTypeLabels = Logos::sourceTypeLabels();
     }
 
     public function run()

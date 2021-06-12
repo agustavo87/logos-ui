@@ -12,7 +12,8 @@ class LogosContainer extends Container
         'greet' => 'example',
         'greeter' => 'object',
         'config' => \Arete\Logos\Ports\Abstracts\ConfigurationRepository::class,
-        'valueTypes' => \Arete\Logos\Abstracts\ValueTypeMapper::class
+        'valueTypes' => \Arete\Logos\Abstracts\ValueTypeMapper::class,
+        'sourceTypeLabels' => \Arete\Logos\Abstracts\MapsSourceTypeLabels::class
     ];
 
     protected static array $providers = [

@@ -55,14 +55,6 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
             \Arete\Logos\Adapters\Laravel\LvConfigurationRepository::class
         );
 
-        $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\MapsSourceTypeLabels::class,
-            function ($app) {
-                return new \Arete\Logos\Adapters\Laravel\ZoteroSourceTypeLabelsMap(
-                    config('sources.source.typesLabels')
-                );
-            }
-        );
         Logos::load();
         Logos::delegate($this->app);
     }

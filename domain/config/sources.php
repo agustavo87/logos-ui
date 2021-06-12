@@ -24,12 +24,14 @@ return [
     ],
     'source' => [
         'typesLabels' => [
-            'journalArticle'   => 'Journal Article',
-            'annotation'       => 'Annotation',
-            'blogPost'         => 'Blog Post',
-            'book'             => 'Book',
-            'bookSection'      => 'Book Section',
-            'default'          => ''
+            'default' => '',
+            'map' => [
+                'journalArticle'   => 'Journal Article',
+                'annotation'       => 'Annotation',
+                'blogPost'         => 'Blog Post',
+                'book'             => 'Book',
+                'bookSection'      => 'Book Section'
+            ]
         ]
     ]
 ];

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Ports\Interfaces;
+namespace Arete\Logos\Interfaces;
 
 /**
  * Maps from a Source Type code name to its label.
