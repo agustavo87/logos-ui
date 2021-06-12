@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Common;
 
-trait CreatesDinamically
+abstract class CreatesDinamically
 {
     public const CREATE_KEYWORD = 'create';
 

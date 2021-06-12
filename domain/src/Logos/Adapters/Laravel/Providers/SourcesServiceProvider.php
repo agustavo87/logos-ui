@@ -4,6 +4,7 @@ namespace Arete\Logos\Adapters\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Arete\Logos\Services\LogosContainer as Logos;
 
 class SourcesServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -22,13 +23,6 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
                 \Arete\Logos\Services\Zotero\SimpleSchemaLoader::class
             );
         }
-
-        $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\ValueTypeMapper::class,
-            function ($app) {
-                return new \Arete\Logos\Adapters\Laravel\ZoteroValueTypeMapper(config('sources.fieldValueTypes'));
-            }
-        );
 
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\SourceTypeRepository::class,
@@ -57,7 +51,7 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         );
 
         $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\ConfigurationRepository::class,
+            \Arete\Logos\Ports\Abstracts\ConfigurationRepository::class,
             \Arete\Logos\Adapters\Laravel\LvConfigurationRepository::class
         );
 
@@ -69,6 +63,8 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
                 );
             }
         );
+        Logos::load();
+        Logos::delegate($this->app);
     }
 
     /**

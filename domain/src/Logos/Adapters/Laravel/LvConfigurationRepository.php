@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Adapters\Laravel;
 
-use Arete\Logos\Ports\Interfaces\ConfigurationRepository as ConfigurationRepositoryPort;
+use Arete\Logos\Ports\Abstracts\ConfigurationRepository as ConfigurationRepositoryPort;
 use Illuminate\Config\Repository as LaravelConfigRepository;
 
-class LvConfigurationRepository implements ConfigurationRepositoryPort
+class LvConfigurationRepository extends ConfigurationRepositoryPort
 {
     protected array $config;
 

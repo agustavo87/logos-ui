@@ -10,15 +10,17 @@ return [
         'complex'   => 'complex',
         'default'   => 'text'
     ],
-    'fieldValueTypes' => [
-        'default'           => 'text',
-        'date'              => 'date',
-        'accessDate'        => 'date',
-        'numPages'          => 'text',
-        'seriesNumber'      => 'number',
-        'volume'            => 'number',
-        'numberOfVolumes'   => 'number',
-        'issue'             => 'number'
+    'attributesValueTypes'   => [
+        'default'       => 'text',
+        'map' => [
+            'date'              => 'date',
+            'accessDate'        => 'date',
+            'numPages'          => 'text',
+            'seriesNumber'      => 'number',
+            'volume'            => 'number',
+            'numberOfVolumes'   => 'number',
+            'issue'             => 'number'
+        ]
     ],
     'source' => [
         'typesLabels' => [
