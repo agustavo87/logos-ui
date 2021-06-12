@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use Arete\Logos\Models\Schema;
-use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
-use Arete\Logos\Services\Zotero\SchemaLoaderInterface as ZoteroSchemaLoader;
 use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
+use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Interfaces\ValueTypeMapper;
 use Arete\Logos\Interfaces\MapsSourceTypeLabels;
 use Arete\Logos\Ports\Logos;
@@ -19,11 +18,10 @@ class SourceTypeSeeder extends Seeder
     protected MapsSourceTypeLabels $sourceTypeLabels;
 
     public function __construct(
-        LogosDB $db,
-        ZoteroSchemaLoader $schemaLoader
+        LogosDB $db
     ) {
         $this->db = $db;
-        $this->schema = $schemaLoader->load();
+        $this->schema = Logos::schema('simpleZotero');
         $this->valueTypes = Logos::valueTypes();
         $this->sourceTypeLabels = Logos::sourceTypeLabels();
     }

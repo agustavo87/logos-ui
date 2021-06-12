@@ -7,6 +7,7 @@ namespace Arete\Logos\Providers;
 use Arete\Common\Provider;
 use Arete\Logos\Services\ValueTypeMapper;
 use Arete\Logos\Services\SourceTypeLabelsMap;
+use Arete\Logos\Services\SchemaLoader;
 
 class SourcesProvider extends Provider
 {
@@ -23,6 +24,13 @@ class SourcesProvider extends Provider
             \Arete\Logos\Abstracts\MapsSourceTypeLabels::class,
             function ($container) {
                 return new SourceTypeLabelsMap();
+            }
+        );
+
+        $this->container::register(
+            \Arete\Logos\Interfaces\SchemaLoaderInterface::class,
+            function ($container) {
+                return new SchemaLoader();
             }
         );
     }

@@ -17,13 +17,6 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
     {
         $this->mergeConfigFrom(__DIR__  . '/../../../../../config/sources.php', 'sources');
 
-        if ($this->app->environment('testing')) {
-            $this->app->bind(
-                \Arete\Logos\Services\Zotero\SchemaLoaderInterface::class,
-                \Arete\Logos\Services\Zotero\SimpleSchemaLoader::class
-            );
-        }
-
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\SourceTypeRepository::class,
             \Arete\Logos\Adapters\Laravel\DBSourceTypeRepository::class

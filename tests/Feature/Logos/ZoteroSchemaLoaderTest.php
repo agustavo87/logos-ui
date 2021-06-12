@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Logos;
 
 use Tests\FixturableTestCase;
+use Arete\Logos\Ports\Logos;
 
 class ZoteroSchemaLoaderTest extends FixturableTestCase
 {
     public function testZoteroSchemaLoaderIsBinded()
     {
-        $loader = $this->app->make(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class);
+        $loader = Logos::schema();
         $this->assertInstanceOf(
-            \Arete\Logos\Services\Zotero\SchemaLoaderInterface::class,
+            \Arete\Logos\Interfaces\SchemaLoaderInterface::class,
             $loader
         );
 
