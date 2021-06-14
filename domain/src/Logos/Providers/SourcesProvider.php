@@ -7,7 +7,7 @@ namespace Arete\Logos\Providers;
 use Arete\Common\Provider;
 use Arete\Logos\Services\ValueTypeMapper;
 use Arete\Logos\Services\SourceTypeLabelsMap;
-use Arete\Logos\Services\SchemaLoader;
+use Arete\Logos\Services\Zotero\ZoteroSchemaLoader;
 
 class SourcesProvider extends Provider
 {
@@ -28,9 +28,9 @@ class SourcesProvider extends Provider
         );
 
         $this->container::register(
-            \Arete\Logos\Interfaces\SchemaLoaderInterface::class,
+            \Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface::class,
             function ($container) {
-                return new SchemaLoader();
+                return new ZoteroSchemaLoader();
             }
         );
     }

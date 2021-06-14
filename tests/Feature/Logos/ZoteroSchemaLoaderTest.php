@@ -11,9 +11,9 @@ class ZoteroSchemaLoaderTest extends FixturableTestCase
 {
     public function testZoteroSchemaLoaderIsBinded()
     {
-        $loader = Logos::schema();
+        $loader = Logos::zoteroSchema();
         $this->assertInstanceOf(
-            \Arete\Logos\Interfaces\SchemaLoaderInterface::class,
+            \Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface::class,
             $loader
         );
 
@@ -30,7 +30,7 @@ class ZoteroSchemaLoaderTest extends FixturableTestCase
     public function testZoteroSchemaLoaderLoadsSchema($loader)
     {
         $schema = $loader->load();
-        $this->assertInstanceOf(\Arete\Logos\Models\Zotero\Schema::class, $schema);
+        $this->assertInstanceOf(\Arete\Logos\Models\Zotero\ZoteroSchema::class, $schema);
         return $schema;
     }
 

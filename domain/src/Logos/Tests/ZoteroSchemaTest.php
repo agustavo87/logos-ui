@@ -6,7 +6,7 @@ namespace Arete\Logos\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Tests\LogsInformation;
-use Arete\Logos\Models\Zotero\{CreatorType, CSLMap, Field, ItemType, Schema};
+use Arete\Logos\Models\Zotero\{CreatorType, CSLMap, Field, ItemType, ZoteroSchema};
 use Arete\Logos\Tests\Traits\ChecksZoteroSchemaDataStructure;
 
 use function Arete\Common\var_dump_ret;
@@ -18,13 +18,13 @@ class ZoteroSchemaTest extends TestCase
 
     public function testSchemaCreatesWithDefaults()
     {
-        $schema = new Schema();
+        $schema = new ZoteroSchema();
         $this->checkSchemaDataStructure($schema);
     }
 
     public function testSchemaMergesDefaults()
     {
-        $schema = new Schema([
+        $schema = new ZoteroSchema([
             'version' => 2,
             'csl' => new CSLMap([
                 'types' => [
@@ -101,7 +101,7 @@ class ZoteroSchemaTest extends TestCase
 
     public function testSchemaAddsMasiveItems()
     {
-        $schema = new Schema([
+        $schema = new ZoteroSchema([
             'version' => 2,
             'meta' => [
                 'some-key' => 'some-value'
@@ -145,7 +145,7 @@ class ZoteroSchemaTest extends TestCase
 
     public function testGetItemByType()
     {
-        $schema = (new Schema())->addItemTypes([
+        $schema = (new ZoteroSchema())->addItemTypes([
             [
                 'itemType'  => 'book'
             ],
@@ -176,7 +176,7 @@ class ZoteroSchemaTest extends TestCase
 
     public function testSchemaReturnsItemDataType()
     {
-        $schema = (new Schema([
+        $schema = (new ZoteroSchema([
             'version'   => 1,
             'meta'      => [
                 'fields'    => [

@@ -7,17 +7,17 @@ namespace Arete\Logos\Tests;
 use PHPUnit\Framework\TestCase;
 use Tests\LogsInformation;
 use Arete\Logos\Tests\Traits\ChecksZoteroSchemaDataStructure;
-use Arete\Logos\Models\Zotero\{Schema, CSLMap};
+use Arete\Logos\Models\Zotero\{ZoteroSchema, CSLMap};
 
 class SimpleZoteroSchemaLoaderTest extends TestCase
 {
     use LogsInformation;
     use ChecksZoteroSchemaDataStructure;
 
-    public function testSchemaHaveExpectedDataStructure()
+    public function testZoteroSchemaHaveExpectedDataStructure()
     {
         $schemaLoader = new \Arete\Logos\Services\Zotero\SimpleSchemaLoader();
-        $this->isInstanceOf(\Arete\Logos\Services\Zotero\SchemaLoaderInterface::class, $schemaLoader);
+        $this->isInstanceOf(\Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface::class, $schemaLoader);
 
         $schema = $schemaLoader->load();
         $this->checkSchemaDataStructure($schema);
@@ -26,13 +26,13 @@ class SimpleZoteroSchemaLoaderTest extends TestCase
     }
 
     /**
-     * @depends testSchemaHaveExpectedDataStructure
+     * @depends testZoteroSchemaHaveExpectedDataStructure
      *
-     * @param Schema $schema
+     * @param ZoteroSchema $schema
      *
-     * @return Schema
+     * @return ZoteroSchema
      */
-    public function testSchemaTypeHaveExpectedDataStrcture(Schema $schema): Schema
+    public function testZoteroSchemaTypeHaveExpectedDataStrcture(ZoteroSchema $schema): ZoteroSchema
     {
         $firstItemType = $schema->itemTypes[0];
         $this->assertIsString($firstItemType->itemType);
@@ -48,13 +48,13 @@ class SimpleZoteroSchemaLoaderTest extends TestCase
     }
 
     /**
-     * @depends testSchemaTypeHaveExpectedDataStrcture
+     * @depends testZoteroSchemaTypeHaveExpectedDataStrcture
      *
-     * @param Schema $schema
+     * @param ZoteroSchema $schema
      *
-     * @return Schema
+     * @return ZoteroSchema
      */
-    public function testSchemaCslMapHaveExpectedDataStructure(Schema $schema): Schema
+    public function testZoteroSchemaCslMapHaveExpectedDataStructure(ZoteroSchema $schema): ZoteroSchema
     {
         $cslMap = $schema->csl;
         $this->assertInstanceOf(CSLMap::class, $cslMap);
@@ -67,13 +67,13 @@ class SimpleZoteroSchemaLoaderTest extends TestCase
     }
 
     /**
-     * @depends testSchemaCslMapHaveExpectedDataStructure
+     * @depends testZoteroSchemaCslMapHaveExpectedDataStructure
      *
-     * @param Schema $schema
+     * @param ZoteroSchema $schema
      *
-     * @return Schema
+     * @return ZoteroSchema
      */
-    public function testSchemaMetaHaveBasicDataTypes(Schema $schema): Schema
+    public function testZoteroSchemaMetaHaveBasicDataTypes(ZoteroSchema $schema): ZoteroSchema
     {
         $meta = $schema->meta;
         $this->assertArrayHasKey('fields', $meta);
@@ -82,13 +82,13 @@ class SimpleZoteroSchemaLoaderTest extends TestCase
     }
 
     /**
-     * @depends testSchemaMetaHaveBasicDataTypes
+     * @depends testZoteroSchemaMetaHaveBasicDataTypes
      *
      * @param mixed $schema
      *
      * @return [type]
      */
-    public function testSchemaHaveSomeData(Schema $schema): Schema
+    public function testZoteroSchemaHaveSomeData(ZoteroSchema $schema): ZoteroSchema
     {
         // $this->log($schema);
         $itemTypes = $schema->itemTypes;

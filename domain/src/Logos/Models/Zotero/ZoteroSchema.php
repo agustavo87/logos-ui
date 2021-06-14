@@ -8,7 +8,7 @@ use Arete\Common\FillableProperties;
 
 use function Arete\Common\array_filter_keys;
 
-class Schema extends FillableProperties
+class ZoteroSchema extends FillableProperties
 {
     public int $version;
 

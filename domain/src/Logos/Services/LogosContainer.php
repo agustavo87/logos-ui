@@ -14,7 +14,7 @@ class LogosContainer extends Container
         'config' => \Arete\Logos\Ports\Abstracts\ConfigurationRepository::class,
         'valueTypes' => \Arete\Logos\Abstracts\ValueTypeMapper::class,
         'sourceTypeLabels' => \Arete\Logos\Abstracts\MapsSourceTypeLabels::class,
-        'schema' => \Arete\Logos\Interfaces\SchemaLoaderInterface::class
+        'zoteroSchema' => \Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface::class
     ];
 
     protected static array $providers = [

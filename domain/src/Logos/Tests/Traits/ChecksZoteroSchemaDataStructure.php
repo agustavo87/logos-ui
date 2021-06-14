@@ -8,7 +8,7 @@ trait ChecksZoteroSchemaDataStructure
 {
     public function checkSchemaDataStructure($schema)
     {
-        $this->assertInstanceOf(\Arete\Logos\Models\Zotero\Schema::class, $schema);
+        $this->assertInstanceOf(\Arete\Logos\Models\Zotero\ZoteroSchema::class, $schema);
         $this->assertIsInt($schema->version);
         $this->assertContainsOnlyInstancesOf(
             \Arete\Logos\Models\Zotero\ItemType::class,

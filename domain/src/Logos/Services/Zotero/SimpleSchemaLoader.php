@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Services\Zotero;
 
-use Arete\Logos\Models\Zotero\Schema;
-use Arete\Logos\Interfaces\SchemaLoaderInterface;
+use Arete\Logos\Models\Zotero\ZoteroSchema;
+use Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface;
 
-class SimpleSchemaLoader implements SchemaLoaderInterface
+class SimpleSchemaLoader implements ZoteroSchemaLoaderInterface
 {
-    public function load(?string $schema = null): Schema
+    public function load(?string $schema = null): ZoteroSchema
     {
-        $schema = new Schema([
+        $schema = new ZoteroSchema([
             'version' => 1,
             'meta' => [
                 'fields' => [

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Arete\Logos\Models\Schema;
-use Arete\Logos\Models\Zotero\Schema as ZoteroSchema;
+use Arete\Logos\Models\Zotero\ZoteroSchema;
 use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Interfaces\ValueTypeMapper;
 use Arete\Logos\Ports\Logos;
@@ -20,7 +20,7 @@ class CreatorTypeSeeder extends Seeder
         LogosDB $db
     ) {
         $this->db = $db;
-        $this->zoteroSchema = Logos::schema('simpleZotero');
+        $this->zoteroSchema = Logos::zoteroSchema('simple');
         $this->valueTypes = Logos::valueTypes();
         $this->logosSchema = new Schema();
     }
