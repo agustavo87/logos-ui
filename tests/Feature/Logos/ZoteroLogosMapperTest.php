@@ -6,7 +6,7 @@ namespace Tests\Feature\Logos;
 
 use Tests\FixturableTestCase;
 
-class ZoteroLogosMapper extends FixturableTestCase
+class ZoteroLogosMapperTest extends FixturableTestCase
 {
     public function testZoteroLogosMapperMaps()
     {
