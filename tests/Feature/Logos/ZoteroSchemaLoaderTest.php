@@ -13,7 +13,7 @@ class ZoteroSchemaLoaderTest extends FixturableTestCase
     {
         $loader = Logos::zoteroSchema();
         $this->assertInstanceOf(
-            \Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface::class,
+            \Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface::class,
             $loader
         );
 

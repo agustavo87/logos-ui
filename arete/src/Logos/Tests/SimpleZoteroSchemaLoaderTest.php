@@ -17,7 +17,7 @@ class SimpleZoteroSchemaLoaderTest extends TestCase
     public function testZoteroSchemaHaveExpectedDataStructure()
     {
         $schemaLoader = new \Arete\Logos\Services\Zotero\SimpleSchemaLoader();
-        $this->isInstanceOf(\Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface::class, $schemaLoader);
+        $this->isInstanceOf(\Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface::class, $schemaLoader);
 
         $schema = $schemaLoader->load();
         $this->checkSchemaDataStructure($schema);

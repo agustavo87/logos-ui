@@ -8,6 +8,8 @@ use Arete\Common\Provider;
 use Arete\Logos\Services\ValueTypeMapper;
 use Arete\Logos\Services\SourceTypeLabelsMap;
 use Arete\Logos\Services\Zotero\ZoteroSchemaLoader;
+use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Ports\Abstracts\ConfigurationRepository;
 
 class SourcesProvider extends Provider
 {
@@ -16,21 +18,33 @@ class SourcesProvider extends Provider
         $this->container::register(
             \Arete\Logos\Abstracts\ValueTypeMapper::class,
             function ($container) {
-                return new ValueTypeMapper();
+                return new ValueTypeMapper(
+                    $container::get(ConfigurationRepository::class)
+                );
             }
         );
 
         $this->container::register(
             \Arete\Logos\Abstracts\MapsSourceTypeLabels::class,
             function ($container) {
-                return new SourceTypeLabelsMap();
+                return new SourceTypeLabelsMap(
+                    $container::get(ConfigurationRepository::class)
+                );
             }
         );
 
         $this->container::register(
-            \Arete\Logos\Interfaces\ZoteroSchemaLoaderInterface::class,
+            ZoteroSchemaLoaderInterface::class,
             function ($container) {
                 return new ZoteroSchemaLoader();
+            }
+        );
+
+        $this->container::register(
+            \Arete\Logos\Models\Schema::class,
+            function ($container) {
+                // in the fuutre could need some inyection of external data source.
+                return new \Arete\Logos\Models\Schema();
             }
         );
     }

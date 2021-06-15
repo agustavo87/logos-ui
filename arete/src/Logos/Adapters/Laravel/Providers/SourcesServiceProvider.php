@@ -48,6 +48,41 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
             \Arete\Logos\Adapters\Laravel\LvConfigurationRepository::class
         );
 
+        // Binding of application services used by laravel adapters
+        $this->app->bind(
+            \Arete\Logos\Models\Schema::class,
+            function ($app) {
+                return Logos::schema();
+                // cuidado.. si el alias no tiene vinculado
+                // ningúna implementación puede dar lugar a un bucle infinito.
+                // porque al no encontrar el contenedor va a buscar en el contenedor delegado
+                // que es este, y este volvería usar la fachada de acceso al contenedor de la applicación,
+                // dando lugar al bucle infinito.
+                /** @todo agregar excepción para servicios con alias sin vínculos */
+            }
+        );
+
+        $this->app->bind(
+            \Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface::class,
+            function ($app) {
+                return Logos::zoteroSchema();
+            }
+        );
+
+        $this->app->bind(
+            \Arete\Logos\Interfaces\ValueTypeMapper::class,
+            function ($app) {
+                return Logos::valueTypes();
+            }
+        );
+
+        $this->app->bind(
+            \Arete\Logos\Interfaces\MapsSourceTypeLabels::class,
+            function ($app) {
+                return Logos::sourceTypeLabels();
+            }
+        );
+
         Logos::load();
         Logos::delegate($this->app);
     }

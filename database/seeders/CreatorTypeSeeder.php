@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Models\Zotero\ZoteroSchema;
+use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Interfaces\ValueTypeMapper;
-use Arete\Logos\Ports\Logos;
 
 class CreatorTypeSeeder extends Seeder
 {
@@ -17,12 +17,15 @@ class CreatorTypeSeeder extends Seeder
     protected Schema $logosSchema;
 
     public function __construct(
-        LogosDB $db
+        LogosDB $db,
+        ZoteroSchemaLoaderInterface $zoteroSchemaLoader,
+        ValueTypeMapper $valueTypes,
+        Schema $logosSchema
     ) {
         $this->db = $db;
-        $this->zoteroSchema = Logos::zoteroSchema('simple');
-        $this->valueTypes = Logos::valueTypes();
-        $this->logosSchema = new Schema();
+        $this->zoteroSchema = $zoteroSchemaLoader->load();
+        $this->valueTypes = $valueTypes;
+        $this->logosSchema = $logosSchema;
     }
 
     public function run()
@@ -52,8 +55,8 @@ class CreatorTypeSeeder extends Seeder
 
             $schemaId = $this->db->insertSchema(
                 $codeName,
-                Schema::TYPES['creator'],
-                Schema::VERSION
+                $this->logosSchema::TYPES['creator'],
+                $this->logosSchema::VERSION
             );
 
             $order = 0;

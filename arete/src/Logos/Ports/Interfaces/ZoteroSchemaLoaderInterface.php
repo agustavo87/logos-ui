@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Interfaces;
+namespace Arete\Logos\Ports\Interfaces;
 
 use Arete\Logos\Models\Zotero\ZoteroSchema;
 
 interface ZoteroSchemaLoaderInterface
 {
-    public function load(?string $schema): ZoteroSchema;
+    public function load(?string $schema = null): ZoteroSchema;
 }

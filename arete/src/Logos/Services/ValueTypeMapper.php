@@ -6,6 +6,7 @@ namespace Arete\Logos\Services;
 
 use Arete\Logos\Abstracts\ValueTypeMapper as BaseValueTypeMapper;
 use Arete\Logos\Services\LogosContainer as Logos;
+use Arete\Logos\Ports\Abstracts\ConfigurationRepository;
 
 /**
  * Maps the fields types of Zotero to Logos Value Types
@@ -15,9 +16,9 @@ class ValueTypeMapper extends BaseValueTypeMapper
     protected array $map;
     protected string $default;
 
-    public function __construct()
+    public function __construct(ConfigurationRepository $config)
     {
-        $attributesValueTypes = Logos::config('attributesValueTypes');
+        $attributesValueTypes = $config('attributesValueTypes');
         $this->map = $attributesValueTypes['map'];
         $this->default = $attributesValueTypes['default'];
     }

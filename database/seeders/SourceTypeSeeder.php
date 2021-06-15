@@ -2,33 +2,39 @@
 
 namespace Database\Seeders;
 
-use Arete\Logos\Models\Schema;
+use Arete\Logos\Models\Schema as LogosSchema;
 use Arete\Logos\Models\Zotero\ZoteroSchema;
+use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Interfaces\ValueTypeMapper;
 use Arete\Logos\Interfaces\MapsSourceTypeLabels;
-use Arete\Logos\Ports\Logos;
 use Illuminate\Database\Seeder;
 
 class SourceTypeSeeder extends Seeder
 {
+    protected LogosSchema $logosSchema;
+    protected ZoteroSchema $zoteroSchema;
     protected LogosDB $db;
-    protected ZoteroSchema $schema;
     protected ValueTypeMapper $valueTypes;
     protected MapsSourceTypeLabels $sourceTypeLabels;
 
     public function __construct(
-        LogosDB $db
+        LogosSchema $logosSchema,
+        ZoteroSchemaLoaderInterface $zoteroSchemaLoader,
+        LogosDB $db,
+        ValueTypeMapper $valueTypes,
+        MapsSourceTypeLabels $sourceTypeLabels
     ) {
+        $this->logosSchema = $logosSchema;
+        $this->zoteroSchema = $zoteroSchemaLoader->load();
         $this->db = $db;
-        $this->schema = Logos::zoteroSchema('simple');
-        $this->valueTypes = Logos::valueTypes();
-        $this->sourceTypeLabels = Logos::sourceTypeLabels();
+        $this->valueTypes = $valueTypes;
+        $this->sourceTypeLabels = $sourceTypeLabels;
     }
 
     public function run()
     {
-        $itemTypes = $this->schema->itemTypes;
+        $itemTypes = $this->zoteroSchema->itemTypes;
 
         foreach ($itemTypes as $itemType) {
             $sourceTypeCode = $itemType->itemType;
@@ -40,8 +46,8 @@ class SourceTypeSeeder extends Seeder
 
             $schemaID = $this->db->insertSchema(
                 $sourceTypeCode,
-                Schema::TYPES['source'],
-                'z.' . $this->schema->version
+                $this->logosSchema::TYPES['source'],
+                'z.' . $this->zoteroSchema->version
             );
 
             $order = 0;
