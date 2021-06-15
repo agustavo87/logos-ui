@@ -186,6 +186,14 @@ class DB
         return LvDB::table('attribute_types')->where('code_name', $code)->first();
     }
 
+    public function getAttributesTypes(array $codes)
+    {
+        return LvDB::table('attribute_types')
+                    ->whereIn('code_name', $codes)
+                    ->get()
+                    ->keyBy('code_name');
+    }
+
     public function insertValue($type, $value): int
     {
         $valueTables = [
@@ -204,9 +212,10 @@ class DB
         $attributableId,
         $attributableType,
         $attributeType,
-        $value
+        $value,
+        $valueType = null
     ): ?int {
-        $valueType = $this->getAttributeType($attributeType)->value_type;
+        $valueType = $valueType ?? $this->getAttributeType($attributeType)->value_type;
         $valueID = $this->insertValue($valueType, $value);
         $attributableType = $this->schema::TYPES[$attributableType];
         $id = LvDB::table('attributes')->insertGetId([

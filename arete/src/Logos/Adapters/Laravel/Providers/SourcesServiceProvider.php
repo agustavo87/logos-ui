@@ -38,6 +38,7 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
                 return new \Arete\Logos\Adapters\Laravel\DBSourceRepository(
                     $app->make(\Arete\Logos\Ports\Interfaces\SourceTypeRepository::class),
                     $app->make(\Arete\Logos\Ports\Interfaces\CreatorTypeRepository::class),
+                    $app->make(\Arete\Logos\Models\Schema::class),
                     $app->make(\Arete\Logos\Adapters\Laravel\Common\DB::class)
                 );
             }

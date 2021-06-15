@@ -10,21 +10,25 @@ use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Adapters\Laravel\Common\DBRepository;
 use Arete\Logos\Adapters\Laravel\Common\DB;
 use Arete\Logos\Models\Source;
+use Arete\Logos\Models\Schema;
 use Arete\Logos\Models\ParticipationSet;
 
 class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 {
     protected SourceTypeRepository $sourceTypes;
     protected CreatorTypeRepository $creatorTypes;
+    protected Schema $schema;
 
     public function __construct(
         SourceTypeRepository $sourceTypes,
         CreatorTypeRepository $creatorTypes,
+        Schema $schema,
         DB $db
     ) {
         parent::__construct($db);
         $this->sourceTypes = $sourceTypes;
         $this->creatorTypes = $creatorTypes;
+        $this->schema = $schema;
     }
 
     public function createFromArray(array $params): Source
@@ -36,12 +40,14 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             $type->code(),
             1
         );
+        $attributeTypes = $this->db->getAttributesTypes(array_keys($params['attributes']));
         foreach ($params['attributes'] as $code => $value) {
             $id = $this->db->insertAttribute(
                 $sourceID,
-                'source',
+                $this->schema::TYPES['source'],
                 $code,
-                $value
+                $value,
+                $attributeTypes[$code]->value_type
             );
             if (!is_null($id)) {
                 $source->pushAttribute($code, $value);
