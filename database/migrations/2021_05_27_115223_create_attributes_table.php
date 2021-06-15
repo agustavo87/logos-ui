@@ -16,14 +16,16 @@ class CreateAttributesTable extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('attributable_id');
-            $table->string('attributable_type')->index();
+            $table->string('attributable_type');
             $table->string('attribute_type_code_name');
             $table->foreign('attribute_type_code_name')
                   ->references('code_name')
                   ->on('attribute_types')
                   ->onDelete('cascade');
-            $table->unsignedBigInteger('value_id');
-            $table->enum('value_type', array_keys(config('sources.valueTypes')))->index();
+            $table->json('complex_value')->nullable();
+            $table->string('text_value')->nullable();
+            $table->integer('number_value')->nullable();
+            $table->dateTime('date_value')->nullable();
         });
     }
 

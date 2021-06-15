@@ -40,11 +40,11 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             $type->code(),
             1
         );
-        $attributeTypes = $this->db->getAttributesTypes(array_keys($params['attributes']));
+        $attributeTypes = $this->db->getAttributeTypes(array_keys($params['attributes']));
         foreach ($params['attributes'] as $code => $value) {
             $id = $this->db->insertAttribute(
                 $sourceID,
-                $this->schema::TYPES['source'],
+                'source',
                 $code,
                 $value,
                 $attributeTypes[$code]->value_type
