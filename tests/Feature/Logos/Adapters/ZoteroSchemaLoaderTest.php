@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Logos;
+namespace Tests\Feature\Logos\Adapters;
 
 use Tests\TestCase;
 use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;

@@ -12,7 +12,6 @@ class ValueTypeMapperTest extends TestCase
     public function testLogosValueTypeMapperMaps()
     {
         $mapper = $this->app->make(ValueTypeMapper::class);
-        // $mapper = \Arete\Logos\Ports\Logos::valueTypes();
         $this->assertEquals('date', $mapper->mapValueType('date'));
         $this->assertEquals('text', $mapper->mapValueType('no-exist'));
     }

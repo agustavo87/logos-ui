@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Logos;
+namespace Tests\Feature\Logos\Adapters;
 
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Models\CreatorType;
 use Arete\Logos\Models\Attribute;
-use Tests\FixturableTestCase;
+use Tests\TestCase;
 
-class CreatorTypeTest extends FixturableTestCase
+class CreatorTypeRepositoryTest extends TestCase
 {
 
     public function testGetPersonCreatorType()

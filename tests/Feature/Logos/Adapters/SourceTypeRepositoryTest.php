@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Feature\Logos;
+namespace Tests\Feature\Logos\Adapters;
 
-use Tests\FixturableTestCase;
+use Tests\TestCase;
 use Arete\Logos\Models\RoleCollection;
 use Arete\Logos\Models\Role;
 use Arete\Logos\Models\SourceType;
 use Arete\Logos\Models\Attribute;
 use Arete\Logos\Ports\Interfaces\SourceTypeRepository;
 
-class SourceTypeTest extends FixturableTestCase
+class SourceTypeRepositoryTest extends TestCase
 {
     /**
      * @return SourceType

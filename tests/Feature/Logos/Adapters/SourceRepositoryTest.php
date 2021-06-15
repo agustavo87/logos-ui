@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Logos;
+namespace Tests\Feature\Logos\Adapters;
 
 use Arete\Logos\Models\ParticipationSet;
 use Arete\Logos\Models\SourceInterface;
