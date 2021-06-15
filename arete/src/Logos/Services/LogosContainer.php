@@ -8,9 +8,11 @@ use Arete\Common\Container;
 
 class LogosContainer extends Container
 {
+    /**
+     * As convention, the alias indicate a service that can be
+     * accesed externally, normally by an adapter.
+     */
     protected static array $alias = [
-        'greet' => 'example',
-        'greeter' => 'object',
         'config' => \Arete\Logos\Ports\Abstracts\ConfigurationRepository::class,
         'valueTypes' => \Arete\Logos\Abstracts\ValueTypeMapper::class,
         'sourceTypeLabels' => \Arete\Logos\Abstracts\MapsSourceTypeLabels::class,
@@ -19,7 +21,6 @@ class LogosContainer extends Container
     ];
 
     protected static array $providers = [
-        \Arete\Logos\Providers\ExampleProvider::class,
         \Arete\Logos\Providers\SourcesProvider::class
     ];
 }
