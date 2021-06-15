@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos;
 
-use Tests\FixturableTestCase;
-use Arete\Logos\Ports\Logos;
+use Tests\TestCase;
+use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Models\Zotero\ZoteroSchema;
 
-class ZoteroSchemaLoaderTest extends FixturableTestCase
+class ZoteroSchemaLoaderTest extends TestCase
 {
     public function testZoteroSchemaLoaderIsBinded()
     {
-        $loader = Logos::zoteroSchema();
+        $loader = $this->app->make(ZoteroSchemaLoaderInterface::class);
         $this->assertInstanceOf(
-            \Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface::class,
+            ZoteroSchemaLoaderInterface::class,
             $loader
         );
 
@@ -27,31 +28,25 @@ class ZoteroSchemaLoaderTest extends FixturableTestCase
      *
      * @return [type]
      */
-    public function testZoteroSchemaLoaderLoadsSchema($loader)
+    public function testZoteroSchemaLoaderLoadsZoteroSchema($loader)
     {
         $schema = $loader->load();
-        $this->assertInstanceOf(\Arete\Logos\Models\Zotero\ZoteroSchema::class, $schema);
+        $this->assertInstanceOf(ZoteroSchema::class, $schema);
         return $schema;
     }
 
     /**
-     * @depends testZoteroSchemaLoaderLoadsSchema
+     * @depends testZoteroSchemaLoaderLoadsZoteroSchema
      *
      * @param mixed $schema
      *
      * @return [type]
      */
-    public function testSchemaHaveSomeData($schema)
+    public function testZoteroSchemaHaveSomeData($schema)
     {
-        // print_r($schema);
         $itemTypes = $schema->itemTypes;
         $expectedTypes = ['annotation', 'blogPost', 'book', 'bookSection', 'journalArticle'];
-        // print_r($itemTypes);
-        foreach ($expectedTypes as $expType) {
-            $matches = array_filter($itemTypes, function ($type) use ($expType) {
-                return $type->itemType == $expType;
-            });
-            $this->assertGreaterThan(0, count($matches));
-        }
+        $dif = array_diff($expectedTypes, $itemTypes); // ItemType's are stringable
+        $this->assertEquals(0, count($dif));
     }
 }

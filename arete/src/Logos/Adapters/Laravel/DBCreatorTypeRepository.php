@@ -6,7 +6,7 @@ namespace Arete\Logos\Adapters\Laravel;
 
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository as CreatorTypeRepositoryPort;
 use Arete\Logos\Models\CreatorType;
-use Arete\Logos\Models\Laravel\LvCreatorType;
+use Arete\Logos\Adapters\Laravel\Models\LvCreatorType;
 use Arete\Logos\Adapters\Laravel\Common\DBRepository;
 
 /**

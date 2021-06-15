@@ -6,7 +6,7 @@ namespace Arete\Logos\Models\Zotero;
 
 use Arete\Common\FillableProperties;
 
-class ItemType extends FillableProperties
+class ItemType extends FillableProperties implements \Stringable
 {
     public string $itemType;
     /**
@@ -76,5 +76,10 @@ class ItemType extends FillableProperties
         $results = array_filter($this->fields, fn ($field) => $field->field == $name);
         // error_log('resultados: ' . count($results));
         return count($results) ? array_shift($results) : null;
+    }
+
+    public function __toString()
+    {
+        return $this->itemType;
     }
 }

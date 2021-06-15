@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models\Laravel;
+namespace Arete\Logos\Adapters\Laravel\Models;
 
 use stdClass;
 use Illuminate\Support\Collection;

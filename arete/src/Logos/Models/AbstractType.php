@@ -6,7 +6,7 @@ namespace Arete\Logos\Models;
 
 use Arete\Logos\Models\Traits\ExposeAttributes;
 
-abstract class AbstractType
+abstract class AbstractType implements \Countable
 {
     use ExposeAttributes;
 
