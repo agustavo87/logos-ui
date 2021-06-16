@@ -8,5 +8,5 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class BindingNotFoundException extends \Exception implements NotFoundExceptionInterface
 {
-   //
+    //
 }

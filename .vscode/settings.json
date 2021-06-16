@@ -17,6 +17,16 @@
     ],
     "intelephense.environment.phpVersion": "7.4.11",
     "php.validate.run": "onType",
-    "intelephense.diagnostics.languageConstraints": false
-
+    "intelephense.diagnostics.languageConstraints": false,
+    "materialTheme.accent": "Lime",
+    // Controls the font family.
+    // "editor.fontFamily": "Operator Mono",
+    // Controls the line height. Use 0 to compute the lineHeight from the fontSize.
+    "editor.lineHeight": 24,
+    // Enables font ligatures
+    "editor.fontLigatures": true,
+    // Controls if file decorations should use badges.
+    "explorer.decorations.badges": true,
+    "phpParameterHint.opacity": 0.2,
+    "intelephense.environment.documentRoot": "public/"
 }

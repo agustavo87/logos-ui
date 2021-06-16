@@ -18,7 +18,7 @@ class LogosEnviroment implements LogosEnviromentPort
     }
     public function getUsersTableData(): \stdClass
     {
-        $usersTable = $this->config->get('usersTable') ?? 'users' ;
+        $usersTable = $this->config->get('usersTable') ?? 'users';
         $SingularTableName = Str::singular($usersTable);
         $usersPK = $this->config->get('usersPK') ??  'id';
         $usersFK = "{$SingularTableName}_{$usersPK}";
