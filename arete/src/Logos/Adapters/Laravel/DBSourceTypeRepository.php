@@ -20,7 +20,7 @@ class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositor
         return LvSourceType::fromLvData(
             $this->db->getSourceType($codeName),
             $schema,
-            $this->db->getAttributes($schema->id),
+            $this->db->getSchemaAttributeTypes($schema->id),
             $this->db->getRoles($codeName)
         );
     }

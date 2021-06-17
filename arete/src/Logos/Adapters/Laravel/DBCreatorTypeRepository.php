@@ -20,7 +20,7 @@ class DBCreatorTypeRepository extends DBRepository implements CreatorTypeReposit
         return LvCreatorType::fromLvData(
             $this->db->getCreatorType($codeName),
             $schema,
-            $this->db->getAttributes($schema->id),
+            $this->db->getSchemaAttributeTypes($schema->id),
         );
     }
 }

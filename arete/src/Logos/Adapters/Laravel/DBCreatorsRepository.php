@@ -64,9 +64,9 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
                 'typeCode'  => $type->code(),
                 'id'        => $creatorEntry->id
                 ]
-            );
+        );
         /** @todo realizar un join en la obtención de los atributos con su value_type */
-        $attributes = $this->db->getContcreteAttributes($creatorEntry->id, 'creator');
+        $attributes = $this->db->getEntityAttributes($creatorEntry->id, 'creator');
         foreach ($attributes as $code => $data) {
             $creator->pushAttribute(
                 $code,

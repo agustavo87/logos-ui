@@ -160,10 +160,9 @@ class DB
     /**
      * @param mixed $schemaId
      *
-     * @todo cambiar nombre a getSchemaAttributeTypes
-     * @return void
+     * @return \Illuminate\Support\Collection
      */
-    public function getAttributes($schemaId)
+    public function getSchemaAttributeTypes($schemaId): Collection
     {
         return LvDB::table('schema_attributes')
             ->join(
@@ -188,7 +187,7 @@ class DB
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getContcreteAttributes(int $id, $attributableType = 'source'): Collection
+    public function getEntityAttributes(int $id, $attributableType = 'source'): Collection
     {
         $attributableType = $this->schema::TYPES[$attributableType];
         return LvDB::table('attributes')
@@ -197,15 +196,6 @@ class DB
             ->get()
             ->keyBy('attribute_type_code_name');
     }
-
-    // public function getCreatorAttributes(int $id): Collection
-    // {
-    //     return LvDB::table('sources')
-    //         ->join('attributes', 'sources.id', '=', 'attributes.attributable_id')
-    //         ->select('attributes.*')
-    //         ->get()
-    //         ->keyBy('attribute_type_code_name');
-    // }
 
     public function getSource($id)
     {
@@ -242,7 +232,7 @@ class DB
      * @todo cambiar nombre a getAttributeTypesByCode
      * @return \stdClass
      */
-    public function getAttributeType($code): \stdClass
+    public function getAttributeTypeByCode($code): \stdClass
     {
         return LvDB::table('attribute_types')->where('code_name', $code)->first();
     }
@@ -263,7 +253,7 @@ class DB
         $value,
         $valueType = null
     ): ?int {
-        $valueType = $valueType ?? $this->getAttributeType($attributeType)->value_type;
+        $valueType = $valueType ?? $this->getAttributeTypeByCode($attributeType)->value_type;
         $attributableType = $this->schema::TYPES[$attributableType];
 
         $valueColumn = self::VALUE_COLUMS[$valueType];
