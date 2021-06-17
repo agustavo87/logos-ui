@@ -28,5 +28,9 @@
     // Controls if file decorations should use badges.
     "explorer.decorations.badges": true,
     "phpParameterHint.opacity": 0.2,
-    "intelephense.environment.documentRoot": "public/"
+    "intelephense.environment.documentRoot": "public/",
+    "workbench.colorCustomizations": {
+        "phpParameterHint.hintForeground": "#95a9a7",
+        "phpParameterHint.hintBackground": "#293339"
+    }
 }
