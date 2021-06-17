@@ -75,7 +75,7 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             'participations' => $participations
         ]);
 
-        $attributes = $this->db->getSourceAttributes($id);
+        $attributes = $this->db->getContcreteAttributes($id);
         foreach ($attributes as $code => $data) {
             $source->pushAttribute(
                 $code,

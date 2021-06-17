@@ -157,6 +157,12 @@ class DB
         ])->first();
     }
 
+    /**
+     * @param mixed $schemaId
+     *
+     * @todo cambiar nombre a getSchemaAttributeTypes
+     * @return void
+     */
     public function getAttributes($schemaId)
     {
         return LvDB::table('schema_attributes')
@@ -182,14 +188,24 @@ class DB
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getSourceAttributes(int $id): Collection
+    public function getContcreteAttributes(int $id, $attributableType = 'source'): Collection
     {
-        return LvDB::table('sources')
-            ->join('attributes', 'sources.id', '=', 'attributes.attributable_id')
-            ->select('attributes.*')
+        $attributableType = $this->schema::TYPES[$attributableType];
+        return LvDB::table('attributes')
+            ->where('attributable_type', $attributableType)
+            ->where('attributable_id', $id)
             ->get()
             ->keyBy('attribute_type_code_name');
     }
+
+    // public function getCreatorAttributes(int $id): Collection
+    // {
+    //     return LvDB::table('sources')
+    //         ->join('attributes', 'sources.id', '=', 'attributes.attributable_id')
+    //         ->select('attributes.*')
+    //         ->get()
+    //         ->keyBy('attribute_type_code_name');
+    // }
 
     public function getSource($id)
     {
@@ -208,6 +224,24 @@ class DB
         ]);
     }
 
+    public function insertCreator($type, $userId, $updated = null, $created = null): int
+    {
+        $updated = $updated ?? now();
+        $created = $created ?? now();
+        return LvDB::table('creators')->insertGetId([
+            'updated_at' => $updated,
+            'created_at' => $created,
+            $this->logos->getUsersTableData()->FK => $userId,
+            'creator_type_code_name' => $type
+        ]);
+    }
+
+    /**
+     * @param mixed $code
+     *
+     * @todo cambiar nombre a getAttributeTypesByCode
+     * @return \stdClass
+     */
     public function getAttributeType($code): \stdClass
     {
         return LvDB::table('attribute_types')->where('code_name', $code)->first();
@@ -242,5 +276,10 @@ class DB
         ]);
 
         return $id;
+    }
+
+    public function getCreator($id)
+    {
+        return LvDB::table('creators')->find($id);
     }
 }

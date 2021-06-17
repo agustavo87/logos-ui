@@ -22,8 +22,6 @@ class CreateCreatorsTable extends Migration
     public function up()
     {
         Schema::create('creators', function (Blueprint $table) {
-
-            
             $users = $this->logos->getUsersTableData();
 
             $table->id();

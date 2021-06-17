@@ -32,4 +32,9 @@ trait ExposeAttributes
     {
         return $this->attributes;
     }
+
+    public function pushAttribute(string $attribute, $value)
+    {
+        $this->attributes[$attribute] = $value;
+    }
 }

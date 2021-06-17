@@ -36,9 +36,4 @@ class Source implements SourceInterface, Arrayable
     {
         return $this->participations;
     }
-
-    public function pushAttribute($code, $value)
-    {
-        $this->attributes[$code] = $value;
-    }
 }
