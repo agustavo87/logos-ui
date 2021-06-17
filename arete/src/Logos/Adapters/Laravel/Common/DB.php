@@ -229,7 +229,6 @@ class DB
     /**
      * @param mixed $code
      *
-     * @todo cambiar nombre a getAttributeTypesByCode
      * @return \stdClass
      */
     public function getAttributeTypeByCode($code): \stdClass
