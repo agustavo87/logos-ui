@@ -13,6 +13,9 @@ use Arete\Exceptions\BindingNotFoundException;
  */
 class Container
 {
+    /**
+     * Containment constants
+     */
     public const HAS_OWN_ABSTRACT = 1;
     public const HAS_ALIAS = 2;
     public const HAS_EXTERNAL = 3;
@@ -53,7 +56,7 @@ class Container
      * @param mixed $id
      *
      * @return mixed
-     * @throws
+     * @throws BindingNotFoundException
      */
     public static function getOwn($id)
     {
@@ -66,9 +69,21 @@ class Container
         throw new BindingNotFoundException('No binding with id: \'' . $id . '\'');
     }
 
-    public static function has(string $id)
+    /**
+     * Respond if the $id is registered
+     *
+     * If $kind is specified by containment constant returns
+     * if the containment is equal to that kind.
+     *
+     * @param string $id
+     * @param int|null $kind containment constant
+     *
+     * @return void
+     */
+    public static function has(string $id, ?int $kind = null)
     {
-        return (bool) static::hasAny($id);
+        $status = static::hasAny($id);
+        return $kind ? $kind == $status : (bool) $status;
     }
 
     /**
