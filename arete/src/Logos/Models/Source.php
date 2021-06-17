@@ -17,6 +17,11 @@ class Source implements SourceInterface, Arrayable
     protected SourceType $type;
     protected ParticipationSet $participations;
 
+    public function __construct(array $properties = [])
+    {
+        $this->fill($properties);
+    }
+
     public function id(): int
     {
         return $this->id;
@@ -35,10 +40,5 @@ class Source implements SourceInterface, Arrayable
     public function pushAttribute($code, $value)
     {
         $this->attributes[$code] = $value;
-    }
-
-    public function toArray()
-    {
-        return $this->attributes;
     }
 }

@@ -7,12 +7,20 @@ namespace Arete\Logos\Adapters\Laravel\Common;
 use Illuminate\Support\Facades\DB as LvDB;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Ports\Interfaces\LogosEnviroment;
+use Illuminate\Support\Collection;
 
 /**
  * Laravel depedent DB Access operations
  */
 class DB
 {
+    public const VALUE_COLUMS = [
+        'text' => 'text_value',
+        'number' => 'number_value',
+        'date' => 'date_value',
+        'complex' => 'complex_value'
+    ];
+
     protected LogosEnviroment $logos;
     public Schema $schema;
 
@@ -169,6 +177,25 @@ class DB
             ->get();
     }
 
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSourceAttributes(int $id): Collection
+    {
+        return LvDB::table('sources')
+            ->join('attributes', 'sources.id', '=', 'attributes.attributable_id')
+            ->select('attributes.*')
+            ->get()
+            ->keyBy('attribute_type_code_name');
+    }
+
+    public function getSource($id)
+    {
+        return LvDB::table('sources')->find($id);
+    }
+
     public function insertSource($type, $userId, $updated = null, $created = null): int
     {
         $updated = $updated ?? now();
@@ -204,13 +231,8 @@ class DB
     ): ?int {
         $valueType = $valueType ?? $this->getAttributeType($attributeType)->value_type;
         $attributableType = $this->schema::TYPES[$attributableType];
-        $valueColumns = [
-            'text' => 'text_value',
-            'number' => 'number_value',
-            'date' => 'date_value',
-            'complex' => 'complex_value'
-        ];
-        $valueColumn = $valueColumns[$valueType];
+
+        $valueColumn = self::VALUE_COLUMS[$valueType];
 
         $id = LvDB::table('attributes')->insertGetId([
             'attributable_id' => $attributableId,

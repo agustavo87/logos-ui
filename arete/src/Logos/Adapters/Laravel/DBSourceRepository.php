@@ -12,6 +12,7 @@ use Arete\Logos\Adapters\Laravel\Common\DB;
 use Arete\Logos\Models\Source;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Models\ParticipationSet;
+use Arete\Logos\Models\SourceType;
 
 class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 {
@@ -59,5 +60,43 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             'id' => $sourceID
         ]);
         return $source;
+    }
+
+    public function get(int $id)
+    {
+        $source = $this->db->getSource($id);
+        $type = $this->sourceTypes->get($source->source_type_code_name);
+        $source = new Source([
+            'id' => $source->id,
+            'type' => $type
+        ]);
+        $participations = new ParticipationSet($source);
+        $source->fill([
+            'participations' => $participations
+        ]);
+
+        $attributes = $this->db->getSourceAttributes($id);
+        foreach ($attributes as $code => $data) {
+            $source->pushAttribute(
+                $code,
+                $this->resolveAttributeValue($type, (array) $data)
+            );
+        }
+        return $source;
+    }
+    /**
+     * Resolves the value from its type
+     *
+     * @param SourceType $type
+     * @param array $attributeData
+     *
+     * @return mixed
+     */
+    public function resolveAttributeValue(SourceType $type, array $attributeData)
+    {
+        $attribute = $type->{$attributeData['attribute_type_code_name']};
+        $valueType = $attribute->type;
+        $valueColumn = $this->db::VALUE_COLUMS[$valueType];
+        return $attributeData[$valueColumn];
     }
 }

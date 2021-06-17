@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos\Adapters;
 
-use Arete\Logos\Models\Attribute;
 use Arete\Logos\Models\ParticipationSet;
 use Arete\Logos\Models\SourceInterface;
 use Arete\Logos\Models\SourceType;
@@ -46,14 +45,29 @@ class SourceRepositoryTest extends TestCase
             'abstractNote' => "La historia de como {$name} despertó a la atención plena",
             'date' => now(),
             'accessDate' => now(),
-            'volume' => 20,
-            'issue' => 3
+            'volume' => $this->faker->numberBetween(1, 50),
+            'issue' => $this->faker->numberBetween(1, 4)
         ]
         // faltaría el usuario al que estaría asociada la fuente
         ];
         $source = $sources->createFromArray($sourceData);
         $this->checkSourceDataStructure($source, $sourceData['attributes']);
         return $source;
+    }
+
+    /**
+     * Test if get a source correctly
+     *
+     * @param Source $source
+     * @depends testCreatesSourceWithoutCreator
+     * @return Source
+     */
+    public function testGetSource(Source $storedSource): Source
+    {
+        $sources = $this->app->make(SourceRepository::class);
+        $fetchedSource = $sources->get($storedSource->id());
+        $this->checkSourceDataStructure($fetchedSource, $storedSource->toArray());
+        return $storedSource;
     }
 
     public function checkSourceDataStructure(Source $source, array $expectedAttributes = []): void
@@ -72,18 +86,3 @@ class SourceRepositoryTest extends TestCase
         }
     }
 }
-
-
-//     /**
-//      * @param Source $source
-//      *
-//      * @depends testCreatesSourceWithoutCreator
-//      * @return Source
-//      */
-//     public function testGetSourceFromRepository(Source $prevSource): Source
-//     {
-//         $sources = $this->app->make(SourceRepository::class);
-//         $newSource = $sources->get($prevSource->id());
-
-//     }
-// }

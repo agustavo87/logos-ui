@@ -10,7 +10,8 @@ class CreateSourcesTable extends Migration
 {
     protected LogosEnviroment $logos;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->logos = app(LogosEnviroment::class);
     }
 
