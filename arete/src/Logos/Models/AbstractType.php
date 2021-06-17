@@ -33,4 +33,9 @@ abstract class AbstractType implements \Countable
     {
         return $this->version;
     }
+
+    public function names(): array
+    {
+        return $this->attributes();
+    }
 }

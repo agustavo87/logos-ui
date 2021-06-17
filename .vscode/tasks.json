@@ -9,7 +9,9 @@
             "command": "phpcbf --standard=PSR12  ${file}",
             "presentation": {
                 "reveal": "never",
-                "echo": false
+                "echo": false,
+                "focus": false,
+                "clear": true
             },
             "problemMatcher": []
         }

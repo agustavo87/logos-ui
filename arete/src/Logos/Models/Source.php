@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Arete\Logos\Models;
 
 use Arete\Logos\Models\Traits\ExposeAttributes;
+use Arete\Common\Interfaces\Arrayable;
 use Arete\Common\FillsProperties;
 
-class Source implements SourceInterface
+class Source implements SourceInterface, Arrayable
 {
     use ExposeAttributes;
     use FillsProperties;
@@ -34,5 +35,10 @@ class Source implements SourceInterface
     public function pushAttribute($code, $value)
     {
         $this->attributes[$code] = $value;
+    }
+
+    public function toArray()
+    {
+        return $this->attributes;
     }
 }

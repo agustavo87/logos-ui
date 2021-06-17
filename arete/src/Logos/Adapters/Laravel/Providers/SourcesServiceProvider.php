@@ -53,34 +53,28 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         $this->app->bind(
             \Arete\Logos\Models\Schema::class,
             function ($app) {
-                return Logos::schema();
-                // cuidado.. si el alias no tiene vinculado
-                // ningúna implementación puede dar lugar a un bucle infinito.
-                // porque al no encontrar el contenedor va a buscar en el contenedor delegado
-                // que es este, y este volvería usar la fachada de acceso al contenedor de la applicación,
-                // dando lugar al bucle infinito.
-                /** @todo agregar excepción para servicios con alias sin vínculos */
+                return Logos::getOwn('schema');
             }
         );
 
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface::class,
             function ($app) {
-                return Logos::zoteroSchema();
+                return Logos::getOwn('zoteroSchema');
             }
         );
 
         $this->app->bind(
             \Arete\Logos\Interfaces\ValueTypeMapper::class,
             function ($app) {
-                return Logos::valueTypes();
+                return Logos::getOwn('valueTypes');
             }
         );
 
         $this->app->bind(
             \Arete\Logos\Interfaces\MapsSourceTypeLabels::class,
             function ($app) {
-                return Logos::sourceTypeLabels();
+                return Logos::getOwn('sourceTypeLabels');
             }
         );
 

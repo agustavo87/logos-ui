@@ -6,7 +6,7 @@ namespace Arete\Exceptions;
 
 use Psr\Container\NotFoundExceptionInterface;
 
-class BindingNotFoundException extends \Exception implements NotFoundExceptionInterface
+class BindingNotFoundException extends \DomainException implements NotFoundExceptionInterface
 {
     //
 }

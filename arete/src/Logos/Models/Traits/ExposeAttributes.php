@@ -27,4 +27,9 @@ trait ExposeAttributes
     {
         return array_keys($this->attributes);
     }
+
+    public function toArray()
+    {
+        return $this->attributes;
+    }
 }

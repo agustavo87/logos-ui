@@ -6,20 +6,20 @@ namespace Arete\Common;
 
 trait FillsProperties
 {
-    public function fill(array $attributes)
+    public function fill(array $properties)
     {
-        $attributes = $this->mergeIfDefaults($attributes);
-        foreach ($attributes as $property => $value) {
+        $properties = $this->mergeIfDefaults($properties);
+        foreach ($properties as $property => $value) {
             $this->$property = $value;
         }
     }
 
-    public function mergeIfDefaults($attributes)
+    public function mergeIfDefaults($properties)
     {
         if ((!isset($this->defaultAttributes)) || !$this->defaultAttributes) {
-            return $attributes;
+            return $properties;
         }
 
-        return array_merge($this->defaultAttributes, $attributes);
+        return array_merge($this->defaultAttributes, $properties);
     }
 }

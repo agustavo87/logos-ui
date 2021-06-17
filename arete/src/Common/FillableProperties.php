@@ -10,10 +10,10 @@ abstract class FillableProperties
 
     protected $defaultAttributes = [];
 
-    public function __construct(?array $attributes = [])
+    public function __construct(?array $properties = [])
     {
         $this->fillDefaultsAttributes();
-        $this->fill($attributes);
+        $this->fill($properties);
     }
 
     abstract protected function fillDefaultsAttributes();

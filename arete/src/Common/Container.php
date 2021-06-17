@@ -7,8 +7,17 @@ namespace Arete\Common;
 use Psr\Container\ContainerInterface;
 use Arete\Exceptions\BindingNotFoundException;
 
+/**
+ * IoC Container for DI
+ * @todo write some unit tests.
+ */
 class Container
 {
+    public const HAS_OWN_ABSTRACT = 1;
+    public const HAS_ALIAS = 2;
+    public const HAS_EXTERNAL = 3;
+    public const NOT_REGISTERED = 0;
+
     protected static ?ContainerInterface $external = null;
 
     protected static array $bindings = [];
@@ -27,29 +36,118 @@ class Container
 
     public static function get(string $id)
     {
-        if (static::has($id)) {
-            return static::resolve($id);
-        } else {
-            throw new BindingNotFoundException('No binding with id: \'' . $id . '\'');
+        switch (static::hasAny($id)) {
+            case self::HAS_OWN_ABSTRACT:
+                return static::resolveOwn($id);
+            case self::HAS_ALIAS:
+                return static::resolveOwn(static::$alias[$id]);
+            case self::HAS_EXTERNAL:
+                return static::resolveExternal($id);
         }
+        throw new BindingNotFoundException('No binding with id: \'' . $id . '\'');
+    }
+
+    /**
+     * Get without delegate
+     *
+     * @param mixed $id
+     *
+     * @return mixed
+     * @throws
+     */
+    public static function getOwn($id)
+    {
+        switch (static::hasAny($id)) {
+            case self::HAS_OWN_ABSTRACT:
+                return static::resolveOwn($id);
+            case self::HAS_ALIAS:
+                return static::resolveOwn(static::$alias[$id]);
+        }
+        throw new BindingNotFoundException('No binding with id: \'' . $id . '\'');
     }
 
     public static function has(string $id)
     {
-        return array_key_exists($id, static::$bindings) ? true
-                : (static::$external ? static::$external->has($id) : false);
+        return (bool) static::hasAny($id);
     }
 
-    protected static function resolve(string $id)
+    /**
+     * Has own abstract or alias binding, or external binding.
+     *
+     * @param string $id
+     *
+     * @return void
+     */
+    protected static function hasAny(string $id): int
     {
-        return array_key_exists($id, static::$bindings)
-            ? call_user_func(static::$bindings[$id], static::class)
-            : (
-                static::$external
-                    ? (static::$external->has($id) ?  static::$external->get($id) : null)
-                    : null
-            );
+        if (static::hasAlias($id)) {
+            return self::HAS_ALIAS;
+        } elseif (static::hasAbstract($id)) {
+            return self::HAS_OWN_ABSTRACT;
+        } elseif (static::hasExternal($id)) {
+            return self::HAS_EXTERNAL;
+        }
+        return self::NOT_REGISTERED;
     }
+
+    /**
+     *
+     * @param string $abstract
+     *
+     * @return mixed
+     */
+    protected static function resolveOwn(string $abstract)
+    {
+        return call_user_func(static::$bindings[$abstract], static::class);
+    }
+
+    /**
+     * @param string $abstract
+     *
+     * @return object|boolean
+     */
+    protected static function resolveExternal(string $abstract)
+    {
+        return static::$external->get($abstract);
+    }
+
+    /**
+     * Has own alias.
+     *
+     * @param mixed $alias
+     *
+     * @return bool
+     */
+    protected static function hasAlias($alias): bool
+    {
+        return array_key_exists($alias, static::$alias);
+    }
+
+    /**
+     * Has own abstract.
+     *
+     * @param mixed $abstract
+     *
+     * @return bool
+     */
+    protected static function hasAbstract($abstract): bool
+    {
+        return array_key_exists($abstract, static::$bindings);
+    }
+
+    /**
+     * Check external container has id.
+     *
+     * @param mixed $id
+     *
+     * @return bool
+     */
+    protected static function hasExternal($id): bool
+    {
+        return static::$external ? static::$external->has($id) : false;
+    }
+
+
 
     public static function register($id, callable $recipe)
     {
