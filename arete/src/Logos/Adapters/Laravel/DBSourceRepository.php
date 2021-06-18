@@ -12,7 +12,6 @@ use Arete\Logos\Adapters\Laravel\Common\DB;
 use Arete\Logos\Models\Source;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Models\ParticipationSet;
-use Arete\Logos\Models\SourceType;
 
 class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 {
