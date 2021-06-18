@@ -33,7 +33,6 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 
     public function createFromArray(array $params): Source
     {
-        // $type = $this->sourceTypes->get($params['type']);
         $source = new Source($this->sourceTypes);
         $sourceID =  $this->db->insertSource(
             $params['type'],
