@@ -41,22 +41,32 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             $type->code(),
             1
         );
-
-        /**
-         * @todo utilizar la inserción múltiple.
-         * */
+        $data = [];
+        $baseRow = [
+            'attributable_id'           => null,
+            'attributable_type'         => $this->schema::TYPES['source'],
+            'attribute_type_code_name'  => null,
+            'text_value'                => null,
+            'number_value'              => null,
+            'date_value'                => null,
+            'complex_value'             => null
+        ];
         foreach ($params['attributes'] as $code => $value) {
-            $id = $this->db->insertAttribute(
-                $sourceID,
-                'source',
-                $code,
-                $value,
-                $type->$code->type
+            $data[] = array_merge(
+                $baseRow,
+                [
+                    'attributable_id'                           => $sourceID,
+                    'attributable_type'                         => $this->schema::TYPES['source'],
+                    'attribute_type_code_name'                  => $code,
+                    $this->db::VALUE_COLUMS[$type->$code->type] => $value,
+                ]
             );
-            if (!is_null($id)) {
-                $source->pushAttribute($code, $value);
-            }
+            $source->pushAttribute($code, $value);
         }
+        $this->db->db
+            ->table('attributes')
+            ->insert($data);
+
         $source->fill([
             'type' => $type,
             'participations' => $participations,

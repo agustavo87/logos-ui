@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB as LvDB;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Ports\Interfaces\LogosEnviroment;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Connection;
+use Illuminate\Database\DatabaseManager;
 
 /**
  * Laravel depedent DB Access operations
@@ -22,14 +24,17 @@ class DB
     ];
 
     protected LogosEnviroment $logos;
+    public Connection $db;
     public Schema $schema;
 
     public function __construct(
         LogosEnviroment $logos,
-        Schema $schema
+        Schema $schema,
+        DatabaseManager $dbManager
     ) {
         $this->logos = $logos;
         $this->schema = $schema;
+        $this->db = $dbManager->connection();
     }
 
     public function insertSourceType($code, $label = null)
