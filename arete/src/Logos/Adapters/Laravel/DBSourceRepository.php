@@ -41,14 +41,17 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             $type->code(),
             1
         );
-        $attributeTypes = $this->db->getAttributeTypes(array_keys($params['attributes']));
+
+        /**
+         * @todo utilizar la inserción múltiple.
+         * */
         foreach ($params['attributes'] as $code => $value) {
             $id = $this->db->insertAttribute(
                 $sourceID,
                 'source',
                 $code,
                 $value,
-                $attributeTypes[$code]->value_type
+                $type->$code->type
             );
             if (!is_null($id)) {
                 $source->pushAttribute($code, $value);
@@ -84,6 +87,7 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
         }
         return $source;
     }
+
     /**
      * Resolves the value from its type
      *
