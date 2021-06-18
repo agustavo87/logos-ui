@@ -9,7 +9,7 @@ use Arete\Logos\Models\CreatorType;
 use Tests\TestCase;
 use Arete\Logos\Ports\Interfaces\CreatorsRepository;
 
-class CreatorRepositoryTest extends TestCase
+class CreatorsRepositoryTest extends TestCase
 {
     public function testCreatesCreatorFromArray(): Creator
     {

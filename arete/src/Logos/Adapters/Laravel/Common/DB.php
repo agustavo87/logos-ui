@@ -209,16 +209,35 @@ class DB
     /**
      * @param int $id
      *
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection¬
      */
     public function getEntityAttributes(int $id, $attributableType = 'source'): Collection
     {
+        $valueColumns = $this::VALUE_COLUMS;
         $attributableType = $this->schema::TYPES[$attributableType];
-        return LvDB::table('attributes')
+        $entityTable = $attributableType . 's';
+        return LvDB::table($entityTable)
+            ->join(
+                'attributes',
+                $entityTable . '.id',
+                '=',
+                'attributes.attributable_id'
+            )
+            ->join(
+                'attribute_types',
+                'attributes.attribute_type_code_name',
+                '=',
+                'attribute_types.code_name'
+            )
             ->where('attributable_type', $attributableType)
             ->where('attributable_id', $id)
+            ->select([$entityTable . '.*', 'attributes.*', 'attribute_types.value_type'])
             ->get()
-            ->keyBy('attribute_type_code_name');
+            ->keyBy('attribute_type_code_name')
+            ->map(function ($item) use ($valueColumns) {
+                $item->value = $item->{$valueColumns[$item->value_type]};
+                return $item;
+            });
     }
 
     public function insertCreatorType($code, $label = null): bool

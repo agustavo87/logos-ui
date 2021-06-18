@@ -56,14 +56,13 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 
     public function get(int $id)
     {
-        $source = $this->db->getSource($id);
-        $type = $this->sourceTypes->get($source->source_type_code_name);
+        $attributes = $this->db->getEntityAttributes($id);
+        $sourceEntry = $attributes->first();
         $source = new Source(
             $this->sourceTypes,
             [
-            'id' => $source->id,
-            'type' => $type,
-            'typeCode' => $type->code()
+                'id' => $sourceEntry->id,
+                'typeCode' => $sourceEntry->source_type_code_name
             ]
         );
         $participations = new ParticipationSet($source);
@@ -71,29 +70,12 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             'participations' => $participations
         ]);
 
-        $attributes = $this->db->getEntityAttributes($id);
         foreach ($attributes as $code => $data) {
             $source->pushAttribute(
                 $code,
-                $this->resolveAttributeValue($type, (array) $data)
+                $data->value
             );
         }
         return $source;
-    }
-
-    /**
-     * Resolves the value from its type
-     *
-     * @param SourceType $type
-     * @param array $attributeData
-     *
-     * @return mixed
-     */
-    public function resolveAttributeValue(SourceType $type, array $attributeData)
-    {
-        $attribute = $type->{$attributeData['attribute_type_code_name']};
-        $valueType = $attribute->type;
-        $valueColumn = $this->db::VALUE_COLUMS[$valueType];
-        return $attributeData[$valueColumn];
     }
 }

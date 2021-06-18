@@ -49,33 +49,22 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function get(int $id): ?Creator
     {
-        $creatorEntry = $this->db->getCreator($id);
-        $type = $this->creatorTypes->get($creatorEntry->creator_type_code_name);
+        $attributes = $this->db->getEntityAttributes($id, 'creator');
+        $creatorEntry = $attributes->first();
         $creator = new Creator(
             $this->creatorTypes,
             [
-                'type'      => $type,
-                'typeCode'  => $type->code(),
-                'id'        => $creatorEntry->id
+                'id'        => $creatorEntry->id,
+                'typeCode'  => $creatorEntry->creator_type_code_name
             ]
         );
-        /** @todo realizar un join en la obtención de los atributos con su value_type */
-        $attributes = $this->db->getEntityAttributes($creatorEntry->id, 'creator');
         foreach ($attributes as $code => $data) {
             $creator->pushAttribute(
                 $code,
-                $this->resolveAttributeValue($type, (array) $data)
+                $data->value
             );
         }
         return $creator;
-    }
-
-    public function resolveAttributeValue(CreatorType $type, array $attributeData)
-    {
-        $attribute = $type->{$attributeData['attribute_type_code_name']};
-        $valueType = $attribute->type;
-        $valueColumn = $this->db::VALUE_COLUMS[$valueType];
-        return $attributeData[$valueColumn];
     }
 
     public function save(Creator $creator): bool
