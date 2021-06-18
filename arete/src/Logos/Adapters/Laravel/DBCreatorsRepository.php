@@ -29,6 +29,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
             $params['type'],
             $userId
         );
+
         $creator = new Creator(
             $this->creatorTypes,
             [
@@ -37,19 +38,11 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
             ]
         );
 
-        $attributeTypes = $this->db->getAttributeTypes(array_keys($params['attributes']));
-        foreach ($params['attributes'] as $code => $value) {
-            $id = $this->db->insertEntityAttribute(
-                $creatorID,
-                'creator',
-                $code,
-                $value,
-                $attributeTypes[$code]->value_type
-            );
-            if (!is_null($id)) {
-                $creator->pushAttribute($code, $value);
-            }
-        }
+        $this->db->insertEntityAttributes(
+            $creator,
+            'creator',
+            $params['attributes']
+        );
 
         return $creator;
     }
@@ -61,9 +54,10 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
         $creator = new Creator(
             $this->creatorTypes,
             [
+                'type'      => $type,
                 'typeCode'  => $type->code(),
                 'id'        => $creatorEntry->id
-                ]
+            ]
         );
         /** @todo realizar un join en la obtención de los atributos con su value_type */
         $attributes = $this->db->getEntityAttributes($creatorEntry->id, 'creator');
@@ -93,42 +87,4 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
     {
         return [];
     }
-
-    // public function get(int $id)
-    // {
-    //     $source = $this->db->getSource($id);
-    //     $type = $this->sourceTypes->get($source->source_type_code_name);
-    //     $source = new Source([
-    //         'id' => $source->id,
-    //         'type' => $type
-    //     ]);
-    //     $participations = new ParticipationSet($source);
-    //     $source->fill([
-    //         'participations' => $participations
-    //     ]);
-
-    //     $attributes = $this->db->getSourceAttributes($id);
-    //     foreach ($attributes as $code => $data) {
-    //         $source->pushAttribute(
-    //             $code,
-    //             $this->resolveAttributeValue($type, (array) $data)
-    //         );
-    //     }
-    //     return $source;
-    // }
-    // /**
-    //  * Resolves the value from its type
-    //  *
-    //  * @param SourceType $type
-    //  * @param array $attributeData
-    //  *
-    //  * @return mixed
-    //  */
-    // public function resolveAttributeValue(SourceType $type, array $attributeData)
-    // {
-    //     $attribute = $type->{$attributeData['attribute_type_code_name']};
-    //     $valueType = $attribute->type;
-    //     $valueColumn = $this->db::VALUE_COLUMS[$valueType];
-    //     return $attributeData[$valueColumn];
-    // }
 }

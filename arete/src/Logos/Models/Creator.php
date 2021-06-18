@@ -21,6 +21,8 @@ class Creator implements Arrayable
      */
     protected string $typeCode;
 
+    protected ?CreatorType $type = null;
+
     protected CreatorTypeRepository $creatorTypes;
 
     public function __construct(
@@ -50,6 +52,6 @@ class Creator implements Arrayable
 
     public function type(): CreatorType
     {
-        return $this->creatorTypes->get($this->typeCode);
+        return $this->type ?? ($this->type = $this->creatorTypes->get($this->typeCode));
     }
 }

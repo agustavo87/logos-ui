@@ -34,44 +34,23 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 
     public function createFromArray(array $params): Source
     {
-        $type = $this->sourceTypes->get($params['type']);
-        $source = new Source();
-        $participations = new ParticipationSet($source);
+        // $type = $this->sourceTypes->get($params['type']);
+        $source = new Source($this->sourceTypes);
         $sourceID =  $this->db->insertSource(
-            $type->code(),
+            $params['type'],
             1
         );
-        $data = [];
-        $baseRow = [
-            'attributable_id'           => null,
-            'attributable_type'         => $this->schema::TYPES['source'],
-            'attribute_type_code_name'  => null,
-            'text_value'                => null,
-            'number_value'              => null,
-            'date_value'                => null,
-            'complex_value'             => null
-        ];
-        foreach ($params['attributes'] as $code => $value) {
-            $data[] = array_merge(
-                $baseRow,
-                [
-                    'attributable_id'                           => $sourceID,
-                    'attributable_type'                         => $this->schema::TYPES['source'],
-                    'attribute_type_code_name'                  => $code,
-                    $this->db::VALUE_COLUMS[$type->$code->type] => $value,
-                ]
-            );
-            $source->pushAttribute($code, $value);
-        }
-        $this->db->db
-            ->table('attributes')
-            ->insert($data);
-
+        $participations = new ParticipationSet($source);
         $source->fill([
-            'type' => $type,
+            'typeCode' => $params['type'],
             'participations' => $participations,
             'id' => $sourceID
         ]);
+        $this->db->insertEntityAttributes(
+            $source,
+            'source',
+            $params['attributes']
+        );
         return $source;
     }
 
@@ -79,10 +58,14 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
     {
         $source = $this->db->getSource($id);
         $type = $this->sourceTypes->get($source->source_type_code_name);
-        $source = new Source([
+        $source = new Source(
+            $this->sourceTypes,
+            [
             'id' => $source->id,
-            'type' => $type
-        ]);
+            'type' => $type,
+            'typeCode' => $type->code()
+            ]
+        );
         $participations = new ParticipationSet($source);
         $source->fill([
             'participations' => $participations

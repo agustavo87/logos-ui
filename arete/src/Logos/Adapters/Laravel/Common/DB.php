@@ -170,6 +170,42 @@ class DB
         return $id;
     }
 
+
+    /**
+     * @param mixed     $entityObject
+     * @param string    $entityGenus    source | creator
+     * @param array     $attributes     [code => value, ...]
+     *
+     * @return void
+     */
+    public function insertEntityAttributes($entityObject, string $entityGenus, array $attributes): void
+    {
+        $data = [];
+        $baseRow = [
+            'attributable_id'           => $entityObject->id(),
+            'attributable_type'         => $this->schema::TYPES[$entityGenus],
+            'attribute_type_code_name'  => null,
+            'text_value'                => null,
+            'number_value'              => null,
+            'date_value'                => null,
+            'complex_value'             => null
+        ];
+        $type = $entityObject->type();
+        foreach ($attributes as $code => $value) {
+            $data[] = array_merge(
+                $baseRow,
+                [
+                    'attribute_type_code_name'                  => $code,
+                    self::VALUE_COLUMS[$type->$code->type]      => $value,
+                ]
+            );
+            $entityObject->pushAttribute($code, $value);
+        }
+        $this->db
+            ->table('attributes')
+            ->insert($data);
+    }
+
     /**
      * @param int $id
      *
