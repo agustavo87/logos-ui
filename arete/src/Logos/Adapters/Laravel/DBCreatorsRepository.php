@@ -39,7 +39,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
         $attributeTypes = $this->db->getAttributeTypes(array_keys($params['attributes']));
         foreach ($params['attributes'] as $code => $value) {
-            $id = $this->db->insertAttribute(
+            $id = $this->db->insertEntityAttribute(
                 $creatorID,
                 'creator',
                 $code,

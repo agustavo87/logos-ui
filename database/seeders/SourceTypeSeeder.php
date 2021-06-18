@@ -55,7 +55,7 @@ class SourceTypeSeeder extends Seeder
                 $baseAttribute = $field->baseField;
                 $attribute = $field->field;
 
-                if (!$this->db->attributeExist($attribute)) {
+                if (!$this->db->attributeTypeExist($attribute)) {
                     $this->db->insertAttributeType(
                         $attribute,
                         $this->valueTypes->mapValueType($attribute),

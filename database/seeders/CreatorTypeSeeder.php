@@ -65,7 +65,7 @@ class CreatorTypeSeeder extends Seeder
                 $fieldCodeName = $field[0];
                 $fieldLabel = $field[1];
 
-                if (!$this->db->attributeExist($fieldCodeName)) {
+                if (!$this->db->attributeTypeExist($fieldCodeName)) {
                     $this->db->insertAttributeType(
                         $fieldCodeName,
                         $this->valueTypes->mapValueType($fieldCodeName)
