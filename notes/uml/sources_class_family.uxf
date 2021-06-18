@@ -466,8 +466,8 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>360</x>
-      <y>880</y>
+      <x>230</x>
+      <y>910</y>
       <w>130</w>
       <h>70</h>
     </coordinates>
