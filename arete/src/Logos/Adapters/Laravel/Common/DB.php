@@ -11,6 +11,7 @@ use Arete\Logos\Ports\Interfaces\LogosEnviroment;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Laravel depedent DB Access operations
@@ -181,7 +182,7 @@ class DB
      * @param null $updated
      * @param null $created
      *
-     * @return int id of the new entity
+     * @return int|null id of the new entity or null if error.
      */
     public function insertEntityAttributes(
         Attributable $entityObject,
@@ -189,19 +190,14 @@ class DB
         $userID,
         $updated = null,
         $created = null
-    ): int {
+    ): ?int {
         $updated = $updated ?? now();
         $created = $created ?? now();
-        $entityID = 0;
-        $this->db->transaction(function () use (
-            $updated,
-            $created,
-            $userID,
-            $entityObject,
-            $attributes,
-            &$entityID
-        ) {
-            $entityTable = $entityObject->genus() . 's';
+        $entityTable = $entityObject->genus() . 's';
+        $type = $entityObject->type();
+
+        try {
+            $this->db->beginTransaction();
             // insert entity entry
             $entityID = $this->db->table($entityTable)->insertGetId([
                 'updated_at' => $updated,
@@ -224,7 +220,6 @@ class DB
                 'date_value'                => null,
                 'complex_value'             => null
             ];
-            $type = $entityObject->type();
             foreach ($attributes as $code => $value) {
                 $data[] = array_merge(
                     $baseRow,
@@ -238,8 +233,15 @@ class DB
             $this->db
                 ->table('attributes')
                 ->insert($data);
-        });
-        return $entityID;
+
+            $this->db->commit();
+            return $entityID;
+        } catch (\Throwable $th) {
+            $this->db->rollBack();
+            Log::error('Error in inserting entity attributes', ['throwable' => $th]);
+            throw $th;
+        }
+        return null;
     }
 
     /**
