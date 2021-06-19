@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Adapters\Laravel\Common;
 
+use Arete\Logos\Models\Abstracts\Attributable;
 use Illuminate\Support\Facades\DB as LvDB;
 use Arete\Logos\Models\Schema;
 use Arete\Logos\Ports\Interfaces\LogosEnviroment;
@@ -183,8 +184,8 @@ class DB
      * @return int id of the new entity
      */
     public function insertEntityAttributes(
-        $entityObject,
-        string $entityGenus,
+        Attributable $entityObject,
+        string $entityGenus, // se puede obtener directamente de entity object
         array $attributes,
         $userID,
         $updated = null,

@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Models\Abstracts;
 
 use Arete\Logos\Models\Traits\ExposeAttributes;
 
-abstract class AbstractType implements \Countable
+abstract class Type implements \Countable
 {
     use ExposeAttributes;
 
+    protected ?string $genus = '';
     protected string $code_name;
     protected ?string $label = null;
     protected string $version;
@@ -37,5 +38,10 @@ abstract class AbstractType implements \Countable
     public function names(): array
     {
         return $this->attributes();
+    }
+
+    public function genus(): ?string
+    {
+        return $this->genus;
     }
 }

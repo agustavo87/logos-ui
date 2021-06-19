@@ -79,7 +79,7 @@ class SourceRepositoryTest extends TestCase
         $this->assertInstanceOf(ParticipationSet::class, $source->participations());
         $arraySource = $source->toArray();
         $this->assertIsArray($arraySource);
-        Log::info($arraySource);
+        // Log::info($arraySource);
         foreach ($expectedAttributes as $code => $value) {
             $attribute = $source->$code;
             $this->assertEquals($value, $attribute);
