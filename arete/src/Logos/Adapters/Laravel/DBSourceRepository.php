@@ -34,20 +34,16 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
     public function createFromArray(array $params): Source
     {
         $source = new Source($this->sourceTypes);
-        $sourceID =  $this->db->insertSource(
-            $params['type'],
-            1
-        );
         $participations = new ParticipationSet($source);
         $source->fill([
             'typeCode' => $params['type'],
             'participations' => $participations,
-            'id' => $sourceID
         ]);
         $this->db->insertEntityAttributes(
             $source,
             'source',
-            $params['attributes']
+            $params['attributes'],
+            1
         );
         return $source;
     }

@@ -24,15 +24,9 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function createFromArray(array $params, $userId = 1): Creator
     {
-        $creatorID =  $this->db->insertCreator(
-            $params['type'],
-            $userId
-        );
-
         $creator = new Creator(
             $this->creatorTypes,
             [
-                'id'        => $creatorID,
                 'typeCode'  => $params['type']
             ]
         );
@@ -40,7 +34,8 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
         $this->db->insertEntityAttributes(
             $creator,
             'creator',
-            $params['attributes']
+            $params['attributes'],
+            1
         );
 
         return $creator;

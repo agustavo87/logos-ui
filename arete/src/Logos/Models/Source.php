@@ -38,6 +38,11 @@ class Source implements SourceInterface, Arrayable
         return $this->type ?? ($this->type = $this->sourceTypes->get($this->typeCode));
     }
 
+    public function typeCode(): string
+    {
+        return $this->typeCode;
+    }
+
     public function participations(): ParticipationSet
     {
         return $this->participations;

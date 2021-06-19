@@ -171,39 +171,77 @@ class DB
     }
 
 
+
     /**
-     * @param mixed     $entityObject
-     * @param string    $entityGenus    source | creator
-     * @param array     $attributes     [code => value, ...]
+     * @param mixed $entityObject the attributable object
+     * @param string $entityGenus the attributable type ('source' | 'creator')
+     * @param array $attributes code => value
+     * @param mixed $userID
+     * @param null $updated
+     * @param null $created
      *
-     * @return void
+     * @return int id of the new entity
      */
-    public function insertEntityAttributes($entityObject, string $entityGenus, array $attributes): void
-    {
-        $data = [];
-        $baseRow = [
-            'attributable_id'           => $entityObject->id(),
-            'attributable_type'         => $this->schema::TYPES[$entityGenus],
-            'attribute_type_code_name'  => null,
-            'text_value'                => null,
-            'number_value'              => null,
-            'date_value'                => null,
-            'complex_value'             => null
-        ];
-        $type = $entityObject->type();
-        foreach ($attributes as $code => $value) {
-            $data[] = array_merge(
-                $baseRow,
-                [
+    public function insertEntityAttributes(
+        $entityObject,
+        string $entityGenus,
+        array $attributes,
+        $userID,
+        $updated = null,
+        $created = null
+    ): int {
+        $updated = $updated ?? now();
+        $created = $created ?? now();
+        $entityTable = $entityGenus . 's';
+        $entityID = 0;
+        $this->db->transaction(function () use (
+            $entityTable,
+            $updated,
+            $created,
+            $userID,
+            $entityObject,
+            $entityGenus,
+            $attributes,
+            &$entityID
+        ) {
+            // insert entity entry
+            $entityID = $this->db->table($entityTable)->insertGetId([
+                'updated_at' => $updated,
+                'created_at' => $created,
+                $this->logos->getUsersTableData()->FK => $userID,
+                $entityGenus . '_type_code_name' => $entityObject->typeCode()
+            ]);
+            $entityObject->fill([
+                'id' => $entityID
+            ]);
+
+            // insert entity attributes
+            $data = [];
+            $baseRow = [
+                'attributable_id'           => $entityID,
+                'attributable_type'         => $this->schema::TYPES[$entityGenus],
+                'attribute_type_code_name'  => null,
+                'text_value'                => null,
+                'number_value'              => null,
+                'date_value'                => null,
+                'complex_value'             => null
+            ];
+            $type = $entityObject->type();
+            foreach ($attributes as $code => $value) {
+                $data[] = array_merge(
+                    $baseRow,
+                    [
                     'attribute_type_code_name'                  => $code,
                     self::VALUE_COLUMS[$type->$code->type]      => $value,
-                ]
-            );
-            $entityObject->pushAttribute($code, $value);
-        }
-        $this->db
-            ->table('attributes')
-            ->insert($data);
+                    ]
+                );
+                $entityObject->pushAttribute($code, $value);
+            }
+            $this->db
+                ->table('attributes')
+                ->insert($data);
+        });
+        return $entityID;
     }
 
     /**
