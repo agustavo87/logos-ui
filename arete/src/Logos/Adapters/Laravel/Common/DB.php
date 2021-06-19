@@ -185,7 +185,6 @@ class DB
      */
     public function insertEntityAttributes(
         Attributable $entityObject,
-        string $entityGenus, // se puede obtener directamente de entity object
         array $attributes,
         $userID,
         $updated = null,
@@ -193,24 +192,22 @@ class DB
     ): int {
         $updated = $updated ?? now();
         $created = $created ?? now();
-        $entityTable = $entityGenus . 's';
         $entityID = 0;
         $this->db->transaction(function () use (
-            $entityTable,
             $updated,
             $created,
             $userID,
             $entityObject,
-            $entityGenus,
             $attributes,
             &$entityID
         ) {
+            $entityTable = $entityObject->genus() . 's';
             // insert entity entry
             $entityID = $this->db->table($entityTable)->insertGetId([
                 'updated_at' => $updated,
                 'created_at' => $created,
                 $this->logos->getUsersTableData()->FK => $userID,
-                $entityGenus . '_type_code_name' => $entityObject->typeCode()
+                $entityObject->genus() . '_type_code_name' => $entityObject->typeCode()
             ]);
             $entityObject->fill([
                 'id' => $entityID
@@ -220,7 +217,7 @@ class DB
             $data = [];
             $baseRow = [
                 'attributable_id'           => $entityID,
-                'attributable_type'         => $this->schema::TYPES[$entityGenus],
+                'attributable_type'         => $this->schema::TYPES[$entityObject->genus()],
                 'attribute_type_code_name'  => null,
                 'text_value'                => null,
                 'number_value'              => null,

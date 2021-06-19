@@ -33,7 +33,6 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
         $this->db->insertEntityAttributes(
             $creator,
-            'creator',
             $params['attributes'],
             1
         );

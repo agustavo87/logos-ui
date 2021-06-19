@@ -41,7 +41,6 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
         ]);
         $this->db->insertEntityAttributes(
             $source,
-            'source',
             $params['attributes'],
             1
         );
