@@ -8,7 +8,7 @@ abstract class FillableProperties
 {
     use FillsProperties;
 
-    protected $defaultAttributes = [];
+    protected $defaultProperties = [];
 
     public function __construct(?array $properties = [])
     {

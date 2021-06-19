@@ -16,10 +16,10 @@ trait FillsProperties
 
     public function mergeIfDefaults($properties)
     {
-        if ((!isset($this->defaultAttributes)) || !$this->defaultAttributes) {
+        if ((!isset($this->defaultProperties)) || !$this->defaultProperties) {
             return $properties;
         }
 
-        return array_merge($this->defaultAttributes, $properties);
+        return array_merge($this->defaultProperties, $properties);
     }
 }

@@ -25,7 +25,7 @@ class ZoteroSchema extends FillableProperties
 
     protected function fillDefaultsAttributes()
     {
-        $this->defaultAttributes = [
+        $this->defaultProperties = [
         'version' => 0,
         'itemTypes' => [new ItemType()],
         'meta' => [],

@@ -21,7 +21,7 @@ class ItemType extends FillableProperties implements \Stringable
 
     protected function fillDefaultsAttributes()
     {
-        $this->defaultAttributes = [
+        $this->defaultProperties = [
             'itemType' => '',
             'fields' => [],
             'creatorTypes' => []
