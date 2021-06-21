@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel;
 
-use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
+use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Domain\Abstracts\CreatorType;
 use Arete\Logos\Infrastructure\Laravel\Models\LvCreatorType;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;

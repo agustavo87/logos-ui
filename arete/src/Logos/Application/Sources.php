@@ -1,6 +1,6 @@
 <?php
 
-namespace Arete\Logos\Services;
+namespace Arete\Logos\Application;
 
 use App\Models\Source;
 

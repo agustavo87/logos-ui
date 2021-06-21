@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use Arete\Logos\Domain\Schema as LogosSchema;
 use Arete\Logos\Domain\Zotero\ZoteroSchema;
-use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 use Arete\Logos\Infrastructure\Laravel\Common\DB as LogosDB;
-use Arete\Logos\Interfaces\ValueTypeMapper;
-use Arete\Logos\Interfaces\MapsSourceTypeLabels;
+use Arete\Logos\Application\Interfaces\ValueTypeMapper;
+use Arete\Logos\Application\Interfaces\MapsSourceTypeLabels;
 use Illuminate\Database\Seeder;
 
 class SourceTypeSeeder extends Seeder

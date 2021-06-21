@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel;
 
-use Arete\Logos\Ports\Abstracts\ConfigurationRepository as ConfigurationRepositoryPort;
+use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository as ConfigurationRepositoryPort;
 use Illuminate\Config\Repository as LaravelConfigRepository;
 
 class LvConfigurationRepository extends ConfigurationRepositoryPort

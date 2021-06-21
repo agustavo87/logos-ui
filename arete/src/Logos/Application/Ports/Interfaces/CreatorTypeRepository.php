@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Ports\Interfaces;
+namespace Arete\Logos\Application\Ports\Interfaces;
 
 use Arete\Logos\Domain\Contracts\TypeRepository;
 use Arete\Logos\Domain\Abstracts\CreatorType;

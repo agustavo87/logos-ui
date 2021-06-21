@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Abstracts;
+namespace Arete\Logos\Application\Abstracts;
 
-use Arete\Logos\Interfaces\ValueTypeMapper as ValueTypeMapperInterface;
+use Arete\Logos\Application\Interfaces\ValueTypeMapper as ValueTypeMapperInterface;
 
 abstract class ValueTypeMapper implements ValueTypeMapperInterface
 {

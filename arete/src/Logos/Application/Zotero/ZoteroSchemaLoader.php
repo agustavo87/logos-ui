@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services\Zotero;
+namespace Arete\Logos\Application\Zotero;
 
-use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 use Arete\Logos\Domain\Zotero\ZoteroSchema;
 
 class ZoteroSchemaLoader implements ZoteroSchemaLoaderInterface
 {
     protected $loaders = [
-        'simple' => \Arete\Logos\Services\Zotero\SimpleSchemaLoader::class
+        'simple' => \Arete\Logos\Application\Zotero\SimpleSchemaLoader::class
     ];
 
     protected $default = 'simple';

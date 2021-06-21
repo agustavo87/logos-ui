@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\Zotero\ZoteroSchema;
-use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 use Arete\Logos\Infrastructure\Laravel\Common\DB as LogosDB;
-use Arete\Logos\Interfaces\ValueTypeMapper;
+use Arete\Logos\Application\Interfaces\ValueTypeMapper;
 
 class CreatorTypeSeeder extends Seeder
 {

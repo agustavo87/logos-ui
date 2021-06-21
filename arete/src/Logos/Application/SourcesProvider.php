@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Providers;
+namespace Arete\Logos\Application;
 
 use Arete\Common\Provider;
-use Arete\Logos\Services\ValueTypeMapper;
-use Arete\Logos\Services\SourceTypeLabelsMap;
-use Arete\Logos\Services\Zotero\ZoteroSchemaLoader;
-use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
-use Arete\Logos\Ports\Abstracts\ConfigurationRepository;
+use Arete\Logos\Application\ValueTypeMapper;
+use Arete\Logos\Application\SourceTypeLabelsMap;
+use Arete\Logos\Application\Zotero\ZoteroSchemaLoader;
+use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository;
 
 class SourcesProvider extends Provider
 {
     public function register()
     {
         $this->container::register(
-            \Arete\Logos\Abstracts\ValueTypeMapper::class,
+            \Arete\Logos\Application\Abstracts\ValueTypeMapper::class,
             function ($container) {
                 return new ValueTypeMapper(
                     $container::get(ConfigurationRepository::class)
@@ -25,7 +25,7 @@ class SourcesProvider extends Provider
         );
 
         $this->container::register(
-            \Arete\Logos\Abstracts\MapsSourceTypeLabels::class,
+            \Arete\Logos\Application\Abstracts\MapsSourceTypeLabels::class,
             function ($container) {
                 return new SourceTypeLabelsMap(
                     $container::get(ConfigurationRepository::class)

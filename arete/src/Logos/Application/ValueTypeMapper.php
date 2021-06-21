@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services;
+namespace Arete\Logos\Application;
 
-use Arete\Logos\Abstracts\ValueTypeMapper as BaseValueTypeMapper;
-use Arete\Logos\Services\LogosContainer as Logos;
-use Arete\Logos\Ports\Abstracts\ConfigurationRepository;
+use Arete\Logos\Application\Abstracts\ValueTypeMapper as BaseValueTypeMapper;
+use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository;
 
 /**
  * Maps the fields types of Zotero to Logos Value Types

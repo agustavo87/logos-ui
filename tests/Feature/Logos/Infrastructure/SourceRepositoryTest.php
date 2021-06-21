@@ -8,7 +8,7 @@ use Arete\Logos\Domain\ParticipationSet;
 use Arete\Logos\Domain\Abstracts\SourceType;
 use Arete\Logos\Domain\Source;
 use Tests\TestCase;
-use Arete\Logos\Ports\Interfaces\SourceRepository;
+use Arete\Logos\Application\Ports\Interfaces\SourceRepository;
 use Faker\Generator;
 
 class SourceRepositoryTest extends TestCase

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services\Zotero;
+namespace Arete\Logos\Application\Zotero;
 
 use Arete\Logos\Domain\Zotero\ZoteroSchema;
-use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 
 class SimpleSchemaLoader implements ZoteroSchemaLoaderInterface
 {

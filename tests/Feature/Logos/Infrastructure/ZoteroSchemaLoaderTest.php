@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Logos\Infrastructure;
 
 use Tests\TestCase;
-use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 use Arete\Logos\Domain\Zotero\ZoteroSchema;
 
 class ZoteroSchemaLoaderTest extends TestCase

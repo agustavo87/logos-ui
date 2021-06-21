@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel;
 
-use Arete\Logos\Ports\Interfaces\LogosEnviroment as LogosEnviromentPort;
-use Arete\Logos\Ports\Abstracts\ConfigurationRepository;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment as LogosEnviromentPort;
+use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository;
 use Illuminate\Support\Str;
 
 class LogosEnviroment implements LogosEnviromentPort

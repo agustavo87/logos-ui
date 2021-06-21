@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Arete\Logos\Domain;
 
 use Arete\Logos\Domain\Abstracts\Attributable;
-use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
+use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
 
 class Creator extends Attributable
 {

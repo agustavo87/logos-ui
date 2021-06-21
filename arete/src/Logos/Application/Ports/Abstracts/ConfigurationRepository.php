@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Ports\Abstracts;
+namespace Arete\Logos\Application\Ports\Abstracts;
 
 abstract class ConfigurationRepository
 {

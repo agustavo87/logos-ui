@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Services;
+namespace Arete\Logos\Application;
 
-use Arete\Logos\Abstracts\MapsSourceTypeLabels;
-use Arete\Logos\Services\LogosContainer as Logos;
-use Arete\Logos\Ports\Abstracts\ConfigurationRepository;
+use Arete\Logos\Application\Abstracts\MapsSourceTypeLabels;
+use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository;
 
 /**
  * Maps Source Types Codes to Labels.

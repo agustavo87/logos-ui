@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Interfaces;
+namespace Arete\Logos\Application\Interfaces;
 
 interface ValueTypeMapper
 {

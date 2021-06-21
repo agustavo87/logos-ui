@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\FixturableTestCase as TestCase;
-use Arete\Logos\Services\Sources;
+use Arete\Logos\Application\Sources;
 use App\Models\{
     Creator,
     Source,

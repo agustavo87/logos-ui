@@ -1,6 +1,6 @@
 <?php
 
-use Arete\Logos\Ports\Interfaces\LogosEnviroment;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

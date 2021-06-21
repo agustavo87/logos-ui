@@ -7,7 +7,7 @@ namespace Arete\Logos\Infrastructure\Laravel\Common;
 use Arete\Logos\Domain\Abstracts\Attributable;
 use Illuminate\Support\Facades\DB as LvDB;
 use Arete\Logos\Domain\Schema;
-use Arete\Logos\Ports\Interfaces\LogosEnviroment;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager;

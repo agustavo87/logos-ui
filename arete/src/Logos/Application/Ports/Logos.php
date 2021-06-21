@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Ports;
+namespace Arete\Logos\Application\Ports;
 
-use Arete\Logos\Services\LogosContainer;
+use Arete\Logos\Application\LogosContainer;
 
 /**
  * Logos facade

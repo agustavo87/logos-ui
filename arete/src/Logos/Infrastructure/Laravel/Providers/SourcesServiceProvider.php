@@ -4,7 +4,7 @@ namespace Arete\Logos\Infrastructure\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
-use Arete\Logos\Services\LogosContainer as Logos;
+use Arete\Logos\Application\LogosContainer as Logos;
 
 class SourcesServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -18,43 +18,43 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         $this->mergeConfigFrom(__DIR__  . '/../../../../../config/sources.php', 'sources');
 
         $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\SourceTypeRepository::class,
+            \Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository::class,
             \Arete\Logos\Infrastructure\Laravel\DBSourceTypeRepository::class
         );
 
         $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\CreatorTypeRepository::class,
+            \Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository::class,
             \Arete\Logos\Infrastructure\Laravel\DBCreatorTypeRepository::class
         );
 
         $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\LogosEnviroment::class,
+            \Arete\Logos\Application\Ports\Interfaces\LogosEnviroment::class,
             \Arete\Logos\Infrastructure\Laravel\LogosEnviroment::class
         );
 
         $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\SourceRepository::class,
+            \Arete\Logos\Application\Ports\Interfaces\SourceRepository::class,
             function ($app) {
                 return new \Arete\Logos\Infrastructure\Laravel\DBSourceRepository(
-                    $app->make(\Arete\Logos\Ports\Interfaces\SourceTypeRepository::class),
-                    $app->make(\Arete\Logos\Ports\Interfaces\CreatorTypeRepository::class),
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository::class),
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository::class),
                     $app->make(\Arete\Logos\Domain\Schema::class),
                     $app->make(\Arete\Logos\Infrastructure\Laravel\Common\DB::class)
                 );
             }
         );
         $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\CreatorsRepository::class,
+            \Arete\Logos\Application\Ports\Interfaces\CreatorsRepository::class,
             function ($app) {
                 return new \Arete\Logos\Infrastructure\Laravel\DBCreatorsRepository(
                     $app->make(\Arete\Logos\Infrastructure\Laravel\Common\DB::class),
-                    $app->make(\Arete\Logos\Ports\Interfaces\CreatorTypeRepository::class)
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository::class)
                 );
             }
         );
 
         $this->app->bind(
-            \Arete\Logos\Ports\Abstracts\ConfigurationRepository::class,
+            \Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository::class,
             \Arete\Logos\Infrastructure\Laravel\LvConfigurationRepository::class
         );
 
@@ -67,21 +67,21 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         );
 
         $this->app->bind(
-            \Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface::class,
+            \Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface::class,
             function ($app) {
                 return Logos::getOwn('zoteroSchema');
             }
         );
 
         $this->app->bind(
-            \Arete\Logos\Interfaces\ValueTypeMapper::class,
+            \Arete\Logos\Application\Interfaces\ValueTypeMapper::class,
             function ($app) {
                 return Logos::getOwn('valueTypes');
             }
         );
 
         $this->app->bind(
-            \Arete\Logos\Interfaces\MapsSourceTypeLabels::class,
+            \Arete\Logos\Application\Interfaces\MapsSourceTypeLabels::class,
             function ($app) {
                 return Logos::getOwn('sourceTypeLabels');
             }

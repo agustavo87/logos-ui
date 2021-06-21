@@ -7,7 +7,7 @@ namespace Tests\Feature\Logos\Infrastructure;
 use Arete\Logos\Domain\Creator;
 use Arete\Logos\Domain\Abstracts\CreatorType;
 use Tests\TestCase;
-use Arete\Logos\Ports\Interfaces\CreatorsRepository;
+use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 
 class CreatorsRepositoryTest extends TestCase
 {

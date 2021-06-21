@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Abstracts;
+namespace Arete\Logos\Application\Abstracts;
 
-use Arete\Logos\Interfaces\MapsSourceTypeLabels as MapsSourceTypeLabelsInterface;
+use Arete\Logos\Application\Interfaces\MapsSourceTypeLabels as MapsSourceTypeLabelsInterface;
 
 abstract class MapsSourceTypeLabels implements MapsSourceTypeLabelsInterface
 {
