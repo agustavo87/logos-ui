@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos\Infrastructure;
 
-use Arete\Logos\Models\Creator;
-use Arete\Logos\Models\CreatorType;
+use Arete\Logos\Domain\Creator;
+use Arete\Logos\Domain\Abstracts\CreatorType;
 use Tests\TestCase;
 use Arete\Logos\Ports\Interfaces\CreatorsRepository;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Ports\Interfaces;
 
-use Arete\Logos\Models\Creator;
+use Arete\Logos\Domain\Creator;
 use Arete\Common\Exceptions\IncorrectDataStructureException;
 use Arete\Common\Exceptions\PersistenceException;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models\Traits;
+namespace Arete\Logos\Domain\Traits;
 
 trait ExposeAttributes
 {

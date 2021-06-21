@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel\Common;
 
-use Arete\Logos\Models\Abstracts\Attributable;
+use Arete\Logos\Domain\Abstracts\Attributable;
 use Illuminate\Support\Facades\DB as LvDB;
-use Arete\Logos\Models\Schema;
+use Arete\Logos\Domain\Schema;
 use Arete\Logos\Ports\Interfaces\LogosEnviroment;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Connection;

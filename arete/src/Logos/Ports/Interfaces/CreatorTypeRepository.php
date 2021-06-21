@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Ports\Interfaces;
 
-use Arete\Logos\Interfaces\TypeRepository;
-use Arete\Logos\Models\CreatorType;
+use Arete\Logos\Domain\Contracts\TypeRepository;
+use Arete\Logos\Domain\Abstracts\CreatorType;
 
 interface CreatorTypeRepository extends TypeRepository
 {

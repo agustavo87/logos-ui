@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos\Infrastructure;
 
-use Arete\Logos\Models\ParticipationSet;
-use Arete\Logos\Models\SourceInterface;
-use Arete\Logos\Models\SourceType;
-use Arete\Logos\Models\Source;
+use Arete\Logos\Domain\ParticipationSet;
+use Arete\Logos\Domain\Abstracts\SourceType;
+use Arete\Logos\Domain\Source;
 use Tests\TestCase;
 use Arete\Logos\Ports\Interfaces\SourceRepository;
 use Faker\Generator;
-use Illuminate\Support\Facades\Log;
 
 class SourceRepositoryTest extends TestCase
 {
@@ -72,7 +70,7 @@ class SourceRepositoryTest extends TestCase
 
     public function checkSourceDataStructure(Source $source, array $expectedAttributes = []): void
     {
-        $this->assertInstanceOf(SourceInterface::class, $source);
+        $this->assertInstanceOf(Source::class, $source);
         $this->assertIsInt($source->id());
         $type = $source->type();
         $this->assertInstanceOf(SourceType::class, $type);

@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Domain;
 
-use Arete\Logos\Models\Traits\ExposeAttributes;
-use Arete\Logos\Models\SourceInterface;
+use Arete\Logos\Domain\Traits\ExposeAttributes;
+use Arete\Logos\Domain\Contracts\Source;
+use Arete\Logos\Domain\Contracts\Participation;
 
 class ParticipationSet
 {
     use ExposeAttributes;
 
-    protected SourceInterface $source;
+    protected Source $source;
 
-    public function __construct(SourceInterface $source)
+    public function __construct(Source $source)
     {
         $this->source = $source;
     }
 
-    public function push(string $role, ParticipationInterface $participation)
+    public function push(string $role, Participation $participation)
     {
         if (!array_key_exists($role, $this->attributes)) {
             $this->attributes[$role] = [];
@@ -34,7 +35,7 @@ class ParticipationSet
         return $this->attributes();
     }
 
-    public function source(): SourceInterface
+    public function source(): Source
     {
         return $this->source;
     }

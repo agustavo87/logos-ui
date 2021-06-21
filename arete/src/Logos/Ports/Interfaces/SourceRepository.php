@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Ports\Interfaces;
 
-use Arete\Logos\Models\Source;
+use Arete\Logos\Domain\Source;
 
 interface SourceRepository
 {

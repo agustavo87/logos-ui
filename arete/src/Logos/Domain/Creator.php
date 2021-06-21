@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Domain;
 
-use Arete\Logos\Models\Abstracts\Attributable;
+use Arete\Logos\Domain\Abstracts\Attributable;
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
 
 class Creator extends Attributable

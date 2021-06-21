@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Arete\Logos\Infrastructure\Laravel;
 
 use Arete\Logos\Ports\Interfaces\SourceTypeRepository;
-use Arete\Logos\Models\SourceType;
+use Arete\Logos\Domain\Abstracts\SourceType;
 use Arete\Logos\Infrastructure\Laravel\Models\LvSourceType;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 

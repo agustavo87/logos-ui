@@ -41,10 +41,10 @@ class SourcesProvider extends Provider
         );
 
         $this->container::register(
-            \Arete\Logos\Models\Schema::class,
+            \Arete\Logos\Domain\Schema::class,
             function ($container) {
                 // in the fuutre could need some inyection of external data source.
-                return new \Arete\Logos\Models\Schema();
+                return new \Arete\Logos\Domain\Schema();
             }
         );
     }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Logos\Infrastructure;
 
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
-use Arete\Logos\Models\CreatorType;
-use Arete\Logos\Models\Attribute;
+use Arete\Logos\Domain\Abstracts\CreatorType;
+use Arete\Logos\Domain\Attribute;
 use Tests\TestCase;
 
 class CreatorTypeRepositoryTest extends TestCase

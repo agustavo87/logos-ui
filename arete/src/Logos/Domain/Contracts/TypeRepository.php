@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Interfaces;
+namespace Arete\Logos\Domain\Contracts;
 
-use Arete\Logos\Models\Abstracts\Type;
+use Arete\Logos\Domain\Abstracts\Type;
 
 interface TypeRepository
 {

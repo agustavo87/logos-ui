@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Domain;
 
-use Arete\Logos\Models\Traits\ExposeAttributes;
+use Arete\Logos\Domain\Traits\ExposeAttributes;
+use Arete\Logos\Domain\Contracts\Participation;
+use Arete\Logos\Domain\Abstracts\CreatorType;
 
-class SimpleParticipation implements ParticipationInterface
+class SimpleParticipation implements Participation
 {
     use ExposeAttributes;
 

@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
-
-use Arete\Logos\Models\Abstracts\Type;
+namespace Arete\Logos\Domain\Abstracts;
 
 abstract class SourceType extends Type
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Ports\Interfaces;
 
-use Arete\Logos\Interfaces\TypeRepository;
-use Arete\Logos\Models\SourceType;
+use Arete\Logos\Domain\Contracts\TypeRepository;
+use Arete\Logos\Domain\Abstracts\SourceType;
 
 interface SourceTypeRepository extends TypeRepository
 {

@@ -3,10 +3,10 @@
 namespace Tests\Feature\Logos\Infrastructure;
 
 use Tests\TestCase;
-use Arete\Logos\Models\RoleCollection;
-use Arete\Logos\Models\Role;
-use Arete\Logos\Models\SourceType;
-use Arete\Logos\Models\Attribute;
+use Arete\Logos\Domain\Abstracts\RoleCollection;
+use Arete\Logos\Domain\Role;
+use Arete\Logos\Domain\Abstracts\SourceType;
+use Arete\Logos\Domain\Attribute;
 use Arete\Logos\Ports\Interfaces\SourceTypeRepository;
 
 class SourceTypeRepositoryTest extends TestCase

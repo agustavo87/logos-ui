@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Domain\Abstracts;
 
-use Arete\Logos\Models\Traits\ExposeAttributes;
+use Arete\Logos\Domain\Traits\ExposeAttributes;
+use Arete\Logos\Domain\Abstracts\SourceType;
 
 abstract class RoleCollection
 {

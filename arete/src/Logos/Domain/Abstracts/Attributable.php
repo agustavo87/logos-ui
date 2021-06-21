@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models\Abstracts;
+namespace Arete\Logos\Domain\Abstracts;
 
-use Arete\Logos\Models\Traits\ExposeAttributes;
+use Arete\Logos\Domain\Traits\ExposeAttributes;
 use Arete\Common\Interfaces\Arrayable;
 use Arete\Common\FillsProperties;
-use Arete\Logos\Interfaces\TypeRepository;
-use Arete\Logos\Models\Abstracts\Type;
+use Arete\Logos\Domain\Contracts\TypeRepository;
+use Arete\Logos\Domain\Abstracts\Type;
 
-class Attributable implements Arrayable
+abstract class Attributable implements Arrayable
 {
     use ExposeAttributes;
     use FillsProperties;

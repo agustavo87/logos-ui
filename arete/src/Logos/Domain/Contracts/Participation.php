@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models;
+namespace Arete\Logos\Domain\Contracts;
 
-interface ParticipationInterface
+use Arete\Logos\Domain\Abstracts\CreatorType;
+use Arete\Logos\Domain\Role;
+
+interface Participation
 {
     public function creatorId(): int;
     public function creatorType(): CreatorType;

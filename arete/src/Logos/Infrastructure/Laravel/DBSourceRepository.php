@@ -9,9 +9,9 @@ use Arete\Logos\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
-use Arete\Logos\Models\Source;
-use Arete\Logos\Models\Schema;
-use Arete\Logos\Models\ParticipationSet;
+use Arete\Logos\Domain\Source;
+use Arete\Logos\Domain\Schema;
+use Arete\Logos\Domain\ParticipationSet;
 
 class DBSourceRepository extends DBRepository implements SourceRepositoryPort
 {

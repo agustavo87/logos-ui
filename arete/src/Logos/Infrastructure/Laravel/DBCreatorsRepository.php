@@ -8,7 +8,7 @@ use Arete\Logos\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
-use Arete\Logos\Models\Creator;
+use Arete\Logos\Domain\Creator;
 
 class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 {

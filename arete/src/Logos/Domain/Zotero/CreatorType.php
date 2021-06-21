@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Models\Zotero;
+namespace Arete\Logos\Domain\Zotero;
 
 use Arete\Common\FillableProperties;
 
