@@ -172,11 +172,8 @@ class DB
         return $id;
     }
 
-
-
     /**
      * @param mixed $entityObject the attributable object
-     * @param string $entityGenus the attributable type ('source' | 'creator')
      * @param array $attributes code => value
      * @param mixed $userID
      * @param null $updated
@@ -209,6 +206,7 @@ class DB
                 'id' => $entityID
             ]);
 
+            /** @todo extract this in a method */
             // insert entity attributes
             $data = [];
             $baseRow = [
