@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Adapters\Laravel;
+namespace Arete\Logos\Infrastructure\Laravel;
 
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Models\CreatorType;
-use Arete\Logos\Adapters\Laravel\Models\LvCreatorType;
-use Arete\Logos\Adapters\Laravel\Common\DBRepository;
+use Arete\Logos\Infrastructure\Laravel\Models\LvCreatorType;
+use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 
 /**
  * Laravel dependent Data Base based Creator Type Repository

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Adapters\Laravel\Common;
+namespace Arete\Logos\Infrastructure\Laravel\Common;
 
 use Arete\Logos\Models\Abstracts\Attributable;
 use Illuminate\Support\Facades\DB as LvDB;

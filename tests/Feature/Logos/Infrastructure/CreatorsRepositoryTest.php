@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Logos\Adapters;
+namespace Tests\Feature\Logos\Infrastructure;
 
 use Arete\Logos\Models\Creator;
 use Arete\Logos\Models\CreatorType;

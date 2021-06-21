@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Adapters\Laravel;
+namespace Arete\Logos\Infrastructure\Laravel;
 
 use Arete\Logos\Ports\Interfaces\CreatorsRepository;
-use Arete\Logos\Adapters\Laravel\Common\DBRepository;
+use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 use Arete\Logos\Ports\Interfaces\CreatorTypeRepository;
-use Arete\Logos\Adapters\Laravel\Common\DB;
+use Arete\Logos\Infrastructure\Laravel\Common\DB;
 use Arete\Logos\Models\Creator;
 
 class DBCreatorsRepository extends DBRepository implements CreatorsRepository

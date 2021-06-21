@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Arete\Logos\Models\Schema as LogosSchema;
 use Arete\Logos\Models\Zotero\ZoteroSchema;
 use Arete\Logos\Ports\Interfaces\ZoteroSchemaLoaderInterface;
-use Arete\Logos\Adapters\Laravel\Common\DB as LogosDB;
+use Arete\Logos\Infrastructure\Laravel\Common\DB as LogosDB;
 use Arete\Logos\Interfaces\ValueTypeMapper;
 use Arete\Logos\Interfaces\MapsSourceTypeLabels;
 use Illuminate\Database\Seeder;

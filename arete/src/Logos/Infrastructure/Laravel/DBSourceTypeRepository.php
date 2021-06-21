@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Adapters\Laravel;
+namespace Arete\Logos\Infrastructure\Laravel;
 
 use Arete\Logos\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Models\SourceType;
-use Arete\Logos\Adapters\Laravel\Models\LvSourceType;
-use Arete\Logos\Adapters\Laravel\Common\DBRepository;
+use Arete\Logos\Infrastructure\Laravel\Models\LvSourceType;
+use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 
 /**
  * Laravel dependent Data Base based Source Type Repository

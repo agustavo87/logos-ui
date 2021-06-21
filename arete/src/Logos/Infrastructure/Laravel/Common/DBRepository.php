@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Adapters\Laravel\Common;
+namespace Arete\Logos\Infrastructure\Laravel\Common;
 
-use Arete\Logos\Adapters\Laravel\Common\DB;
+use Arete\Logos\Infrastructure\Laravel\Common\DB;
 
 /**
  * Laravel dependent Data Base based Repository

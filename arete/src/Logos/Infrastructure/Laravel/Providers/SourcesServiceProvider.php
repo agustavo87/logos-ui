@@ -1,6 +1,6 @@
 <?php
 
-namespace Arete\Logos\Adapters\Laravel\Providers;
+namespace Arete\Logos\Infrastructure\Laravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -19,35 +19,35 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
 
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\SourceTypeRepository::class,
-            \Arete\Logos\Adapters\Laravel\DBSourceTypeRepository::class
+            \Arete\Logos\Infrastructure\Laravel\DBSourceTypeRepository::class
         );
 
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\CreatorTypeRepository::class,
-            \Arete\Logos\Adapters\Laravel\DBCreatorTypeRepository::class
+            \Arete\Logos\Infrastructure\Laravel\DBCreatorTypeRepository::class
         );
 
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\LogosEnviroment::class,
-            \Arete\Logos\Adapters\Laravel\LogosEnviroment::class
+            \Arete\Logos\Infrastructure\Laravel\LogosEnviroment::class
         );
 
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\SourceRepository::class,
             function ($app) {
-                return new \Arete\Logos\Adapters\Laravel\DBSourceRepository(
+                return new \Arete\Logos\Infrastructure\Laravel\DBSourceRepository(
                     $app->make(\Arete\Logos\Ports\Interfaces\SourceTypeRepository::class),
                     $app->make(\Arete\Logos\Ports\Interfaces\CreatorTypeRepository::class),
                     $app->make(\Arete\Logos\Models\Schema::class),
-                    $app->make(\Arete\Logos\Adapters\Laravel\Common\DB::class)
+                    $app->make(\Arete\Logos\Infrastructure\Laravel\Common\DB::class)
                 );
             }
         );
         $this->app->bind(
             \Arete\Logos\Ports\Interfaces\CreatorsRepository::class,
             function ($app) {
-                return new \Arete\Logos\Adapters\Laravel\DBCreatorsRepository(
-                    $app->make(\Arete\Logos\Adapters\Laravel\Common\DB::class),
+                return new \Arete\Logos\Infrastructure\Laravel\DBCreatorsRepository(
+                    $app->make(\Arete\Logos\Infrastructure\Laravel\Common\DB::class),
                     $app->make(\Arete\Logos\Ports\Interfaces\CreatorTypeRepository::class)
                 );
             }
@@ -55,7 +55,7 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
 
         $this->app->bind(
             \Arete\Logos\Ports\Abstracts\ConfigurationRepository::class,
-            \Arete\Logos\Adapters\Laravel\LvConfigurationRepository::class
+            \Arete\Logos\Infrastructure\Laravel\LvConfigurationRepository::class
         );
 
         // Binding of application services used by laravel adapters

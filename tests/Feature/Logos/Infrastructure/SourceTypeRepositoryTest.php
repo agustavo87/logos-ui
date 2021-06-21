@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Logos\Adapters;
+namespace Tests\Feature\Logos\Infrastructure;
 
 use Tests\TestCase;
 use Arete\Logos\Models\RoleCollection;
