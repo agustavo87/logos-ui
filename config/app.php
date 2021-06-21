@@ -179,7 +179,7 @@ return [
          * Own Service Providers
          */
         Arete\Sofrosine\Providers\LocaleServiceProvider::class,
-        Arete\Logos\Infrastructure\Laravel\Providers\SourcesServiceProvider::class,
+        Arete\Logos\Infrastructure\Laravel\SourcesServiceProvider::class,
     ],
 
     /*

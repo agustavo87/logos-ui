@@ -1,6 +1,6 @@
 <?php
 
-namespace Arete\Logos\Infrastructure\Laravel\Providers;
+namespace Arete\Logos\Infrastructure\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
