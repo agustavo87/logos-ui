@@ -6,6 +6,11 @@ namespace Arete\Logos\Domain\Abstracts;
 
 use Arete\Logos\Domain\Traits\ExposeAttributes;
 
+/**
+ * For entity types
+ *
+ * count(): N attributes
+ */
 abstract class Type implements \Countable
 {
     use ExposeAttributes;

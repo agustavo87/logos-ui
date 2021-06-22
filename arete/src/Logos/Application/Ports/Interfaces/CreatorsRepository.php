@@ -41,10 +41,11 @@ interface CreatorsRepository
     /**
      * Give the creators who matches the specified criteria
      *
-     * @param int   $user       the owner of the creators.
-     * @param array $criteria   a property => value array of criteria to look up.
+     * @param int       $user           the owner of the creators.
+     * @param string    $attributeCode
+     * @param string    $attributeValue
      *
      * @return array
      */
-    public function getLike(int $user, array $criteria): array;
+    public function getLike(int $user, string $attributeCode, string $attributeValue): array;
 }

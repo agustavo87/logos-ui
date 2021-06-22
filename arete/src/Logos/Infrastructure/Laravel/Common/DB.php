@@ -8,14 +8,14 @@ namespace Arete\Logos\Infrastructure\Laravel\Common;
 
 use Arete\Logos\Domain\Abstracts\Attributable;
 use Arete\Logos\Domain\Abstracts\Type;
-use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Domain\Schema;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB as LvDB;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
+use Arete\Exceptions\PersistenceException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Connection;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB as LvDB;
 use Illuminate\Support\Facades\Log;
-use Arete\Exceptions\PersistenceException;
 
 /**
  * Laravel depedent DB Access operations
@@ -267,7 +267,7 @@ class DB
     {
         $valueColumns = $this::VALUE_COLUMS;
         $attributableType = $this->schema::TYPES[$attributableType];
-        $entityTable = $attributableType . 's';
+        $entityTable = $this->getEntityTable($attributableType);
         return LvDB::table($entityTable)
             ->join(
                 'attributes',
@@ -411,5 +411,35 @@ class DB
     public function getCreator($id)
     {
         return LvDB::table('creators')->find($id);
+    }
+
+    public function getEntityTable(string $attributableType)
+    {
+        return $attributableType . 's';
+    }
+
+    public function findEntitiesWith(string $attributableType, string $attributeCode, string $attributeValue): array
+    {
+        $valueType = $this->db->table('attribute_types')
+            ->where('code_name', $attributeCode)
+            ->select('value_type')
+            ->first()
+            ->value_type;
+
+        $entityTable = $this->getEntityTable($attributableType);
+        $IDs = $this->db->table($entityTable)
+            ->join(
+                'attributes',
+                $entityTable . '.id',
+                '=',
+                'attributes.attributable_id'
+            )
+            ->where('attributable_type', $attributableType)
+            ->where('attribute_type_code_name', $attributeCode)
+            ->where($this::VALUE_COLUMS[$valueType], 'LIKE', '%' . $attributeValue . '%')
+            ->select($entityTable . '.id')
+            ->get();
+
+            return $IDs->map(fn ($entry) => $entry->id)->toArray();
     }
 }

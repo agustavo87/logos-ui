@@ -77,7 +77,7 @@ class CreatorsRepositoryTest extends TestCase
     public function testGetLikeCreator(): Creator
     {
         $creators = $this->app->make(CreatorsRepository::class);
-        $creator = $creators->getLike(1, ['name', 'dro']);
+        $creator = $creators->getLike(1, 'name', 'dro')[0];
         $this->assertEquals("Pedro Raúl", $creator->name);
         $this->assertEquals("Alfonso", $creator->lastName);
         return $creator;

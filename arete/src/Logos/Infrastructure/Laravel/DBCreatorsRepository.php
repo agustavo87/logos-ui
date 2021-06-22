@@ -13,6 +13,7 @@ use Arete\Logos\Domain\Creator;
 class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 {
     protected CreatorTypeRepository $creatorTypes;
+    protected int $maxFetchSize = 30;
 
     public function __construct(
         DB $db,
@@ -69,8 +70,17 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
         );
     }
 
-    public function getLike(int $user, array $criteria): array
+    public function getLike(int $user, $attributeCode, $attributeValue, $page = null): array
     {
-        return [];
+        $entitiesIDs = $this->db->findEntitiesWith('creator', $attributeCode, $attributeValue);
+
+        $result = [];
+        $take = count($entitiesIDs) > $this->maxFetchSize ? $this->maxFetchSize : count($entitiesIDs);
+        for ($i = 0; $i < $take - 1; $i++) {
+            $creator = $this->get($entitiesIDs[$i]);
+            $result[] = $creator;
+        }
+
+        return $result;
     }
 }
