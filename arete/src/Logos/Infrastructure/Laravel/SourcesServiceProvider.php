@@ -15,7 +15,7 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__  . '/../../../../../config/sources.php', 'sources');
+        $this->mergeConfigFrom(__DIR__  . '/../../../../config/sources.php', 'sources');
 
         $this->app->bind(
             \Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository::class,
