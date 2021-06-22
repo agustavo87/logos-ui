@@ -8,10 +8,10 @@ use Arete\Logos\Domain\ParticipationSet;
 use Arete\Logos\Domain\Abstracts\SourceType;
 use Arete\Logos\Domain\Source;
 use Tests\TestCase;
-use Arete\Logos\Application\Ports\Interfaces\SourceRepository;
+use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Faker\Generator;
 
-class SourceRepositoryTest extends TestCase
+class SourcesRepositoryTest extends TestCase
 {
     protected Generator $faker;
 
@@ -21,10 +21,10 @@ class SourceRepositoryTest extends TestCase
         $this->faker = \Faker\Factory::create('es_AR');
     }
 
-    public function testSourceRepositoryIsBinded()
+    public function testSourcesRepositoryIsBinded()
     {
-        $sources = $this->app->make(SourceRepository::class);
-        $this->assertInstanceOf(SourceRepository::class, $sources);
+        $sources = $this->app->make(SourcesRepository::class);
+        $this->assertInstanceOf(SourcesRepository::class, $sources);
     }
 
     /**
@@ -34,7 +34,7 @@ class SourceRepositoryTest extends TestCase
     */
     public function testCreatesSourceWithoutCreator(): Source
     {
-        $sources = $this->app->make(SourceRepository::class);
+        $sources = $this->app->make(SourcesRepository::class);
         $name = $this->faker->name();
         $sourceData = [
         'type' => 'journalArticle',
@@ -62,10 +62,50 @@ class SourceRepositoryTest extends TestCase
      */
     public function testGetSource(Source $storedSource): Source
     {
-        $sources = $this->app->make(SourceRepository::class);
+        $sources = $this->app->make(SourcesRepository::class);
         $fetchedSource = $sources->get($storedSource->id());
         $this->checkSourceDataStructure($fetchedSource, $storedSource->toArray());
         return $storedSource;
+    }
+
+    /**
+     * @param Source $storedSource
+     *
+     * @depends testGetSource
+     * @return Source
+     */
+    public function testSaveSource(Source $storedSource): Source
+    {
+        $sources = $this->app->make(SourcesRepository::class);
+        $storedSource->abstractNote = "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta";
+        $storedSource->volume = 32;
+        $sources->save($storedSource);
+
+        // fetch
+        $fetchedSource = $sources->get($storedSource->id());
+        $this->assertEquals(
+            "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta",
+            $fetchedSource->abstractNote
+        );
+        $this->assertEquals(32, $fetchedSource->volume);
+
+        return $fetchedSource;
+    }
+
+    /**
+     * @depends testSaveSource
+     * @return Source
+     */
+    public function testGetLikeSource(Source $storedSource): Source
+    {
+        $sources = $this->app->make(SourcesRepository::class);
+        $source = $sources->getLike(1, 'abstractNote', 'abuela')[0];
+        $this->assertEquals(
+            "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta",
+            $source->abstractNote
+        );
+        $this->assertEquals(32, $source->volume);
+        return $source;
     }
 
     public function checkSourceDataStructure(Source $source, array $expectedAttributes = []): void

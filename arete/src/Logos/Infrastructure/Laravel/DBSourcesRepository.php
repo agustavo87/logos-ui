@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel;
 
-use Arete\Logos\Application\Ports\Interfaces\SourceRepository as SourceRepositoryPort;
+use Arete\Logos\Application\Ports\Interfaces\SourcesRepository as SourcesRepositoryPort;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
@@ -13,11 +13,12 @@ use Arete\Logos\Domain\Source;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\ParticipationSet;
 
-class DBSourceRepository extends DBRepository implements SourceRepositoryPort
+class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
 {
     protected SourceTypeRepository $sourceTypes;
     protected CreatorTypeRepository $creatorTypes;
     protected Schema $schema;
+    protected int $maxFetchSize = 30;
 
     public function __construct(
         SourceTypeRepository $sourceTypes,
@@ -47,7 +48,7 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
         return $source;
     }
 
-    public function get(int $id)
+    public function get(int $id): Source
     {
         $attributes = $this->db->getEntityAttributes($id);
         $sourceEntry = $attributes->first();
@@ -70,5 +71,28 @@ class DBSourceRepository extends DBRepository implements SourceRepositoryPort
             );
         }
         return $source;
+    }
+
+    public function save(Source $source): bool
+    {
+        return (bool) $this->db->insertAttributes(
+            $source->id(),
+            $source->type(),
+            $source->getDirtyAttributes()
+        );
+    }
+
+    public function getLike(int $user, $attributeCode, $attributeValue, $page = null): array
+    {
+        $entitiesIDs = $this->db->findEntitiesWith('source', $attributeCode, $attributeValue);
+
+        $result = [];
+        $take = count($entitiesIDs) > $this->maxFetchSize ? $this->maxFetchSize : count($entitiesIDs);
+        for ($i = 0; $i <= $take - 1; $i++) {
+            $creator = $this->get($entitiesIDs[$i]);
+            $result[] = $creator;
+        }
+
+        return $result;
     }
 }
