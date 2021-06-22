@@ -74,7 +74,11 @@ class CreatorsRepositoryTest extends TestCase
         return $fetchedCreator;
     }
 
-    public function testGetLikeCreator(): Creator
+    /**
+     * @depends testGetCreator
+     * @return Creator
+     */
+    public function testGetLikeCreator(Creator $storedCreator): Creator
     {
         $creators = $this->app->make(CreatorsRepository::class);
         $creator = $creators->getLike(1, 'name', 'dro')[0];

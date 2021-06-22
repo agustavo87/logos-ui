@@ -176,7 +176,14 @@ class DB
         return $id;
     }
 
-    public function insertAttributes($attributableID, Type $entityType, array $attributes): bool
+    /**
+     * @param mixed $attributableID
+     * @param Type $entityType
+     * @param array $attributes [code => value, ...]
+     *
+     * @return int
+     */
+    public function insertAttributes($attributableID, Type $entityType, array $attributes): int
     {
         $entityGenus = $entityType->genus();
         $data = [];
@@ -201,7 +208,11 @@ class DB
             }
             return $this->db
                 ->table('attributes')
-                ->insert($data);
+                ->upsert(
+                    $data,
+                    ['attributable_id', 'attributable_type', 'attribute_type_code_name'],
+                    ['text_value', 'number_value', 'date_value', 'complex_value']
+                );
     }
 
     /**

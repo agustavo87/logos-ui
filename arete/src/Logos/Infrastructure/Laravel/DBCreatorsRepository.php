@@ -63,7 +63,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function save(Creator $creator): bool
     {
-        return $this->db->insertAttributes(
+        return (bool) $this->db->insertAttributes(
             $creator->id(),
             $creator->type(),
             $creator->getDirtyAttributes()
@@ -76,7 +76,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
         $result = [];
         $take = count($entitiesIDs) > $this->maxFetchSize ? $this->maxFetchSize : count($entitiesIDs);
-        for ($i = 0; $i < $take - 1; $i++) {
+        for ($i = 0; $i <= $take - 1; $i++) {
             $creator = $this->get($entitiesIDs[$i]);
             $result[] = $creator;
         }
