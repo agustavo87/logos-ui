@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Arete\Logos\Infrastructure\Laravel\Common;
 
 use Arete\Logos\Domain\Abstracts\Attributable;
-use Illuminate\Support\Facades\DB as LvDB;
-use Arete\Logos\Domain\Schema;
+use Arete\Logos\Domain\Abstracts\Type;
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
+use Arete\Logos\Domain\Schema;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\DB as LvDB; /** @todo reemplazar accesos por facade */
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Log;
+use Arete\Exceptions\PersistenceException;
 
 /**
  * Laravel depedent DB Access operations
@@ -172,6 +174,34 @@ class DB
         return $id;
     }
 
+    public function insertAttributes($attributableID, Type $entityType, array $attributes): bool
+    {
+        $entityGenus = $entityType->genus();
+        $data = [];
+            $baseRow = [
+                'attributable_id'           => $attributableID,
+                'attributable_type'         => $this->schema::TYPES[$entityGenus],
+                'attribute_type_code_name'  => null,
+                'text_value'                => null,
+                'number_value'              => null,
+                'date_value'                => null,
+                'complex_value'             => null
+            ];
+            foreach ($attributes as $code => $value) {
+                $data[] = array_merge(
+                    $baseRow,
+                    [
+                    'attribute_type_code_name'                      => $code,
+                    self::VALUE_COLUMS[$entityType->$code->type]    => $value,
+                    ]
+                );
+                // $entityObject->pushAttribute($code, $value);
+            }
+            return $this->db
+                ->table('attributes')
+                ->insert($data);
+    }
+
     /**
      * @param mixed $entityObject the attributable object
      * @param array $attributes code => value
@@ -179,6 +209,7 @@ class DB
      * @param null $updated
      * @param null $created
      *
+     * @throws \Arete\Exceptions\PersistenceException
      * @return int|null id of the new entity or null if error.
      */
     public function insertEntityAttributes(
@@ -195,6 +226,7 @@ class DB
 
         try {
             $this->db->beginTransaction();
+
             // insert entity entry
             $entityID = $this->db->table($entityTable)->insertGetId([
                 'updated_at' => $updated,
@@ -206,38 +238,20 @@ class DB
                 'id' => $entityID
             ]);
 
-            /** @todo extract this in a method */
             // insert entity attributes
-            $data = [];
-            $baseRow = [
-                'attributable_id'           => $entityID,
-                'attributable_type'         => $this->schema::TYPES[$entityObject->genus()],
-                'attribute_type_code_name'  => null,
-                'text_value'                => null,
-                'number_value'              => null,
-                'date_value'                => null,
-                'complex_value'             => null
-            ];
-            foreach ($attributes as $code => $value) {
-                $data[] = array_merge(
-                    $baseRow,
-                    [
-                    'attribute_type_code_name'                  => $code,
-                    self::VALUE_COLUMS[$type->$code->type]      => $value,
-                    ]
-                );
-                $entityObject->pushAttribute($code, $value);
-            }
-            $this->db
-                ->table('attributes')
-                ->insert($data);
+            $this->insertAttributes($entityID, $type, $attributes);
 
             $this->db->commit();
+
+            // if everything is ok
+            foreach ($attributes as $code => $value) {
+                $entityObject->pushAttribute($code, $value);
+            }
             return $entityID;
         } catch (\Throwable $th) {
             $this->db->rollBack();
             Log::error('Error in inserting entity attributes', ['throwable' => $th]);
-            throw $th;
+            throw new PersistenceException('Error in inserting entity attributes', 0, $th);
         }
         return null;
     }
