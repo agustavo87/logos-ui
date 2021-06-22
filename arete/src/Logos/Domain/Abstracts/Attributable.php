@@ -21,12 +21,25 @@ abstract class Attributable implements Arrayable
     protected TypeRepository $types;
     protected ?string $genus = null;
 
+    protected array $dirtyAttributes = [];
+
     public function __construct(
         TypeRepository $types,
         array $properties = []
     ) {
         $this->types = $types;
         $this->fill($properties);
+    }
+
+    public function __set($name, $value)
+    {
+        $this->dirtyAttributes[$name] = $value;
+        return $this->attributes[$name] = $value;
+    }
+
+    public function getDirtyAttributes()
+    {
+        return $this->dirtyAttributes;
     }
 
     public function id(): int

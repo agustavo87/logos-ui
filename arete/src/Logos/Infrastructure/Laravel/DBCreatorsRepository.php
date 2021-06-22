@@ -62,7 +62,11 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function save(Creator $creator): bool
     {
-        return true;
+        return $this->db->insertAttributes(
+            $creator->id(),
+            $creator->type(),
+            $creator->getDirtyAttributes()
+        );
     }
 
     public function getLike(int $user, array $criteria): array

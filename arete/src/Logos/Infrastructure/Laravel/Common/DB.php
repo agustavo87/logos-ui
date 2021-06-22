@@ -1,5 +1,7 @@
 <?php
 
+/** @todo reemplazar accesos por LvDB facade */
+
 declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel\Common;
@@ -9,7 +11,7 @@ use Arete\Logos\Domain\Abstracts\Type;
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Domain\Schema;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB as LvDB; /** @todo reemplazar accesos por facade */
+use Illuminate\Support\Facades\DB as LvDB;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Log;

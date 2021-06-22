@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos\Infrastructure;
 
+use Tests\TestCase;
 use Arete\Logos\Domain\Creator;
 use Arete\Logos\Domain\Abstracts\CreatorType;
-use Tests\TestCase;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 
 class CreatorsRepositoryTest extends TestCase
@@ -54,5 +54,32 @@ class CreatorsRepositoryTest extends TestCase
         $fetchedCreator = $creators->get($storedCreator->id());
         $this->checkCreatoreDataStructure($fetchedCreator, $storedCreator->toArray());
         return $storedCreator;
+    }
+
+    /**
+     * @param Creator $storedCreator
+     *
+     * @depends testGetCreator
+     * @return Creator
+     */
+    public function testSaveCreator(Creator $storedCreator): Creator
+    {
+        $creators = $this->app->make(CreatorsRepository::class);
+        $storedCreator->name = "Pedro Raúl";
+        $storedCreator->lastName = "Alfonso";
+        $creators->save($storedCreator);
+        $fetchedCreator = $creators->get($storedCreator->id());
+        $this->assertEquals("Pedro Raúl", $fetchedCreator->name);
+        $this->assertEquals("Alfonso", $fetchedCreator->lastName);
+        return $fetchedCreator;
+    }
+
+    public function testGetLikeCreator(): Creator
+    {
+        $creators = $this->app->make(CreatorsRepository::class);
+        $creator = $creators->getLike(1, ['name', 'dro']);
+        $this->assertEquals("Pedro Raúl", $creator->name);
+        $this->assertEquals("Alfonso", $creator->lastName);
+        return $creator;
     }
 }
