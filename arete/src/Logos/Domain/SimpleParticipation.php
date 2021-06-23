@@ -13,7 +13,6 @@ class SimpleParticipation implements Participation
 {
     use ExposeAttributes;
 
-    // protected int $creatorId;
     protected int $relevance;
     protected ?Creator $creator = null;
     protected Role $role;
@@ -36,6 +35,11 @@ class SimpleParticipation implements Participation
     public function creatorId(): int
     {
         return $this->creator->id();
+    }
+
+    public function creator(): Creator
+    {
+        return $this->creator;
     }
 
     public function creatorType(): CreatorType

@@ -72,6 +72,11 @@ class ParticipationSet
         return $this->source;
     }
 
+    /**
+     * @param string $role
+     *
+     * @return Participation[]
+     */
     public function byRelevance(string $role): array
     {
         $participations = $this->$role;

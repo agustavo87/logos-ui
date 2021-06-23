@@ -137,7 +137,8 @@ class SourcesRepositoryTest extends TestCase
             'type' => 'book',
             'attributes' => [
                 'title' => "Las mil y unas novias de {$name}.",
-                'abstractNote' => "Cuenta la historia de como {$name} paso de no tener a nadie a estar rodeado de mujeres.",
+                'abstractNote' =>   "Cuenta la historia de como {$name} paso de no tener a nadie a"
+                                    . " estar rodeado de mujeres.",
                 'date' => now(),
                 'edition' => '2nd',
                 'place' => 'Buenos Aires',
@@ -180,5 +181,71 @@ class SourcesRepositoryTest extends TestCase
         $this->assertEquals('Zamudio', $firstAuthor->lastName);
 
         return $source;
+    }
+
+    /**
+     * @param Source $creator
+     *
+     * @depends testCreatesSourceWithCreator
+     * @return Source
+     */
+    public function testCreateSourceWithCreatedCreator(Source $previousSource): Source
+    {
+        $previousAuthor = $previousSource
+                    ->participations()
+                    ->byRelevance('author')[0]
+                    ->creator();
+
+        /** @var SourcesRepository */
+        $sources = $this->app->make(SourcesRepository::class);
+        $newSource = $sources->createFromArray([
+            'type' => 'journalArticle',
+            'attributes' => [
+                'title' => 'Examen de los pormenores de las dificultades gástricas de los lisiados en guerra.',
+                'abstractNote' =>   'Se examina los pormenores de las dificultades gastroinstetianles de ' .
+                                    'los soldados caidos en guerra pero que no llegaron a morir. Solo se torpezaron.',
+                'date' => now(),
+                'publicationTitle' => 'Studies in the gastrointestinal diseases',
+                'volume' => 5,
+                'issue' => 2,
+                'pages' => '223-244'
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 1,
+                    'creator' => [
+                        'creatorID' => $previousAuthor->id()
+                    ]
+                ], [
+                    'role' => 'author',
+                    'relevance' => 2,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Magdalena Tamara",
+                            'lastName' => "Guiñazú"
+                        ]
+                    ]
+                ], [
+                    'role' => 'reviewedAuthor',
+                    'relevance' => 4,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Roberto Miguel",
+                            'lastName' => "García"
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $reviewedAuthors = $newSource->participations()->reviewedAuthor;
+        $firstReviewedAuthorID = array_key_first($reviewedAuthors);
+        $this->assertEquals('Roberto Miguel', $reviewedAuthors[$firstReviewedAuthorID]->name);
+        $this->assertEquals('Pedro Eustaquio', $newSource->participations()->byRelevance('author')[0]->name);
+
+        return $newSource;
     }
 }
