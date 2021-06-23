@@ -31,8 +31,6 @@ class CreateParticipationsTable extends Migration
                   ->references('code_name')
                   ->on('roles')
                   ->onDelete('cascade');
-
-            $table->timestamps();
         });
     }
 

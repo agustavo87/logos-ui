@@ -7,6 +7,7 @@ namespace Arete\Logos\Domain;
 use Arete\Logos\Domain\Abstracts\Attributable;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Domain\Contracts\Source as SourceContract;
+use Arete\Logos\Domain\Abstracts\SourceType;
 
 class Source extends Attributable implements SourceContract
 {
@@ -23,5 +24,10 @@ class Source extends Attributable implements SourceContract
     public function participations(): ParticipationSet
     {
         return $this->participations;
+    }
+
+    public function type(): SourceType
+    {
+        return $this->type ?? ($this->type = $this->types->get($this->typeCode));
     }
 }

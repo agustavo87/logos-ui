@@ -20,6 +20,7 @@ abstract class Attributable implements Arrayable
     protected ?Type $type = null;
     protected TypeRepository $types;
     protected ?string $genus = null;
+    protected ?string $ownerID = null;
 
     protected array $dirtyAttributes = [];
 
@@ -60,5 +61,10 @@ abstract class Attributable implements Arrayable
     public function genus(): ?string
     {
         return $this->genus;
+    }
+
+    public function ownerID(): ?string
+    {
+        return $this->ownerID;
     }
 }

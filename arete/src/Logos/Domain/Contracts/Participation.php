@@ -6,6 +6,7 @@ namespace Arete\Logos\Domain\Contracts;
 
 use Arete\Logos\Domain\Abstracts\CreatorType;
 use Arete\Logos\Domain\Role;
+use Arete\Logos\Domain\Source;
 
 interface Participation
 {
@@ -13,4 +14,5 @@ interface Participation
     public function creatorType(): CreatorType;
     public function role(): Role;
     public function relevance(): int;
+    public function source(): Source;
 }

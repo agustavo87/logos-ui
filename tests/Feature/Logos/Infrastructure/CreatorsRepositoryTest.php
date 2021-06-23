@@ -19,7 +19,7 @@ class CreatorsRepositoryTest extends TestCase
                 'name'      => "Gustavo Raúl",
                 'lastName'  => "Ayala"
             ]
-            ];
+        ];
         $creators = $this->app->make(CreatorsRepository::class);
         $creator = $creators->createFromArray($expectedProperties);
 

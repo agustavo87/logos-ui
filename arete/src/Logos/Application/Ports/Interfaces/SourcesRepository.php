@@ -25,4 +25,5 @@ interface SourcesRepository
      */
     public function getLike(int $user, string $attributeCode, string $attributeValue): array;
 
+    public static function setOwner(string $id);
 }

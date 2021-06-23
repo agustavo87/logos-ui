@@ -123,4 +123,62 @@ class SourcesRepositoryTest extends TestCase
             $this->assertEquals($value, $attribute);
         }
     }
+
+    /**
+    * Test de creation of a new source
+    *
+    * @return Source
+    */
+    public function testCreatesSourceWithCreator(): Source
+    {
+        $sources = $this->app->make(SourcesRepository::class);
+        $name = $this->faker->name();
+        $sourceData = [
+            'type' => 'book',
+            'attributes' => [
+                'title' => "Las mil y unas novias de {$name}.",
+                'abstractNote' => "Cuenta la historia de como {$name} paso de no tener a nadie a estar rodeado de mujeres.",
+                'date' => now(),
+                'edition' => '2nd',
+                'place' => 'Buenos Aires',
+                'publisher' => 'Agora',
+                'volume' => $this->faker->numberBetween(1, 50),
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 1,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Pedro Eustaquio",
+                            'lastName' => "Zamudio"
+                        ]
+                    ]
+                ], [
+                    'role' => 'author',
+                    'relevance' => 2,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Marisol Lucrecia",
+                            'lastName' => "Bermudez"
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $source = $sources->createFromArray($sourceData);
+        $this->checkSourceDataStructure($source, $sourceData['attributes']);
+
+        $participations = $source->participations();
+        $this->assertEquals('author', $participations->roles()[0]);
+        $this->assertSame($participations->source(), $source);
+        $authors = $participations->byRelevance('author');
+        $firstAuthor = $authors[0];
+        $this->assertEquals('Pedro Eustaquio', $firstAuthor->name);
+        $this->assertEquals('Zamudio', $firstAuthor->lastName);
+
+        return $source;
+    }
 }

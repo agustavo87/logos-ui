@@ -11,6 +11,9 @@ use Arete\Logos\Domain\Abstracts\Type;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Exceptions\PersistenceException;
+use Arete\Logos\Domain\Creator;
+use Arete\Logos\Domain\Role;
+use Arete\Logos\Domain\Source;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Collection;
@@ -241,10 +244,11 @@ class DB
             $this->db->beginTransaction();
 
             // insert entity entry
+            $ownerColumn = $this->logos->getUsersTableData()->FK;
             $entityID = $this->db->table($entityTable)->insertGetId([
                 'updated_at' => $updated,
                 'created_at' => $created,
-                $this->logos->getUsersTableData()->FK => $userID,
+                $ownerColumn => $userID,
                 $entityObject->genus() . '_type_code_name' => $entityObject->typeCode()
             ]);
             $entityObject->fill([
@@ -452,5 +456,20 @@ class DB
             ->get();
 
             return $IDs->map(fn ($entry) => $entry->id)->toArray();
+    }
+
+    public function insertParticipation(
+        Source $source,
+        Creator $creator,
+        Role $role,
+        int $relevance
+    ): bool {
+        return $this->db->table('participations')
+            ->insert([
+                'source_id' => $source->id(),
+                'creator_id' => $creator->id(),
+                'role_code_name' => $role->code,
+                'relevance' => $relevance
+            ]);
     }
 }
