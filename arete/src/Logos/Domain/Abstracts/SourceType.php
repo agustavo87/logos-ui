@@ -9,7 +9,7 @@ abstract class SourceType extends Type
     protected ?string $genus = 'source';
     protected RoleCollection $roles;
 
-    public function participations(): RoleCollection
+    public function roles(): RoleCollection
     {
         return $this->roles;
     }

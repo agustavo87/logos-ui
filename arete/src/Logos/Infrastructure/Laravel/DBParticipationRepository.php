@@ -15,7 +15,7 @@ class DBParticipationRepository extends DBRepository implements ParticipationRep
 {
     public function create(Source $source, Creator $creator, string $role, int $relevance): Participation
     {
-        $roleObj = $source->type()->participations()->$role;
+        $roleObj = $source->type()->roles()->$role;
 
         $this->db->insertParticipation(
             $source,
