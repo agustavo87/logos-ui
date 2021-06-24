@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'usersTable'    => 'users',
-    'usersPK'       => 'id',
+    'ownersTable'    => 'users',
+    'ownersPK'       => 'id',
     'defaultOwner'  => 1,
     'valueTypes'    => [
         'text'      => 'text',

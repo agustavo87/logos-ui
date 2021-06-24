@@ -18,16 +18,16 @@ class LogosEnviroment implements LogosEnviromentPort
         $this->config = $config;
         $this->defaultOwner = $config->get('defaultOwner');
     }
-    public function getUsersTableData(): \stdClass
+    public function getOwnersTableData(): \stdClass
     {
-        $usersTable = $this->config->get('usersTable') ?? 'users';
-        $SingularTableName = Str::singular($usersTable);
-        $usersPK = $this->config->get('usersPK') ??  'id';
-        $usersFK = "{$SingularTableName}_{$usersPK}";
+        $ownersTable = $this->config->get('ownersTable') ?? 'users';
+        $SingularTableName = Str::singular($ownersTable);
+        $ownersPK = $this->config->get('ownersPK') ??  'id';
+        $ownersFK = "{$SingularTableName}_{$ownersPK}";
         return (object) [
-            'table' => $usersTable,
-            'PK'   => $usersPK,
-            'FK' => $usersFK
+            'table' => $ownersTable,
+            'PK'   => $ownersPK,
+            'FK' => $ownersFK
         ];
     }
 

@@ -6,7 +6,7 @@ namespace Arete\Logos\Application\Ports\Interfaces;
 
 interface LogosEnviroment
 {
-    public function getUsersTableData(): \stdClass;
+    public function getOwnersTableData(): \stdClass;
 
     /**
      * Sets the default owner of the ownerables entitiles

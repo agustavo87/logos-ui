@@ -23,7 +23,7 @@ class CreateSourcesTable extends Migration
     {
         Schema::create('sources', function (Blueprint $table) {
 
-            $users = $this->logos->getUsersTableData();
+            $users = $this->logos->getOwnersTableData();
 
             $table->id();
             $table->timestamps();

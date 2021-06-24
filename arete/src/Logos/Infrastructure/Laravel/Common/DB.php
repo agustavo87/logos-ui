@@ -244,7 +244,7 @@ class DB
             $this->db->beginTransaction();
 
             // insert entity entry
-            $ownerColumn = $this->logos->getUsersTableData()->FK;
+            $ownerColumn = $this->logos->getOwnersTableData()->FK;
             $entityID = $this->db->table($entityTable)->insertGetId([
                 'updated_at' => $updated,
                 'created_at' => $created,
@@ -386,7 +386,7 @@ class DB
         return LvDB::table('sources')->insertGetId([
             'updated_at' => $updated,
             'created_at' => $created,
-            $this->logos->getUsersTableData()->FK => $userId,
+            $this->logos->getOwnersTableData()->FK => $userId,
             'source_type_code_name' => $type
         ]);
     }
@@ -418,7 +418,7 @@ class DB
         return LvDB::table('creators')->insertGetId([
             'updated_at' => $updated,
             'created_at' => $created,
-            $this->logos->getUsersTableData()->FK => $userId,
+            $this->logos->getOwnersTableData()->FK => $userId,
             'creator_type_code_name' => $type
         ]);
     }
