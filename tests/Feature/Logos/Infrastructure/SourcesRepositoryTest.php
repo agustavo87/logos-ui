@@ -39,16 +39,15 @@ class SourcesRepositoryTest extends TestCase
         $sources = $this->app->make(SourcesRepository::class);
         $name = $this->faker->name();
         $sourceData = [
-        'type' => 'journalArticle',
-        'attributes' => [
-            'title' => "El despertar de {$name} a la atención plena.",
-            'abstractNote' => "La historia de como {$name} despertó a la atención plena",
-            'date' => now(),
-            'accessDate' => now(),
-            'volume' => $this->faker->numberBetween(1, 50),
-            'issue' => $this->faker->numberBetween(1, 4)
-        ]
-        // faltaría el usuario al que estaría asociada la fuente
+            'type' => 'journalArticle',
+            'attributes' => [
+                'title' => "El despertar de {$name} a la atención plena.",
+                'abstractNote' => "La historia de como {$name} despertó a la atención plena",
+                'date' => now(),
+                'accessDate' => now(),
+                'volume' => $this->faker->numberBetween(1, 50),
+                'issue' => $this->faker->numberBetween(1, 4)
+            ]
         ];
         $source = $sources->createFromArray($sourceData);
         $this->checkSourceDataStructure($source, $sourceData['attributes']);
@@ -59,6 +58,7 @@ class SourcesRepositoryTest extends TestCase
      * Test if get a source correctly
      *
      * @param Source $source
+     *
      * @depends testCreatesSourceWithoutCreator
      * @return Source
      */
