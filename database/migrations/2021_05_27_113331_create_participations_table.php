@@ -16,7 +16,7 @@ class CreateParticipationsTable extends Migration
         Schema::create('participations', function (Blueprint $table) {
             $table->unsignedBigInteger('source_id');
             $table->unsignedBigInteger('creator_id');
-            $table->primary(['creator_id', 'source_id']);
+            $table->primary(['creator_id', 'source_id', 'role_code_name']);
             $table->foreign('source_id')
                   ->references('id')
                   ->on('sources')

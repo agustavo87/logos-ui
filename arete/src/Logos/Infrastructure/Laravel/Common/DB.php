@@ -472,4 +472,15 @@ class DB
                 'relevance' => $relevance
             ]);
     }
+
+    public function removeParticipation(Source $source, $roleCode, $creatorID): int
+    {
+        return $this->db->table('participations')
+                ->where([
+                    ['source_id', '=', $source->id()],
+                    ['creator_id', '=', $creatorID],
+                    ['role_code_name', '=', $roleCode]
+                ])
+                ->delete();
+    }
 }

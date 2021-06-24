@@ -33,4 +33,9 @@ class DBParticipationRepository extends DBRepository implements ParticipationRep
 
         return $participation;
     }
+
+    public function remove(Source $source, string $roleCode, $creatorID): bool
+    {
+        return (bool) $this->db->removeParticipation($source, $roleCode, $creatorID);
+    }
 }

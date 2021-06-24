@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Arete\Logos\Domain;
 
 use Arete\Exceptions\IncorrectDataStructureException;
+use Arete\Exceptions\PersistenceException;
 use Arete\Logos\Domain\Traits\ExposeAttributes;
 use Arete\Logos\Domain\Contracts\Participation;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
@@ -92,5 +93,28 @@ class ParticipationSet
             }
         });
         return $participations;
+    }
+
+    public function remove(string $roleCode, $creatorID): bool
+    {
+        //
+        if (!isset($this->$roleCode[$creatorID])) {
+            throw new \OutOfBoundsException(
+                "There is no participation with role: $roleCode and creator id: $creatorID ."
+            );
+        }
+
+        $removed = $this->participations->remove(
+            $this->source,
+            $roleCode,
+            $creatorID
+        );
+
+        if (!$removed) {
+            throw new PersistenceException("Could not remove creator: $creatorID with role: $roleCode");
+        }
+
+        unset($this->attributes[$roleCode][$creatorID]);
+        return true;
     }
 }

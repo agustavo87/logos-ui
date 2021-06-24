@@ -34,6 +34,7 @@ class SourcesRepositoryTest extends TestCase
     */
     public function testCreatesSourceWithoutCreator(): Source
     {
+        /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
         $name = $this->faker->name();
         $sourceData = [
@@ -62,6 +63,7 @@ class SourcesRepositoryTest extends TestCase
      */
     public function testGetSource(Source $storedSource): Source
     {
+        /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
         $fetchedSource = $sources->get($storedSource->id());
         $this->checkSourceDataStructure($fetchedSource, $storedSource->toArray());
@@ -76,6 +78,7 @@ class SourcesRepositoryTest extends TestCase
      */
     public function testSaveSource(Source $storedSource): Source
     {
+        /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
         $storedSource->abstractNote = "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta";
         $storedSource->volume = 32;
@@ -98,6 +101,7 @@ class SourcesRepositoryTest extends TestCase
      */
     public function testGetLikeSource(Source $storedSource): Source
     {
+        /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
         $source = $sources->getLike(1, 'abstractNote', 'abuela')[0];
         $this->assertEquals(
@@ -131,6 +135,7 @@ class SourcesRepositoryTest extends TestCase
     */
     public function testCreatesSourceWithCreator(): Source
     {
+        /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
         $name = $this->faker->name();
         $sourceData = [
@@ -173,6 +178,7 @@ class SourcesRepositoryTest extends TestCase
         $this->checkSourceDataStructure($source, $sourceData['attributes']);
 
         $participations = $source->participations();
+        // is the only role, if itsn't there's no guarantee of the roles order.
         $this->assertEquals('author', $participations->roles()[0]);
         $this->assertSame($participations->source(), $source);
         $authors = $participations->byRelevance('author');
@@ -247,5 +253,23 @@ class SourcesRepositoryTest extends TestCase
         $this->assertEquals('Pedro Eustaquio', $newSource->participations()->byRelevance('author')[0]->name);
 
         return $newSource;
+    }
+
+    /**
+     * @param Source $previousSource
+     *
+     * @depends testCreateSourceWithCreatedCreator
+     * @return Source
+     */
+    public function testRemoveParticipation(Source $previousSource): Source
+    {
+        $firstAuthor = $previousSource->participations()->byRelevance('author')[0]->creator();
+        $previousSource->participations()->remove('author', $firstAuthor->id());
+        $this->assertEquals(
+            "Magdalena Tamara",
+            $previousSource->participations()->byRelevance('author')[0]->name
+        );
+
+        return $previousSource;
     }
 }
