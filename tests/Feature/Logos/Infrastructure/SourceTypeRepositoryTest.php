@@ -16,6 +16,7 @@ class SourceTypeRepositoryTest extends TestCase
      */
     public function test_get_zotero_basic_journal_article_type(): SourceType
     {
+        /** @var SourceTypeRepository */
         $types = $this->app->make(SourceTypeRepository::class);
         $type = $types->get('journalArticle');
         $this->assertInstanceOf(SourceType::class, $type);
@@ -68,6 +69,7 @@ class SourceTypeRepositoryTest extends TestCase
      */
     public function test_journal_article_attribute_has_expected_structure(SourceType $type): SourceType
     {
+        /**  @var Attribute */
         $titleAttribute = $type->title;
         $this->assertEquals('title', $titleAttribute->code);
         $this->assertEquals('text', $titleAttribute->type);
@@ -89,6 +91,7 @@ class SourceTypeRepositoryTest extends TestCase
      */
     public function test_journal_article_role_has_expected_structure(SourceType $type): SourceType
     {
+        /** @var Role */
         $authorRole = $type->participations()->author;
 
         $this->assertEquals('author', $authorRole->code);

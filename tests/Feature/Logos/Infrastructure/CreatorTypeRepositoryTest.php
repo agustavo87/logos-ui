@@ -12,8 +12,9 @@ use Tests\TestCase;
 class CreatorTypeRepositoryTest extends TestCase
 {
 
-    public function testGetPersonCreatorType()
+    public function testGetPersonCreatorType(): CreatorType
     {
+        /** @var CreatorTypeRepository */
         $types = $this->app->make(CreatorTypeRepository::class);
         $person = $types->get('person');
         $this->assertInstanceOf(CreatorType::class, $person);
@@ -28,7 +29,7 @@ class CreatorTypeRepositoryTest extends TestCase
      *
      * @return CreatorType
      */
-    public function testHaveExpectedPropertyMethods($person)
+    public function testHaveExpectedPropertyMethods(CreatorType $person): CreatorType
     {
         $this->assertEquals('person', $person->code());
         $this->assertEquals('person', (string) $person);
@@ -45,7 +46,7 @@ class CreatorTypeRepositoryTest extends TestCase
      *
      * @return CreatorType
      */
-    public function testPersonHaveExpectedAttributes($person)
+    public function testPersonHaveExpectedAttributes(CreatorType $person): CreatorType
     {
         $expectedAttributes = ['name', 'lastName'];
         foreach ($expectedAttributes as $attribute) {
@@ -62,7 +63,7 @@ class CreatorTypeRepositoryTest extends TestCase
      *
      * @return CreatorType
      */
-    public function testPersonAttributesHaveExpectedStructure($person)
+    public function testPersonAttributesHaveExpectedStructure(CreatorType $person): CreatorType
     {
         $name = $person->name;
 

@@ -4,7 +4,6 @@ use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 
 class CreateSourcesTable extends Migration
 {
