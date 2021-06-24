@@ -9,6 +9,7 @@ use Arete\Logos\Domain\Abstracts\SourceType;
 use Arete\Logos\Domain\Source;
 use Tests\TestCase;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
+use Arete\Logos\Domain\Contracts\Participation;
 use Faker\Generator;
 
 class SourcesRepositoryTest extends TestCase
@@ -183,6 +184,7 @@ class SourcesRepositoryTest extends TestCase
         $this->assertSame($participations->source(), $source);
         $authors = $participations->byRelevance('author');
         $firstAuthor = $authors[0];
+        $this->assertInstanceOf(Participation::class, $firstAuthor);
         $this->assertEquals('Pedro Eustaquio', $firstAuthor->name);
         $this->assertEquals('Zamudio', $firstAuthor->lastName);
 
