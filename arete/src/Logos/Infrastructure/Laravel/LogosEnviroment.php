@@ -11,10 +11,12 @@ use Illuminate\Support\Str;
 class LogosEnviroment implements LogosEnviromentPort
 {
     protected ConfigurationRepository $config;
+    protected $defaultOwner;
 
     public function __construct(ConfigurationRepository $config)
     {
         $this->config = $config;
+        $this->defaultOwner = $config->get('defaultOwner');
     }
     public function getUsersTableData(): \stdClass
     {
@@ -27,5 +29,15 @@ class LogosEnviroment implements LogosEnviromentPort
             'PK'   => $usersPK,
             'FK' => $usersFK
         ];
+    }
+
+    public function setOwner(string $id)
+    {
+        $this->defaultOwner = $id;
+    }
+
+    public function getOwner()
+    {
+        return $this->defaultOwner;
     }
 }

@@ -13,6 +13,7 @@ use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository as SourcesRepositoryPort;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Application\Ports\Interfaces\ParticipationRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
@@ -27,7 +28,6 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
     protected CreatorTypeRepository $creatorTypes;
     protected ParticipationRepository $participations;
     protected Schema $schema;
-    protected static string $defaultOwner = '1';
     protected int $maxFetchSize = 30;
 
     public function __construct(
@@ -36,9 +36,10 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         CreatorTypeRepository $creatorTypes,
         ParticipationRepository $participations,
         Schema $schema,
-        DB $db
+        DB $db,
+        LogosEnviroment $logos
     ) {
-        parent::__construct($db);
+        parent::__construct($db, $logos);
         $this->creators = $creators;
         $this->sourceTypes = $sourceTypes;
         $this->creatorTypes = $creatorTypes;
@@ -48,7 +49,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
 
     public function createFromArray(array $params, ?string $ownerID = null): Source
     {
-        $ownerID = $ownerID ?? self::$defaultOwner;
+        $ownerID = $ownerID ?? $this->logos->getOwner();
 
         // first, let's create the source and insert it's attributes
         $source = new Source($this->sourceTypes);
@@ -129,10 +130,5 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         }
 
         return $result;
-    }
-
-    public static function setOwner(string $id)
-    {
-        self::$defaultOwner = $id;
     }
 }

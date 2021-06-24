@@ -3,6 +3,7 @@
 return [
     'usersTable'    => 'users',
     'usersPK'       => 'id',
+    'defaultOwner'  => 1,
     'valueTypes'    => [
         'text'      => 'text',
         'number'    => 'number',

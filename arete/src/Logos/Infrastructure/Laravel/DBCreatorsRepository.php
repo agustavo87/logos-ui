@@ -7,6 +7,7 @@ namespace Arete\Logos\Infrastructure\Laravel;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
 use Arete\Logos\Domain\Creator;
 
@@ -17,9 +18,10 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function __construct(
         DB $db,
+        LogosEnviroment $logos,
         CreatorTypeRepository $creatorTypes
     ) {
-        parent::__construct($db);
+        parent::__construct($db, $logos);
         $this->creatorTypes = $creatorTypes;
     }
 
