@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @todo a todos los metodos agregar la opción de especificar el usuario
- * o utilizar el usuario por defecto.
- */
-
 declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel;
@@ -29,6 +24,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
     protected ParticipationRepository $participations;
     protected Schema $schema;
     protected int $maxFetchSize = 30;
+    protected array $cache = [];
 
     public function __construct(
         CreatorsRepository $creators,
@@ -84,6 +80,23 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
 
     public function get(int $id): Source
     {
+        if (array_key_exists($id, $this->cache)) {
+            return $this->cache[$id];
+        }
+        return $this->getNew($id);
+    }
+
+    /**
+     * Fetch new source from persistence even if it's already feteched
+     *
+     * This can create parallel version of same entity and have unpredicted results.
+     *
+     * @param int $id
+     *
+     * @return Source
+     */
+    public function getNew(int $id): Source
+    {
         // lets create the source with it's attributes
         $attributes = $this->db->getEntityAttributes($id);
         $sourceEntry = $attributes->first();
@@ -94,6 +107,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
                 'typeCode' => $sourceEntry->source_type_code_name
             ]
         );
+        // hidrate the model attributes
         foreach ($attributes as $code => $data) {
             $source->pushAttribute(
                 $code,
@@ -104,13 +118,15 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         // lets add participations in it's creation.
         $participations = new ParticipationSet($source, $this->creators, $this->participations);
         $source->fill([
-            'participations' => $participations
+            'participations' => $participations->load()
         ]);
-        return $source;
+        return $this->cache[$id] = $source;
     }
 
     public function save(Source $source): bool
     {
+        $source->participations()->save();
+
         return (bool) $this->db->insertAttributes(
             $source->id(),
             $source->type(),

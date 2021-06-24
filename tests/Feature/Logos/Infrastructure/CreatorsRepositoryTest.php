@@ -64,11 +64,12 @@ class CreatorsRepositoryTest extends TestCase
      */
     public function testSaveCreator(Creator $storedCreator): Creator
     {
+        /** @var CreatorsRepository */
         $creators = $this->app->make(CreatorsRepository::class);
         $storedCreator->name = "Pedro Raúl";
         $storedCreator->lastName = "Alfonso";
         $creators->save($storedCreator);
-        $fetchedCreator = $creators->get($storedCreator->id());
+        $fetchedCreator = $creators->getNew($storedCreator->id());
         $this->assertEquals("Pedro Raúl", $fetchedCreator->name);
         $this->assertEquals("Alfonso", $fetchedCreator->lastName);
         return $fetchedCreator;

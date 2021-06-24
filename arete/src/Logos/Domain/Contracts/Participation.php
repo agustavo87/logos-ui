@@ -15,6 +15,7 @@ interface Participation
     public function creatorType(): CreatorType;
     public function role(): Role;
     public function relevance(): int;
+    public function setRelevance(int $relevance): self;
     public function source(): Source;
     public function creator(): Creator;
 }

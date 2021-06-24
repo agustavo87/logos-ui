@@ -48,4 +48,15 @@ interface CreatorsRepository
      * @return array
      */
     public function getLike(int $user, string $attributeCode, string $attributeValue): array;
+
+    /**
+     * returns a new object even if theres already an instance of it
+     *
+     * the parallel versions can create unexpected results.
+     *
+     * @param int $id
+     *
+     * @return Creator|null
+     */
+    public function getNew(int $id): ?Creator;
 }

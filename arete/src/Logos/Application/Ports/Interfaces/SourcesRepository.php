@@ -12,6 +12,17 @@ interface SourcesRepository
 
     public function get(int $id): Source;
 
+    /**
+     * Fetch new source from persistence even if it's already feteched
+     *
+     * This can create parallel version of same entity and have unpredicted results.
+     *
+     * @param int $id
+     *
+     * @return Source
+     */
+    public function getNew(int $id): Source;
+
     public function save(Source $source): bool;
 
     /**

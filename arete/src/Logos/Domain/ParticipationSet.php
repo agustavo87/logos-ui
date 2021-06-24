@@ -30,6 +30,42 @@ class ParticipationSet
         $this->participations = $participations;
     }
 
+    /**
+     * Loads persisted participations
+     *
+     * @return self
+     */
+    public function load(): self
+    {
+        $participations = $this->participations->load($this->source);
+        foreach ($participations as $participation) {
+            $this->push($participation->role()->code, $participation);
+        }
+        return $this;
+    }
+    public function save(): self
+    {
+        $dirtyCreators = [];
+        $toBeSavedParticipations = [];
+        foreach ($this->attributes as $roleCode => $participations) {
+            foreach ($participations as $creatorID => $participation) {
+                $creator = $participation->creator();
+                if ($creator->isDirty()) {
+                    // if there is more than one instance of same creator modified is undertimend wich is saved.
+                    $dirtyCreators[$creator->id()] = $creator;
+                }
+                $toBeSavedParticipations[] = $participation;
+            }
+        }
+        foreach ($dirtyCreators as $creator) {
+            $this->creators->save($creator);
+        }
+        if (count($toBeSavedParticipations)) {
+            $this->participations->save($toBeSavedParticipations);
+        }
+        return $this;
+    }
+
     public function push(string $role, Participation $participation)
     {
         if (!array_key_exists($role, $this->attributes)) {

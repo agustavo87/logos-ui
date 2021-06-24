@@ -463,14 +463,42 @@ class DB
         Creator $creator,
         Role $role,
         int $relevance
-    ): bool {
+    ): int {
         return $this->db->table('participations')
-            ->insert([
-                'source_id' => $source->id(),
-                'creator_id' => $creator->id(),
-                'role_code_name' => $role->code,
-                'relevance' => $relevance
-            ]);
+            ->upsert(
+                [
+                    'source_id' => $source->id(),
+                    'creator_id' => $creator->id(),
+                    'role_code_name' => $role->code,
+                    'relevance' => $relevance
+                ],
+                ['source_id', 'creator_id', 'role_code_name'],
+                ['relevance']
+            );
+    }
+
+    /**
+     * @param Participation[] $participationsData
+     *
+     * @return int
+     */
+    public function saveParticipations($participationsData): int
+    {
+        $preparedData = [];
+        foreach ($participationsData as $participation) {
+            $preparedData[] = [
+                'source_id' => $participation->source()->id(),
+                'creator_id' => $participation->creatorId(),
+                'role_code_name' => $participation->role()->code,
+                'relevance' => $participation->relevance()
+            ];
+        }
+        return $this->db->table('participations')
+            ->upsert(
+                $preparedData,
+                ['source_id', 'creator_id', 'role_code_name'],
+                ['relevance']
+            );
     }
 
     public function removeParticipation(Source $source, $roleCode, $creatorID): int
@@ -482,5 +510,17 @@ class DB
                     ['role_code_name', '=', $roleCode]
                 ])
                 ->delete();
+    }
+
+    /**
+     * @param Source $source
+     *
+     * @return Collection
+     */
+    public function getParticipations(Source $source): Collection
+    {
+        return $this->db->table('participations')
+            ->where(['source_id' => $source->id()])
+            ->get();
     }
 }

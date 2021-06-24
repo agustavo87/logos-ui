@@ -27,9 +27,19 @@ class SimpleParticipation implements Participation
         $this->source = $source;
         $this->role = $role;
         $this->creator = $creator;
-        $this->attributes = $creator->toArray();
+        // $this->attributes = $creator->toArray();
         $this->role = $role;
         $this->relevance = $relevance;
+    }
+
+    public function __get($name)
+    {
+        return $this->creator->$name;
+    }
+
+    public function __set($name, $value)
+    {
+        return $this->creator->$name = $value;
     }
 
     public function creatorId(): int
@@ -60,5 +70,11 @@ class SimpleParticipation implements Participation
     public function source(): Source
     {
         return $this->source;
+    }
+
+    public function setRelevance(int $relevance): Participation
+    {
+        $this->relevance = $relevance;
+        return $this;
     }
 }

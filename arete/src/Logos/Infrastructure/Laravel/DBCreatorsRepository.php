@@ -15,6 +15,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 {
     protected CreatorTypeRepository $creatorTypes;
     protected int $maxFetchSize = 30;
+    protected array $cache = [];
 
     public function __construct(
         DB $db,
@@ -45,6 +46,24 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function get(int $id): ?Creator
     {
+        // use the cache to not return different objects
+        if (array_key_exists($id, $this->cache)) {
+            return $this->cache[$id];
+        }
+        return $this->getNew($id);
+    }
+
+    /**
+     * returns a new object even if theres already an instance of it
+     *
+     * the parallel versions can create unexpected results.
+     *
+     * @param int $id
+     *
+     * @return Creator|null
+     */
+    public function getNew(int $id): ?Creator
+    {
         $attributes = $this->db->getEntityAttributes($id, 'creator');
         $creatorEntry = $attributes->first();
         $creator = new Creator(
@@ -60,7 +79,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
                 $data->value
             );
         }
-        return $creator;
+        return $this->cache[$id] = $creator;
     }
 
     public function save(Creator $creator): bool

@@ -43,6 +43,11 @@ abstract class Attributable implements Arrayable
         return $this->dirtyAttributes;
     }
 
+    public function isDirty(): bool
+    {
+        return (bool) count($this->dirtyAttributes);
+    }
+
     public function id(): int
     {
         return $this->id;

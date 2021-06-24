@@ -85,8 +85,8 @@ class SourcesRepositoryTest extends TestCase
         $storedSource->volume = 32;
         $sources->save($storedSource);
 
-        // fetch
-        $fetchedSource = $sources->get($storedSource->id());
+        // fetch new so test if changed in persistence
+        $fetchedSource = $sources->getNew($storedSource->id());
         $this->assertEquals(
             "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta",
             $fetchedSource->abstractNote
@@ -273,5 +273,53 @@ class SourcesRepositoryTest extends TestCase
         );
 
         return $previousSource;
+    }
+
+    /**
+     * @param Source $previousSource
+     *
+     * @depends testRemoveParticipation
+     * @return Source
+     */
+    public function testSaveSourceParticipation(Source $previousSource): Source
+    {
+        /** @var SourcesRepository */
+        $sources = $this->app->make(SourcesRepository::class);
+
+        $firstAuthor = $previousSource
+            ->participations()
+            ->byRelevance('author')[0];
+        $firstAuthor->setRelevance(5)
+                    ->name = 'Eustequia Murcia';
+
+        $previousSource
+            ->participations()
+            ->pushNew(
+                [
+                    'type'  => 'person',
+                    'attributes' => [
+                        'name' => 'Roberto Pedro',
+                        'lastName' => "Gonzalez"
+                    ]
+                ],
+                'author',
+                1
+            );
+        $sources->save($previousSource);
+
+        $fetchedSource = $sources->get($previousSource->id());
+
+        // the first (most relevant) author is changed
+        $this->assertEquals(
+            'Roberto Pedro',
+            $fetchedSource->participations()->byRelevance('author')[0]->name
+        );
+
+        // the creator attributes were modified (and persisted).
+        $this->assertEquals(
+            'Eustequia Murcia',
+            $fetchedSource->participations()->author[$firstAuthor->creatorId()]->name
+        );
+        return $fetchedSource;
     }
 }
