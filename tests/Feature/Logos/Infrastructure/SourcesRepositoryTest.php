@@ -104,7 +104,7 @@ class SourcesRepositoryTest extends TestCase
     {
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
-        $source = $sources->getLike(1, 'abstractNote', 'abuela')[0];
+        $source = $sources->getLike('abstractNote', 'abuela')[0];
         $this->assertEquals(
             "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta",
             $source->abstractNote

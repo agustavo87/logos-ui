@@ -134,8 +134,9 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         );
     }
 
-    public function getLike(int $user, $attributeCode, $attributeValue, $page = null): array
+    public function getLike($attributeCode, $attributeValue, ?int $user = null, $page = null): array
     {
+        $user = $user ?? $this->logos->getOwner();
         $entitiesIDs = $this->db->findEntitiesWith('source', $attributeCode, $attributeValue);
 
         $result = [];

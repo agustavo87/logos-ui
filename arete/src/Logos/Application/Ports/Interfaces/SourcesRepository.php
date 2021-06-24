@@ -25,14 +25,15 @@ interface SourcesRepository
 
     public function save(Source $source): bool;
 
+
     /**
-     * Give the sources who matches the specified criteria
+     *  Give the sources who matches the specified criteria
      *
-     * @param int       $user           the owner of the sources.
-     * @param string    $attributeCode
-     * @param string    $attributeValue
+     * @param string $attributeCode
+     * @param string $attributeValue
+     * @param int|null $user
      *
      * @return array
      */
-    public function getLike(int $user, string $attributeCode, string $attributeValue): array;
+    public function getLike(string $attributeCode, string $attributeValue, ?int $user = null): array;
 }
