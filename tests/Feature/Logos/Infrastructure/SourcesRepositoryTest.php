@@ -324,12 +324,14 @@ class SourcesRepositoryTest extends TestCase
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
 
+        // modify first author
         $firstAuthor = $previousSource
             ->participations()
             ->byRelevance('author')[0];
         $firstAuthor->setRelevance(5)
                     ->name = 'Eustequia Murcia';
 
+        // ad a new most relevant (first) author
         $previousSource
             ->participations()
             ->pushNew(
@@ -345,9 +347,9 @@ class SourcesRepositoryTest extends TestCase
             );
         $sources->save($previousSource);
 
-        $fetchedSource = $sources->get($previousSource->id());
+        $fetchedSource = $sources->getNew($previousSource->id());
 
-        // the first (most relevant) author is changed
+        // the first (most relevant) author has changed
         $this->assertEquals(
             'Roberto Pedro',
             $fetchedSource->participations()->byRelevance('author')[0]->name

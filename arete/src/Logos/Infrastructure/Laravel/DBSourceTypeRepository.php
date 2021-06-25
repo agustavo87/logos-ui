@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @todo this could be cached, becouse it remains the same most of the time.
+ */
+
 declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel;
