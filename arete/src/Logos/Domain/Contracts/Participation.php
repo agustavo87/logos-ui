@@ -11,11 +11,11 @@ use Arete\Logos\Domain\Source;
 
 interface Participation
 {
+    public function source(): Source;
+    public function creator(): Creator;
     public function creatorId(): int;
     public function creatorType(): CreatorType;
     public function role(): Role;
     public function relevance(): int;
     public function setRelevance(int $relevance): self;
-    public function source(): Source;
-    public function creator(): Creator;
 }

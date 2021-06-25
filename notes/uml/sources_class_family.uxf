@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.3.0">
-  <zoom_level>10</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>30</x>
-      <y>480</y>
-      <w>210</w>
-      <h>100</h>
+      <x>63</x>
+      <y>343</y>
+      <w>147</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>Source
 --
-+ {attribute_code}: mixed
---
-+ id() :int
-+ type() :SourceType
 + participations() :ParticipationSet
 bg=cyan
 </panel_attributes>
@@ -23,40 +19,23 @@ bg=cyan
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>290</x>
-      <y>480</y>
-      <w>190</w>
-      <h>130</h>
+      <x>238</x>
+      <y>259</y>
+      <w>133</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>SourceType
 --
-{attribute_code}
---
-+ __toString():string
-+ code() :string
-+ label() :string
-+ version(): string
-+ participations() : RoleCollection</panel_attributes>
++ roles() : RoleCollection</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>230</x>
-      <y>540</y>
-      <w>80</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>810</x>
-      <y>500</y>
-      <w>170</w>
-      <h>130</h>
+      <x>525</x>
+      <y>98</y>
+      <w>119</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>Attribute
 --
@@ -66,16 +45,16 @@ bg=cyan
 + type
 + order :int
 --
-options() : array</panel_attributes>
+/options() : array/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>530</x>
-      <y>650</y>
-      <w>190</w>
-      <h>70</h>
+      <x>714</x>
+      <y>273</y>
+      <w>133</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>RoleCollection
 --
@@ -87,10 +66,10 @@ type(): SourceType</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>980</x>
-      <y>650</y>
-      <w>150</w>
-      <h>80</h>
+      <x>756</x>
+      <y>441</y>
+      <w>105</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>Role
 --
@@ -100,309 +79,70 @@ type(): SourceType</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>710</x>
-      <y>670</y>
-      <w>290</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
-m2=*</panel_attributes>
-    <additional_attributes>10.0;10.0;270.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>470</x>
-      <y>530</y>
-      <w>360</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
-m2=*</panel_attributes>
-    <additional_attributes>10.0;10.0;340.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>470</x>
-      <y>550</y>
-      <w>80</w>
-      <h>150</h>
-    </coordinates>
-    <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>60.0;130.0;30.0;130.0;30.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>240</x>
-      <y>790</y>
-      <w>250</w>
-      <h>80</h>
+      <x>245</x>
+      <y>357</y>
+      <w>266</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>ParticipationSet
 --
 + {role_code}: Participation[creatorId]
 --
++ source(): Source
 + roles(): array
-+ source(): Source</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>570</x>
-      <y>790</y>
-      <w>180</w>
-      <h>120</h>
-    </coordinates>
-    <panel_attributes>Participation[id]
---
-{attribute_code} :mixed
---
-+ creatorId()
-+ creatorType()
-+ role()
-+ relevance() :int</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1080</x>
-      <y>920</y>
-      <w>270</w>
-      <h>130</h>
-    </coordinates>
-    <panel_attributes>CreatorType
---
-+ {attribute_code}: Attribute
---
-__toString(): string
-+ code() :string
-+ label(): string
-+ version() :string
++ byRelevance(role_code :string): Participation[]
++ push(role :str, p :Participation)
++ pushNew(creatorData :array, role :str, relevance :int): Participation
++ remove (role :str, creatorId :int): bool
++ load(): self
++ save()
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>960</x>
-      <y>90</y>
-      <w>240</w>
-      <h>90</h>
+      <x>567</x>
+      <y>371</y>
+      <w>126</w>
+      <h>105</h>
     </coordinates>
-    <panel_attributes>PropertyMap
+    <panel_attributes>Participation[id]
 --
-# properties [name=&gt; value]
+{attribute_code} :mixed
 --
-__get(name:string) :mixed
-__set(name:string, value :mixed) :void</panel_attributes>
++ source(): Source
++ creator(): Creator
++ creatorId()
++ creatorType():CreatorType
++ role(): Role
++ relevance() :int
++ setRelevance(rel :int)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>392</x>
+      <y>245</y>
+      <w>140</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>CreatorType
+
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>1230</x>
-      <y>0</y>
-      <w>200</w>
-      <h>140</h>
-    </coordinates>
-    <panel_attributes>Allows to access a code =&gt; value
-array map, as properties of an
-object. Also could be extended
-to add accessors and mutators.
-And add interfaces to allow to be
-iterable and Array accesible. Also
-to really be a Map could have functions
-like has() or in fact names()
-bg=yellow</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>770</x>
-      <y>260</y>
-      <w>240</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>AttributeCollection
---
-# properties [name =&gt; value :Attribute]
---
-+ __get(name :string) :Attribute
-+ __set(name :string, value :Attribute) :void
-+ names() :array</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>840</x>
-      <y>160</y>
-      <w>240</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>220.0;10.0;220.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>460</x>
-      <y>350</y>
-      <w>340</w>
-      <h>180</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>320.0;10.0;320.0;160.0;10.0;160.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1120</x>
-      <y>260</y>
-      <w>240</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>ValueCollection
---
-# properties [name =&gt; value :mixed]
---
-+ __get(name :string) :mixed
-+ __set(name :string, value :mixed) :void
-+ names() :array</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1050</x>
-      <y>160</y>
-      <w>200</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0;180.0;50.0;180.0;90.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>210</x>
-      <y>350</y>
-      <w>1060</w>
-      <h>150</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>1040.0;10.0;1040.0;70.0;10.0;70.0;10.0;130.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>880</x>
-      <y>350</y>
-      <w>590</w>
-      <h>630</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;110.0;570.0;110.0;570.0;610.0;470.0;610.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>740</x>
-      <y>350</y>
-      <w>620</w>
-      <h>540</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>600.0;10.0;600.0;520.0;10.0;520.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>970</x>
-      <y>580</y>
-      <w>290</w>
-      <h>360</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
-m2=*</panel_attributes>
-    <additional_attributes>270.0;340.0;270.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>480</x>
-      <y>820</y>
-      <w>110</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
-m2=*</panel_attributes>
-    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>200</x>
-      <y>570</y>
-      <w>60</w>
-      <h>260</h>
-    </coordinates>
-    <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>40.0;240.0;10.0;240.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>500</x>
-      <y>260</y>
-      <w>240</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>RoleCollection
---
-# properties [name =&gt; value :Role]
---
-+ __get(name :string) :Role
-+ __set(name :string, value :Role) :void
-+ names() :array</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>710</x>
-      <y>350</y>
-      <w>80</w>
-      <h>330</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;40.0;60.0;40.0;60.0;310.0;10.0;310.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>600</x>
-      <y>160</y>
-      <w>480</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>460.0;10.0;460.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLNote</id>
-    <coordinates>
-      <x>1360</x>
-      <y>970</y>
-      <w>170</w>
-      <h>70</h>
+      <x>1190</x>
+      <y>630</y>
+      <w>119</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>toString()
 return the type_code_name
@@ -413,69 +153,252 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>310</x>
-      <y>620</y>
-      <w>160</w>
-      <h>150</h>
+      <x>336</x>
+      <y>42</y>
+      <w>112</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>toString()
 returns the type code.
-roles() and schema(), are 
-functions to not load
-the information from
-bd if it is not needed
-if it is. Load it and cache it.
-version() : is the schema 
-version.
 bg=blue</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <id>Relation</id>
+    <id>UMLNote</id>
     <coordinates>
-      <x>680</x>
-      <y>900</y>
-      <w>420</w>
-      <h>80</h>
+      <x>700</x>
+      <y>371</y>
+      <w>147</w>
+      <h>28</h>
     </coordinates>
-    <panel_attributes/>
-    <additional_attributes>10.0;10.0;10.0;60.0;400.0;60.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>0</x>
-      <y>350</y>
-      <w>1250</w>
-      <h>500</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>1230.0;10.0;1230.0;60.0;10.0;60.0;10.0;480.0;240.0;480.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>740</x>
-      <y>720</y>
-      <w>340</w>
-      <h>150</h>
-    </coordinates>
-    <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>320.0;10.0;320.0;130.0;10.0;130.0</additional_attributes>
+    <panel_attributes>Participation[id] means Array of 
+Participation objects keyed by  its 'id'.
+bg=yellow</panel_attributes>
+    <additional_attributes/>
   </element>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>230</x>
-      <y>910</y>
-      <w>130</w>
-      <h>70</h>
+      <x>651</x>
+      <y>161</y>
+      <w>126</w>
+      <h>21</h>
     </coordinates>
-    <panel_attributes>Participation[id]
-means Array of 
-Participation objects
-keyed by  its 'id'.
-bg=yellow</panel_attributes>
+    <panel_attributes>options() not implementd yet
+bg=red</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>574</x>
+      <y>301</y>
+      <w>112</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>Creator
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>77</x>
+      <y>133</y>
+      <w>112</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>/Attributable/
+--
+{attribute_code}:mixed
+--
++ id(): int
++ isDirty(): bool
++ getDirtyAttributes: array
++ type(): Type
++ typeCode(): string
++ genus(): ?string
++ ownerID(): mixed
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>329</x>
+      <y>84</y>
+      <w>126</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>/Type/
+--
++ {attribute_code}: Attribute
+--
+__toString(): string
++ code() :string
++ label(): string
++ version() :string
++ names(): array
++ genus(): ?string
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>203</x>
+      <y>357</y>
+      <w>56</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>504</x>
+      <y>371</y>
+      <w>77</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
+m1=*</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>126</x>
+      <y>231</y>
+      <w>21</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>126</x>
+      <y>231</y>
+      <w>462</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0;640.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>329</y>
+      <w>21</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>287</x>
+      <y>175</y>
+      <w>112</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
+    <additional_attributes>140.0;10.0;140.0;70.0;10.0;70.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>175</y>
+      <w>98</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0;120.0;70.0;120.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>182</x>
+      <y>84</y>
+      <w>161</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;160.0;50.0;160.0;190.0;10.0;210.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>448</x>
+      <y>91</y>
+      <w>91</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=*
+</panel_attributes>
+    <additional_attributes>10.0;20.0;110.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>364</x>
+      <y>273</y>
+      <w>364</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;500.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>686</x>
+      <y>441</y>
+      <w>84</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>287</y>
+      <w>28</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;20.0;10.0;20.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>525</x>
+      <y>252</y>
+      <w>112</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0;140.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>175</x>
+      <y>266</y>
+      <w>77</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0;10.0;110.0</additional_attributes>
   </element>
 </diagram>
