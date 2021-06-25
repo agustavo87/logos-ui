@@ -55,18 +55,41 @@ class SourcesRepositoryTest extends TestCase
     }
 
     /**
+     * @param Source $source
+     *
+     * @depends testCreatesSourceWithoutCreator
+     * @return Source
+     */
+    public function testGetSameAndDiferentInstancesOfSameSource(Source $previousSource): Source
+    {
+        /** @var SourcesRepository */
+        $sources = $this->app->make(SourcesRepository::class);
+
+        // when retrieve a already retrieved sourced, it returns the reference to the same object.
+        $firstFetch = $sources->get($previousSource->id());
+        $secondFetch = $sources->get($previousSource->id());
+        $this->assertSame($firstFetch, $secondFetch);
+
+        // getNew(), gets a new instance of the same source.
+        $newFetch = $sources->getNew($previousSource->id());
+        $this->assertNotSame($firstFetch, $newFetch);
+
+        return $previousSource;
+    }
+
+    /**
      * Test if get a source correctly
      *
      * @param Source $source
      *
-     * @depends testCreatesSourceWithoutCreator
+     * @depends testGetSameAndDiferentInstancesOfSameSource
      * @return Source
      */
     public function testGetSource(Source $storedSource): Source
     {
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
-        $fetchedSource = $sources->get($storedSource->id());
+        $fetchedSource = $sources->getNew($storedSource->id());
         $this->checkSourceDataStructure($fetchedSource, $storedSource->toArray());
         return $storedSource;
     }
@@ -104,6 +127,7 @@ class SourcesRepositoryTest extends TestCase
     {
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
+        // this depends if there are not other similar records, i.e., could no work on a already populated db.
         $source = $sources->getLike('abstractNote', 'abuela')[0];
         $this->assertEquals(
             "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta",
@@ -185,6 +209,7 @@ class SourcesRepositoryTest extends TestCase
         $authors = $participations->byRelevance('author');
         $firstAuthor = $authors[0];
         $this->assertInstanceOf(Participation::class, $firstAuthor);
+        $this->assertEquals('person', $firstAuthor->creatorType()->code());
         $this->assertEquals('Pedro Eustaquio', $firstAuthor->name);
         $this->assertEquals('Zamudio', $firstAuthor->lastName);
 
@@ -201,8 +226,7 @@ class SourcesRepositoryTest extends TestCase
     {
         $previousAuthor = $previousSource
                     ->participations()
-                    ->byRelevance('author')[0]
-                    ->creator();
+                    ->byRelevance('author')[0];
 
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
@@ -223,7 +247,7 @@ class SourcesRepositoryTest extends TestCase
                     'role' => 'author',
                     'relevance' => 1,
                     'creator' => [
-                        'creatorID' => $previousAuthor->id()
+                        'creatorID' => $previousAuthor->creatorId()
                     ]
                 ], [
                     'role' => 'author',
@@ -249,10 +273,18 @@ class SourcesRepositoryTest extends TestCase
             ]
         ]);
 
+        // first reviewed author
         $reviewedAuthors = $newSource->participations()->reviewedAuthor;
         $firstReviewedAuthorID = array_key_first($reviewedAuthors);
-        $this->assertEquals('Roberto Miguel', $reviewedAuthors[$firstReviewedAuthorID]->name);
-        $this->assertEquals('Pedro Eustaquio', $newSource->participations()->byRelevance('author')[0]->name);
+        $this->assertEquals(
+            'Roberto Miguel',
+            $reviewedAuthors[$firstReviewedAuthorID]->name
+        );
+        // most relevant author
+        $this->assertEquals(
+            'Pedro Eustaquio',
+            $newSource->participations()->byRelevance('author')[0]->name
+        );
 
         return $newSource;
     }
@@ -265,11 +297,17 @@ class SourcesRepositoryTest extends TestCase
      */
     public function testRemoveParticipation(Source $previousSource): Source
     {
-        $firstAuthor = $previousSource->participations()->byRelevance('author')[0]->creator();
-        $previousSource->participations()->remove('author', $firstAuthor->id());
+        $firstAuthor = $previousSource->participations()->byRelevance('author')[0];
+        $this->assertEquals(
+            'Pedro Eustaquio',
+            $firstAuthor->name
+        );
+        $previousSource->participations()->remove('author', $firstAuthor->creatorId());
+        // now the most relevant author is other
+        $newFirstAuthor = $previousSource->participations()->byRelevance('author')[0];
         $this->assertEquals(
             "Magdalena Tamara",
-            $previousSource->participations()->byRelevance('author')[0]->name
+            $newFirstAuthor->name
         );
 
         return $previousSource;
