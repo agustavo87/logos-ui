@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @todo Add a isEqual() and isLike() function to compare attributables.
+ */
+
 declare(strict_types=1);
 
 namespace Arete\Logos\Domain\Abstracts;

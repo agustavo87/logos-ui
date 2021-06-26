@@ -127,10 +127,22 @@ class SourcesRepositoryTest extends TestCase
     {
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
-        // this depends if there are not other similar records, i.e., could no work on a already populated db.
-        $source = $sources->getLike('abstractNote', 'abuela')[0];
-        $this->assertEquals(
-            "Cuenta la historia de como tu abuela le gusta le gusta andar en patineta",
+        $originalAbstract = $storedSource->abstractNote;
+        // generete an proabably unique key to look for
+        $randomWords = $this->faker->word() . ' ' . str_shuffle($this->faker->word());
+        $storedSource->abstractNote .= ' ' . $randomWords;
+        $sources->save($storedSource);
+
+        // search by the key
+        $source = $sources->getLike('abstractNote', $randomWords)[0];
+        // has the generated key
+        $this->assertStringContainsString(
+            $randomWords,
+            $source->abstractNote
+        );
+        // if is as the previous source
+        $this->assertStringContainsString(
+            $originalAbstract,
             $source->abstractNote
         );
         $this->assertEquals(32, $source->volume);
