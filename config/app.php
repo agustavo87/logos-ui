@@ -174,8 +174,12 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\LocaleServiceProvider::class,
-        App\Providers\LogosServiceProvider::class
+
+        /**
+         * Own Service Providers
+         */
+        Arete\Sofrosine\Providers\LocaleServiceProvider::class,
+        Arete\Logos\Infrastructure\Laravel\SourcesServiceProvider::class,
     ],
 
     /*

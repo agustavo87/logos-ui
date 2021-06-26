@@ -37,7 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['single', 'stderr', 'browser'],
             'ignore_exceptions' => false,
         ],
 
@@ -79,6 +79,7 @@ return [
             'with' => [
                 'stream' => 'php://stderr',
             ],
+            'level' => 'warning'
         ],
 
         'syslog' => [
@@ -98,6 +99,12 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+        'browser' => [
+            'driver' => 'monolog',
+            'handler' => Monolog\Handler\BrowserConsoleHandler::class,
+            'formatter' => 'default',
+            'level' => env('LOG_LEVEL', 'debug')
         ],
     ],
 

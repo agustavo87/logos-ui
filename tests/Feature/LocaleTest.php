@@ -5,8 +5,8 @@ namespace Tests\Feature;
 use Tests\FixturableTestCase as TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
-use App\Utils;
-use App\Services\Locale;
+use Arete\Sofrosine\Support\Utils;
+use Arete\Sofrosine\Services\Locale;
 
 class LocaleTest extends TestCase
 {
@@ -19,7 +19,8 @@ class LocaleTest extends TestCase
     protected User $user;
     protected Locale $locale;
 
-    public function logStatus($response, int $expected = 200): void {
+    public function logStatus($response, int $expected = 200): void
+    {
 
         $statusCode = $response->getStatusCode();
         $this->log("$statusCode: {$response->getStatusText()}", $statusCode == $expected);
@@ -27,7 +28,7 @@ class LocaleTest extends TestCase
 
     /**
      * Inicializa el entorno de todos los tests.
-     * 
+     *
      * - Crea un macro para obtener el texto del status.
      * - Crea un usuario a ser usado durante los tests.
      *
@@ -47,7 +48,7 @@ class LocaleTest extends TestCase
 
     /**
      * Ejectua acciones luego de terminados los tests.
-     * 
+     *
      * - Limpia la BD del modelo de usuario creado.
      *
      * @return void
@@ -59,7 +60,7 @@ class LocaleTest extends TestCase
 
     /**
      * Ejectua acciones antes de cada test.
-     * 
+     *
      * - Obtiene el usuario y lo guarda para uso posterior.
      *
      * @return void
@@ -150,7 +151,7 @@ class LocaleTest extends TestCase
 
         $response = $this->withHeader('Accept-Language', '')
                         ->get('/');
-        
+
         $response->assertRedirect('/' . config('locale.languages.default'));
     }
 
@@ -174,16 +175,16 @@ class LocaleTest extends TestCase
 
         $response = $this->withHeader('Accept-Language', $language)
                             ->get('/');
-        
+
         $response->assertRedirect('/' . $language);
         $response->assertHeader('Content-Language', $language);
         $response->assertHeader('Vary', 'Accept-Language');
-        
+
         $language = 'es';
 
         $response = $this->withHeader('Accept-Language', $language)
                             ->get('/');
-        
+
         $response->assertRedirect('/' . $language);
     }
 
@@ -199,7 +200,7 @@ class LocaleTest extends TestCase
 
         $response = $this->withSession(['language' => $language])
                             ->get('/');
-        
+
         $response->assertRedirect();
         $response->assertLocation('/' . $language);
     }
@@ -265,7 +266,7 @@ class LocaleTest extends TestCase
                                 : self::$languageA
                             );
 
-        
+
         $response = $this->putJson("/locale", [
             'language' => $otherLanguage
         ]);
@@ -292,7 +293,7 @@ class LocaleTest extends TestCase
         $otherLanguage = $this->user->language == self::$languageA
                          ? self::$languageB
                          : self::$languageA;
-        
+
         $response = $this->actingAs($this->user)
                     ->get('/');
         $response->assertRedirect();
@@ -317,7 +318,7 @@ class LocaleTest extends TestCase
         $this->ok('ok');
     }
 
-  
+
     /**
      * Valida que el lenguaje tenga un formato válido y/o sea soportado por
      * la aplicación.
@@ -353,6 +354,4 @@ class LocaleTest extends TestCase
         $this->log($content->errors->language);
         $this->assertEquals($content->errors->language[0], __('validation.language_supported'));
     }
-
-
 }

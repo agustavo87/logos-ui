@@ -6,13 +6,11 @@ use App\Models\Source;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-/**
- * @todo Hacer que muestre solo las fuentes del usuario
- */
 class SourceSelect extends Component
 {
     use WithPagination;
 
+    public $max_rows = 8;
     public $listen = 'source-get';
 
     public $searchFields = [
@@ -22,7 +20,9 @@ class SourceSelect extends Component
 
     public function render()
     {
-        $sources = Source::select('key', 'data');
+        $sources = Source::select('id', 'key', 'data');
+
+        $sources->where('user_id', auth()->user()->id);
 
         foreach ($this->searchFields as $field => $value) {
             if(!empty($value)) {
@@ -30,13 +30,12 @@ class SourceSelect extends Component
                     $sources->where($field, 'LIKE', "%{$value}%");
                 } elseif ($field == 'title') {
                     $sources->whereRaw('LCASE(data->"$.title") LIKE "%' . strtolower($value) . '%"');
-                    // $sources->where('data->title', 'LIKE', "%{$value}%");
                 }
             }
         }
 
         return view('livewire.source-select', [
-            'sources' => $sources->latest()->paginate(5)
+            'sources' => $sources->latest()->paginate( $this->max_rows )
         ]);
     }
 

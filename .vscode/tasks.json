@@ -1,0 +1,19 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "fix sniff",
+            "type": "shell",
+            "command": "phpcbf --standard=PSR12  ${file}",
+            "presentation": {
+                "reveal": "never",
+                "echo": false,
+                "focus": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

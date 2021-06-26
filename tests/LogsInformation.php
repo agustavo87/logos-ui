@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use function Arete\Common\var_dump_ret;
+
 trait LogsInformation
 {
     /**
@@ -51,6 +53,9 @@ trait LogsInformation
      */
     public static function log($message, $ok = false): void
     {
+        if (! is_string($message)) {
+            $message = var_dump_ret($message);
+        }
         $color = $ok ? "32" : "37";
         if (static::$verbose) {
             $message = self::toLoggable($message);

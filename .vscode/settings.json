@@ -1,0 +1,36 @@
+{
+    "phpcs.standard": "phpcsrules.xml",
+
+    "logViewer.watch": [
+        {
+            "title": "Laravel Log",
+            "pattern": "storage/logs/*.log"
+        },
+        {
+            "title": "PHP Log",
+            "pattern": "D:/laragon/tmp/php_errors.log"
+        },
+        {
+            "title": "Apache",
+            "pattern": "D:\\laragon\\bin\\apache\\httpd-2.4.35-win64-VC15\\logs\\error.log"
+        }
+    ],
+    "intelephense.environment.phpVersion": "7.4.11",
+    "php.validate.run": "onType",
+    "intelephense.diagnostics.languageConstraints": false,
+    "materialTheme.accent": "Lime",
+    // Controls the font family.
+    // "editor.fontFamily": "Operator Mono",
+    // Controls the line height. Use 0 to compute the lineHeight from the fontSize.
+    "editor.lineHeight": 24,
+    // Enables font ligatures
+    "editor.fontLigatures": true,
+    // Controls if file decorations should use badges.
+    "explorer.decorations.badges": true,
+    "phpParameterHint.opacity": 0.2,
+    "intelephense.environment.documentRoot": "public/",
+    "workbench.colorCustomizations": {
+        "phpParameterHint.hintForeground": "#95a9a7",
+        "phpParameterHint.hintBackground": "#293339"
+    }
+}

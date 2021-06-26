@@ -30,12 +30,11 @@ class AuthTest extends TestCase
         ])->id;
     }
 
-    public function logStatus($response, int $expected = 200): void {
+    public function logStatus($response, int $expected = 200): void
+    {
         $statusCode = $response->getStatusCode();
         $this->log("$statusCode: {$response->getStatusText()}", $statusCode == $expected);
     }
-
-
 
     /**
      * Limpia la BD del modelo de usuario creado.
@@ -73,7 +72,6 @@ class AuthTest extends TestCase
                              'email' => $this->user->email,
                              'password' => 'password'
                          ]);
-        $response->assertRedirect(route('home', ['locale' => $this->user->language] ) );
-
+        $response->assertRedirect(route('home', ['locale' => $this->user->language]));
     }
 }

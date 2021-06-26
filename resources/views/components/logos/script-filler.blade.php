@@ -6,10 +6,13 @@
             data: dataModel,
             bootData: bootDataFunc,
             handleSetSchema: function ($event) {
+                console.log(this.schema + ': handler:')
                 if ($event.detail.schema !== this.schema) {
+                    console.log(this.schema + ': it is not for me')
                     this.display = false;
                     return;
                 };
+                console.log(this.schema + ': it ts for me')
                 this.bootData($event.detail.data)
                 this.display = true
             },
