@@ -178,9 +178,9 @@ class SourcesRepositoryTest extends TestCase
         $sourceData = [
             'type' => 'book',
             'attributes' => [
-                'title' => "Las mil y unas novias de {$name}.",
+                'title' => "Las mil y unas novias de {$name}",
                 'abstractNote' =>   "Cuenta la historia de como {$name} paso de no tener a nadie a"
-                                    . " estar rodeado de mujeres.",
+                                    . " estar rodeado de mujeres",
                 'date' => now(),
                 'edition' => '2nd',
                 'place' => 'Buenos Aires',

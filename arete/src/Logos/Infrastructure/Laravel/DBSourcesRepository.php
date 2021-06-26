@@ -10,6 +10,7 @@ use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Application\Ports\Interfaces\ParticipationRepository;
+use Arete\Logos\Domain\Contracts\Formatter;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
 use Arete\Logos\Domain\Source;
@@ -25,12 +26,14 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
     protected Schema $schema;
     protected int $maxFetchSize = 30;
     protected array $cache = [];
+    protected Formatter $defaultFormatter;
 
     public function __construct(
         CreatorsRepository $creators,
         SourceTypeRepository $sourceTypes,
         CreatorTypeRepository $creatorTypes,
         ParticipationRepository $participations,
+        Formatter $defaultFormatter,
         Schema $schema,
         DB $db,
         LogosEnviroment $logos
@@ -40,6 +43,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         $this->sourceTypes = $sourceTypes;
         $this->creatorTypes = $creatorTypes;
         $this->participations = $participations;
+        $this->defaultFormatter = $defaultFormatter;
         $this->schema = $schema;
     }
 
@@ -48,7 +52,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         $ownerID = $ownerID ?? $this->logos->getOwner();
 
         // first, let's create the source and insert it's attributes
-        $source = new Source($this->sourceTypes);
+        $source = new Source($this->sourceTypes, $this->defaultFormatter);
         $source->fill([
             'typeCode' => $params['type'],
             'ownerID' => $ownerID
@@ -102,6 +106,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         $sourceEntry = $attributes->first();
         $source = new Source(
             $this->sourceTypes,
+            $this->defaultFormatter,
             [
                 'id' => $sourceEntry->id,
                 'typeCode' => $sourceEntry->source_type_code_name

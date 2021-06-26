@@ -18,21 +18,56 @@ trait ExposeAttributes
         return $this->attributes[$name] = $value;
     }
 
-    public function count()
+    /**
+     * The amount of attributes
+     *
+     * @return int
+     */
+    public function count(): int
     {
         return  count($this->attributes);
     }
 
-    public function attributes()
+    /**
+     * Returns true if the class has the attribute
+     *
+     * @param string $attribute
+     *
+     * @return bool
+     */
+    public function has(string $attribute): bool
+    {
+        return array_key_exists($attribute, $this->attributes);
+    }
+
+    /**
+     * Returns the attributes names
+     *
+     * @return string[]
+     */
+    public function attributes(): array
     {
         return array_keys($this->attributes);
     }
 
-    public function toArray()
+    /**
+     * Returns the attributes as associative attribute => value array
+     *
+     * @return array
+     */
+    public function toArray(): array
     {
         return $this->attributes;
     }
 
+    /**
+     * Introduces a new attribute
+     *
+     * @param string $attribute
+     * @param mixed $value
+     *
+     * @return void
+     */
     public function pushAttribute(string $attribute, $value)
     {
         $this->attributes[$attribute] = $value;

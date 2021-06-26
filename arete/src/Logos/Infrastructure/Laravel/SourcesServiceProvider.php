@@ -5,6 +5,7 @@ namespace Arete\Logos\Infrastructure\Laravel;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Arete\Logos\Application\LogosContainer as Logos;
+use Arete\Logos\Domain\SimpleFormatter;
 
 class SourcesServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -45,6 +46,7 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
                     $app->make(\Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository::class),
                     $app->make(\Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository::class),
                     $app->make(\Arete\Logos\Application\Ports\Interfaces\ParticipationRepository::class),
+                    new SimpleFormatter(),
                     $app->make(\Arete\Logos\Domain\Schema::class),
                     $app->make(\Arete\Logos\Infrastructure\Laravel\Common\DB::class),
                     $app->make(\Arete\Logos\Application\Ports\Interfaces\LogosEnviroment::class)
