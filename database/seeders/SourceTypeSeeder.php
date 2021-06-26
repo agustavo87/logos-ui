@@ -46,7 +46,7 @@ class SourceTypeSeeder extends Seeder
 
             $schemaID = $this->db->insertSchema(
                 $sourceTypeCode,
-                $this->logosSchema::TYPES['source'],
+                $this->logosSchema::GENUS['source'],
                 'z.' . $this->zoteroSchema->version
             );
 

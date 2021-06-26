@@ -159,19 +159,19 @@ class DB
 
     public function insertEntityAttribute(
         $attributableId,
-        $attributableType,
+        $attributableGenus,
         $attributeType,
         $value,
         $valueType = null
     ): ?int {
         $valueType = $valueType ?? $this->getAttributeType($attributeType)->value_type;
-        $attributableType = $this->schema::TYPES[$attributableType];
+        $attributableGenus = $this->schema::GENUS[$attributableGenus];
 
         $valueColumn = self::VALUE_COLUMS[$valueType];
 
         $id = LvDB::table('attributes')->insertGetId([
             'attributable_id' => $attributableId,
-            'attributable_type' => $attributableType,
+            'attributable_genus' => $attributableGenus,
             'attribute_type_code_name' => $attributeType,
             $valueColumn => $value
         ]);
@@ -192,7 +192,7 @@ class DB
         $data = [];
             $baseRow = [
                 'attributable_id'           => $attributableID,
-                'attributable_type'         => $this->schema::TYPES[$entityGenus],
+                'attributable_genus'         => $this->schema::GENUS[$entityGenus],
                 'attribute_type_code_name'  => null,
                 'text_value'                => null,
                 'number_value'              => null,
@@ -213,7 +213,7 @@ class DB
                 ->table('attributes')
                 ->upsert(
                     $data,
-                    ['attributable_id', 'attributable_type', 'attribute_type_code_name'],
+                    ['attributable_id', 'attributable_genus', 'attribute_type_code_name'],
                     ['text_value', 'number_value', 'date_value', 'complex_value']
                 );
     }
@@ -278,11 +278,11 @@ class DB
      *
      * @return \Illuminate\Support\Collection¬
      */
-    public function getEntityAttributes(int $id, $attributableType = 'source'): Collection
+    public function getEntityAttributes(int $id, $attributableGenus = 'source'): Collection
     {
         $valueColumns = $this::VALUE_COLUMS;
-        $attributableType = $this->schema::TYPES[$attributableType];
-        $entityTable = $this->getEntityTable($attributableType);
+        $attributableGenus = $this->schema::GENUS[$attributableGenus];
+        $entityTable = $this->getEntityTable($attributableGenus);
         return LvDB::table($entityTable)
             ->join(
                 'attributes',
@@ -296,7 +296,7 @@ class DB
                 '=',
                 'attribute_types.code_name'
             )
-            ->where('attributable_type', $attributableType)
+            ->where('attributable_genus', $attributableGenus)
             ->where('attributable_id', $id)
             ->select([$entityTable . '.*', 'attributes.*', 'attribute_types.value_type'])
             ->get()
@@ -356,7 +356,7 @@ class DB
 
     public function getSourceSchema($codename)
     {
-        return $this->getSchema($codename, $this->schema::TYPES['source']);
+        return $this->getSchema($codename, $this->schema::GENUS['source']);
     }
 
     public function getSourceType($codeName)
@@ -393,7 +393,7 @@ class DB
 
     public function getCreatorSchema($codename)
     {
-        return $this->getSchema($codename, $this->schema::TYPES['creator']);
+        return $this->getSchema($codename, $this->schema::GENUS['creator']);
     }
 
     public function getCreatorType($codeName)
@@ -428,12 +428,12 @@ class DB
         return LvDB::table('creators')->find($id);
     }
 
-    public function getEntityTable(string $attributableType)
+    public function getEntityTable(string $attributableGenus)
     {
-        return $attributableType . 's';
+        return $attributableGenus . 's';
     }
 
-    public function findEntitiesWith(string $attributableType, string $attributeCode, string $attributeValue): array
+    public function findEntitiesWith(string $attributableGenus, string $attributeCode, string $attributeValue): array
     {
         $valueType = $this->db->table('attribute_types')
             ->where('code_name', $attributeCode)
@@ -441,7 +441,7 @@ class DB
             ->first()
             ->value_type;
 
-        $entityTable = $this->getEntityTable($attributableType);
+        $entityTable = $this->getEntityTable($attributableGenus);
         $IDs = $this->db->table($entityTable)
             ->join(
                 'attributes',
@@ -449,7 +449,7 @@ class DB
                 '=',
                 'attributes.attributable_id'
             )
-            ->where('attributable_type', $attributableType)
+            ->where('attributable_genus', $attributableGenus)
             ->where('attribute_type_code_name', $attributeCode)
             ->where($this::VALUE_COLUMS[$valueType], 'LIKE', '%' . $attributeValue . '%')
             ->select($entityTable . '.id')

@@ -91,9 +91,13 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
         );
     }
 
-    public function getLike(int $user, $attributeCode, $attributeValue, $page = null): array
+    public function getLike($attributeCode, $attributeValue, ?int $ownerID = null, $page = null): array
     {
-        $entitiesIDs = $this->db->findEntitiesWith('creator', $attributeCode, $attributeValue);
+        $entitiesIDs = $this->db->findEntitiesWith(
+            'creator',
+            $attributeCode,
+            $attributeValue
+        );
 
         $result = [];
         $take = count($entitiesIDs) > $this->maxFetchSize ? $this->maxFetchSize : count($entitiesIDs);

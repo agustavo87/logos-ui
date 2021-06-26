@@ -15,7 +15,7 @@ class CreateAttributesTable extends Migration
     {
         Schema::create('attributes', function (Blueprint $table) {
             $table->unsignedBigInteger('attributable_id');
-            $table->string('attributable_type');
+            $table->string('attributable_genus');
             $table->string('attribute_type_code_name');
             $table->foreign('attribute_type_code_name')
                   ->references('code_name')
@@ -26,7 +26,7 @@ class CreateAttributesTable extends Migration
             $table->integer('number_value')->nullable();
             $table->dateTime('date_value')->nullable();
             $table->unique(
-                ['attributable_id', 'attributable_type', 'attribute_type_code_name'],
+                ['attributable_id', 'attributable_genus', 'attribute_type_code_name'],
                 'attributable_attribute_key'
             );
         });

@@ -6,7 +6,7 @@ namespace Arete\Logos\Domain;
 
 class Schema
 {
-    public const TYPES = [
+    public const GENUS = [
         'creator' => 'creator',
         'source'  => 'source'
     ];

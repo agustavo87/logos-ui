@@ -76,15 +76,20 @@ class CreatorsRepositoryTest extends TestCase
     }
 
     /**
-     * @depends testGetCreator
+     * @depends testSaveCreator
      * @return Creator
      */
     public function testGetLikeCreator(Creator $storedCreator): Creator
     {
+        /** @var CreatorsRepository */
         $creators = $this->app->make(CreatorsRepository::class);
-        $creator = $creators->getLike(1, 'name', 'dro')[0];
-        $this->assertEquals("Pedro Raúl", $creator->name);
-        $this->assertEquals("Alfonso", $creator->lastName);
+        $faker = \Faker\Factory::create();
+        $randomWord = $faker->word() . ' ' . str_shuffle($faker->word());
+        $storedCreator->name .= ' ' . $randomWord;
+        $creators->save($storedCreator);
+        $creator = $creators->getLike('name', $randomWord)[0];
+        $this->assertStringContainsString($randomWord, $creator->name);
+        $this->assertEquals($storedCreator->lastName, $creator->lastName);
         return $creator;
     }
 }

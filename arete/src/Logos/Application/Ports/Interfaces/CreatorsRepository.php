@@ -47,7 +47,7 @@ interface CreatorsRepository
      *
      * @return array
      */
-    public function getLike(int $user, string $attributeCode, string $attributeValue): array;
+    public function getLike(string $attributeCode, string $attributeValue, ?int $ownerID = null): array;
 
     /**
      * returns a new object even if theres already an instance of it
