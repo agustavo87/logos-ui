@@ -10,7 +10,7 @@ interface Source
 {
     public function participations(): ParticipationSet;
 
-    public function render($params = null): string;
+    public function render(array $params = null): string;
 
     public function setFormatter(Formatter $fomater);
 }
