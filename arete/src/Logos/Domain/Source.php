@@ -45,4 +45,11 @@ class Source extends Attributable implements SourceContract
     {
         $this->formater = $fomater;
     }
+
+    public function toArray(): array
+    {
+        $sourceInfo = parent::toArray();
+        $sourceInfo['participations'] = $this->participations->toArray();
+        return $sourceInfo;
+    }
 }

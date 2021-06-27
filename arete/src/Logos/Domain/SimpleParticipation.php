@@ -76,4 +76,13 @@ class SimpleParticipation implements Participation
         $this->relevance = $relevance;
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'role' => $this->role->code,
+            'relevance' => $this->relevance,
+            'creator' => $this->creator->toArray()
+        ];
+    }
 }

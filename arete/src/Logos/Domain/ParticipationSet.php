@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Domain;
 
+use Arete\Common\Interfaces\Arrayable;
 use Arete\Exceptions\IncorrectDataStructureException;
 use Arete\Exceptions\PersistenceException;
 use Arete\Logos\Domain\Traits\ExposeAttributes;
@@ -12,7 +13,7 @@ use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\ParticipationRepository;
 use Arete\Logos\Domain\Source;
 
-class ParticipationSet
+class ParticipationSet implements Arrayable
 {
     use ExposeAttributes;
 
@@ -152,5 +153,17 @@ class ParticipationSet
 
         unset($this->attributes[$roleCode][$creatorID]);
         return true;
+    }
+
+    public function toArray(): array
+    {
+        $participations = [];
+        foreach ($this->attributes as $role => $participationsArray) {
+            $participations[$role] = [];
+            foreach ($participationsArray as $id => $participation) {
+                $participations[$role][$id] = $participation->toArray();
+            }
+        }
+        return $participations;
     }
 }
