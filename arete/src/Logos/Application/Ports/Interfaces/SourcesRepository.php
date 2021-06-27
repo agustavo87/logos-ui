@@ -33,7 +33,7 @@ interface SourcesRepository
      * @param string $attributeValue
      * @param int|null $user
      *
-     * @return array
+     * @return Source[]
      */
     public function getLike(string $attributeCode, string $attributeValue, ?int $user = null): array;
 }
