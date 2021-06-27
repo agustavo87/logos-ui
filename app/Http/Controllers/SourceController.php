@@ -61,7 +61,7 @@ class SourceController extends Controller
     {
         //
     }
-    
+
     /**
      * Show the view to edit the source
      *

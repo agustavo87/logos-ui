@@ -10,9 +10,9 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 
-        'delta', 
-        'html',  
+        'title',
+        'delta',
+        'html',
         'meta'
     ];
 

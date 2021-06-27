@@ -14,7 +14,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      * Solo accesible por el admin
-     * 
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create',[
+        return view('users.create', [
             'locale' => config('locale')
         ]);
     }
@@ -49,17 +49,17 @@ class UserController extends Controller
         // $data = $request->only('email', 'name', 'country', 'locale');
         $this->authorize('create', User::class);
         $data = $request->validate([
-            'email' => 'required|email|unique:users', 
+            'email' => 'required|email|unique:users',
             'name' => 'required|min:2|max:255',
-            'country' => 'required|size:2', 
+            'country' => 'required|size:2',
             ]);
-        
+
         $data['password'] = Hash::make($request->password);
-        
+
 
         $user = User::create($data);
         Auth::login($user, true);
-        
+
         return redirect()->route('home');
     }
 
@@ -109,12 +109,12 @@ class UserController extends Controller
         //     abort(403);
         // }
         // Gate::authorize('update-user', $user);
-        
+
         $this->authorize('update', $user);
         $data = $request->validate([
             'name' =>  [ 'min:2', 'max:255'],
             'country' => ['size:2'],
-            ]);        
+            ]);
 
         $user->update($data);
 
@@ -129,6 +129,6 @@ class UserController extends Controller
      */
     public function destroy($lang, User $user)
     {
-        $this->authorize('delete', $user);   
+        $this->authorize('delete', $user);
     }
 }

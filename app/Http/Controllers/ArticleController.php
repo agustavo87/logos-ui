@@ -6,7 +6,6 @@ use App\Models\Article;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Response;
 
 class ArticleController extends Controller
 {
@@ -19,7 +18,7 @@ class ArticleController extends Controller
     {
         return Article::all();
     }
-    
+
     /**
      * Display a listing of the articles that belongs to the
      * specified user
@@ -46,7 +45,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the UI for creating a new Article.
      *
      * @return \Illuminate\Http\Response
      */
@@ -59,7 +58,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the UI for editing the existing article
      *
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
@@ -73,7 +72,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created article
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -94,11 +93,10 @@ class ArticleController extends Controller
                 'delta' => json_decode($data['delta']),
                 'meta' => json_decode($data['meta'])
             ]);
-            
     }
 
     /**
-     * Display the specified resource.
+     * Display the article.
      *
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
@@ -122,7 +120,7 @@ class ArticleController extends Controller
 
     public function sources(Request $request)
     {
-        
+        //
     }
 
 

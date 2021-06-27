@@ -11,14 +11,14 @@
         {!!$article->html!!}
     </article>
     <footer>
-        @if ($article->sources->count())
+        {{-- @if ($article->sources->count()) --}}
         <h2>Referencias</h2>
         <ul class="references">
-            @foreach ($article->sources as $source)
+            {{-- @foreach ($article->sources as $source)
                 <li>{{ $source->render() }}</li>
-            @endforeach
+            @endforeach --}}
         </ul>
-        @endif
+        {{-- @endif --}}
     </footer>
     @push('head-script')
     <style>
@@ -59,7 +59,7 @@
         .article-show footer {
             margin-top: 2rem;
         }
-        
+
         .article-show footer h2 {
             margin-top: 2rem;
             font-size: 1.5rem;
@@ -72,6 +72,6 @@
             text-indent: -1rem;
         }
     </style>
-        
+
     @endpush
 </div>

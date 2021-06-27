@@ -30,9 +30,9 @@ class LogosCreate extends Component
         }
     }
 
-    public function save() 
-    {   
-        if($this->article->user == null) {
+    public function save()
+    {
+        if ($this->article->user == null) {
             auth()->user()->articles()->save($this->article);
         } else {
             $this->article->save();

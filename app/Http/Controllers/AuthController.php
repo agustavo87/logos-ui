@@ -4,13 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Arete\Sofrosine\Services\Locale;
 
 class AuthController extends Controller
 {
 
+    protected Locale $locale;
+
+    public function __construct(Locale $locale)
+    {
+        $this->locale = $locale;
+    }
+
     /**
      * Show login page
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      *
      * @return Response
@@ -39,14 +47,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            // ddd(route('home'));
-            return redirect(route('home', [ 'locale' => app('locale')->getLocale()] ));
+            return redirect(route('home', [ 'locale' => $this->locale->getLocale()]));
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
-
     }
 
     /**
@@ -59,9 +65,6 @@ class AuthController extends Controller
     public function logout(Request $request, $lang)
     {
         Auth::logout();
-        // ddd(route('home'));
         return redirect()->route('home');
     }
-
-    
 }
