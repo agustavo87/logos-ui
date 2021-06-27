@@ -7,7 +7,7 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use Arete\Logos\Application\LogosContainer as Logos;
 use Arete\Logos\Domain\SimpleFormatter;
 
-class SourcesServiceProvider extends ServiceProvider implements DeferrableProvider
+class SourcesServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -112,15 +112,5 @@ class SourcesServiceProvider extends ServiceProvider implements DeferrableProvid
         $this->publishes([
             __DIR__ . '/../../../../../config/sources.php' => config_path('sources.php'),
         ]);
-    }
-
-     /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [Sources::class];
     }
 }
