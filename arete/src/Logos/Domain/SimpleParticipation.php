@@ -27,7 +27,6 @@ class SimpleParticipation implements Participation
         $this->source = $source;
         $this->role = $role;
         $this->creator = $creator;
-        // $this->attributes = $creator->toArray();
         $this->role = $role;
         $this->relevance = $relevance;
     }

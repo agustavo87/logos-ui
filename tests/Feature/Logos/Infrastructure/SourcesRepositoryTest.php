@@ -90,7 +90,7 @@ class SourcesRepositoryTest extends TestCase
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
         $fetchedSource = $sources->getNew($storedSource->id());
-        $this->checkSourceDataStructure($fetchedSource, $storedSource->toArray());
+        $this->checkSourceDataStructure($fetchedSource, $storedSource->toArray()['attributes']);
         return $storedSource;
     }
 

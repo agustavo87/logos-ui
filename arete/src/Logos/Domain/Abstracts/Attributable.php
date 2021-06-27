@@ -76,4 +76,15 @@ abstract class Attributable implements Arrayable
     {
         return $this->ownerID;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'genus' => $this->genus,
+            'type' => $this->typeCode,
+            'ownerID' => $this->ownerID,
+            'attributes' => $this->attributes
+        ];
+    }
 }

@@ -52,7 +52,7 @@ class CreatorsRepositoryTest extends TestCase
     {
         $creators = $this->app->make(CreatorsRepository::class);
         $fetchedCreator = $creators->get($storedCreator->id());
-        $this->checkCreatoreDataStructure($fetchedCreator, $storedCreator->toArray());
+        $this->checkCreatoreDataStructure($fetchedCreator, $storedCreator->toArray()['attributes']);
         return $storedCreator;
     }
 
