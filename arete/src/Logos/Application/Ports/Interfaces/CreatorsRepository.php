@@ -42,13 +42,13 @@ interface CreatorsRepository
     /**
      * Give the creators who matches the specified criteria
      *
-     * @param int       $user           the owner of the creators.
      * @param string    $attributeCode
      * @param string    $attributeValue
+     * @param mixed     $ownerID = null           the owner of the creators.
      *
      * @return array
      */
-    public function getLike(string $attributeCode, string $attributeValue, ?int $ownerID = null): array;
+    public function getLike(string $attributeCode, string $attributeValue, $ownerID = null): array;
 
     /**
      * returns a new object even if theres already an instance of it

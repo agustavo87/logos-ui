@@ -29,11 +29,11 @@ interface SourcesRepository
     /**
      *  Give the sources who matches the specified criteria
      *
-     * @param string $attributeCode
-     * @param string $attributeValue
-     * @param int|null $user
+     * @param string    $attributeCode
+     * @param string    $attributeValue
+     * @param mixed     $ownerID = null
      *
      * @return Source[]
      */
-    public function getLike(string $attributeCode, string $attributeValue, ?int $user = null): array;
+    public function getLike(string $attributeCode, string $attributeValue, $ownerID = null): array;
 }

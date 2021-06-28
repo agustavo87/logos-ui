@@ -432,8 +432,12 @@ class DB
         return $attributableGenus . 's';
     }
 
-    public function findEntitiesWith(string $attributableGenus, string $attributeCode, string $attributeValue): array
-    {
+    public function findEntitiesWith(
+        string $attributableGenus,
+        string $attributeCode,
+        string $attributeValue,
+        $ownerID = null
+    ): array {
         $valueType = $this->db->table('attribute_types')
             ->where('code_name', $attributeCode)
             ->select('value_type')
@@ -441,7 +445,7 @@ class DB
             ->value_type;
 
         $entityTable = $this->getEntityTable($attributableGenus);
-        $IDs = $this->db->table($entityTable)
+        $query = $this->db->table($entityTable)
             ->join(
                 'attributes',
                 $entityTable . '.id',
@@ -450,11 +454,17 @@ class DB
             )
             ->where('attributable_genus', $attributableGenus)
             ->where('attribute_type_code_name', $attributeCode)
-            ->where($this::VALUE_COLUMS[$valueType], 'LIKE', '%' . $attributeValue . '%')
-            ->select($entityTable . '.id')
-            ->get();
+            ->where($this::VALUE_COLUMS[$valueType], 'LIKE', '%' . $attributeValue . '%');
+        if ($ownerID) {
+            $query->where(
+                $this->logos->getOwnersTableData()->FK,
+                $ownerID
+            );
+        }
+        $IDs = $query->select($entityTable . '.id')
+                     ->get();
 
-            return $IDs->map(fn ($entry) => $entry->id)->toArray();
+        return $IDs->map(fn ($entry) => $entry->id)->toArray();
     }
 
     public function insertParticipation(

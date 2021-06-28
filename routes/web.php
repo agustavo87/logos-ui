@@ -128,7 +128,7 @@ Route::group([
     'prefix' => 'test'
 ], function () {
     Route::get('sources', function (SourcesRepository $sources) {
-        $results = $sources->getLike('title', 'et');
+        $results = $sources->getLike('title', 'et', 1);
         if (!count($results)) {
             return 'sin resultados';
         }

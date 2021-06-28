@@ -95,12 +95,13 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
         );
     }
 
-    public function getLike($attributeCode, $attributeValue, ?int $ownerID = null, $page = null): array
+    public function getLike($attributeCode, $attributeValue, $ownerID = null, $page = null): array
     {
         $entitiesIDs = $this->db->findEntitiesWith(
             'creator',
             $attributeCode,
-            $attributeValue
+            $attributeValue,
+            $ownerID
         );
 
         $result = [];
