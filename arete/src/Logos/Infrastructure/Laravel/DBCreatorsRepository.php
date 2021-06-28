@@ -28,17 +28,18 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function createFromArray(array $params, $ownerID = null): Creator
     {
+        $ownerID = $ownerID ?? $this->logos->getOwner();
         $creator = new Creator(
             $this->creatorTypes,
             [
-                'typeCode'  => $params['type']
+                'typeCode'  => $params['type'],
+                'ownerID' => $ownerID
             ]
         );
 
         $this->db->insertEntityAttributes(
             $creator,
-            $params['attributes'],
-            1
+            $params['attributes']
         );
 
         return $creator;
@@ -64,13 +65,16 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
      */
     public function getNew(int $id): ?Creator
     {
+        $ownerFKColumn = $this->logos->getOwnersTableData()->FK;
+
         $attributes = $this->db->getEntityAttributes($id, 'creator');
         $creatorEntry = $attributes->first();
         $creator = new Creator(
             $this->creatorTypes,
             [
                 'id'        => $creatorEntry->id,
-                'typeCode'  => $creatorEntry->creator_type_code_name
+                'typeCode'  => $creatorEntry->creator_type_code_name,
+                'ownerID'   => $creatorEntry->$ownerFKColumn
             ]
         );
         foreach ($attributes as $code => $data) {

@@ -231,7 +231,6 @@ class DB
     public function insertEntityAttributes(
         Attributable $entityObject,
         array $attributes,
-        $userID,
         $updated = null,
         $created = null
     ): ?int {
@@ -248,7 +247,7 @@ class DB
             $entityID = $this->db->table($entityTable)->insertGetId([
                 'updated_at' => $updated,
                 'created_at' => $created,
-                $ownerColumn => $userID,
+                $ownerColumn => $entityObject->ownerID(),
                 $entityObject->genus() . '_type_code_name' => $entityObject->typeCode()
             ]);
             $entityObject->fill([

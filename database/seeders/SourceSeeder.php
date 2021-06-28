@@ -13,8 +13,8 @@ use Illuminate\Support\Str;
 
 class SourceSeeder extends Seeder
 {
-    protected static int $sourcesN = 5;
-    protected static int $creatorsN = 3;
+    protected static int $sourcesPerUser = 10;
+    protected static int $creatorsPerUser = 4;
 
     protected Generator $faker;
 
@@ -39,10 +39,24 @@ class SourceSeeder extends Seeder
      */
     public function run()
     {
-        $ownersID = User::all('id');
-        $creatorsCollection = collect($this->createCreators(self::$creatorsN));
-        for ($i = 1; $i <= self::$sourcesN; $i++) {
-            $ownerID = $ownersID->random();
+        $ownersID = User::all('id')->pluck('id');
+        $creatorsCollection = $this->createUserCreators($ownersID->toArray(), self::$creatorsPerUser);
+        foreach ($ownersID as $ID) {
+            $this->createUserSources(self::$sourcesPerUser, $ID, $creatorsCollection[$ID]);
+        }
+    }
+
+    /**
+     * @param int $n
+     * @param int $ownerID
+     * @param \Illuminate\Support\Collection $creators
+     *
+     * @return void
+     */
+    public function createUserSources(int $n, int $ownerID, $creators)
+    {
+        for ($i = 1; $i <= $n; $i++) {
+            $ownerID = $ownerID;
             $pageInit =  $this->faker->numberBetween(7, 488);
             $pageEnd = $pageInit + $this->faker->numberBetween(1, 20);
             $this->sources->createFromArray([
@@ -61,7 +75,7 @@ class SourceSeeder extends Seeder
                         'role' => 'author',
                         'relevance' => 1,
                         'creator' => [
-                            'creatorID' => $creatorsCollection->random()->id()
+                            'creatorID' => $creators->random()->id()
                         ]
                     ]
                 ]
@@ -69,7 +83,12 @@ class SourceSeeder extends Seeder
         }
     }
 
-    public function createCreators(int $n): array
+    /**
+     * @param int $n
+     *
+     * @return \Arete\Logos\Domain\Creator[]
+     */
+    public function createCreators($ownerID, int $n): array
     {
         $creatorsCollection = [];
         for ($i = 1; $i <= $n; $i++) {
@@ -79,8 +98,23 @@ class SourceSeeder extends Seeder
                     'name'      => $this->faker->firstName() . ' ' . $this->faker->firstName(),
                     'lastName'  => $this->faker->lastName
                 ]
-            ]);
+            ], $ownerID);
         }
         return $creatorsCollection;
+    }
+
+    /**
+     * @param int[] $usersIDs
+     * @param int $creatorsPerUser
+     *
+     * @return array
+     */
+    public function createUserCreators(array $usersIDs, int $creatorsPerUser): array
+    {
+        $usersCreators = [];
+        foreach ($usersIDs as $ownerID) {
+            $usersCreators[$ownerID] = collect($this->createCreators($ownerID, $creatorsPerUser));
+        }
+        return $usersCreators;
     }
 }

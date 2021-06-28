@@ -60,8 +60,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
 
         $this->db->insertEntityAttributes(
             $source,
-            $params['attributes'],
-            $ownerID
+            $params['attributes']
         );
 
         // then add the participations
@@ -101,6 +100,8 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
      */
     public function getNew(int $id): Source
     {
+        $ownerFKColumn = $this->logos->getOwnersTableData()->FK;
+
         // lets create the source with it's attributes
         $attributes = $this->db->getEntityAttributes($id);
         $sourceEntry = $attributes->first();
@@ -109,7 +110,8 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
             $this->defaultFormatter,
             [
                 'id' => $sourceEntry->id,
-                'typeCode' => $sourceEntry->source_type_code_name
+                'typeCode' => $sourceEntry->source_type_code_name,
+                'ownerID' => $sourceEntry->$ownerFKColumn
             ]
         );
         // hidrate the model attributes
