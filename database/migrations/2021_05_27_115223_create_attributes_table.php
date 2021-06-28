@@ -22,7 +22,7 @@ class CreateAttributesTable extends Migration
                   ->on('attribute_types')
                   ->onDelete('cascade');
             $table->json('complex_value')->nullable();
-            $table->string('text_value')->nullable();
+            $table->string('text_value', 4000)->nullable();
             $table->integer('number_value')->nullable();
             $table->dateTime('date_value')->nullable();
             $table->unique(

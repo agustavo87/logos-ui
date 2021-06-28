@@ -8,7 +8,7 @@ use Arete\Logos\Domain\Source;
 
 interface SourcesRepository
 {
-    public function createFromArray(array $params): Source;
+    public function createFromArray(array $params, $ownerID = null): Source;
 
     public function get(int $id): Source;
 

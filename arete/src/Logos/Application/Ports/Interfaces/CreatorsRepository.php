@@ -15,11 +15,12 @@ interface CreatorsRepository
      * property => value
      *
      * @param array $properties
+     * @param $ownerID
      *
      * @throws IncorrectDataStructureException
      * @return void
      */
-    public function createFromArray(array $attributes, $userId): Creator;
+    public function createFromArray(array $attributes, $ownerID = null): Creator;
 
     /**
      * Returns the creator of provided id, null otherwise

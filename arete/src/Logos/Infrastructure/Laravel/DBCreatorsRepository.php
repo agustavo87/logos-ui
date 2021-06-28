@@ -26,7 +26,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
         $this->creatorTypes = $creatorTypes;
     }
 
-    public function createFromArray(array $params, $userId = 1): Creator
+    public function createFromArray(array $params, $ownerID = null): Creator
     {
         $creator = new Creator(
             $this->creatorTypes,

@@ -47,7 +47,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         $this->schema = $schema;
     }
 
-    public function createFromArray(array $params, ?string $ownerID = null): Source
+    public function createFromArray(array $params, $ownerID = null): Source
     {
         $ownerID = $ownerID ?? $this->logos->getOwner();
 

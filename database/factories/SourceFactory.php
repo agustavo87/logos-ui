@@ -20,7 +20,7 @@ class SourceFactory extends Factory
     /**
      * Keys that are already used in the current run,
      * and may not be persisted yet.
-     * 
+     *
      * @var array
      */
     public static array $usedKeys = [];
@@ -32,7 +32,7 @@ class SourceFactory extends Factory
      */
     public function definition()
     {
-        if(rand(0,1)) {
+        if (rand(0, 1)) {
             return $this->journalArticle();
         } else {
             return $this->book();
@@ -45,15 +45,15 @@ class SourceFactory extends Factory
 
         $name = $this->faker->firstName;
         $key = $this->getKey($name, $year);
-        
-        $title = substr(Str::title($this->faker->sentence),0,-1); // substr quita el punto final
-        $journal = substr(Str::title($this->faker->sentence),0,-1);
-        $volume = $this->faker->numberBetween(1,60);
-        $issue = $this->faker->numberBetween(1,4);
-        $pageInit = $this->faker->numberBetween(7,488);
-        $length = $this->faker->numberBetween(0,20);
-        
-        
+
+        $title = substr(Str::title($this->faker->sentence), 0, -1); // substr quita el punto final
+        $journal = substr(Str::title($this->faker->sentence), 0, -1);
+        $volume = $this->faker->numberBetween(1, 60);
+        $issue = $this->faker->numberBetween(1, 4);
+        $pageInit = $this->faker->numberBetween(7, 488);
+        $length = $this->faker->numberBetween(0, 20);
+
+
         // $count = User::count();
         // $first = User::first();
         // echo "journal|count: {$count}, first: " . ($count ? $first->id : 'null') . "\n";
@@ -80,8 +80,8 @@ class SourceFactory extends Factory
         $year = $this->faker->numberBetween(1930, 2021);
         $name = $this->faker->firstName;
         $key = $this->getKey($name, $year);
-        
-        $title = substr(Str::title($this->faker->sentence),0,-1);
+
+        $title = substr(Str::title($this->faker->sentence), 0, -1);
         $editorial = Str::title($this->faker->word);
         $city = Str::title($this->faker->city);
 
@@ -103,19 +103,19 @@ class SourceFactory extends Factory
         ];
     }
 
-    public function getKey ($name, $year)
+    public function getKey($name, $year)
     {
         $abc = "abcdefghijkmnopqrstuvwxyz0123456789"; // soporta solo unas cuantas repeticiones.
         $base = "{$name}{$year}";
         $try = $base;
         $i = 0;
-       while (
-           in_array($try, self::$usedKeys) 
-           || DB::table('sources')->where('key', $try)->exists()
-           ) {
-           $try = $base . $abc[$i++];
-       }
-       self::$usedKeys[] = $try;
-       return $try;
+        while (
+            in_array($try, self::$usedKeys)
+            || DB::table('sources')->where('key', $try)->exists()
+        ) {
+            $try = $base . $abc[$i++];
+        }
+        self::$usedKeys[] = $try;
+        return $try;
     }
 }

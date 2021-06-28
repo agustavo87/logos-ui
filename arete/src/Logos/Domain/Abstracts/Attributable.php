@@ -2,6 +2,7 @@
 
 /**
  * @todo Add a isEqual() and isLike() function to compare attributables.
+ * @todo Add a attributableKey identifier (as ayala2020)
  */
 
 declare(strict_types=1);
