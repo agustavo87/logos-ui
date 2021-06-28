@@ -3,73 +3,65 @@
 namespace App\Http\Controllers;
 
 use App\Models\Source;
+use App\Models\User;
+use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SourceController extends Controller
 {
+
+    protected SourcesRepository $sources;
+
+    public function __construct(SourcesRepository $sources)
+    {
+        $this->sources = $sources;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('sources.index');
-    }
+        if (Auth::check()) {
+            $userID = Auth::user()->id;
+        } elseif ($request->has('userid')) {
+            $userID = $request->userid;
+        } else {
+            $userID = User::first('id')->id;
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($request->has('attr')) {
+            $attr = $request->attr;
+        } else {
+            $attr = 'title';
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Source  $source
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Source $source)
-    {
-        //
-    }
+        if ($request->has('q')) {
+            $q = $request->q;
+        } else {
+            $q = 'a';
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Source  $source
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Source $source)
-    {
-        //
-    }
+        $results = $this->sources
+                        ->getLike(
+                            $attr,
+                            $q,
+                            $userID
+                        );
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Source  $source
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Source $source)
-    {
-        //
-    }
+        if (!count($results)) {
+            return 'sin resultados';
+        }
+        $results = array_map(function ($source) {
+            $sourceData = $source->toArray();
+            $sourceData['render'] = $source->render();
+            return $sourceData;
+        }, $results);
 
-    /**
-     * Show the view to edit the source
-     *
-     * @param  \App\Models\Source  $source
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($lang, Source $source)
-    {
-        return view('sources.edit', ['source' => $source]);
+        return $results;
     }
 }

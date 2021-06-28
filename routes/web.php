@@ -127,16 +127,8 @@ Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
 Route::group([
     'prefix' => 'test'
 ], function () {
-    Route::get('sources', function (SourcesRepository $sources) {
-        $results = $sources->getLike('title', 'et', 1);
-        if (!count($results)) {
-            return 'sin resultados';
-        }
-        $source = $results[0];
-        $sourceData = $source->toArray();
-        $sourceData['render'] = $source->render();
-        return $sourceData;
-    });
+    Route::get('sources', [SourceController::class, 'index']);
+
 });
 
 
