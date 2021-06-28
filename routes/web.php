@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     LocaleController,
     SourceController,
 };
+use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,5 +123,21 @@ Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
 | Test Routes
 |--------------------------------------------------------------------------
 */
+
+Route::group([
+    'prefix' => 'test'
+], function () {
+    Route::get('sources', function (SourcesRepository $sources) {
+        $results = $sources->getLike('title', 'et');
+        if (!count($results)) {
+            return 'sin resultados';
+        }
+        $source = $results[0];
+        $sourceData = $source->toArray();
+        $sourceData['render'] = $source->render();
+        return $sourceData;
+    });
+});
+
 
 Route::view('livewire', 'livewire');
