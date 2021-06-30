@@ -47,5 +47,12 @@ class SourcesProvider extends Provider
                 return new \Arete\Logos\Domain\Schema();
             }
         );
+
+        $this->container::register(
+            \Arete\Logos\Application\Ports\FilteredIndexUseCase::class,
+            function ($container) {
+                return new \Arete\Logos\Application\Ports\FilteredIndexUseCase();
+            }
+        );
     }
 }

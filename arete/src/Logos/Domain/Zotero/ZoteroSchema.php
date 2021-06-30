@@ -74,6 +74,12 @@ class ZoteroSchema extends FillableProperties
         return count($results) ? array_shift($results) : null;
     }
 
+    public function hasItemType(string $name): bool
+    {
+        $results = array_filter($this->itemTypes, fn ($item) => $item->itemType == $name);
+        return (bool) count($results);
+    }
+
     /**
      * Returns the registered value type in meta
      *

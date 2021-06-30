@@ -17,10 +17,11 @@ class LogosContainer extends Container
         'valueTypes' => \Arete\Logos\Application\Abstracts\ValueTypeMapper::class,
         'sourceTypeLabels' => \Arete\Logos\Application\Abstracts\MapsSourceTypeLabels::class,
         'zoteroSchema' => \Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface::class,
-        'schema' => \Arete\Logos\Domain\Schema::class
+        'schema' => \Arete\Logos\Domain\Schema::class,
+        'filteredIndex' => \Arete\Logos\Application\Ports\FilteredIndexUseCase::class
     ];
 
     protected static array $providers = [
-        \Arete\Logos\Application\SourcesProvider::class
+        \Arete\Logos\Application\SourcesProvider::class,
     ];
 }

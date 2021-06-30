@@ -197,4 +197,19 @@ class Container
             throw new \BadMethodCallException("Method don't exist", 1);
         }
     }
+
+    /**
+     * @param Provider[] $providers
+     *
+     * @return void
+     */
+    public static function setProviders(array $providers)
+    {
+        static::$providers = $providers;
+    }
+
+    public static function pushProvider(string $provider)
+    {
+        static::$providers[] = $provider;
+    }
 }

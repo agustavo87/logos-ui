@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Source;
-use App\Models\User;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
+use Arete\Logos\Application\Ports\Logos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class SourceController extends Controller
 {
+
+    public const DEF_ATTR = 'title';
+    public const DEF_Q = '%';
+    public static $defUserID = null;
 
     protected SourcesRepository $sources;
 
@@ -28,23 +30,11 @@ class SourceController extends Controller
     {
         if (Auth::check()) {
             $userID = Auth::user()->id;
-        } elseif ($request->has('userid')) {
-            $userID = $request->userid;
         } else {
-            $userID = User::first('id')->id;
+            $userID = $request->has('userid') ? $request->userid : self::$defUserID;
         }
-
-        if ($request->has('attr')) {
-            $attr = $request->attr;
-        } else {
-            $attr = 'title';
-        }
-
-        if ($request->has('q')) {
-            $q = $request->q;
-        } else {
-            $q = 'a';
-        }
+        $attr = $request->has('attr') ? $request->attr : self::DEF_ATTR;
+        $q = $request->has('q') ? $request->q : self::DEF_Q;
 
         $results = $this->sources
                         ->getLike(
@@ -54,7 +44,7 @@ class SourceController extends Controller
                         );
 
         if (!count($results)) {
-            return 'sin resultados';
+            return response()->json('no results');
         }
         $results = array_map(function ($source) {
             $sourceData = $source->toArray();
@@ -63,5 +53,14 @@ class SourceController extends Controller
         }, $results);
 
         return $results;
+    }
+
+    public function filter(Request $request)
+    {
+        return response()->json(
+            Logos::filteredIndex([
+                'title' => 'a'
+            ])
+        );
     }
 }

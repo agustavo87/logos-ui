@@ -6,7 +6,8 @@ namespace Arete\Logos\Infrastructure\Laravel\Models;
 
 use Illuminate\Support\Collection;
 use Arete\Logos\Domain\Role;
-use Arete\Logos\Domain\Abstracts\{SourceType, RoleCollection};
+use Arete\Logos\Domain\SourceType;
+use Arete\Logos\Domain\RoleCollection;
 
 /**
  * Laravel dependent RoleCollection.

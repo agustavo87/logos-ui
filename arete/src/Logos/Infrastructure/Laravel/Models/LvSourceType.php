@@ -7,7 +7,7 @@ namespace Arete\Logos\Infrastructure\Laravel\Models;
 use stdClass;
 use Illuminate\Support\Collection;
 use Arete\Logos\Domain\Attribute;
-use Arete\Logos\Domain\Abstracts\SourceType;
+use Arete\Logos\Domain\SourceType;
 
 /**
  * Laravel dependent SourceType

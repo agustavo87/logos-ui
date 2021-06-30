@@ -127,8 +127,12 @@ Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
 Route::group([
     'prefix' => 'test'
 ], function () {
-    Route::get('sources', [SourceController::class, 'index']);
-
+    Route::group([
+        'prefix' => 'sources'
+    ], function () {
+        Route::get('/', [SourceController::class, 'index']);
+        Route::get('filter', [SourceController::class, 'filter']);
+    });
 });
 
 
