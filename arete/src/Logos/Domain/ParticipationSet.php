@@ -55,6 +55,7 @@ class ParticipationSet implements Arrayable
                     // if there is more than one instance of same creator modified is undertimend wich is saved.
                     $dirtyCreators[$creator->id()] = $creator;
                 }
+                /** @todo ¿por qué no se chequea si está sucia la participación a guardar ? */
                 $toBeSavedParticipations[] = $participation;
             }
         }

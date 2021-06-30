@@ -18,9 +18,18 @@ interface ParticipationRepository
      *
      * @return void
      */
-    public function create(Source $source, Creator $creator, string $role, int $relevance): Participation;
+    public function create(
+        Source $source,
+        Creator $creator,
+        string $role,
+        int $relevance
+    ): Participation;
 
-    public function remove(Source $source, string $roleCode, $creatorID): bool;
+    public function remove(
+        Source $source,
+        string $roleCode,
+        $creatorID
+    ): bool;
 
     /**
      * Loads participations from persistence
