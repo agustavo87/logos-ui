@@ -8,8 +8,11 @@ use Arete\Common\Provider;
 use Arete\Logos\Application\Abstracts\MapsSourceTypeLabels;
 use Arete\Logos\Application\Abstracts\ValueTypeMapper;
 use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository as ConfigurationRepositoryPort;
+use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
+use Arete\Logos\Domain\Schema;
+use Arete\Logos\Infrastructure\Defaults\CreatorTypeRepository as DefaultCreatorTypeRepository;
 use Arete\Logos\Infrastructure\Defaults\ZoteroSourceTypeRepository;
 
 class TestSourcesProvider extends Provider
@@ -30,6 +33,16 @@ class TestSourcesProvider extends Provider
                     $container::get(ValueTypeMapper::class),
                     $container::get(MapsSourceTypeLabels::class),
                     $container::get(ZoteroSchemaLoaderInterface::class)
+                );
+            }
+        );
+
+        $this->container::register(
+            CreatorTypeRepository::class,
+            function ($container) {
+                return new DefaultCreatorTypeRepository(
+                    $container::get(Schema::class),
+                    $container::get(ValueTypeMapper::class)
                 );
             }
         );
