@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Arete\Logos\Infrastructure\Mocks;
+namespace Arete\Logos\Infrastructure\Defaults;
 
 use Arete\Logos\Application\ValueTypeMapper;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository as SourceTypeRepository;

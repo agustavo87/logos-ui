@@ -10,7 +10,7 @@ use Arete\Logos\Application\Abstracts\ValueTypeMapper;
 use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository as ConfigurationRepositoryPort;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
-use Arete\Logos\Infrastructure\Mocks\ZoteroSourceTypeRepository;
+use Arete\Logos\Infrastructure\Defaults\ZoteroSourceTypeRepository;
 
 class TestSourcesProvider extends Provider
 {
@@ -19,7 +19,7 @@ class TestSourcesProvider extends Provider
         $this->container::register(
             ConfigurationRepositoryPort::class,
             function ($container) {
-                return new \Arete\Logos\Infrastructure\Mocks\ConfigurationRepository();
+                return new \Arete\Logos\Infrastructure\Defaults\ConfigurationRepository();
             }
         );
 
