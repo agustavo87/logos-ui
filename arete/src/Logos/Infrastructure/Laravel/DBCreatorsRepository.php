@@ -26,6 +26,14 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
         $this->creatorTypes = $creatorTypes;
     }
 
+    /**
+     * @param array $params
+     * @param null $ownerID
+     *
+     * @throws \Arete\Exceptions\PersistenceException
+     * @throws \Arete\Exceptions\IncorrectDataStructureException
+     * @return Creator
+     */
     public function createFromArray(array $params, $ownerID = null): Creator
     {
         $ownerID = $ownerID ?? $this->logos->getOwner();
@@ -57,6 +65,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
     /**
      * returns a new object even if theres already an instance of it
      *
+     * Don't return from the cache if there is one. Has to be used carrefully
      * the parallel versions can create unexpected results.
      *
      * @param int $id

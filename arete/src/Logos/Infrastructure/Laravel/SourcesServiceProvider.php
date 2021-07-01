@@ -3,7 +3,6 @@
 namespace Arete\Logos\Infrastructure\Laravel;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Support\DeferrableProvider;
 use Arete\Logos\Application\LogosContainer as Logos;
 use Arete\Logos\Domain\SimpleFormatter;
 
