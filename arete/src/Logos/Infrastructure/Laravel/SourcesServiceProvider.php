@@ -15,7 +15,11 @@ class SourcesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__  . '/../../../../config/sources.php', 'sources');
+        $this->mergeConfigFrom(__DIR__  . '/config/sources.php', 'sources');
+
+        $this->loadRoutesFrom(__DIR__ . '/Http/routes.php');
+
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
 
         $this->app->bind(
             \Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository::class,

@@ -7,10 +7,8 @@ use App\Http\Controllers\{
     ArticleController,
     AuthController,
     UserController,
-    LocaleController,
-    SourceController,
+    LocaleController
 };
-use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,17 +121,5 @@ Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
 | Test Routes
 |--------------------------------------------------------------------------
 */
-
-Route::group([
-    'prefix' => 'test'
-], function () {
-    Route::group([
-        'prefix' => 'sources'
-    ], function () {
-        Route::get('/', [SourceController::class, 'index']);
-        Route::get('filter', [SourceController::class, 'filter']);
-    });
-});
-
 
 Route::view('livewire', 'livewire');

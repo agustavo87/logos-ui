@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Arete\Logos\Infrastructure\Laravel\Http\Controllers;
 
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Logos;
