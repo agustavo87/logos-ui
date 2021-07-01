@@ -98,8 +98,7 @@ class CreatorsRepositoryTest extends TestCase
         $randomWord = $faker->word() . ' ' . str_shuffle($faker->word());
         $storedCreator->name .= ' ' . $randomWord;
         self::$creators->save($storedCreator);
-        $result = self::$creators->getLike('name', $randomWord);
-        $creator = array_shift($result);
+        $creator = self::$creators->getLike('name', $randomWord)[0];
         $this->assertStringContainsString($randomWord, $creator->name);
         $this->assertEquals($storedCreator->lastName, $creator->lastName);
         return $creator;

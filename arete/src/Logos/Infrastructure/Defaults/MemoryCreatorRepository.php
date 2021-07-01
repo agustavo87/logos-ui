@@ -119,7 +119,7 @@ class MemoryCreatorRepository implements CreatorsRepository
             }
             return str_contains((string) $creator->$attributeCode, $attributeValue);
         });
-        return $results;
+        return array_values($results);
     }
 
     /**
