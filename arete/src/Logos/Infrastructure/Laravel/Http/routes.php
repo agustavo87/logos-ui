@@ -2,7 +2,6 @@
 
 use Arete\Logos\Infrastructure\Laravel\Http\Controllers\SourceController;
 use Illuminate\Support\Facades\Route;
-use Arete\Logos\Application\Ports\Logos;
 
 // use Illuminate\Http\Request;
 

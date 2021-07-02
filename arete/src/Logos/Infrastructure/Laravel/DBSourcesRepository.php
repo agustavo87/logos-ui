@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Infrastructure\Laravel;
 
+use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository as SourcesRepositoryPort;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
@@ -17,7 +18,7 @@ use Arete\Logos\Domain\Source;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\ParticipationSet;
 
-class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
+class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort, ComplexSourcesRepository
 {
     protected CreatorsRepository $creators;
     protected SourceTypeRepository $sourceTypes;
@@ -159,5 +160,10 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort
         }
 
         return $result;
+    }
+
+    public function complexFilter(array $params): array
+    {
+        return ['msg' => 'hola :)', 'params' => $params];
     }
 }

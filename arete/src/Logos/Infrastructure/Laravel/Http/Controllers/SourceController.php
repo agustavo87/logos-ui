@@ -6,6 +6,7 @@ use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Logos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Arete\Common\Laravel\Controller;
 
 class SourceController extends Controller
 {

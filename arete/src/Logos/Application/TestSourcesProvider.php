@@ -8,6 +8,7 @@ use Arete\Common\Provider;
 use Arete\Logos\Application\Abstracts\MapsSourceTypeLabels;
 use Arete\Logos\Application\Abstracts\ValueTypeMapper;
 use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository;
+use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
@@ -85,6 +86,21 @@ class TestSourcesProvider extends Provider
 
         $this->container::register(
             SourcesRepository::class,
+            function ($container) {
+                return new MemorySourcesRepository(
+                    $container::get(CreatorsRepository::class),
+                    $container::get(SourceTypeRepository::class),
+                    $container::get(CreatorTypeRepository::class),
+                    $container::get(ParticipationRepository::class),
+                    new SimpleFormatter(),
+                    new Schema(),
+                    $container::get(LogosEnviroment::class)
+                );
+            }
+        );
+
+        $this->container::register(
+            ComplexSourcesRepository::class,
             function ($container) {
                 return new MemorySourcesRepository(
                     $container::get(CreatorsRepository::class),

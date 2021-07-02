@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Logos\Infrastructure;
+namespace Arete\Logos\Tests;
 
 use Arete\Logos\Application\LogosContainer;
 use PHPUnit\Framework\TestCase;

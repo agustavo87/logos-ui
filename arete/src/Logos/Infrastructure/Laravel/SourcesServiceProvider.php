@@ -56,6 +56,23 @@ class SourcesServiceProvider extends ServiceProvider
                 );
             }
         );
+
+        $this->app->bind(
+            \Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository::class,
+            function ($app) {
+                return new \Arete\Logos\Infrastructure\Laravel\DBSourcesRepository(
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\CreatorsRepository::class),
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository::class),
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository::class),
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\ParticipationRepository::class),
+                    new SimpleFormatter(),
+                    $app->make(\Arete\Logos\Domain\Schema::class),
+                    $app->make(\Arete\Logos\Infrastructure\Laravel\Common\DB::class),
+                    $app->make(\Arete\Logos\Application\Ports\Interfaces\LogosEnviroment::class)
+                );
+            }
+        );
+
         $this->app->bind(
             \Arete\Logos\Application\Ports\Interfaces\CreatorsRepository::class,
             function ($app) {

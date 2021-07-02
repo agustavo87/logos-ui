@@ -1,6 +1,6 @@
 <?php
 
-namespace Arete\Logos\Infrastructure\Laravel\Http\Controllers;
+namespace Arete\Common\Laravel;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
