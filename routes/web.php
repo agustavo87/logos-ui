@@ -7,7 +7,8 @@ use App\Http\Controllers\{
     ArticleController,
     AuthController,
     UserController,
-    LocaleController
+    LocaleController,
+    SourceController
 };
 
 /*

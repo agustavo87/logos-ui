@@ -17,5 +17,11 @@ class UserSeeder extends Seeder
         $users = User::factory()
             ->count(5)
             ->create();
+        $userA = $users[0];
+        $userB = $users[1];
+        $userA->email = 'agustavo87@gmail.com';
+        $userB->email = 'john.doe@example.com';
+        $userA->save();
+        $userB->save();
     }
 }

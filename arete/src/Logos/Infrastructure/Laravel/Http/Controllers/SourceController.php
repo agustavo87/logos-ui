@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class SourceController extends Controller
 {
-
     public const DEF_ATTR = 'title';
     public const DEF_Q = '%';
     public static $defUserID = null;

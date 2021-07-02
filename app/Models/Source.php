@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Arete\Logos\Application\Sources; // Luego implementarlo en el service provider de logos
+// use Arete\Logos\Application\Sources; // Luego implementarlo en el service provider de logos
 use Illuminate\Support\Facades\DB;
 
 class Source extends Model
 {
     use HasFactory;
 
-    public Sources $sourceManager;
+    // public Sources $sourceManager;
 
     protected $guarded = [];
 
@@ -19,18 +19,18 @@ class Source extends Model
         'data' => 'array'
     ];
 
-    /**
-     * Faker instance if it is required it i has to be generated.
-     *
-     * @var null
-     */
-    protected $faker = null;
+    // /**
+    //  * Faker instance if it is required it i has to be generated.
+    //  *
+    //  * @var null
+    //  */
+    // protected $faker = null;
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-        $this->sourceManager = new Sources();
-    }
+    // public function __construct(array $attributes = [])
+    // {
+    //     parent::__construct($attributes);
+    //     // $this->sourceManager = new Sources();
+    // }
 
     /**
      * Get the user that owns the source.
@@ -60,30 +60,30 @@ class Source extends Model
     public function creators()
     {
         return $this->belongsToMany(Creator::class)
-            ->withPivot('type','relevance')
+            ->withPivot('type', 'relevance')
             ->using(CreatorSource::class)
             ->as('role');
     }
 
-    /**
-     * Return a string representation of the Source
-     *
-     * @return string
-     */
-    public function render(): string
-    {
-        return $this->sourceManager->render($this);
-    }
+    // /**
+    //  * Return a string representation of the Source
+    //  *
+    //  * @return string
+    //  */
+    // public function render(): string
+    // {
+    //     // return $this->sourceManager->render($this);
+    // }
 
-    /**
-     * Return a readable name of the type of the source
-     *
-     * @return string
-     */
-    public function name(): string
-    {
-        return $this->sourceManager->name($this);
-    }
+    // /**
+    //  * Return a readable name of the type of the source
+    //  *
+    //  * @return string
+    //  */
+    // public function name(): string
+    // {
+    //     return $this->sourceManager->name($this);
+    // }
 
     /**
      * Generate key
@@ -103,7 +103,7 @@ class Source extends Model
             $last_name = $faker->lastName();
         }
 
-        $year = $this->data['year'] ? $this->data['year'] : $faker->numberBetween(1950,2019);
+        $year = $this->data['year'] ? $this->data['year'] : $faker->numberBetween(1950, 2019);
         $key = strtolower("{$last_name}{$year}");
 
         while ($this->keyExist($key)) {
@@ -126,5 +126,4 @@ class Source extends Model
         return DB::table('sources')->where('user_id', $this->user->id)
                                    ->where('key', $key)->exists();
     }
-
 }
