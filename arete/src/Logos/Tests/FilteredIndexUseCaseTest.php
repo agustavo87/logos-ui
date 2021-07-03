@@ -26,6 +26,7 @@ class FilteredIndexUseCaseTest extends TestCase
         /** @var SourcesRepository */
         $sources = LogosContainer::get(SourcesRepository::class);
         $sources->flush();
+
         $sources->createFromArray([
             'type' => 'journalArticle',
             'attributes' => [
@@ -36,7 +37,8 @@ class FilteredIndexUseCaseTest extends TestCase
                 'volume' => 4,
                 'issue' => 3
             ]
-        ]);
+        ], 3);
+
         $sources->createFromArray([
             'type' => 'journalArticle',
             'attributes' => [
@@ -71,29 +73,32 @@ class FilteredIndexUseCaseTest extends TestCase
                     ]
                 ]
             ]
-        ]);
+        ], 3);
 
-        $sources->createFromArray([
-            'type' => 'book',
-            'attributes' => [
-                'title' => "Animal Metaphysics Handbook",
-                'publisher' => 'Gomez e Hijos Inc.',
-                'place' => 'Argentina'
-            ],
-            'participations' => [
-                [
-                    'role' => 'author',
-                    'relevance' => 2,
-                    'creator' => [
-                        'type' => 'person',
-                        'attributes' => [
-                            'name' => "Magdalena Tamara",
-                            'lastName' => "Guiñazú"
+        $sources->createFromArray(
+            [
+                'type' => 'book',
+                'attributes' => [
+                    'title' => "Animal Metaphysics Handbook",
+                    'publisher' => 'Gomez e Hijos Inc.',
+                    'place' => 'Argentina'
+                ],
+                'participations' => [
+                    [
+                        'role' => 'author',
+                        'relevance' => 2,
+                        'creator' => [
+                            'type' => 'person',
+                            'attributes' => [
+                                'name' => "Magdalena Tamara",
+                                'lastName' => "Guiñazú"
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ]);
+            ],
+            1
+        );
     }
 
     public function testSourcesPersited()
@@ -177,6 +182,23 @@ class FilteredIndexUseCaseTest extends TestCase
             "Roberto Miguel",
             $source->participations()->byRelevance('reviewedAuthor')[0]->name
         );
+        return $filter;
+    }
+
+    /**
+     * @param FilteredIndexUseCase $filter
+     *
+     * @depends testFilterByRole
+     * @return FilteredIndexUseCase
+     */
+    public function testFilterByOwner(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    {
+        $results = $filter->filter([
+            'ownerID' => '1'
+        ]);
+        $this->assertGreaterThan(0, count($results));
+        $source = $results[0];
+        $this->assertEquals('Animal Metaphysics Handbook', $source->title);
         return $filter;
     }
 }

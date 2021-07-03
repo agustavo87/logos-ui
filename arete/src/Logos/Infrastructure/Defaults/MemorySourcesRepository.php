@@ -150,7 +150,9 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
                     return false;
                 }
             }
-            return $source->has($attributeCode) ? str_contains((string) $source->$attributeCode, $attributeValue) : false;
+            return $source->has($attributeCode) ?
+                                str_contains((string) $source->$attributeCode, $attributeValue) :
+                                false;
         });
         return array_values($results);
     }
@@ -176,6 +178,17 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
                 );
             }
         }
+
+        // filter by owner
+        if (isset($params['ownerID'])) {
+            // if there is results, start from there, if not, start with all sources.
+            $result = count($result) ? $result : self::$sources;
+            $result = array_filter(
+                $result,
+                fn (Source $source) => (string) $source->ownerID() == $params['ownerID']
+            );
+        }
+
 
         // filter by creators/participants
         if (isset($params['participantions'])) {
@@ -216,7 +229,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
      *
      * @return array
      */
-    public function filterByAttribute(array $attributables, string $attrCode, string $attrValue): array
+    protected function filterByAttribute(array $attributables, string $attrCode, string $attrValue): array
     {
         return array_filter(
             $attributables,
@@ -248,7 +261,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
      *
      * @return int[]|null
      */
-    public function pluckIds(array $sources): ?array
+    protected function pluckIds(array $sources): ?array
     {
         return count($sources) ? $this->pluck($sources, 'id') : null;
     }
