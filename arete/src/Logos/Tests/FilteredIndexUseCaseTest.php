@@ -25,6 +25,7 @@ class FilteredIndexUseCaseTest extends TestCase
     {
         /** @var SourcesRepository */
         $sources = LogosContainer::get(SourcesRepository::class);
+        $sources->flush();
         $sources->createFromArray([
             'type' => 'journalArticle',
             'attributes' => [
@@ -42,9 +43,55 @@ class FilteredIndexUseCaseTest extends TestCase
                 'title' => "Todos los gatos van al Cielo.",
                 'abstractNote' =>   "La historia del trato secreto de Dios con una especie diseñada " .
                                     "para llevar a los humanos a ejercitar su paciencia.",
+                'publicationTitle' => 'Journal of Trans-Species Metaphysics.',
                 'date' => new DateTime('01-01-1988'),
                 'volume' => 4,
                 'issue' => 3
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 2,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Magdalena Tamara",
+                            'lastName' => "Guiñazú"
+                        ]
+                    ]
+                ], [
+                    'role' => 'reviewedAuthor',
+                    'relevance' => 4,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Roberto Miguel",
+                            'lastName' => "García"
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $sources->createFromArray([
+            'type' => 'book',
+            'attributes' => [
+                'title' => "Animal Metaphysics Handbook",
+                'publisher' => 'Gomez e Hijos Inc.',
+                'place' => 'Argentina'
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 2,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Magdalena Tamara",
+                            'lastName' => "Guiñazú"
+                        ]
+                    ]
+                ]
             ]
         ]);
     }
@@ -70,13 +117,40 @@ class FilteredIndexUseCaseTest extends TestCase
      * @depends testTestBindingsWorking
      * @return FilteredIndexUseCase
      */
-    public function testFilteredIndexFilterAttributes(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    public function testFilterByAttributes(FilteredIndexUseCase $filter): FilteredIndexUseCase
     {
         $params = [
             'attributes' => ['title' => 'gatos', 'abstractNote' => 'Dios']
         ];
         $godSource = $filter->filter($params)[0];
         $this->assertEquals("Todos los gatos van al Cielo.", $godSource->title);
+        return $filter;
+    }
+
+    /**
+     * @param FilteredIndexUseCase $filter
+     *
+     * @depends testFilterByAttributes
+     * @return FilteredIndexUseCase
+     */
+    public function testFilterByAuthor(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    {
+        $result = $filter->filter([
+                'attributes' => [
+                    'title' => 'gatos'
+                ],
+                'participantions' => [
+                    'author' => [
+                        'attributes' => [
+                            'name' => 'Magdalena Tamara'
+                        ]
+                    ]
+                ],
+            ]);
+
+        $source = $result[0];
+
+        $this->assertEquals("Todos los gatos van al Cielo.", $source->title);
         return $filter;
     }
 }

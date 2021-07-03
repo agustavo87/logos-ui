@@ -47,6 +47,12 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         $this->logos = $logos;
     }
 
+
+    public function flush()
+    {
+        self::$sources = [];
+    }
+
     protected static function newId(): int
     {
         $id = array_slice(self::$ids, -1, 1)[0] + 1;
@@ -144,26 +150,67 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
                     return false;
                 }
             }
-            return str_contains((string) $source->$attributeCode, $attributeValue);
+            return $source->has($attributeCode) ? str_contains((string) $source->$attributeCode, $attributeValue) : false;
         });
         return array_values($results);
     }
 
     public function complexFilter(array $params): array
     {
+        if (!count(self::$sources)) {
+            return [];
+        }
         $result = [];
-        if ($params['attributes']) {
+        $ownerID = isset($params['ownerID']) ? $params['ownerID'] : null;
+        if (isset($params['attributes'])) {
             foreach ($params['attributes'] as $attribute => $condition) {
-                $subset = count($result) ? $this->pluck($result, 'id') : null;
+                $subset = $this->pluckIds($result);
                 $result = $this->getLike(
                     $attribute,
                     $condition,
-                    null,
+                    $ownerID,
                     $subset
                 );
             }
         }
-        return $result;
+        if (isset($params['participantions'])) {
+            $result = count($result) ? $result : self::$sources;
+            foreach ($params['participantions'] as $role => $properties) {
+                if (isset($properties['attributes'])) {
+                    foreach ($properties['attributes'] as $attrCode => $attrValue) {
+                        $result = array_filter(
+                            $result,
+                            function (Source $source) use ($attrCode, $attrValue, $role) {
+                                return $source->participations()->has($role) ?
+                                    ($this->filterByAttribute($source->participations()->$role, $attrCode, $attrValue)) :
+                                    false;
+                            }
+                        );
+                    }
+                }
+            }
+        }
+        return array_values($result);
+    }
+
+    /**
+     * @param object[] $attributables
+     * @param string $attrCode
+     * @param string $attrValue
+     *
+     * @return array
+     */
+    public function filterByAttribute(array $attributables, string $attrCode, string $attrValue): array
+    {
+        return array_filter(
+            $attributables,
+            function ($attributable) use ($attrCode, $attrValue) {
+                if ($attributable->has($attrCode)) {
+                    return (string) $attributable->$attrCode == $attrValue;
+                }
+                return false;
+            }
+        );
     }
 
     /**
@@ -178,5 +225,15 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
             fn ($object) => $method ? $object->$property() : $object->$property,
             $objects
         );
+    }
+
+    /**
+     * @param Source[] $sources
+     *
+     * @return int[]|null
+     */
+    public function pluckIds(array $sources): ?array
+    {
+        return count($sources) ? $this->pluck($sources, 'id') : null;
     }
 }

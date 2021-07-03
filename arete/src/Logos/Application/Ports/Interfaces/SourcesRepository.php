@@ -36,4 +36,11 @@ interface SourcesRepository
      * @return Source[]
      */
     public function getLike(string $attributeCode, string $attributeValue, $ownerID = null): array;
+
+    /**
+     * clear cached and temporal data.
+     *
+     * @return void
+     */
+    public function flush();
 }

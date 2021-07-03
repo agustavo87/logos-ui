@@ -166,4 +166,9 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     {
         return ['msg' => 'hola :)', 'params' => $params];
     }
+
+    public function flush()
+    {
+        $this->cache = [];
+    }
 }

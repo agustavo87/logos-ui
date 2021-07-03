@@ -1,5 +1,9 @@
 <?php
 
+/**
+ *  @todo crear una interfaz Attributable que tenga estos métodos.
+ */
+
 declare(strict_types=1);
 
 namespace Arete\Logos\Domain\Traits;

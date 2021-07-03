@@ -11,8 +11,6 @@ use Arete\Logos\Domain\Source;
 
 class SimpleParticipation implements Participation
 {
-    use ExposeAttributes;
-
     protected int $relevance;
     protected ?Creator $creator = null;
     protected Role $role;
@@ -39,6 +37,60 @@ class SimpleParticipation implements Participation
     public function __set($name, $value)
     {
         return $this->creator->$name = $value;
+    }
+
+    public function count(): int
+    {
+        return $this->creator->count();
+    }
+
+     /**
+     * Returns true if the class has the attribute
+     *
+     * @param string $attribute
+     *
+     * @return bool
+     */
+    public function has(string $attribute): bool
+    {
+        return $this->creator->has($attribute);
+    }
+
+    /**
+     * Returns the attributes names
+     *
+     * @return string[]
+     */
+    public function attributes(): array
+    {
+        return $this->creator->attributes();
+    }
+
+    /**
+     * Returns the attributes as associative attribute => value array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'role' => $this->role->code,
+            'relevance' => $this->relevance,
+            'creator' => $this->creator->toArray()
+        ];
+    }
+
+    /**
+     * Introduces a new attribute
+     *
+     * @param string $attribute
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function pushAttribute(string $attribute, $value)
+    {
+        $this->creator->pushAttribute($attribute, $value);
     }
 
     public function creatorId(): int
@@ -77,12 +129,5 @@ class SimpleParticipation implements Participation
         return $this;
     }
 
-    public function toArray(): array
-    {
-        return [
-            'role' => $this->role->code,
-            'relevance' => $this->relevance,
-            'creator' => $this->creator->toArray()
-        ];
-    }
+
 }

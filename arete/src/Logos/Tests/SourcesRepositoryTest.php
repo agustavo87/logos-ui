@@ -32,6 +32,7 @@ class SourcesRepositoryTest extends TestCase
         LogosContainer::pushProvider(TestSourcesProvider::class);
         LogosContainer::load();
         self::$sources = LogosContainer::get(SourcesRepository::class);
+        self::$sources->flush();
     }
 
     public function testCreatorTypeRepositoryTestIsBinded()
