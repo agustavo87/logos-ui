@@ -157,11 +157,14 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
 
     public function complexFilter(array $params): array
     {
+        // if there's no sources nothing can be filtered
         if (!count(self::$sources)) {
             return [];
         }
         $result = [];
         $ownerID = isset($params['ownerID']) ? $params['ownerID'] : null;
+
+        // filter by source attributes
         if (isset($params['attributes'])) {
             foreach ($params['attributes'] as $attribute => $condition) {
                 $subset = $this->pluckIds($result);
@@ -173,17 +176,30 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
                 );
             }
         }
+
+        // filter by creators/participants
         if (isset($params['participantions'])) {
+            // if there is results, start from there, if not, start with all sources.
             $result = count($result) ? $result : self::$sources;
+
             foreach ($params['participantions'] as $role => $properties) {
+                // filter the sources that have some creator with the specified role.
+                $result = array_filter(
+                    $result,
+                    fn (Source $source) => $source->participations()->has($role)
+                );
+
+                // if specified, filter by the creator attributes
                 if (isset($properties['attributes'])) {
                     foreach ($properties['attributes'] as $attrCode => $attrValue) {
                         $result = array_filter(
                             $result,
                             function (Source $source) use ($attrCode, $attrValue, $role) {
-                                return $source->participations()->has($role) ?
-                                    ($this->filterByAttribute($source->participations()->$role, $attrCode, $attrValue)) :
-                                    false;
+                                return $this->filterByAttribute(
+                                    $source->participations()->$role,
+                                    $attrCode,
+                                    $attrValue
+                                );
                             }
                         );
                     }

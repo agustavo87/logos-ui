@@ -20,6 +20,11 @@ class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
         return $this->filter($params);
     }
 
+    /**
+     * @param array $params
+     *
+     * @return \Arete\Logos\Domain\Source[]
+     */
     public function filter(array $params): array
     {
         return $this->sources->complexFilter($params);

@@ -153,4 +153,30 @@ class FilteredIndexUseCaseTest extends TestCase
         $this->assertEquals("Todos los gatos van al Cielo.", $source->title);
         return $filter;
     }
+
+    /**
+     * @param FilteredIndexUseCase $filter
+     *
+     * @depends testFilterByAuthor
+     * @return FilteredIndexUseCase
+     */
+    public function testFilterByRole(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    {
+        $result = $filter->filter([
+                'attributes' => [
+                    'title' => 'gatos'
+                ],
+                'participantions' => [
+                    'reviewedAuthor' => []
+                ],
+            ]);
+
+        $source = $result[0];
+
+        $this->assertEquals(
+            "Roberto Miguel",
+            $source->participations()->byRelevance('reviewedAuthor')[0]->name
+        );
+        return $filter;
+    }
 }
