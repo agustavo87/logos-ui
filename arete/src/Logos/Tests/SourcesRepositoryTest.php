@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace Arete\Logos\Tests;
 
 use Arete\Logos\Application\LogosContainer;
+use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\TestSourcesProvider;
 use Arete\Logos\Domain\Abstracts\SourceType;
 use Arete\Logos\Domain\Contracts\Participation;
 use Arete\Logos\Domain\ParticipationSet;
 use Arete\Logos\Domain\Source;
+use Arete\Logos\Tests\Traits\SourcesComplexFilterTest;
 use PHPUnit\Framework\TestCase;
 use Faker\Generator;
 
 class SourcesRepositoryTest extends TestCase
 {
+    use SourcesComplexFilterTest;
+
     public static SourcesRepository $sources;
     protected Generator $faker;
 
@@ -35,12 +39,13 @@ class SourcesRepositoryTest extends TestCase
         self::$sources->flush();
     }
 
-    public function testCreatorTypeRepositoryTestIsBinded()
+    public function testSourcesRepositoryIsBinded(): SourcesRepository
     {
         $this->assertInstanceOf(SourcesRepository::class, self::$sources);
+        return self::$sources;
     }
 
-        /**
+    /**
     * Test de creation of a new source
     *
     * @return Source
@@ -377,5 +382,12 @@ class SourcesRepositoryTest extends TestCase
             $fetchedSource->participations()->author[$firstAuthor->creatorId()]->name
         );
         return $fetchedSource;
+    }
+
+    public function testComplexSourcesRepositoryIsBinded(): ComplexSourcesRepository
+    {
+        $complexSources = LogosContainer::get(ComplexSourcesRepository::class);
+        $this->assertInstanceOf(ComplexSourcesRepository::class, $complexSources);
+        return $complexSources;
     }
 }
