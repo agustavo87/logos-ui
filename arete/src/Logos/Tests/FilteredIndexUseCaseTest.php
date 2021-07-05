@@ -144,7 +144,7 @@ class FilteredIndexUseCaseTest extends TestCase
                 'attributes' => [
                     'title' => 'gatos'
                 ],
-                'participantions' => [
+                'participations' => [
                     'author' => [
                         'attributes' => [
                             'name' => 'Magdalena Tamara'
@@ -171,7 +171,7 @@ class FilteredIndexUseCaseTest extends TestCase
                 'attributes' => [
                     'title' => 'gatos'
                 ],
-                'participantions' => [
+                'participations' => [
                     'reviewedAuthor' => []
                 ],
             ]);

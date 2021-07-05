@@ -191,11 +191,11 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
 
 
         // filter by creators/participants
-        if (isset($params['participantions'])) {
+        if (isset($params['participations'])) {
             // if there is results, start from there, if not, start with all sources.
             $result = count($result) ? $result : self::$sources;
 
-            foreach ($params['participantions'] as $role => $properties) {
+            foreach ($params['participations'] as $role => $properties) {
                 // filter the sources that have some creator with the specified role.
                 $result = array_filter(
                     $result,

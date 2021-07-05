@@ -164,7 +164,12 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
 
     public function complexFilter(array $params): array
     {
-        return ['msg' => 'hola :)', 'params' => $params];
+        $selectedIDs = $this->db->getSourceIDsWith($params);
+        $sources = [];
+        foreach ($selectedIDs as $sourceID) {
+            $sources[] = $this->get($sourceID);
+        }
+        return array_values($sources);
     }
 
     public function flush()

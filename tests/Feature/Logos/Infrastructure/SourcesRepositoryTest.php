@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos\Infrastructure;
 
-use Arete\Logos\Domain\ParticipationSet;
-use Arete\Logos\Domain\Abstracts\SourceType;
-use Arete\Logos\Domain\Source;
 use Tests\TestCase;
+use Arete\Logos\Application\LogosContainer;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
+use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
+use Arete\Logos\Domain\Source;
+use Arete\Logos\Domain\Abstracts\SourceType;
+use Arete\Logos\Domain\ParticipationSet;
 use Arete\Logos\Domain\Contracts\Participation;
+use Arete\Logos\Tests\Traits\SourcesComplexFilterTest;
 use Faker\Generator;
 
 class SourcesRepositoryTest extends TestCase
 {
+    use SourcesComplexFilterTest;
+
     protected Generator $faker;
 
     public function __construct(...$args)
@@ -373,5 +378,12 @@ class SourcesRepositoryTest extends TestCase
             $fetchedSource->participations()->author[$firstAuthor->creatorId()]->name
         );
         return $fetchedSource;
+    }
+
+    public function testComplexSourcesRepositoryIsBinded(): ComplexSourcesRepository
+    {
+        $complexSource = LogosContainer::get(ComplexSourcesRepository::class);
+        $this->assertInstanceOf(ComplexSourcesRepository::class, $complexSource);
+        return $complexSource;
     }
 }

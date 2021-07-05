@@ -51,7 +51,7 @@ trait SourcesComplexFilterTest
                 'attributes' => [
                     'title' => 'gatos'
                 ],
-                'participantions' => [
+                'participations' => [
                     'author' => [
                         'attributes' => [
                             'name' => 'Magdalena Tamara'
@@ -78,7 +78,7 @@ trait SourcesComplexFilterTest
                 'attributes' => [
                     'title' => 'gatos'
                 ],
-                'participantions' => [
+                'participations' => [
                     'reviewedAuthor' => []
                 ],
             ]);
@@ -101,7 +101,14 @@ trait SourcesComplexFilterTest
     public function testFilterByOwner(ComplexSourcesRepository $sources): ComplexSourcesRepository
     {
         $results = $sources->complexFilter([
-            'ownerID' => '1'
+            'ownerID' => '1',
+            'participations' => [
+                'author' => [
+                    'attributes' => [
+                        'name' => 'Magdalena Tamara'
+                    ]
+                ]
+            ]
         ]);
         $this->assertGreaterThan(0, count($results));
         $source = $results[0];
