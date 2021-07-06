@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Arete\Common\Laravel\Controller;
 use Arete\Logos\Domain\Source;
+use Illuminate\Support\Facades\Log;
 
 class SourceController extends Controller
 {
@@ -79,8 +80,17 @@ class SourceController extends Controller
         return response()->json($data);
     }
 
-    public function showSearch(SourceSearchRequest $request)
+    public function showSearch(Request $request)
     {
-        return view('logos::sources.search');
+        $user = auth()->check() ? auth()->user()->id : 0;
+        Log::info('user', ['user' => $user]);
+        return view('logos::sources.search', [
+            'userID' => $user
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        dd($request->all());
     }
 }

@@ -1,20 +1,25 @@
 @props([
-    'name','label',
+    'name','label', 'containerStyle' => null,
     'errorStyle' => 'text-red-500 text-sm',
+    'labelClass' => '',
+    'labelPadding' => null
     ])
-<div class="flex flex-col">
-    <x-form.label :for=$name>{{ $label }}: </x-form.label>
-    <x-form.input 
+<div class="flex flex-col" style="{{ $containerStyle }}" >
+
+    <x-form.label :padding=$labelPadding :for=$name class={{$labelClass}}>{{ $label }}: </x-form.label>
+
+    <x-form.input
+
         {{ $attributes->merge([
             'name' => $name,
             'id' => $name,
             'value' => old($name),
             'aria-label' => $label,
-        ]) }} 
+        ]) }}
     />
     @error($name)
         <div class="{{ $errorStyle }}"> {{ $message }} </div>
     @enderror
-    
+
 
 </div>
