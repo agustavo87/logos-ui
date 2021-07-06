@@ -23,33 +23,39 @@
             <div class="pt-5">
                 <h3 class="font-semibold text-gray-900 opacity-80">Atributos</h3>
                 <div class="flex flex-row gap-1">
-                    <x-form.field name="attributes[1][name]" label="Atributo"
+                    <x-form.field name="attribute[1][name]" label="Atributo"
                         type="text" placeholder="title"
                         container-style="flex: 1 50px"  label-padding="px-1 pt-2"
+                        input-name="attribute.1.name"
                     />
-                    <x-form.field name="attributes[1][value]" label="Valor"
+                    <x-form.field name="attribute[1][value]" label="Valor"
                         type="text" placeholder="palabra"
                         container-style="flex: 2 50px" label-padding="px-1 pt-2"
+                        input-name="attribute.1.value"
                     />
                 </div>
                 <div class="flex flex-row gap-1">
-                    <x-form.field name="attributes[2][name]" label="Atributo"
+                    <x-form.field name="attribute[2][name]" label="Atributo"
                         type="text" placeholder="title"
                         container-style="flex: 1 50px"  label-padding="px-1 pt-2"
+                        input-name="attribute.2.name"
                     />
-                    <x-form.field name="attributes[2][value]" label="Valor"
+                    <x-form.field name="attribute[2][value]" label="Valor"
                         type="text" placeholder="palabra"
                         container-style="flex: 2 50px" label-padding="px-1 pt-2"
+                        input-name="attribute.2.value"
                     />
                 </div>
                 <div class="flex flex-row gap-1">
-                    <x-form.field name="attributes[3][name]" label="Atributo"
+                    <x-form.field name="attribute[3][name]" label="Atributo"
                         type="text" placeholder="title"
                         container-style="flex: 1 50px"  label-padding="px-1 pt-2"
+                        input-name="attribute.3.value"
                     />
-                    <x-form.field name="attributes[3][value]" label="Valor"
+                    <x-form.field name="attribute[3][value]" label="Valor"
                         type="text" placeholder="palabra"
                         container-style="flex: 2 50px" label-padding="px-1 pt-2"
+                        input-name="attribute.3.value"
                     />
                 </div>
             </div>

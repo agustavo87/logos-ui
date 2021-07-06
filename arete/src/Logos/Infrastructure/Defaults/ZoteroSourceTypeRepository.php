@@ -97,4 +97,9 @@ class ZoteroSourceTypeRepository implements SourceTypeRepository
     {
         return $this->sourceTypes[$codeName];
     }
+
+    public function types(): array
+    {
+        return self::$availableZoteroItemsTypes;
+    }
 }

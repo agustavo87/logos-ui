@@ -24,10 +24,11 @@ class SourceSearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'string',
-            'ownerID' => 'integer',
-            'attributes' => 'array',
-            'participations' => 'array',
+            'type' => 'nullable|string',
+            'ownerID' => 'nullable|integer',
+            'attribute.*.name' => 'nullable|string',
+            'attribute.*.value' => 'nullable|string',
+            'participations' => 'nullable|array',
         ];
     }
 }

@@ -151,6 +151,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'attribute.*.name' => 'atribrute name',
+        'attribute.*.value' => 'atribrute value'
+    ],
 
 ];

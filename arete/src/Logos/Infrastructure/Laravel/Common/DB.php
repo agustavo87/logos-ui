@@ -598,4 +598,12 @@ class DB
                      ->map(fn (object $row) => $row->id)
                      ->toArray();
     }
+
+    /**
+     * @return \Illuminate\Support\Collection;
+     */
+    public function getSourceTypeNames()
+    {
+        return $this->db->table('source_types')->get('code_name');
+    }
 }

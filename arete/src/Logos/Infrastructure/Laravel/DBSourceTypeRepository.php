@@ -28,4 +28,12 @@ class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositor
             $this->db->getRoles($codeName)
         );
     }
+
+    public function types(): array
+    {
+        return $this->db
+                    ->getSourceTypeNames()
+                    ->map(fn ($obj) => $obj->code_name)
+                    ->toArray();
+    }
 }

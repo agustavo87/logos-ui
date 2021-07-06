@@ -89,7 +89,7 @@ class SourceController extends Controller
         ]);
     }
 
-    public function search(Request $request)
+    public function search(SourceSearchRequest $request)
     {
         dd($request->all());
     }

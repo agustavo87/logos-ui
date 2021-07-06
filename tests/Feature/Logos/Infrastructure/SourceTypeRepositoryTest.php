@@ -102,4 +102,14 @@ class SourceTypeRepositoryTest extends TestCase
         $this->assertIsBool($authorRole->primary);
         return $type;
     }
+
+    public function testGetsAvailableTypes()
+    {
+        /** @var SourceTypeRepository */
+        $types = $this->app->make(SourceTypeRepository::class);
+        $availableTypes = $types->types();
+        // basic types in simple schema loader of zotero.
+        $this->assertContains('journalArticle', $availableTypes);
+        $this->assertContains('book', $availableTypes);
+    }
 }
