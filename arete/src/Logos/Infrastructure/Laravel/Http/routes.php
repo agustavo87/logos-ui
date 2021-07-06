@@ -14,5 +14,6 @@ Route::group([
     ], function () {
         Route::get('/', [SourceController::class, 'index']);
         Route::get('filter', [SourceController::class, 'filter']);
+        Route::get('search', [SourceController::class, 'showSearch']);
     });
 });

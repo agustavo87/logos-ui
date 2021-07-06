@@ -46,10 +46,20 @@ class Source extends Attributable implements SourceContract
         $this->formater = $fomater;
     }
 
-    public function toArray(): array
+    /**
+     *  Returns an array representation of the source
+     *
+     * @param string    $participationsOrderBy 'id' | 'relevance' | other;
+     *                                      - 'id': key participations by id.
+     *                                      - 'relevance': order participations by relevance.
+     *                                      - other: no order.
+     *
+     * @return array
+     */
+    public function toArray(?string $participationsOrderBy = 'id'): array
     {
         $sourceInfo = parent::toArray();
-        $sourceInfo['participations'] = $this->participations->toArray();
+        $sourceInfo['participations'] = $this->participations->toArray($participationsOrderBy);
         return $sourceInfo;
     }
 }

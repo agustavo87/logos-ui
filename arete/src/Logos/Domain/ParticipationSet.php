@@ -156,13 +156,32 @@ class ParticipationSet implements Arrayable
         return true;
     }
 
-    public function toArray(): array
+    /**
+     * Returns an array representation of participations
+     *
+     * @param string|null   $orderBy  'id' | 'relevance' | other;
+     *                              - 'id': key by participation id.
+     *                              - 'relevance': order by participation relevance (no key).
+     *                              - other: no key or order.
+     * @return array
+     */
+    public function toArray(?string $orderBy = 'id'): array
     {
         $participations = [];
         foreach ($this->attributes as $role => $participationsArray) {
             $participations[$role] = [];
-            foreach ($participationsArray as $id => $participation) {
-                $participations[$role][$id] = $participation->toArray();
+            if ($orderBy == 'relevance') {
+                foreach ($this->byRelevance($role) as $participation) {
+                    $participations[$role][] = $participation->toArray();
+                }
+            } else {
+                foreach ($participationsArray as $id => $participation) {
+                    if ($orderBy == 'id') {
+                        $participations[$role][$id] = $participation->toArray();
+                    } else {
+                        $participations[$role][] = $participation->toArray();
+                    }
+                }
             }
         }
         return $participations;

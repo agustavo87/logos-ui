@@ -130,7 +130,9 @@ class SourcesServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../../../../config/sources.php' => config_path('sources.php'),
+            __DIR__  . '/config/sources.php' => config_path('sources.php'),
         ]);
+
+        $this->loadViewsFrom(__DIR__  . '/views', 'logos');
     }
 }
