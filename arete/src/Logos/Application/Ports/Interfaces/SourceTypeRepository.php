@@ -17,4 +17,14 @@ interface SourceTypeRepository extends TypeRepository
      * @return array
      */
     public function types(): array;
+
+    /**
+     * Get availables attributes
+     *
+     * @param string|null $type specify the source type wich the attribute
+     *                          belongs. if `null` all attributes are returned.
+     *
+     * @return array
+     */
+    public function attributes(?string $type = null): array;
 }

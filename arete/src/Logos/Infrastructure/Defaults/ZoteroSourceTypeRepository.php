@@ -102,4 +102,25 @@ class ZoteroSourceTypeRepository implements SourceTypeRepository
     {
         return self::$availableZoteroItemsTypes;
     }
+
+    public function attributes(?string $type = null): array
+    {
+        if ($type) {
+            $itemType = $this->zoteroSchema->getItemType($type);
+            return array_map(fn ($field) => $field->field, $itemType->fields);
+        }
+        $avTypes = [];
+        foreach (self::$availableZoteroItemsTypes as $zType) {
+            $avTypes = array_unique($avTypes + $this->getTypeAttributes($zType));
+        }
+        return $avTypes;
+    }
+
+    protected function getTypeAttributes($type): array
+    {
+        return array_map(
+            fn ($field) => $field->field,
+            $this->zoteroSchema->getItemType($type)->fields
+        );
+    }
 }

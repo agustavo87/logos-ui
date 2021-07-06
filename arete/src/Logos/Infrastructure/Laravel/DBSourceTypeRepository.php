@@ -36,4 +36,11 @@ class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositor
                     ->map(fn ($obj) => $obj->code_name)
                     ->toArray();
     }
+
+    public function attributes(?string $type = null): array
+    {
+        return $this->db->getSourceTypeAttributes($type)
+                 ->map(fn ($obj) => $obj->attribute_type_code_name)
+                 ->toArray();
+    }
 }

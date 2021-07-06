@@ -91,6 +91,27 @@ class SourceController extends Controller
 
     public function search(SourceSearchRequest $request)
     {
-        dd($request->all());
+        $query = [];
+        if ($request->has('type')) {
+            $query['type'] = $request->type;
+        }
+        if ($request->has('ownerID')) {
+            $query['ownerID'] = $request->ownerID;
+        }
+        if ($request->has('attribute')) {
+            $query['attributes'] = [];
+            foreach ($request->attribute as $attribute) {
+                $name = $attribute['name'];
+                $value = $attribute['value'];
+                if ((bool) $name  && (bool) $value) {
+                    $query['attributes'][$name] = $value;
+                }
+            }
+        }
+
+        $result = Logos::filteredIndex($query);
+        $result = $this->sourcesToArray($result);
+        return response()->json($result);
+
     }
 }

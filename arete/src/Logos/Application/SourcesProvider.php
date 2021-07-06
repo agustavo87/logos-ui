@@ -11,6 +11,7 @@ use Arete\Logos\Application\Zotero\ZoteroSchemaLoader;
 use Arete\Logos\Application\Ports\Interfaces\ZoteroSchemaLoaderInterface;
 use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository;
 use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
+use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 
 class SourcesProvider extends Provider
 {
@@ -53,7 +54,8 @@ class SourcesProvider extends Provider
             \Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase::class,
             function ($container) {
                 return new \Arete\Logos\Application\FilteredIndexUseCase(
-                    $container::get(ComplexSourcesRepository::class)
+                    $container::get(ComplexSourcesRepository::class),
+                    $container::get(SourceTypeRepository::class)
                 );
             }
         );

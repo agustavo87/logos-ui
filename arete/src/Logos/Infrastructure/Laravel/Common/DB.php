@@ -600,10 +600,27 @@ class DB
     }
 
     /**
-     * @return \Illuminate\Support\Collection;
+     * @return \Illuminate\Support\Collection
      */
     public function getSourceTypeNames()
     {
         return $this->db->table('source_types')->get('code_name');
+    }
+
+    /**
+     * @param string|null $type
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSourceTypeAttributes(?string $type = null)
+    {
+        $query = $this->db->table('schema_attributes');
+        if ($type) {
+            $query->join('schemas', 'schema_attributes.schema_id', '=', 'schemas.id')
+                  ->where('schemas.type_code_name', '=', $type);
+        }
+        return $query->select('attribute_type_code_name')
+                     ->distinct()
+                     ->get();
     }
 }

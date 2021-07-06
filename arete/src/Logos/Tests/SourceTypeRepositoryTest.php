@@ -131,4 +131,24 @@ class SourceTypeRepositoryTest extends TestCase
         $this->assertContains('journalArticle', $availableTypes);
         $this->assertContains('book', $availableTypes);
     }
+
+    public function testGetsAvailableAttributesTypes()
+    {
+        /** @var SourceTypeRepository */
+        $types = LogosContainer::get(SourceTypeRepository::class);
+        $availableAttributes = $types->attributes();
+        // basic types in simple schema loader of zotero.
+        $this->assertContains('title', $availableAttributes);
+        $this->assertContains('abstractNote', $availableAttributes);
+    }
+
+    public function testGetsAvailableSourceAttributesTypes()
+    {
+        /** @var SourceTypeRepository */
+        $types = LogosContainer::get(SourceTypeRepository::class);
+        $availableAttributes = $types->attributes('book');
+        // basic types in simple schema loader of zotero.
+        $this->assertContains('title', $availableAttributes);
+        $this->assertNotContains('issue', $availableAttributes);
+    }
 }

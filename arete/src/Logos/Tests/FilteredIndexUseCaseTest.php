@@ -201,4 +201,34 @@ class FilteredIndexUseCaseTest extends TestCase
         $this->assertEquals('Animal Metaphysics Handbook', $source->title);
         return $filter;
     }
+
+    /**
+     * @param FilteredIndexUseCase $filter
+     *
+     * @depends testFilterByOwner
+     * @return FilteredIndexUseCase
+     */
+    public function testThrowsOnInexistentSourceType(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    {
+        $this->expectExceptionCode(22);
+        $filter->filter(['type' => 'booking']);
+        return $filter;
+    }
+
+    /**
+     * @param FilteredIndexUseCase $filter
+     *
+     * @depends testFilterByOwner
+     * @return FilteredIndexUseCase
+     */
+    public function testThrowsOnInexistentAttributeType(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    {
+        $this->expectExceptionCode(23);
+        $filter->filter([
+            'attributes' => [
+                'nombrensioni' => 'noexisto'
+            ]
+        ]);
+        return $filter;
+    }
 }
