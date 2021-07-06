@@ -14,7 +14,7 @@
       <x-form.field name="password" label="{{ __('messages.users.pass') }}" value='' type="password" required />
       <x-form.select name="country" label="{{ __('messages.users.country') }}">
         @foreach ($locale['countries'] as $country)
-          <option value="{{ $country['.key']}}" {{ old('country') ? 'selected' : ''}}>
+          <option value="{{ $country['.key']}}" {{ old('country') == $country['.key'] ? 'selected' : ''}}>
             {{ $country['name']}}
           </option>
         @endforeach
