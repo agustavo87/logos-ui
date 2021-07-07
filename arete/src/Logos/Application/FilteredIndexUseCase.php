@@ -53,8 +53,12 @@ class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
         }
 
         if (isset($params['attributes'])) {
-            if (!$this->validateSourceTypeAttributes($params['attributes'], $type)) {
-                throw new IncorrectDataStructureException('Inexistent Source Type Attribute', 23);
+            $attrValidation = $this->validateSourceTypeAttributes($params['attributes'], $type);
+            if (!$attrValidation['result']) {
+                throw new IncorrectDataStructureException(
+                    "The '{$attrValidation['attribute']}' attribute don't exist in the source type: '$type'",
+                    23
+                );
             };
         }
         return $this->sources->complexFilter($params);
@@ -65,13 +69,13 @@ class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
         return in_array($sourceType, $this->sourceTypes->types());
     }
 
-    protected function validateSourceTypeAttributes(array $attributes, $type = null): bool
+    protected function validateSourceTypeAttributes(array $attributes, $type = null): array
     {
         foreach ($attributes as $code => $value) {
             if (!in_array($code, $this->sourceTypes->attributes($type))) {
-                return false;
+                return ['result' => false, 'attribute' => $code ];
             }
         }
-        return true;
+        return ['result' => true];
     }
 }
