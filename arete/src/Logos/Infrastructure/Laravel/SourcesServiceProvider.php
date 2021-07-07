@@ -133,6 +133,7 @@ class SourcesServiceProvider extends ServiceProvider
             __DIR__  . '/config/sources.php' => config_path('sources.php'),
         ]);
 
-        $this->loadViewsFrom(__DIR__  . '/views', 'logos');
+        $this->loadViewsFrom(__DIR__  . '/resources/views', 'logos');
+        $this->loadTranslationsFrom(__DIR__ . '/resources/lang', 'logos');
     }
 }

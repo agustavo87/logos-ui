@@ -16,5 +16,6 @@ Route::group([
         Route::get('filter', [SourceController::class, 'filter']);
         Route::get('search', [SourceController::class, 'showSearch']);
         Route::post('search', [SourceController::class, 'search']);
+        Route::get('attributes', [SourceController::class, 'typeAttributes']);
     });
 });

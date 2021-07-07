@@ -2,13 +2,14 @@
 
 namespace Arete\Logos\Infrastructure\Laravel\Http\Controllers;
 
-use Arete\Logos\Infrastructure\Laravel\Http\Requests\SourceSearchRequest;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
+use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 use Arete\Logos\Application\Ports\Logos;
+use Arete\Logos\Domain\Source;
+use Arete\Logos\Infrastructure\Laravel\Http\Requests\SourceSearchRequest;
+use Arete\Common\Laravel\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Arete\Common\Laravel\Controller;
-use Arete\Logos\Domain\Source;
 use Illuminate\Support\Facades\Log;
 
 class SourceController extends Controller
@@ -18,10 +19,14 @@ class SourceController extends Controller
     public static $defUserID = null;
 
     protected SourcesRepository $sources;
+    protected SourceTypeRepository $sourceTypes;
 
-    public function __construct(SourcesRepository $sources)
-    {
+    public function __construct(
+        SourcesRepository $sources,
+        SourceTypeRepository $sourceTypes
+    ) {
         $this->sources = $sources;
+        $this->sourceTypes = $sourceTypes;
     }
 
     /**
@@ -83,10 +88,33 @@ class SourceController extends Controller
     public function showSearch(Request $request)
     {
         $user = auth()->check() ? auth()->user()->id : 0;
-        Log::info('user', ['user' => $user]);
         return view('logos::sources.search', [
-            'userID' => $user
+            'userID' => $user,
+            'sourceTypes' => $this->getSourceTypes()
         ]);
+    }
+
+    protected function getSourceTypes(): array
+    {
+        $sourceTypes = $this->sourceTypes->types();
+        $sourceTypes = array_map(function ($sType) {
+            $path = "logos::sources.types.{$sType}";
+            return (object) [
+                'code' => $sType,
+                'label' => trans()->has($path) ? trans($path) : null
+            ];
+        }, $sourceTypes);
+        array_unshift($sourceTypes, (object) [
+            'code' => null,
+            'label' => trans('logos::sources.types.any')
+        ]);
+        return $sourceTypes;
+    }
+
+    public function typeAttributes(Request $request)
+    {
+        $type = $request->has('type') ? $request->type : null;
+        return response()->json($this->sourceTypes->attributes($type));
     }
 
     public function search(SourceSearchRequest $request)
@@ -96,7 +124,7 @@ class SourceController extends Controller
             $query['type'] = $request->type;
         }
         if ($request->has('ownerID')) {
-            $query['ownerID'] = $request->ownerID;
+            $query['ownerID'] = (int) $request->ownerID == 0 ? null : $request->ownerID;
         }
         if ($request->has('attribute')) {
             $query['attributes'] = [];
@@ -108,10 +136,10 @@ class SourceController extends Controller
                 }
             }
         }
+        // dd($query);
 
         $result = Logos::filteredIndex($query);
         $result = $this->sourcesToArray($result);
         return response()->json($result);
-
     }
 }

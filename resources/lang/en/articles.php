@@ -1,4 +1,5 @@
 <?php
+
 return [
     'articles' => 'Articles',
     'new' => 'New',
