@@ -129,6 +129,19 @@ trait SourcesComplexFilterTest
                 'date' => new DateTime('01-01-1988'),
                 'volume' => 4,
                 'issue' => 3
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 2,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Peteco Mario",
+                            'lastName' => "Carabajal"
+                        ]
+                    ]
+                ]
             ]
         ], 3);
 

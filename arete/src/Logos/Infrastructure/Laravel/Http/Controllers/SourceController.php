@@ -90,7 +90,8 @@ class SourceController extends Controller
         $user = auth()->check() ? auth()->user()->id : 0;
         return view('logos::sources.search', [
             'userID' => $user,
-            'sourceTypes' => $this->getSourceTypes()
+            'sourceTypes' => $this->getSourceTypes(),
+            'attributes' => $this->sourceTypes->attributes()
         ]);
     }
 
@@ -120,7 +121,10 @@ class SourceController extends Controller
     public function search(SourceSearchRequest $request)
     {
         $query = [];
-        if ($request->has('type')) {
+        if (
+            $request->has('type') &&
+            !($request->type !== null || $request->type !== "null")
+        ) {
             $query['type'] = $request->type;
         }
         if ($request->has('ownerID')) {

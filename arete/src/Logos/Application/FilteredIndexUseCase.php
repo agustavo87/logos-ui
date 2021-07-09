@@ -48,7 +48,7 @@ class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
         $type = $params['type'] ?? null;
         if ($type) {
             if (!$this->validateSourceType($type)) {
-                throw new IncorrectDataStructureException('Inexistent Source Type', 22);
+                throw new IncorrectDataStructureException("Inexistent Source Type: '$type'", 22);
             };
         }
 
