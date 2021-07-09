@@ -78,7 +78,6 @@ class compNotifySharedAttriubteUpdate {
                 this.notify();
             }
         }
-        // this.subscriptions.push(xData.update) // subscribimos a nuestro componente.
         return xData;
     }
 }
