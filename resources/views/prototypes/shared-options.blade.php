@@ -3,6 +3,50 @@
 @verbatim
 <script>
 
+class EventRoom {
+    constructor() {
+        this.subscriptions = {};
+    }
+
+    /**
+     * Callback that listen events.
+     * @callback listenerCallback
+     * @param {string} topic
+     * @param {*} message
+     */
+
+    /**
+     * @param {string} topic
+     * @param {listenerCallback} cb
+     */
+     subscribe(topic, cb) {
+        if (!this.topicExists(topic)) {
+            this.subscriptions[topic] = [];
+        }
+        this.subscriptions[topic].push(cb);
+    }
+
+    /**
+     * @param {string}  topic
+     * @param {*}       message
+     */
+     notify(topic, message) {
+        if (!this.topicExists(topic)) {
+            throw new ReferenceError('The topic \'' + topic + '\' is not registered.');
+        }
+        this.subscriptions[topic].forEach(cb => cb(topic, message));
+    }
+
+    /**
+     * @param {string} topic
+     * @returns {boolean}
+     */
+     topicExists(topic) {
+        return this.subscriptions.hasOwnProperty(topic);
+    }
+
+}
+
 /** Class for Alpine.js components that share available options */
 class xSharedOptions {
 
@@ -19,49 +63,12 @@ class xSharedOptions {
     /**
      * Create component instance.
      * @param {UIOption[]} options - The (initial) available options.
+     * @param {EventRoom} eventRoom
      */
-    constructor(options) {
-        this._subscriptions = {};
-
+    constructor(options, eventRoom) {
+        this._eventRoom = eventRoom;
         this._availableOptions = this._mapToStateUIOption(options);
         this._orderOptions();
-    }
-
-    /**
-     * @param {string}  topic
-     * @param {*}       message
-     */
-    _notify(topic, message) {
-        if (! this._topicExists(topic)) {
-            throw new ReferenceError('The topic \'' + topic + '\' is not registered.');
-        }
-        this._subscriptions[topic].forEach(cb => cb(topic, message));
-    }
-
-    /**
-     * Callback that listen events.
-     * @callback listenerCallback
-     * @param {string} topic
-     * @param {*} message
-     */
-
-    /**
-     * @param {string} topic
-     * @param {listenerCallback} cb
-     */
-    _subscribe(topic, cb) {
-        if (!this._topicExists(topic)) {
-            this._subscriptions[topic] = [];
-        }
-        this._subscriptions[topic].push(cb);
-    }
-
-    /**
-     * @param {string} topic
-     * @returns {boolean}
-     */
-    _topicExists(topic) {
-        return this._subscriptions.hasOwnProperty(topic);
     }
 
     /**
@@ -100,6 +107,10 @@ class xSharedOptions {
         return copy;
     }
 
+    _orderOptions() {
+        this._availableOptions.sort((a,b) => a.order - b.order);
+    }
+
     /**
      * @param {string} reqOptCode - Requested option code.
      * @returns {UIOption}
@@ -114,10 +125,6 @@ class xSharedOptions {
     _return(option) {
         let stateOption = this._availableOptions.find(opt => opt.code === option.code);
         stateOption.taken = false;
-    }
-
-    _orderOptions() {
-        this._availableOptions.sort((a,b) => a.order - b.order);
     }
 
     /** @returns {UIOption[]} */
@@ -157,12 +164,12 @@ class xSharedOptions {
              */
             takeOption: (optCode) => this._take(optCode),
 
-            subscribe: (cb) => this._subscribe('source-option-change', cb),
+            subscribe: (cb) => this._eventRoom.subscribe('source-option-change', cb),
 
-            notify: (x = null) => this._notify('source-option-change', x),
+            notify: (x = null) => this._eventRoom.notify('source-option-change', x),
 
             updateMyOptions: function (topic, message) {
-                console.log(this.$el.id + ': actualizando mis opciones topico: ' + topic + ', message:', message);
+                // console.log(this.$el.id + ': actualizando mis opciones topico: ' + topic + ', message:', message);
                 let options = this.getAvailableOptions();
                 options.unshift(this.ownedOption);
                 this.myOptions = options;
@@ -204,7 +211,8 @@ const testOptions = [
         order: 3
     }
 ];
-const mySharedOptions = new xSharedOptions(testOptions);
+const myEventRoom = new EventRoom();
+const mySharedOptions = new xSharedOptions(testOptions, myEventRoom);
 
 </script>
 @endverbatim
