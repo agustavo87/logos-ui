@@ -21,9 +21,47 @@ class xSharedOptions {
      * @param {UIOption[]} options - The (initial) available options.
      */
     constructor(options) {
+        this._subscriptions = {};
+
         this._availableOptions = this._mapToStateUIOption(options);
         this._orderOptions();
-        this._subscriptions = [];
+    }
+
+    /**
+     * @param {string}  topic
+     * @param {*}       message
+     */
+    _notify(topic, message) {
+        if (! this._topicExists(topic)) {
+            throw new ReferenceError('The topic \'' + topic + '\' is not registered.');
+        }
+        this._subscriptions[topic].forEach(cb => cb(topic, message));
+    }
+
+    /**
+     * Callback that listen events.
+     * @callback listenerCallback
+     * @param {string} topic
+     * @param {*} message
+     */
+
+    /**
+     * @param {string} topic
+     * @param {listenerCallback} cb
+     */
+    _subscribe(topic, cb) {
+        if (!this._topicExists(topic)) {
+            this._subscriptions[topic] = [];
+        }
+        this._subscriptions[topic].push(cb);
+    }
+
+    /**
+     * @param {string} topic
+     * @returns {boolean}
+     */
+    _topicExists(topic) {
+        return this._subscriptions.hasOwnProperty(topic);
     }
 
     /**
@@ -95,10 +133,6 @@ class xSharedOptions {
         return option;
     }
 
-    _notify(x) {
-        this._subscriptions.forEach(cb => cb(x));
-    }
-
     getData() {
         let myOption = this._getFirstOption();
         let myOptions = this._getAvailableOptions();
@@ -123,11 +157,12 @@ class xSharedOptions {
              */
             takeOption: (optCode) => this._take(optCode),
 
-            subscribe: (cb) => this._subscriptions.push(cb),
+            subscribe: (cb) => this._subscribe('source-option-change', cb),
 
-            notify: (x = null) => this._notify(x),
+            notify: (x = null) => this._notify('source-option-change', x),
 
-            updateMyOptions: function () {
+            updateMyOptions: function (topic, message) {
+                console.log(this.$el.id + ': actualizando mis opciones topico: ' + topic + ', message:', message);
                 let options = this.getAvailableOptions();
                 options.unshift(this.ownedOption);
                 this.myOptions = options;
@@ -189,7 +224,7 @@ const mySharedOptions = new xSharedOptions(testOptions);
 
 <div class=" max-w-screen-md mx-auto border border-gray-400 p-4 m-4 rounded-md">
     <form class="flex flex-col">
-        <div x-data="mySharedOptions.getData()" x-init="initialize" class=" w-52 flex" >
+        <div x-data="mySharedOptions.getData()" x-init="initialize" id="source-type-select-1" class=" w-52 flex" >
             <select name="sourceAttributes" id="sourceAttributes"
                     x-model="selectedOption" class=" focus:outline-none flex-grow py-2 px-4 m-2 rounded-sm border"
             >
@@ -198,7 +233,7 @@ const mySharedOptions = new xSharedOptions(testOptions);
                 </template>
             </select>
         </div>
-        <div x-data="mySharedOptions.getData()" x-init="initialize" class=" w-52 flex">
+        <div x-data="mySharedOptions.getData()" x-init="initialize" id="source-type-select-2"  class=" w-52 flex">
             <select name="sourceAttributes-2" id="sourceAttributes-2"
                     x-model="selectedOption" class=" focus:outline-none flex-grow py-2 px-4 m-2 rounded-sm border"
             >
