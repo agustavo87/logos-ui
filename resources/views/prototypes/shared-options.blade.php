@@ -44,7 +44,6 @@ class EventRoom {
      topicExists(topic) {
         return this.subscriptions.hasOwnProperty(topic);
     }
-
 }
 
 /** Class for Alpine.js components that share available options */
@@ -133,17 +132,33 @@ class xSharedOptions {
     }
 
     /** @returns {UIOption} */
-    _getFirstOption() {
+    _takeFirstOption() {
         let stateOption = this._availableOptions.find((opt) => opt.taken == false);
         stateOption.taken = true;
         let option = this._toUIOption(stateOption);
         return option;
     }
 
+    /**
+     * @param {UIOption}    giveUpOption
+     * @param {string}      takeOptionCode
+     * @returns {UIOption}
+     */
+    _exchangeOption(giveUpOption, takeOptionCode) {
+        this._return(giveUpOption);
+        let option = this._take(takeOptionCode);
+        setTimeout(this._updateOptions.bind(this));
+        return option;
+    }
+
+    _updateOptions() {
+        this._eventRoom.notify('source-option-change', null)
+    }
+
     getData() {
-        let myOption = this._getFirstOption();
-        let myOptions = this._getAvailableOptions();
-        myOptions.unshift(myOption);
+        let myOption = this._takeFirstOption();
+        let myOptions = this._getAvailableOptions();    // the options that rest after take the first.
+        myOptions.unshift(myOption);                    // my options include the one i take + the availables.
         return {
             /**@prop {UIOption[]} */
             myOptions: myOptions,
@@ -155,18 +170,15 @@ class xSharedOptions {
 
             getAvailableOptions: () => this._getAvailableOptions(),
 
-            /**@param {UIOption} opt */
-            returnOption: (opt) => this._return(opt),
-
             /**
-             * @param {string} optCode - Code of the option
-             * @returns {UIOption}
-             */
-            takeOption: (optCode) => this._take(optCode),
+            * @param {UIOption}    giveUpOption
+            * @param {string}      takeOptionCode
+            */
+            exchangeOptions: (giveUpOption, takeOptionCode) => this._exchangeOption(giveUpOption, takeOptionCode),
 
             subscribe: (cb) => this._eventRoom.subscribe('source-option-change', cb),
 
-            notify: (x = null) => this._eventRoom.notify('source-option-change', x),
+            initialized: (x = null) => this._eventRoom.notify('source-option-change', x),
 
             updateMyOptions: function (topic, message) {
                 // console.log(this.$el.id + ': actualizando mis opciones topico: ' + topic + ', message:', message);
@@ -179,11 +191,9 @@ class xSharedOptions {
                 this.subscribe(this.updateMyOptions.bind(this));
 
                 this.$watch('selectedOption', (value) => {
-                    this.returnOption(this.ownedOption);
-                    this.ownedOption = this.takeOption(value);
-                    this.notify();
+                    this.ownedOption = this.exchangeOptions(this.ownedOption, value);
                 });
-                this.notify();
+                this.initialized();
             }
         }
     }
