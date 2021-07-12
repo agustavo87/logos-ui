@@ -137,11 +137,11 @@ class xSharedOptions {
                 this.subscribe(this.updateMyOptions.bind(this));
 
                 this.$watch('selectedOption', (value) => {
-                    console.log('cambiando opción a:', value)
                     this.returnOption(this.ownedOption);
                     this.ownedOption = this.takeOption(value);
                     this.notify();
                 });
+                this.notify();
             }
         }
     }
@@ -162,6 +162,11 @@ const testOptions = [
         code: "bookSection",
         label: "Book Section",
         order: 2
+    },
+    {
+        code: "blogPost",
+        label: "Blog Post",
+        order: 3
     }
 ];
 const mySharedOptions = new xSharedOptions(testOptions);
@@ -183,14 +188,25 @@ const mySharedOptions = new xSharedOptions(testOptions);
 --}}
 
 <div class=" max-w-screen-md mx-auto border border-gray-400 p-4 m-4 rounded-md">
-    <form x-data="mySharedOptions.getData()" x-init="initialize" class="flex flex-col">
-        <select name="sourceAttributes" id="sourceAttributes" class=" focus:outline-none"
-                x-model="selectedOption"
-        >
-            <template x-for="option in myOptions" x-bind:key="option.code">
-                <option x-bind:value="option.code" x-text="option.label"></option>
-            </template>
-        </select>
+    <form class="flex flex-col">
+        <div x-data="mySharedOptions.getData()" x-init="initialize" class=" w-52 flex" >
+            <select name="sourceAttributes" id="sourceAttributes"
+                    x-model="selectedOption" class=" focus:outline-none flex-grow py-2 px-4 m-2 rounded-sm border"
+            >
+                <template x-for="option in myOptions" x-bind:key="option.code">
+                    <option x-bind:value="option.code" x-text="option.label"></option>
+                </template>
+            </select>
+        </div>
+        <div x-data="mySharedOptions.getData()" x-init="initialize" class=" w-52 flex">
+            <select name="sourceAttributes-2" id="sourceAttributes-2"
+                    x-model="selectedOption" class=" focus:outline-none flex-grow py-2 px-4 m-2 rounded-sm border"
+            >
+                <template x-for="option in myOptions" x-bind:key="option.code">
+                    <option x-bind:value="option.code" x-text="option.label"></option>
+                </template>
+            </select>
+        </div>
     </form>
 </div>
 
