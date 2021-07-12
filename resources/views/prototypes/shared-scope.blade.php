@@ -1,6 +1,6 @@
-<x-layout.default title="Search source">
-    @push('head-script')
-        <script>
+<x-layout.default title="Scope experiments">
+@push('head-script')
+<script>
 
 class compAttributtor {
     constructor(initialAttributes) {
@@ -84,94 +84,15 @@ class compNotifySharedAttriubteUpdate {
 
 const myCompNotifySharedAttriubteUpdate = new compNotifySharedAttriubteUpdate(['Attributo uno', 'Attributo dos']);
 
-        </script>
-    @endpush
-    <x-container class=" mb-5">
-        <x-main-heading>
-            Buscar fuente
-        </x-main-heading>
-        <p class=" text-gray-800">
-            Introduce la fuente que deseas buscar.
-        </p>
-        <form action="/test/sources/search" method="POST" class="mx-auto max-w-screen-lg rounded-lg bg-gray-100 p-4 flex flex-col
-                   justify-start shadow-lg mt-5">
-            @csrf
-
-            {{-- Source Type Select --}}
-
-            <div x-data='compSelectSourceType( @json($sourceTypes, JSON_PRETTY_PRINT) )' class="flex flex-col justify-start">
-                <label for="sourceType" class="text-gray-700 m-0  px-1 pt-4">
-                    {{__('logos::sources.type')}}:
-                </label>
-                <select name="type" id="type" aria-label="{{__('logos::sources.type')}}"
-                        class="p-2 leading-tight border border-gray-400 rounded-sm focus:outline-none"
-                        x-model="selected"
-                        x-on:change="$dispatch('logos:source-type-set', {value: selected})"
-                >
-                    <template x-for="scType in sourceTypes">
-                        <option :value="scType.code" x-text="scType.label"></option>
-                    </template>
-                </select>
-            </div>
-
-            {{-- / Source Type Select --}}
-
-            {{-- Owner ID Component --}}
-
-            <div x-data="{ownerID: @json($userID)}">
-                <x-form.field name="ownerID" label="ID de usuario" type="number" size="3" placeholder="0"
-                              class="self-start w-16"
-                              x-model:value="ownerID"
-                />
-                <span x-text="ownerID == 0 ? 'cualquier usuario' : '0 = cualquiera'"
-                      class=" text-xs text-gray-600 italic m-0"
-                ></span>
-            </div>
-
-            {{-- Owner ID Component --}}
-
-            {{-- Attributes Section --}}
-
-            <div class="pt-5">
-                <h3 class="font-semibold text-gray-900 opacity-80">Atributos</h3>
-                <div x-data="compSelectAttribute()" class="flex flex-row gap-1"
-                     x-init="initialize"
-                >
-                    <x-form.field label="Atributo" type="text" placeholder="title" name="attribute-show"
-                                  container-style="flex: 1 50px" label-padding="px-1 pt-2"
-                                  list="attributes" x-model="selected"
-                    />
-                    <input type="hidden" x-bind:value="selectedCode"
-                           name="attribute[1][name]"
-                    >
-                    <x-form.field name="attribute[1][value]" label="Valor" type="text" placeholder="palabra"
-                                  container-style="flex: 2 50px" label-padding="px-1 pt-2" input-name="attribute.1.value"
-                    />
-                </div>
-            </div>
-
-            {{-- / Attributes Section --}}
-
-            <div class="flex justify-end">
-                <x-form.button type="submit" class="m-2">{{ __('messages.users.send') }}</x-form.button>
-                <x-form.button type="reset" class="m-2">{{ __('messages.users.clear') }}</x-form.button>
-            </div>
-        </form>
-        <hr class="border border-gray-300 my-5" />
-
-
-        {{-- Attribute List --}}
-
-        <datalist x-data="compAttributeList()" id="attributes"
-                  x-init="setAttributes()"
-                  x-on:logos:source-type-set.window="handleSourceTypeSet($event, $dispatch)"
-        >
-            <template x-for="attr in attributes" x-bind:key="attr.code">
-                <option x-bind:value="attr.label"></option>
-            </template>
-        </datalist>
-
-        {{-- / Attribute List --}}
+</script>
+@endpush
+<x-container class=" mb-5">
+    <x-main-heading>
+        Experimentos de scope
+    </x-main-heading>
+    <p class=" text-gray-800">
+        Experimentos.
+    </p>
 
 {{--
     Scope Experiment 1
@@ -270,71 +191,5 @@ const myCompNotifySharedAttriubteUpdate = new compNotifySharedAttriubteUpdate(['
 
 {{-- / Scope Experiment 3 --}}
 
-
-
-    </x-container>
-@push('foot-script')
-<script>
-function compSelectSourceType(initST) {
-    return {
-        sourceTypes: initST,
-        selected: null
-    }
-}
-
-function compAttributeList() {
-    return {
-        loading:false,
-        sourceType:null,
-        initAttributes:  @json($attributes, JSON_PRETTY_PRINT),
-        attributes: [],
-        fetchAttributes: function (sourceType = null) {
-            this.loading = true;
-            let path = '/test/sources/attributes' + (sourceType ? ('?type=' + sourceType) : '')
-            axios.get(path)
-                    .then(({data}) => {
-                    this.setAttributes(data);
-                    this.loading = false;
-                    });
-        },
-        setAttributes: function(data = null) {
-            data = data ? data : this.initAttributes;
-            this.attributes = data.map((code) => {
-                return {code: code, label:code}
-            });
-        },
-        handleSourceTypeSet: function ($event, $dispatch) {
-            this.sourceType = $event.detail.value;
-            this.fetchAttributes(this.sourceType);
-        }
-    }
-}
-
-function compSelectAttribute() {
-    return {
-        initAttributes: @json($attributes, JSON_PRETTY_PRINT),
-        attributes: [],
-        selected: null,
-        selectedCode: null,
-        setCode: function (selectedValue) {
-            let selAttr = this.attributes.find(attr => attr.label == selectedValue );
-            if( selAttr !== undefined) {
-                this.selectedCode = selAttr.code;
-                return;
-            }
-            this.selectedCode = null;
-        },
-        initialize: function () {
-            this.attributes = this.initAttributes.map((code) => {
-                return {code: code, label:code}
-            });
-            this.$watch('selected', (value) => {
-                this.setCode(value);
-            });
-        }
-    }
-}
-</script>
-@endpush
-
+</x-container>
 </x-layout.default>

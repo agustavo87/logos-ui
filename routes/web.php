@@ -123,4 +123,20 @@ Route::put('/locale', [LocaleController::class, 'update'])->name('locale');
 |--------------------------------------------------------------------------
 */
 
+Route::group([
+    'prefix' => 'test/prototypes'
+], function () {
+    Route::view(
+        'sharedscope',
+        'prototypes.shared-scope',
+        [
+            'attributes' => ['Server Attribute 1', 'Server Attribute 2']
+        ]
+    );
+    Route::view(
+        'sharedoptions',
+        'prototypes.shared-options'
+    );
+});
+
 Route::view('livewire', 'livewire');

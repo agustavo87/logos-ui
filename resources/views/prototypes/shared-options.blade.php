@@ -1,0 +1,199 @@
+<x-layout.default title="Scope experiments">
+@push('head-script')
+@verbatim
+<script>
+
+/** Class for Alpine.js components that share available options */
+class xSharedOptions {
+
+    /**
+     * An option with label.
+     * @typedef {{code:string, label:string, order:number}} UIOption
+     */
+
+    /**
+     * An UIOption, with state info.
+     * @typedef {{code:string, label:string, order:number, taken:boolean}} StateUIOption
+     */
+
+    /**
+     * Create component instance.
+     * @param {UIOption[]} options - The (initial) available options.
+     */
+    constructor(options) {
+        this._availableOptions = this._mapToStateUIOption(options);
+        this._orderOptions();
+        this._subscriptions = [];
+    }
+
+    /**
+     * @param {UIOption[]} UIOptions
+     * @returns {StateUIOption[]}
+     */
+    _mapToStateUIOption(UIOptions) {
+        return UIOptions.map(opt => this._toStateUIOption(opt));
+    }
+
+    /**
+     * @param {StateUIOption[]} UIOptions
+     * @returns {UIOption[]}
+     */
+     _mapToUIOption(UIOptions) {
+        return UIOptions.map(opt => this._toUIOption(opt));
+    }
+
+    /**
+     * @param {UIOption} UIOption
+     * @return {StateUIOption}
+     */
+    _toStateUIOption(UIOption) {
+        let copy = Object.assign({}, UIOption);
+        copy['taken'] = false;
+        return copy;
+    }
+
+    /**
+     * @param {StateUIOption} StateUIOption
+     * @return {UIOption}
+     */
+    _toUIOption(StateUIOption) {
+        let copy = Object.assign({}, StateUIOption);
+        delete copy.taken;
+        return copy;
+    }
+
+    /**
+     * @param {string} reqOptCode - Requested option code.
+     * @returns {UIOption}
+     */
+    _take(reqOptCode) {
+        let i = this._availableOptions.findIndex(opt => opt.code == reqOptCode);
+        this._availableOptions[i].taken = true;
+        return this._toUIOption(this._availableOptions[i]);
+    }
+
+    /** @param {UIOption} option */
+    _return(option) {
+        let stateOption = this._availableOptions.find(opt => opt.code === option.code);
+        stateOption.taken = false;
+    }
+
+    _orderOptions() {
+        this._availableOptions.sort((a,b) => a.order - b.order);
+    }
+
+    /** @returns {UIOption[]} */
+    _getAvailableOptions() {
+        return this._mapToUIOption(this._availableOptions.filter(suiOpt => suiOpt.taken === false));
+    }
+
+    /** @returns {UIOption} */
+    _getFirstOption() {
+        let stateOption = this._availableOptions.find((opt) => opt.taken == false);
+        stateOption.taken = true;
+        let option = this._toUIOption(stateOption);
+        return option;
+    }
+
+    _notify(x) {
+        this._subscriptions.forEach(cb => cb(x));
+    }
+
+    getData() {
+        let myOption = this._getFirstOption();
+        let myOptions = this._getAvailableOptions();
+        myOptions.unshift(myOption);
+        return {
+            /**@prop {UIOption[]} */
+            myOptions: myOptions,
+
+            /**@prop {UIOption|null} */
+            ownedOption: myOption,
+
+            selectedOption: myOption.code,
+
+            getAvailableOptions: () => this._getAvailableOptions(),
+
+            /**@param {UIOption} opt */
+            returnOption: (opt) => this._return(opt),
+
+            /**
+             * @param {string} optCode - Code of the option
+             * @returns {UIOption}
+             */
+            takeOption: (optCode) => this._take(optCode),
+
+            subscribe: (cb) => this._subscriptions.push(cb),
+
+            notify: (x = null) => this._notify(x),
+
+            updateMyOptions: function () {
+                let options = this.getAvailableOptions();
+                options.unshift(this.ownedOption);
+                this.myOptions = options;
+            },
+
+            initialize: function () {
+                this.subscribe(this.updateMyOptions.bind(this));
+
+                this.$watch('selectedOption', (value) => {
+                    console.log('cambiando opción a:', value)
+                    this.returnOption(this.ownedOption);
+                    this.ownedOption = this.takeOption(value);
+                    this.notify();
+                });
+            }
+        }
+    }
+}
+
+const testOptions = [
+    {
+        code: "journalArticle",
+        label: "Journal Article",
+        order: 0
+    },
+    {
+        code: "book",
+        label: "Book",
+        order: 1
+    },
+    {
+        code: "bookSection",
+        label: "Book Section",
+        order: 2
+    }
+];
+const mySharedOptions = new xSharedOptions(testOptions);
+
+</script>
+@endverbatim
+@endpush
+<x-container class=" mb-5">
+    <x-main-heading>
+        Experimentos de opciones compartidas
+    </x-main-heading>
+{{--
+    Experimento 1: Opciones compartidas
+    Varios componentes comparten opciones disponibles. Cuando en un componente
+    se selecciona una opción, esta opción ya no se encuentra disponible en los
+    demás.
+    El estado de las opciones se actualiza automáticamente al cambiar cada
+    compoentene particular.
+--}}
+
+<div class=" max-w-screen-md mx-auto border border-gray-400 p-4 m-4 rounded-md">
+    <form x-data="mySharedOptions.getData()" x-init="initialize" class="flex flex-col">
+        <select name="sourceAttributes" id="sourceAttributes" class=" focus:outline-none"
+                x-model="selectedOption"
+        >
+            <template x-for="option in myOptions" x-bind:key="option.code">
+                <option x-bind:value="option.code" x-text="option.label"></option>
+            </template>
+        </select>
+    </form>
+</div>
+
+
+</x-container>
+</x-layout.default>
