@@ -136,6 +136,8 @@ class xSharedOptions {
         let stateOption = this._availableOptions.find((opt) => opt.taken == false);
         stateOption.taken = true;
         let option = this._toUIOption(stateOption);
+
+        setTimeout(this._optionsChanged.bind(this)); // next loop;
         return option;
     }
 
@@ -147,16 +149,21 @@ class xSharedOptions {
     _exchangeOption(giveUpOption, takeOptionCode) {
         this._return(giveUpOption);
         let option = this._take(takeOptionCode);
-        setTimeout(() => this._eventRoom.notify('available-options-change', this._getAvailableOptions()));
+
+        setTimeout(this._optionsChanged.bind(this)); // next loop;
         return option;
     }
 
+    _optionsChanged() {
+        this._eventRoom.notify('available-options-change', this._getAvailableOptions());
+    }
+
     getData() {
-        let myOption = this._takeFirstOption();
+        let myOption = this._takeFirstOption(); // changes availables options
 
         return {
             /**@prop {UIOption[]} */
-            myOptions: [],
+            myOptions: [], // no changes, no events.
 
             /**@prop {UIOption|null} */
             ownedOption: myOption,
@@ -173,8 +180,6 @@ class xSharedOptions {
 
             subscribe: (cb) => this._eventRoom.subscribe('available-options-change', cb),
 
-            initialized: (x = null) => this._eventRoom.notify('available-options-change', x),
-
             updateMyOptions: function (topic, message) {
                 // console.log(this.$el.id + ': actualizando mis opciones topico: ' + topic + ', message:', message);
                 let options = this.getAvailableOptions();
@@ -188,7 +193,10 @@ class xSharedOptions {
                 this.$watch('selectedOption', (value) => {
                     this.ownedOption = this.exchangeOptions(this.ownedOption, value);
                 });
-                this.initialized();
+
+                let options = this.getAvailableOptions();
+                options.unshift(this.ownedOption);
+                this.myOptions = options;
             }
         }
     }
