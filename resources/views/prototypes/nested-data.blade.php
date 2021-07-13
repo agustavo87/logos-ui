@@ -5,7 +5,7 @@
         Problema/Solución pasar datos entre componentes anidados.
     </x-main-heading>
 {{--
-    Problema: Pasar datos de un componente a un componente hijo
+    Problema #1: Pasar datos de un componente a un componente hijo
 
     Solución: Se utiliza el dataset de un nodo padre del componente hijo.
     Al inicializarlo, se utiliza la referencia $el, y se accede al dataset
@@ -47,49 +47,36 @@ function inheritProps() {
 </div>
 
 
-</x-container>
+{{--
+    Experimento: Pasar datos a componentes hijos dentro de un bucle x-for
+    de Alpine.js
+--}}
 
-@push('foot-script')
-@verbatim
+<div  x-data="{mensajes: ['mensaje uno', 'mensaje dos', 'mensaje tres']}"
+      class=" max-w-screen-md my-4 p-4 rounded-sm border"
+>
+    <template x-for="mensaje in mensajes">
+        <div x-bind:data-mensaje="mensaje">
+            <div x-data="repeatedChildLegacy()" x-init="initialize"
+                 class="border border-gray-500 m-2 p-2"
+            >
+                <p>Mi mensaje es: <span class="italic" x-text="dataset.mensaje"></span></p>
+            </div>
+        </div>
+    </template>
+</div>
 <script>
-
-/**
- * depends on:
- * - EventRoom.js
- * - SharedOptionsComponent.js
- */
-
-const testOptions = [
-    {
-        code: "title",
-        label: "Título",
-        order: 0
-    }, {
-        code: "abstractNote",
-        label: "Resumen",
-        order: 1
-    }, {
-        code: "publicationTitle",
-        label: "Nombre de Revista",
-        order: 2
-    }, {
-        code: "publisher",
-        label: "Editorial",
-        order: 3
-    }, {
-        code: "date",
-        label: "Fecha de publicación",
-        order: 4
-    }, {
-        code: "place",
-        label: "Ciudad",
-        order: 4
+    function repeatedChildLegacy() {
+        return {
+            dataset: {
+                mensaje: ''
+            },
+            initialize: function () {
+                this.dataset = Object.assign({}, this.$el.parentElement.dataset);
+            }
+        }
     }
-];
-const myEventRoom = new EventRoom();
-const mySharedOptions = new SharedOptionsComponent(testOptions, myEventRoom);
-
 </script>
-@endverbatim
-@endpush
+
+</x-container>
 </x-layout.default>
