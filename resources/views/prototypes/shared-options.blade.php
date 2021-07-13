@@ -159,11 +159,11 @@ class xSharedOptions {
     }
 
     getData() {
-        let myOption = this._takeFirstOption(); // changes availables options
+        let myOption = this._takeFirstOption(); // changes available options
 
         return {
             /**@prop {UIOption[]} */
-            myOptions: [], // no changes, no events.
+            myOptions: [],
 
             /**@prop {UIOption|null} */
             ownedOption: myOption,
@@ -178,25 +178,24 @@ class xSharedOptions {
             */
             exchangeOptions: (giveUpOption, takeOptionCode) => this._exchangeOption(giveUpOption, takeOptionCode),
 
-            subscribe: (cb) => this._eventRoom.subscribe('available-options-change', cb),
+            subscribe: (topic, cb) => this._eventRoom.subscribe(topic, cb),
 
-            updateMyOptions: function (topic, message) {
-                // console.log(this.$el.id + ': actualizando mis opciones topico: ' + topic + ', message:', message);
-                let options = this.getAvailableOptions();
+            updateMyOptions: function (topic, availableOptions) {
+                let options = [...availableOptions]; // modify a copy, not the shared array.
                 options.unshift(this.ownedOption);
                 this.myOptions = options;
             },
 
             initialize: function () {
-                this.subscribe(this.updateMyOptions.bind(this));
+                let options = this.getAvailableOptions();
+                options.unshift(this.ownedOption);
+                this.myOptions = options;
+
+                this.subscribe('available-options-change', this.updateMyOptions.bind(this));
 
                 this.$watch('selectedOption', (value) => {
                     this.ownedOption = this.exchangeOptions(this.ownedOption, value);
                 });
-
-                let options = this.getAvailableOptions();
-                options.unshift(this.ownedOption);
-                this.myOptions = options;
             }
         }
     }
