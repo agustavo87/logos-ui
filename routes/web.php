@@ -138,6 +138,10 @@ Route::group([
         'prototypes.shared-options'
     );
     Route::view(
+        'dinamicsharedoptions',
+        'prototypes.dinamic-shared-options'
+    );
+    Route::view(
         'nesteddata',
         'prototypes.nested-data'
     );

@@ -1,8 +1,10 @@
 import EventRoom from './common/EventRoom';
 import SharedOptionsComponent from './common/SharedOptionsComponent';
+import DinamicSharedOptionsComponent from './common/DinamicSharedOptionsComponent';
 
 window.EventRoom = EventRoom;
 window.SharedOptionsComponent = SharedOptionsComponent;
+window.DinamicSharedOptionsComponent = DinamicSharedOptionsComponent;
 
 // window._ = require('lodash');
 
