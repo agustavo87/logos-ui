@@ -137,6 +137,10 @@ Route::group([
         'sharedoptions',
         'prototypes.shared-options'
     );
+    Route::view(
+        'nesteddata',
+        'prototypes.nested-data'
+    );
 });
 
 Route::view('livewire', 'livewire');

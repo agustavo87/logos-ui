@@ -1,3 +1,9 @@
+import EventRoom from './common/EventRoom';
+import SharedOptionsComponent from './common/SharedOptionsComponent';
+
+window.EventRoom = EventRoom;
+window.SharedOptionsComponent = SharedOptionsComponent;
+
 // window._ = require('lodash');
 
 /**
