@@ -32,7 +32,7 @@ class EventRoom {
      */
      notify(topic, message) {
         if (!this.topicExists(topic)) {
-            throw new ReferenceError('The topic \'' + topic + '\' is not registered.');
+            throw new ReferenceError('Event Call Error: The topic \'' + topic + '\' is not registered.');
         }
         this.subscriptions[topic].forEach(cb => cb(topic, message));
     }
@@ -147,21 +147,16 @@ class xSharedOptions {
     _exchangeOption(giveUpOption, takeOptionCode) {
         this._return(giveUpOption);
         let option = this._take(takeOptionCode);
-        setTimeout(this._updateOptions.bind(this));
+        setTimeout(() => this._eventRoom.notify('available-options-change', this._getAvailableOptions()));
         return option;
-    }
-
-    _updateOptions() {
-        this._eventRoom.notify('source-option-change', null)
     }
 
     getData() {
         let myOption = this._takeFirstOption();
-        let myOptions = this._getAvailableOptions();    // the options that rest after take the first.
-        myOptions.unshift(myOption);                    // my options include the one i take + the availables.
+
         return {
             /**@prop {UIOption[]} */
-            myOptions: myOptions,
+            myOptions: [],
 
             /**@prop {UIOption|null} */
             ownedOption: myOption,
@@ -176,9 +171,9 @@ class xSharedOptions {
             */
             exchangeOptions: (giveUpOption, takeOptionCode) => this._exchangeOption(giveUpOption, takeOptionCode),
 
-            subscribe: (cb) => this._eventRoom.subscribe('source-option-change', cb),
+            subscribe: (cb) => this._eventRoom.subscribe('available-options-change', cb),
 
-            initialized: (x = null) => this._eventRoom.notify('source-option-change', x),
+            initialized: (x = null) => this._eventRoom.notify('available-options-change', x),
 
             updateMyOptions: function (topic, message) {
                 // console.log(this.$el.id + ': actualizando mis opciones topico: ' + topic + ', message:', message);
