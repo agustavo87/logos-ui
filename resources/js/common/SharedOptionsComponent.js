@@ -8,7 +8,7 @@ export default class SharedOptionsComponent {
 
     /**
      * An UIOption, with state info.
-     * @typedef {{code:string, label:string, order:number, taken:boolean}} StateUIOption
+     * @typedef {{code:string, label:string, order:number, taken:boolean, owner:HTMLElement|null}} StateUIOption
      */
 
     /**
@@ -35,7 +35,7 @@ export default class SharedOptionsComponent {
      * @returns {UIOption[]}
      */
      _mapToUIOption(UIOptions) {
-        return UIOptions.map(opt => this._toUIOption(opt));
+        return  UIOptions.map((opt) => this._toUIOption(opt));
     }
 
     /**
@@ -43,9 +43,7 @@ export default class SharedOptionsComponent {
      * @return {StateUIOption}
      */
     _toStateUIOption(UIOption) {
-        let copy = Object.assign({}, UIOption);
-        copy['taken'] = false;
-        return copy;
+        return Object.assign({taken: false, owner:null}, UIOption);
     }
 
     /**
@@ -53,54 +51,86 @@ export default class SharedOptionsComponent {
      * @return {UIOption}
      */
     _toUIOption(StateUIOption) {
-        let copy = Object.assign({}, StateUIOption);
-        delete copy.taken;
-        return copy;
+        let uiopt = Object.assign({}, StateUIOption);
+        delete uiopt.owner;
+        delete uiopt.taken;
+        return uiopt;
     }
 
     _orderOptions() {
         this._availableOptions.sort((a,b) => a.order - b.order);
     }
 
-    /**
-     * @param {string} reqOptCode - Requested option code.
-     * @returns {UIOption}
-     */
-    _take(reqOptCode) {
-        let i = this._availableOptions.findIndex(opt => opt.code == reqOptCode);
-        this._availableOptions[i].taken = true;
-        return this._toUIOption(this._availableOptions[i]);
+    /** make available (free) options with inexistent nodes */
+    _screenOptions() {
+        this._availableOptions.forEach( (option) => {
+            if (option.owner && !document.body.contains(option.owner)) {
+                option.taken = false;
+                option.owner = null;
+            }
+        });
     }
 
-    /** @param {UIOption} option */
-    _return(option) {
-        let stateOption = this._availableOptions.find(opt => opt.code === option.code);
+    /**
+     * @param {string} reqOptCode - Requested option code.
+     * @param {HTMLElement} owner - the owner who take it.
+     * @returns {UIOption}
+     */
+    _take(reqOptCode, owner) {
+        let i = this._availableOptions.findIndex(opt => opt.code == reqOptCode);
+        let reqOption = this._availableOptions[i];
+        reqOption.taken = true;
+        reqOption.owner = owner;
+        return this._toUIOption(reqOption);
+    }
+
+    /** @param {string} optionCode */
+    _return(optionCode) {
+        let stateOption = this._availableOptions.find(opt => opt.code === optionCode);
         stateOption.taken = false;
+        stateOption.owner = null;
+    }
+
+    _optionRemoved() {
+        this._optionsChanged();
+    }
+
+    _getOptions() {
+        return this._mapToUIOption(this._availableOptions);
     }
 
     /** @returns {UIOption[]} */
     _getAvailableOptions() {
-        return this._mapToUIOption(this._availableOptions.filter(suiOpt => suiOpt.taken === false));
+        this._screenOptions();
+        return this._mapToUIOption(this._availableOptions.filter(opt => opt.taken === false));
     }
 
-    /** @returns {UIOption} */
-    _takeFirstOption() {
+    /**
+     * @param {HTMLElement}  owner - the node that request an option.
+     * @returns {UIOption}
+     */
+    _takeFirstOption(owner) {
         let stateOption = this._availableOptions.find((opt) => opt.taken == false);
-        stateOption.taken = true;
-        let option = this._toUIOption(stateOption);
+        let option = this._take(stateOption.code, owner);
 
         setTimeout(this._optionsChanged.bind(this)); // next loop;
         return option;
     }
 
+
+    _count() {
+        return this._availableOptions.length;
+    }
+
     /**
      * @param {UIOption}    giveUpOption
      * @param {string}      takeOptionCode
+     * @param {HTMLElement} owner
      * @returns {UIOption}
      */
-    _exchangeOption(giveUpOption, takeOptionCode) {
-        this._return(giveUpOption);
-        let option = this._take(takeOptionCode);
+    _exchangeOption(giveUpOption, takeOptionCode, owner) {
+        this._return(giveUpOption.code);
+        let option = this._take(takeOptionCode, owner);
 
         setTimeout(this._optionsChanged.bind(this)); // next loop;
         return option;
@@ -111,34 +141,52 @@ export default class SharedOptionsComponent {
     }
 
     getData(props = null) {
-        let myOption = this._takeFirstOption(); // changes available options
 
         return {
             /**@prop {UIOption[]} */
             myOptions: [],
 
             /**@prop {UIOption|null} */
-            ownedOption: myOption,
+            ownedOption: null,
 
-            selectedOption: myOption.code,
+            selectedOption: null,
 
             getAvailableOptions: () => this._getAvailableOptions(),
 
             /**
-            * @param {UIOption}    giveUpOption
-            * @param {string}      takeOptionCode
+            * @param {UIOption}     giveUpOption
+            * @param {string}       takeOptionCode
+            * @param {HTMLElement}  owner
             */
-            exchangeOptions: (giveUpOption, takeOptionCode) => this._exchangeOption(giveUpOption, takeOptionCode),
+            exchangeOptions: (giveUpOption, takeOptionCode, owner) => {
+                return this._exchangeOption(giveUpOption, takeOptionCode, owner)
+            },
+
+            takeFirstOption: (owner) => this._takeFirstOption(owner),
 
             subscribe: (topic, cb) => this._eventRoom.subscribe(topic, cb),
 
             updateMyOptions: function (topic, availableOptions) {
-                let options = [...availableOptions]; // modify a copy, not the shared array.
+                let options = [...availableOptions];
                 options.unshift(this.ownedOption);
                 this.myOptions = options;
             },
 
+            dataset: {},
+
             initialize: function () {
+                // update dataset
+                let dataset = this.$el.parentElement.dataset;
+                if (Object.keys(dataset)) {
+                    this.dataset = Object.assign({}, this.$el.parentElement.dataset)
+                }
+
+                // take one option
+                let myOption = this.takeFirstOption(this.$el); // changes available options
+                this.ownedOption = myOption;
+                this.selectedOption = myOption.code;
+
+                // get the rest of available options
                 let options = this.getAvailableOptions();
                 options.unshift(this.ownedOption);
                 this.myOptions = options;
@@ -146,7 +194,7 @@ export default class SharedOptionsComponent {
                 this.subscribe('available-options-change', this.updateMyOptions.bind(this));
 
                 this.$watch('selectedOption', (value) => {
-                    this.ownedOption = this.exchangeOptions(this.ownedOption, value);
+                    this.ownedOption = this.exchangeOptions(this.ownedOption, value, this.$el);
                 });
             }
         }

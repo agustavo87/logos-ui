@@ -88,7 +88,7 @@ const myEventRoom = new EventRoom();
 class DinamicFieldsControl {
     constructor (EventRoom, Options) {
         this.eventRoom = EventRoom;
-        this.limitedSharedOptions = new DinamicSharedOptionsComponent(Options, EventRoom);
+        this.limitedSharedOptions = new SharedOptionsComponent(Options, EventRoom);
     }
 
     getRootData() {
