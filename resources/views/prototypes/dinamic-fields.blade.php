@@ -1,8 +1,8 @@
-<x-layout.default title="Selección dinámica de distintas opciones de un conjunto finito.">
+<x-layout.default title="Creación dinámica de campos a demanda.">
 
     <x-container class=" mb-5">
         <x-main-heading>
-            Selección dinámica de distintas opciones de un conjunto finito.
+            Creación dinámica de campos a demanda.
         </x-main-heading>
 {{--
     Expeimento: De un conjunto dado de opciones brindar la posibilidad
@@ -23,13 +23,35 @@
                     {{-- Child component --}}
                     <div x-data="dinamicFields.getSelectData()" x-init="initialize">
                         <h4 class=" my-2 italic" x-text="dataset.attribute"></h4>
-                        <div x-bind:id="dataset.attribute" class=" w-64 flex">
+                        <div x-bind:id="dataset.attribute" class="flex">
                             <select name="sourceAttributes" id="sourceAttributes" x-model="selectedOption"
-                                class=" focus:outline-none flex-grow py-2 px-4 m-2 rounded-sm border">
+                                class=" focus:outline-none py-2 px-4 m-2 rounded-sm border flex-grow-0 w-52">
                                 <template x-for="option in myOptions" x-bind:key="option.code">
                                     <option x-bind:value="option.code" x-text="option.label"></option>
                                 </template>
                             </select>
+
+                            {{-- Conditional inputs --}}
+                            <div class="flex flex-col justify-center">
+                                <template x-if="ownedOption.type == 'text'">
+                                    <div>
+                                        <span>Entrada de texto</span>
+                                        <input type="text" name="texto" id="texto" class="border px-3 py-2 m-2">
+                                    </div>
+                                </template>
+                                <template x-if="ownedOption.type == 'date'">
+                                    <div>
+                                        <span>Entrada de fecha</span>
+                                        <input type="date" name="date" id="date" class="border px-3 py-2 m-2">
+                                    </div>
+                                </template>
+                                <template x-if="ownedOption.type == 'number'">
+                                    <div>
+                                        <span>Entrada de número</span>
+                                        <input type="number" name="xs" id="xs" class="border px-3 py-2 m-2">
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -59,27 +81,38 @@ const testOptions = [
     {
         code: "title",
         label: "Título",
-        order: 0
+        order: 0,
+        type: 'text'
     }, {
         code: "abstractNote",
         label: "Resumen",
-        order: 1
+        order: 1,
+        type: 'text'
     }, {
         code: "publicationTitle",
         label: "Nombre de Revista",
-        order: 2
+        order: 2,
+        type: 'text'
     }, {
         code: "publisher",
         label: "Editorial",
-        order: 3
+        order: 3,
+        type: 'text'
+    }, {
+        code: "volume",
+        label: "Volume",
+        order: 4,
+        type: 'number'
     }, {
         code: "date",
         label: "Fecha de publicación",
-        order: 4
+        order: 5,
+        type: 'date'
     }, {
         code: "place",
         label: "Ciudad",
-        order: 4
+        order: 6,
+        type: 'text'
     }
 ];
 const myEventRoom = new EventRoom();

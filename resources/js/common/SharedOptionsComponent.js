@@ -3,7 +3,7 @@ export default class SharedOptionsComponent {
 
     /**
      * An option with label.
-     * @typedef {{code:string, label:string, order:number}} UIOption
+     * @typedef {{code:string, label:string, order:number, type: string, params: object}} UIOption
      */
 
     /**
@@ -146,10 +146,12 @@ export default class SharedOptionsComponent {
             /**@prop {UIOption[]} */
             myOptions: [],
 
-            /**@prop {UIOption|null} */
-            ownedOption: null,
+            /**@prop {UIOption} */
+            ownedOption: SharedOptionsComponent.defaults.UIOoption,
 
-            selectedOption: null,
+            selectedOption: '',
+
+            defaultTypes: SharedOptionsComponent.defaults.Types,
 
             getAvailableOptions: () => this._getAvailableOptions(),
 
@@ -181,6 +183,8 @@ export default class SharedOptionsComponent {
                     this.dataset = Object.assign({}, this.$el.parentElement.dataset)
                 }
 
+                console.log(SharedOptionsComponent.defaults);
+
                 // take one option
                 let myOption = this.takeFirstOption(this.$el); // changes available options
                 this.ownedOption = myOption;
@@ -198,5 +202,21 @@ export default class SharedOptionsComponent {
                 });
             }
         }
+    }
+}
+
+SharedOptionsComponent.defaults = {
+    UIOoption: {
+        code: '',
+        label: '',
+        order: 0,
+        type: '',
+        params: {}
+    },
+    Types: {
+        text: {
+            length: 10
+        },
+        date: {}
     }
 }

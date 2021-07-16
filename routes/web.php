@@ -134,6 +134,10 @@ Route::group([
         ]
     );
     Route::view(
+        'nesteddata',
+        'prototypes.nested-data'
+    );
+    Route::view(
         'sharedoptions',
         'prototypes.shared-options'
     );
@@ -142,8 +146,8 @@ Route::group([
         'prototypes.dinamic-shared-options'
     );
     Route::view(
-        'nesteddata',
-        'prototypes.nested-data'
+        'dinamicfields',
+        'prototypes.dinamic-fields'
     );
 });
 
