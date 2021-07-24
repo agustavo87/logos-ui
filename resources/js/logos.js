@@ -7,13 +7,13 @@ window.Quill = Quill;
 window.SourceTypes = SourceTypes;
 window.debounce = debounce;
 
-class Logos { 
+class Logos {
     constructor(options) {
         this.ui = {};
         this.ui.sideControls = document.querySelector(options.sideControls)
         this.ui.quillContainer = document.querySelector(options.quillContainer)
         this.ui.btnShowSideControls = document.querySelector(options.btnShowSideControls)
-        
+
         this.initialDelta = options.initialDelta;
         this.meta = [];
 
@@ -21,7 +21,7 @@ class Logos {
             'blots/block': Quill.import('blots/block')
         };
         this.initQuill()
-        this.bindUIHandlers() 
+        this.bindUIHandlers()
         this.Citations = this.quill.getModule('citations');
 
         if (this.initialDelta) {
@@ -73,11 +73,11 @@ class Logos {
                 const [range, oldRange, source] = args;
                 if (range == null) return;
                 if (range.length === 0) { // there's nothing selected
-                    console.log('cambio de seleccion, viendo si es una linea vacía')
+                    // console.log('cambio de seleccion, viendo si es una linea vacía')
                     const [block, offset] = this.quill.scroll.descendant(this.imports['blots/block'], range.index);
                     // check if the only element in the line is a line break, so show side tools.
                     if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
-                        console.log('es una linea vacía')
+                        // console.log('es una linea vacía')
                         let lineBounds = this.quill.getBounds(range);
                         this.ui.sideControls.style.display = 'block'
                         this.ui.sideControls.style.left = lineBounds.left - 42 + "px"

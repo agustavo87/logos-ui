@@ -41,31 +41,31 @@
     </code>
 
 
-    @push('foot-script')
-        <script>
-            function LogosWrapper(initData) {
-                return {
-                    delta: initData.deltaEntangle,
-                    meta: initData.metaEntangle,
-                    html: initData.htmlEntangle,
-                    transactionStatus: 'Listo',
-                    handleQuillInput: function (event) {
-                        this.delta = event.detail.delta();
-                        this.html = event.detail.html();
-                        this.meta = {key: 'value'};
-                        this.transactionStatus = 'Modificado'
-                        this.save()
-                    },
-                    handleSimpleInput: function () {
-                        this.transactionStatus = 'Modificado'
-                        this.save()
-                    },
-                    save: debounce(function () {
-                        this.transactionStatus = "Guardando..."
-                        this.$wire.save().then(() => {this.transactionStatus = 'Guardado'});
-                    }, 3000, {trailing: true, maxWait: 10000})
-                }
-            }
-        </script>
-    @endpush
+@push('head-script')
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('LogosWrapper', (initData) => ({
+        delta: initData.deltaEntangle,
+        meta: initData.metaEntangle,
+        html: initData.htmlEntangle,
+        transactionStatus: 'Listo',
+        handleQuillInput: function (event) {
+            this.delta = event.detail.delta();
+            this.html = event.detail.html();
+            this.meta = {key: 'value'};
+            this.transactionStatus = 'Modificado'
+            this.save()
+        },
+        handleSimpleInput: function () {
+            this.transactionStatus = 'Modificado'
+            this.save()
+        },
+        save: debounce(function () {
+            this.transactionStatus = "Guardando..."
+            this.$wire.save().then(() => {this.transactionStatus = 'Guardado'});
+        }, 3000, {trailing: true, maxWait: 10000})
+    }))
+})
+</script>
+@endpush
 </div>
