@@ -6,7 +6,7 @@
     ])
 
 <!-- This example requires Tailwind CSS v2.0+ -->
-<div x-data="modal()" class="fixed z-10 inset-0 overflow-y-auto" x-show="modal" @keydown.escape="cancel" x-cloak
+<div x-data="modal" class="fixed z-10 inset-0 overflow-y-auto" x-show="modal" @keydown.escape="cancel" x-cloak
     x-on:show-alert.window="externalCall"
 >
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -21,11 +21,11 @@
       >
         <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
       </div>
-  
+
       <!-- This element is to trick the browser into centering the modal contents. -->
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-      <div x-show="modal" @click.away="cancel" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline"
+      <div x-show="modal" @click.outside="cancel" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline"
         x-transition:enter="ease-out duration-300"
         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
@@ -66,9 +66,10 @@
   </div>
 
   @push('head-script')
-    <script>  
-    function modal() {
-        return {
+    <script>
+
+document.addEventListener('alpine:init', () => {
+        Alpine.data('modal', () => ({
             modal: false,
             name: '{{ $name }}',
             acceptCB: () => null, // console.log('aceptado'),
@@ -102,7 +103,45 @@
                     event.detail.cancel ? event.detail.cancel : null
                 );
             }
-        }
-    }
+        }))
+    })
+
+    // function modal() {
+    //     return {
+    //         modal: false,
+    //         name: '{{ $name }}',
+    //         acceptCB: () => null, // console.log('aceptado'),
+    //         cancelCB: () => null, //console.log('cancelado'),
+    //         showModal: function (event, acceptCB =  null, cancelCB = null) {
+    //           if (acceptCB) this.acceptCB = acceptCB;
+    //           if (cancelCB) this.cancelCB = cancelCB;
+    //         //   console.log(event);
+    //         //   console.log(this.acceptCB);
+    //         //   console.log(this.cancelCB);
+    //           this.modal = true;
+    //         },
+    //         hideModal: function () {
+    //             this.modal = false;
+    //         },
+    //         accept: function () {
+    //           this.hideModal();
+    //           this.acceptCB();
+    //         },
+    //         cancel: function () {
+    //           this.hideModal();
+    //           this.cancelCB();
+    //         },
+    //         externalCall: function (event) {
+    //             if (!event.detail.name === this.name) return;
+    //             // console.log('me llaman a mi!');
+    //             // console.log(event.detail)
+    //             this.showModal(
+    //                 event,
+    //                 event.detail.accept ? event.detail.accept : null,
+    //                 event.detail.cancel ? event.detail.cancel : null
+    //             );
+    //         }
+    //     }
+    // }
     </script>
   @endpush
