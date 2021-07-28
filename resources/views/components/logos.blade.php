@@ -28,8 +28,7 @@
       sideControls: '#sidebar-controls',
       quillContainer: '#quill-container',
       btnShowSideControls: '#show-controls',
-      toolbar: '#toolbar',
-      addCitationHandler: LogosUI.getHandler /** @todo para que carajos está esto **/
+      toolbar: '#toolbar'
     });
   </script>
 @endpush
