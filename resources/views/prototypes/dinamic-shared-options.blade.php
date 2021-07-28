@@ -1,4 +1,4 @@
-<x-layout.default title="Selección dinámica de distintas opciones de un conjunto finito.">
+<x-layout.alpine-2 title="Selección dinámica de distintas opciones de un conjunto finito.">
 
     <x-container class=" mb-5">
         <x-main-heading>
@@ -89,4 +89,4 @@ dinamicFields = new DinamicSelectComponent(myEventRoom, testOptions);
     </script>
     @endverbatim
     @endpush
-</x-layout.default>
+</x-layout.alpine-2>

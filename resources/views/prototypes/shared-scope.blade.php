@@ -1,4 +1,4 @@
-<x-layout.default title="Scope experiments">
+<x-layout.alpine-2 title="Scope experiments">
 @push('head-script')
 <script>
 
@@ -192,4 +192,4 @@ const myCompNotifySharedAttriubteUpdate = new compNotifySharedAttriubteUpdate(['
 {{-- / Scope Experiment 3 --}}
 
 </x-container>
-</x-layout.default>
+</x-layout.alpine-2>

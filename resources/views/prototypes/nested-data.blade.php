@@ -1,4 +1,4 @@
-<x-layout.default title="Problema/Solución pasar datos entre componentes anidados">
+<x-layout.alpine-2 title="Problema/Solución pasar datos entre componentes anidados">
 
 <x-container class=" mb-5">
     <x-main-heading>
@@ -79,4 +79,4 @@ function inheritProps() {
 </script>
 
 </x-container>
-</x-layout.default>
+</x-layout.alpine-2>

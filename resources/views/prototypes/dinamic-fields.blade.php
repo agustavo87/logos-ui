@@ -1,4 +1,4 @@
-<x-layout.default title="Creación dinámica de campos a demanda.">
+<x-layout.alpine-2 title="Creación dinámica de campos a demanda.">
 
     <x-container class=" mb-5">
         <x-main-heading>
@@ -122,4 +122,4 @@ dinamicFields = new DinamicSelectComponent(myEventRoom, testOptions);
     </script>
     @endverbatim
     @endpush
-</x-layout.default>
+</x-layout.alpine-2>

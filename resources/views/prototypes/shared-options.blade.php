@@ -1,4 +1,4 @@
-<x-layout.default title="Scope experiments">
+<x-layout.alpine-2 title="Scope experiments">
 
 <x-container class=" mb-5">
     <x-main-heading>
@@ -77,4 +77,4 @@ const mySharedOptions = new SharedOptionsComponent(testOptions, myEventRoom);
 </script>
 @endverbatim
 @endpush
-</x-layout.default>
+</x-layout.alpine-2>

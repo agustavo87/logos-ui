@@ -23,3 +23,7 @@ mix
     .copyDirectory('resources/images/copy', 'public/images' )
     .sourceMaps()
     .browserSync('arete.test');
+
+if (!mix.inProduction()) {
+    mix.js('resources/js/prototypes.js', 'public/js')
+}
