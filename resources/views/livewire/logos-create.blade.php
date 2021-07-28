@@ -37,6 +37,25 @@ document.addEventListener('alpine:init', () => {
             html: $wire.entangle('article.html').defer,
             transactionStatus: 'Listo',
 
+            init: function () {
+                this.debounceSave = debounce(this.commitSave, 3000, {trailing: true, maxWait: 10000});
+            },
+
+            save: function (doDebounce = true) {
+                if (doDebounce) {
+                    this.debounceSave();
+                } else {
+                    this.commitSave()
+                }
+            },
+
+            commitSave: function () {
+                this.transactionStatus = "Guardando..."
+                this.$wire.save().then(() => {this.transactionStatus = 'Guardado'});
+            },
+
+            debounceSave: null,
+
             handleQuillInput: function (event) {
                 this.delta = event.detail.delta();
                 this.html = event.detail.html();
@@ -47,13 +66,8 @@ document.addEventListener('alpine:init', () => {
 
             handleSimpleInput: function () {
                 this.transactionStatus = 'Modificado'
-                this.save()
-            },
-
-            save: debounce(function () {
-                this.transactionStatus = "Guardando..."
-                this.$wire.save().then(() => {this.transactionStatus = 'Guardado'});
-            }, 3000, {trailing: true, maxWait: 10000})
+                this.save(false)
+            }
         }
     })
 })

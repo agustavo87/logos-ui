@@ -97,14 +97,14 @@ Route::group([
     ], function () {
 
         Route::get('/create', [ArticleController::class, 'create'])->name('create');
-        Route::get('/{article}/edit', [ArticleController::class, 'edit'])->name('edit');
+        Route::get('/edit', [ArticleController::class, 'edit'])->name('edit');
 
         Route::get('/by/{user}', [ArticleController::class, 'indexBy'])
             ->name('by');
         Route::get('/mine', [ArticleController::class, 'mine'])
             ->middleware('auth:sanctum')
             ->name('mine');
-        Route::get('/{article}', [ArticleController::class, 'show'])
+        Route::get('/{articleID}', [ArticleController::class, 'show'])
             ->name('show');
     });
 

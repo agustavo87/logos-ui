@@ -7,6 +7,9 @@ use Livewire\Component;
 
 class LogosCreate extends Component
 {
+    protected $queryString = ['articleID'];
+    public $articleID = null;
+
     public Article $article;
 
     protected $rules = [
@@ -16,10 +19,10 @@ class LogosCreate extends Component
         'article.meta' => 'JSON'
     ];
 
-    public function mount($id = null)
+    public function mount()
     {
-        if ($id) {
-            $this->article =  Article::find($id);
+        if ($this->articleID) {
+            $this->article =  Article::find($this->articleID);
         } else {
             $this->article = new Article([
                 'title' => '',
@@ -34,8 +37,10 @@ class LogosCreate extends Component
     {
         if ($this->article->user == null) {
             auth()->user()->articles()->save($this->article);
+            $this->articleID = $this->article->id;
         } else {
             $this->article->save();
+            $this->articleID = $this->article->id;
         }
     }
 
