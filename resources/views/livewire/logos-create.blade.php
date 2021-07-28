@@ -17,23 +17,14 @@
     >
         {{-- Title --}}
         <input type="text" placeholder="Título" autocomplete="off"
-               x-model="title" x-on:input="handleSimpleInput"
+               x-model="title" x-on:change="handleSimpleInput"
                class="ml-2 text-3xl font-bold mb-2 focus:outline-none text-gray-800"
         >
+
         {{-- Logos Editor --}}
         <x-logos :initial-delta="$article->delta" />
 
     </div>
-    <h3 class=" text-xl font-semibold">Livewire</h3>
-    <strong>Meta:</strong>
-    <code>
-        {{ json_encode($article->meta) }}
-    </code>
-    <strong>Delta:</strong>
-    <code>
-        {{ json_encode($article->delta)}}
-    </code>
-
 
 @push('head-script')
 <script>

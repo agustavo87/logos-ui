@@ -95,7 +95,10 @@ Route::group([
         'prefix' => '/articles',
         'as' => 'articles.'
     ], function () {
+
         Route::get('/create', [ArticleController::class, 'create'])->name('create');
+        Route::get('/{article}/edit', [ArticleController::class, 'edit'])->name('edit');
+
         Route::get('/by/{user}', [ArticleController::class, 'indexBy'])
             ->name('by');
         Route::get('/mine', [ArticleController::class, 'mine'])
@@ -103,7 +106,6 @@ Route::group([
             ->name('mine');
         Route::get('/{article}', [ArticleController::class, 'show'])
             ->name('show');
-        Route::get('/{article}/edit', [ArticleController::class, 'edit'])->name('edit');
     });
 
     Route::group([
