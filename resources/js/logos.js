@@ -49,14 +49,15 @@ class Logos {
 
         this.quill.on('editor-change', (eventType, ...args) => {
             if (eventType === 'text-change') {
-                const [delta, oldDelta, source] = args;
+                const delta = args[0];
+                const source = args[2];
                 if (source == 'user') {
                     this.checkBottomBoundTrasspassing(delta);
                     this.notifyQuillInput();
                 }
 
             } else if (eventType === 'selection-change') {
-                const [range, oldRange, source] = args;
+                const range = args[0];
                 this.checkSideBarDisplay(range);
             }
         })
