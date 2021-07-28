@@ -13,6 +13,7 @@ class Logos {
         this.ui.sideControls = document.querySelector(options.sideControls)
         this.ui.quillContainer = document.querySelector(options.quillContainer)
         this.ui.btnShowSideControls = document.querySelector(options.btnShowSideControls)
+        this.ui.toolbar = document.querySelector(options.toolbar)
 
         this.initialDelta = options.initialDelta;
         this.meta = [];
@@ -32,7 +33,7 @@ class Logos {
     initQuill () {
         this.quill = new Quill(this.ui.quillContainer, {
             modules: {
-                toolbar: '#toolbar', /** @todo especificar toolbar por parametro */
+                toolbar: this.ui.toolbar,
                 citations: {
                     type: SourceTypes.CITATION_VANCOUVER,
                     class: 'citation',
