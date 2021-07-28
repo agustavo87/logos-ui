@@ -28,7 +28,7 @@
       sideControls: '#sidebar-controls',
       quillContainer: '#quill-container',
       btnShowSideControls: '#show-controls',
-      addCitationHandler: LogosUI.getHandler
+      addCitationHandler: LogosUI.getHandler /** @todo para que carajos está esto **/
     });
   </script>
 @endpush

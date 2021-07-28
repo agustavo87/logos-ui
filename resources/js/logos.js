@@ -51,48 +51,57 @@ class Logos {
             if (eventType === 'text-change') {
                 const [delta, oldDelta, source] = args;
                 if (source == 'user') {
-                    // check if the editor has to scroll-down.
-                    delta.forEach((op) => {
-                        if (op.insert == "\n") {
-                            // Evaluates in next 'tick', after quill updates.
-                            window.setTimeout(this.fixOffset.bind(this))
-                        }
-                    });
-                    // notifies an input that can be handled by parent
-                    this.ui.quillContainer.dispatchEvent(new CustomEvent('quill-input', {
-                        bubbles: true,
-                        detail: {
-                            delta: () => this.quill.getContents(),
-                            html: () => this.quill.scroll.domNode.innerHTML,
-                            meta: () => this.meta
-                        }
-                    }))
+                    this.checkBottomBoundTrasspassing(delta);
+                    this.notifyQuillInput();
                 }
 
             } else if (eventType === 'selection-change') {
-                // check if has to show floating/side toolbar
                 const [range, oldRange, source] = args;
-                if (range == null) return;
-                if (range.length === 0) { // there's nothing selected
-                    // console.log('cambio de seleccion, viendo si es una linea vacía')
-                    const [block, offset] = this.quill.scroll.descendant(this.imports['blots/block'], range.index);
-                    // check if the only element in the line is a line break, so show side tools.
-                    if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
-                        // console.log('es una linea vacía')
-                        let lineBounds = this.quill.getBounds(range);
-                        this.ui.sideControls.style.display = 'block'
-                        this.ui.sideControls.style.left = lineBounds.left - 48 + "px"
-                        this.ui.sideControls.style.top = lineBounds.top - 10 + "px" /** @todo calcular el centro */
-                    } else {
-                        this.ui.sideControls.style.display = 'none';
-                        this.ui.sideControls.classList.remove('active')
-                    }
-                } else {
-                    this.ui.sideControls.style.display = 'none';
-                    this.ui.sideControls.classList.remove('active')
-                }
+                this.checkSideBarDisplay(range);
             }
         })
+    }
+
+    checkSideBarDisplay(range) {
+        if (range == null) return;
+        if (range.length === 0) { // there's nothing selected
+            // console.log('cambio de seleccion, viendo si es una linea vacía')
+            const [block, offset] = this.quill.scroll.descendant(this.imports['blots/block'], range.index);
+            // check if the only element in the line is a line break, so show side tools.
+            if (block != null && block.domNode.firstChild instanceof HTMLBRElement) {
+                // console.log('es una linea vacía')
+                let lineBounds = this.quill.getBounds(range);
+                this.ui.sideControls.style.display = 'block'
+                this.ui.sideControls.style.left = lineBounds.left - 48 + "px"
+                this.ui.sideControls.style.top = lineBounds.top - 10 + "px" /** @todo calcular el centro */
+            } else {
+                this.ui.sideControls.style.display = 'none';
+                this.ui.sideControls.classList.remove('active')
+            }
+        } else {
+            this.ui.sideControls.style.display = 'none';
+            this.ui.sideControls.classList.remove('active')
+        }
+    }
+
+    checkBottomBoundTrasspassing(delta) {
+        delta.forEach((op) => {
+            if (op.insert == "\n") {
+                // Evaluates in next 'tick', after quill updates.
+                window.setTimeout(this.fixOffset.bind(this))
+            }
+        });
+    }
+
+    notifyQuillInput() {
+        this.ui.quillContainer.dispatchEvent(new CustomEvent('quill-input', {
+            bubbles: true,
+            detail: {
+                delta: () => this.quill.getContents(),
+                html: () => this.quill.scroll.domNode.innerHTML,
+                meta: () => this.meta
+            }
+        }))
     }
 
     bindUIHandlers() {
