@@ -32,7 +32,7 @@ class Logos {
     initQuill () {
         this.quill = new Quill(this.ui.quillContainer, {
             modules: {
-                toolbar: '#toolbar',
+                toolbar: '#toolbar', /** @todo especificar toolbar por parametro */
                 citations: {
                     type: SourceTypes.CITATION_VANCOUVER,
                     class: 'citation',
@@ -69,7 +69,8 @@ class Logos {
                     }))
                 }
 
-            } else if (eventType === 'selection-change') { // check if has to show floating/side toolbar
+            } else if (eventType === 'selection-change') {
+                // check if has to show floating/side toolbar
                 const [range, oldRange, source] = args;
                 if (range == null) return;
                 if (range.length === 0) { // there's nothing selected
@@ -80,8 +81,8 @@ class Logos {
                         // console.log('es una linea vacía')
                         let lineBounds = this.quill.getBounds(range);
                         this.ui.sideControls.style.display = 'block'
-                        this.ui.sideControls.style.left = lineBounds.left - 42 + "px"
-                        this.ui.sideControls.style.top = lineBounds.top - 7 + "px"
+                        this.ui.sideControls.style.left = lineBounds.left - 48 + "px"
+                        this.ui.sideControls.style.top = lineBounds.top - 10 + "px" /** @todo calcular el centro */
                     } else {
                         this.ui.sideControls.style.display = 'none';
                         this.ui.sideControls.classList.remove('active')

@@ -10,6 +10,7 @@ class LogosCreate extends Component
     protected $queryString = ['articleID'];
     public $articleID = null;
 
+    /** @todo sacar article como propiedad pública */
     public Article $article;
 
     protected $rules = [
