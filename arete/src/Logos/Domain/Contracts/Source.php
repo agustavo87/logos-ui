@@ -13,4 +13,6 @@ interface Source
     public function render(array $params = null): string;
 
     public function setFormatter(Formatter $fomater);
+
+    public function key(): string;
 }

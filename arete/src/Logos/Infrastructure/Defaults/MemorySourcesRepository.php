@@ -65,9 +65,12 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         $ownerID = $ownerID ?? $this->logos->getOwner();
         $entityID = $this->newId();
 
+        $key = $this->getKey($params);
+
         $source = new Source($this->sourceTypes, $this->defaultFormatter);
         $source->fill([
             'id'        => $entityID,
+            'key'       => $key,
             'typeCode'  => $params['type'],
             'ownerID'   => $ownerID
         ]);
@@ -91,6 +94,59 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         ]);
 
         return self::$sources[$entityID] = $source;
+    }
+
+    protected function getKey(array $params): string
+    {
+        // Algoritmo "ideal"
+        // 1.a) ver si tiene key
+        // 1.b.1.a) ver sitene creaor autor -> buscar el apellido
+        // 1.b.1.b) ver si tiene algún creador -> buscar el primer atributo
+        // 1.b.1.c) buscar primera palabra del título.
+        // 1.b.1.d) palabra aleatoria
+        // 1.b.2.a) ver si tiene fecha-> obtener el año -> agregarla.
+        // 2.a) ver si existe -> si no -> devolverla
+        // 2.b) agregarle un numero al final -> c.1.a
+
+        if (isset($params['key'])) {
+            $keyWord = $params['key'];
+        } else {
+            /** @todo mejorar la búsqueda del apellido o atributo principal del creador principal */
+            if (isset($params['participations'][0]['creator']['attributes']['lastName'])) {
+                $keyWord = $params['participations'][0]['creator']['attributes']['lastName'];
+            } elseif (isset($params['title'])) {
+                $keyWord = explode(' ', $params['title'])[0];
+            } else {
+                $keyWord = 'anon';
+            }
+            /** @todo acá agregar el año */
+        }
+        $i = 1;
+        $baseKeyWord = $keyWord;
+        while ($this->keyExist($keyWord)) {
+            $keyWord = $baseKeyWord . ++$i;
+        }
+        return $keyWord;
+    }
+
+    public function keyExist(string $key): bool
+    {
+        foreach (self::$sources as $id => $source) {
+            if ($source->key() == $key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getByKey(string $key)
+    {
+        foreach (self::$sources as $id => $source) {
+            if ($source->key() == $key) {
+                return $source;
+            }
+        }
+        return null;
     }
 
     public function get(int $id): Source

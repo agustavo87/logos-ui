@@ -27,6 +27,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     protected Schema $schema;
     protected int $maxFetchSize = 30;
     protected array $cache = [];
+    protected array $cacheByKey = [];
     protected Formatter $defaultFormatter;
 
     public function __construct(
@@ -53,10 +54,12 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         $ownerID = $ownerID ?? $this->logos->getOwner();
 
         // first, let's create the source and insert it's attributes
+        $key = $this->getKey($params);
         $source = new Source($this->sourceTypes, $this->defaultFormatter);
         $source->fill([
             'typeCode' => $params['type'],
-            'ownerID' => $ownerID
+            'ownerID' => $ownerID,
+            'key'     => $key
         ]);
 
         $this->db->insertEntityAttributes(
@@ -79,7 +82,51 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
             'participations' => $participations
         ]);
 
+        $this->cache[$source->id()] = $source;
+        $this->cacheBykey[$source->key()] = $source;
         return $source;
+    }
+
+    protected function getKey(array $params): string
+    {
+        if (isset($params['key'])) {
+            $keyWord = $params['key'];
+        } else {
+            /** @todo mejorar la búsqueda del apellido o atributo principal del creador principal */
+            if (isset($params['participations'][0]['creator']['attributes']['lastName'])) {
+                $keyWord = $params['participations'][0]['creator']['attributes']['lastName'];
+            } elseif (isset($params['title'])) {
+                $keyWord = explode(' ', $params['title'])[0];
+            } else {
+                $keyWord = 'anon';
+            }
+            /** @todo acá agregar el año */
+        }
+        $i = 1;
+        $baseKeyWord = $keyWord;
+        while ($this->keyExist($keyWord)) {
+            $keyWord = $baseKeyWord . ++$i;
+        }
+        return $keyWord;
+    }
+
+    public function keyExist($key)
+    {
+        return $this->db->sourceKeyExist($key);
+    }
+
+    public function getByKey(string $key)
+    {
+        if (array_key_exists($key, $this->cacheByKey)) {
+            return $this->cacheByKey[$key];
+        }
+        return $this->getNewByKey($key);
+    }
+
+    /** @todo agregarlo a la interfas */
+    public function getNewByKey($key)
+    {
+        return $this->getNew($this->db->getSourceIDByKey($key));
     }
 
     public function get(int $id): Source
@@ -111,6 +158,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
             $this->defaultFormatter,
             [
                 'id' => $sourceEntry->id,
+                'key' => $sourceEntry->key,
                 'typeCode' => $sourceEntry->source_type_code_name,
                 'ownerID' => $sourceEntry->$ownerFKColumn
             ]
@@ -128,7 +176,9 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         $source->fill([
             'participations' => $participations->load()
         ]);
-        return $this->cache[$id] = $source;
+        $this->cache[$id] = $source;
+        $this->cacheBykey[$source->key()] = $source;
+        return $source;
     }
 
     public function save(Source $source): bool

@@ -166,8 +166,7 @@ class SourcesRepositoryTest extends TestCase
     {
         $this->assertInstanceOf(Source::class, $source);
         $this->assertIsInt($source->id());
-        $type = $source->type();
-        $this->assertInstanceOf(SourceType::class, $type);
+        $this->assertInstanceOf(SourceType::class, $source->type());
         $this->assertInstanceOf(ParticipationSet::class, $source->participations());
         $arraySource = $source->toArray();
         $this->assertIsArray($arraySource);
@@ -177,6 +176,7 @@ class SourcesRepositoryTest extends TestCase
             $this->assertEquals($value, $attribute);
         }
     }
+
     /**
     * Test de creation of a new source
     *
@@ -237,6 +237,48 @@ class SourcesRepositoryTest extends TestCase
         $this->assertEquals('Zamudio', $firstAuthor->lastName);
 
         return $source;
+    }
+
+    /**
+     * @param SourcesRepository $sources
+     *
+     * @depends testSourcesRepositoryIsBinded
+     * @return SourcesRepository
+     */
+    public function testCreateAndGetSourceByKeyName(SourcesRepository $sources): SourcesRepository
+    {
+        $name = $this->faker->name();
+        $sourceData = [
+            'key' => 'procopio2021',
+            'type' => 'book',
+            'attributes' => [
+                'title' => "Las flipantes aventuras de {$name} en la casa del oso",
+                'abstractNote' =>   "Trata la historia de como {$name} se las vio en medio de una cuarentena de osos.",
+                'date' => now(),
+                'edition' => '2nd',
+                'place' => 'Buenos Aires',
+                'publisher' => 'Agora',
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 1,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Mario Cannario",
+                            'lastName' => "Procopio"
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $source = $sources->createFromArray($sourceData);
+        $this->checkSourceDataStructure($source, $sourceData['attributes']);
+
+        $fetchedSource = $sources->getByKey($source->key());
+        $this->assertEquals($source->id(), $fetchedSource->id());
+        return $sources;
     }
 
     /**
@@ -352,7 +394,7 @@ class SourcesRepositoryTest extends TestCase
         $firstAuthor->setRelevance(5)
                     ->name = 'Eustequia Murcia';
 
-        // ad a new most relevant (first) author
+        // add a new most relevant (first) author
         $previousSource
             ->participations()
             ->pushNew(
@@ -383,6 +425,8 @@ class SourcesRepositoryTest extends TestCase
         );
         return $fetchedSource;
     }
+
+
 
     public function testComplexSourcesRepositoryIsBinded(): ComplexSourcesRepository
     {

@@ -59,12 +59,15 @@ class SourceSeeder extends Seeder
             $ownerID = $ownerID;
             $pageInit =  $this->faker->numberBetween(7, 488);
             $pageEnd = $pageInit + $this->faker->numberBetween(1, 20);
+            $creator = $creators->random();
+            $date  = DateTime::createFromFormat('Y', $this->faker->numberBetween(1980, 2021));
             $this->sources->createFromArray([
+                'key'  => $creator->lastName . $date->format('Y'),
                 'type' => 'journalArticle',
                 'attributes' => [
                     'title' => substr(Str::title($this->faker->sentence), 0, -1), // substr quita el punto final
                     'abstractNote' =>  substr($this->faker->paragraph(8), 0, -1) ,
-                    'date' => DateTime::createFromFormat('Y', $this->faker->numberBetween(1980, 2021)),
+                    'date' => $date,
                     'publicationTitle' => substr(Str::title($this->faker->sentence), 0, -1),
                     'volume' => $this->faker->numberBetween(1, 60),
                     'issue' => $this->faker->numberBetween(1, 4),
@@ -75,7 +78,7 @@ class SourceSeeder extends Seeder
                         'role' => 'author',
                         'relevance' => 1,
                         'creator' => [
-                            'creatorID' => $creators->random()->id()
+                            'creatorID' => $creator->id()
                         ]
                     ]
                 ]

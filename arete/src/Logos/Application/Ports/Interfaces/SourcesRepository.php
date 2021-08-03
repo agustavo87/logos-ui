@@ -13,6 +13,13 @@ interface SourcesRepository
     public function get(int $id): Source;
 
     /**
+     * @param string $key
+     *
+     * @return \Arete\Logos\Domain\Source|null
+     */
+    public function getByKey(string $key);
+
+    /**
      * Fetch new source from persistence even if it's already feteched
      *
      * This can create parallel version of same entity and have unpredicted results.

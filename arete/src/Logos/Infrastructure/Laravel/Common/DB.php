@@ -220,7 +220,7 @@ class DB
     }
 
     /**
-     * @param mixed $entityObject the attributable object
+     * @param \Arete\Logos\Domain\Abstracts\Attributable!object $entityObject the attributable object
      * @param array $attributes code => value
      * @param mixed $userID
      * @param null $updated
@@ -230,7 +230,7 @@ class DB
      * @return int|null id of the new entity or null if error.
      */
     public function insertEntityAttributes(
-        Attributable $entityObject,
+        $entityObject,
         array $attributes,
         $updated = null,
         $created = null
@@ -245,12 +245,17 @@ class DB
 
             // insert entity entry
             $ownerColumn = $this->logos->getOwnersTableData()->FK;
-            $entityID = $this->db->table($entityTable)->insertGetId([
-            'updated_at' => $updated,
-            'created_at' => $created,
-            $ownerColumn => $entityObject->ownerID(),
-            $entityObject->genus() . '_type_code_name' => $entityObject->typeCode()
-            ]);
+            $genusName = $entityObject->genus() . '_type_code_name';
+            $insertingAttributes = [
+                'updated_at'    => $updated,
+                'created_at'    => $created,
+                $ownerColumn    => $entityObject->ownerID(),
+                $genusName      => $entityObject->typeCode()
+            ];
+            if ($entityObject->genus() == 'source') {
+                $insertingAttributes['key'] = $entityObject->key();
+            }
+            $entityID = $this->db->table($entityTable)->insertGetId($insertingAttributes);
             $entityObject->fill([
                 'id' => $entityID
             ]);
@@ -364,6 +369,16 @@ class DB
         return LvDB::table('source_types')->where([
         'code_name' => $codeName,
         ])->first();
+    }
+
+    public function sourceKeyExist($key): bool
+    {
+        return LvDB::table('sources')->where('key', $key)->exists();
+    }
+
+    public function getSourceIDByKey($key): int
+    {
+        return LvDB::table('sources')->select(['id', 'key'])->where('key', $key)->first()->id;
     }
 
     public function getSource($id)

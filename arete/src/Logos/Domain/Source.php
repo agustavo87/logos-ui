@@ -15,6 +15,7 @@ class Source extends Attributable implements SourceContract
     protected ?string $genus = 'source';
     protected ParticipationSet $participations;
     protected Formatter $formater;
+    protected string $key;
 
     /** @todo find all references to constructor an update */
     public function __construct(
@@ -44,6 +45,11 @@ class Source extends Attributable implements SourceContract
     public function setFormatter(Formatter $fomater)
     {
         $this->formater = $fomater;
+    }
+
+    public function key(): string
+    {
+        return $this->key;
     }
 
     /**

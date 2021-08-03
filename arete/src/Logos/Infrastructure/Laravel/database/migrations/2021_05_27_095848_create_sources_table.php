@@ -28,6 +28,8 @@ class CreateSourcesTable extends Migration
             $table->id();
             $table->timestamps();
 
+            $table->string('key', 30)->index();
+
             $table->unsignedBigInteger($users->FK);
             $table->foreign($users->FK)
                   ->references($users->PK)

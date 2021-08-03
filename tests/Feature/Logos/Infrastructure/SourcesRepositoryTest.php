@@ -31,6 +31,7 @@ class SourcesRepositoryTest extends TestCase
     {
         $sources = $this->app->make(SourcesRepository::class);
         $this->assertInstanceOf(SourcesRepository::class, $sources);
+        return $sources;
     }
 
     /**
@@ -135,7 +136,7 @@ class SourcesRepositoryTest extends TestCase
         $originalAbstract = $storedSource->abstractNote;
         // generete an proabably unique key to look for
         $randomWords = $this->faker->word() . ' ' . str_shuffle($this->faker->word());
-        $storedSource->abstractNote .= ' ' . $randomWords;
+        $storedSource->abstractNote .= ' << ' . $randomWords . ' >>.';
         $sources->save($storedSource);
 
         // search by the key
@@ -231,6 +232,48 @@ class SourcesRepositoryTest extends TestCase
         $this->assertEquals('Zamudio', $firstAuthor->lastName);
 
         return $source;
+    }
+
+    /**
+     * @param SourcesRepository $sources
+     *
+     * @depends testSourcesRepositoryIsBinded
+     * @return SourcesRepository
+     */
+    public function testCreateAndGetSourceByKeyName(SourcesRepository $sources): SourcesRepository
+    {
+        $name = $this->faker->name();
+        $sourceData = [
+            'key' => 'procopio2021',
+            'type' => 'book',
+            'attributes' => [
+                'title' => "Las flipantes aventuras de {$name} en la casa del oso",
+                'abstractNote' =>   "Trata la historia de como {$name} se las vio en medio de una cuarentena de osos.",
+                'date' => now(),
+                'edition' => '2nd',
+                'place' => 'Buenos Aires',
+                'publisher' => 'Agora',
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 1,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Mario Cannario",
+                            'lastName' => "Procopio"
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $source = $sources->createFromArray($sourceData);
+        $this->checkSourceDataStructure($source, $sourceData['attributes']);
+
+        $fetchedSource = $sources->getByKey($source->key());
+        $this->assertEquals($source->id(), $fetchedSource->id());
+        return $sources;
     }
 
     /**
