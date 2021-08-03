@@ -29,6 +29,10 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     protected array $cache = [];
     protected array $cacheByKey = [];
     protected Formatter $defaultFormatter;
+    public static array $diferenciators = [
+        'a','b','c','d','e','f','g','h','i','j','k','m','n','o','p',
+        'q', 'r', 's', 't', 'u', 'b', 'w', 'x', 'y', 'z'
+    ];
 
     public function __construct(
         CreatorsRepository $creators,
@@ -105,9 +109,17 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         $i = 1;
         $baseKeyWord = $keyWord;
         while ($this->keyExist($keyWord)) {
-            $keyWord = $baseKeyWord . ++$i;
+            $keyWord = $baseKeyWord . $this->getDiferenciator(++$i);
         }
         return $keyWord;
+    }
+
+    protected function getDiferenciator(int $i): string
+    {
+        if ($i < count(self::$diferenciators)) {
+            return self::$diferenciators[$i - 1];
+        }
+        return '-' . $i;
     }
 
     public function keyExist($key)
