@@ -118,6 +118,13 @@ class SourcesServiceProvider extends ServiceProvider
             }
         );
 
+        $this->app->bind(
+            \Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase::class,
+            function ($app) {
+                return Logos::getOwn(\Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase::class);
+            }
+        );
+
         Logos::load();
         Logos::delegate($this->app);
     }

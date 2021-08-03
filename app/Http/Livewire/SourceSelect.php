@@ -2,48 +2,54 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Source;
 use Livewire\Component;
-use Livewire\WithPagination;
+use Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase;
+use Arete\Logos\Domain\Source;
+
+// use Livewire\WithPagination;
 
 class SourceSelect extends Component
 {
-    use WithPagination;
 
-    public $max_rows = 8;
     public $listen = 'source-get';
 
     public $searchFields = [
-        'key' => '',
-        'title' => ''
+        // 'key' => '',
+        'title' => 'gato'
     ];
 
-    public function render()
+    public $sources = [];
+
+    public function mount()
     {
-        $sources = Source::select('id', 'key', 'data');
+        //
+    }
 
-        $sources->where('user_id', auth()->user()->id);
+    protected function sourcesToArray(array $sources): array
+    {
+        return array_map(function (Source $source) {
+            $sourceData = $source->toArray('relevance');
+            $sourceData['render'] = $source->render();
+            return (object) $sourceData;
+        }, $sources);
+    }
 
+    public function render(FilteredIndexUseCase $filter)
+    {
         foreach ($this->searchFields as $field => $value) {
-            if(!empty($value)) {
-                if($field == 'key') {
-                    $sources->where($field, 'LIKE', "%{$value}%");
-                } elseif ($field == 'title') {
-                    $sources->whereRaw('LCASE(data->"$.title") LIKE "%' . strtolower($value) . '%"');
-                }
+            if ($field == 'title') {
+                $results = $filter->filter([
+                    'attributes' => ['title' => $value]
+                ]);
+                $this->sources = $this->sourcesToArray($results);
             }
         }
 
-        return view('livewire.source-select', [
-            'sources' => $sources->latest()->paginate( $this->max_rows )
-        ]);
+        return view('livewire.source-select');
     }
 
-    public function updatingSearchFields() {
-        $this->resetPage();
-    }
-
-    public function reiniciarFields() {
-        $this->reset(['searchFields']);
+    public function refreshSources()
+    {
+        $this->searchFields['title'] = 'infierno';
     }
 }

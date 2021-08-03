@@ -14,18 +14,75 @@
                  @click.outside="cancel"
             >
                 <div class="px-5 pt-6">
-                    <label for="title"></label>
-                    <x-sources.select-table  wire:model="sources" initial-title="$wire.searchFields.title"
-                        x-on:input:title.debounce.500m="$wire.set('searchFields.title', $event.detail)"
-                    />
-
+                    <table class="sources-table w-full table-fixed border border-separate border-gray-300 rounded-t-md">
+                        <thead>
+                            <tr class="ml-2">
+                                <th class="w-2/6">
+                                    <div class="flex flex-row items-stretch text-gray-500">
+                                        <label for="key" class=" flex-none py-2 bg-gray-100 px-2 rounded-l-md">
+                                            <x-icons.lupa  class="w-3 h-3 fill-current" />
+                                        </label>
+                                        <input type="text" autocomplete="off" id="key" placeholder="key"
+                                               wire:model.debounce.500ms="searchFields.key" x-ref="key"
+                                               class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm w-0"
+                                        >
+                                    </div>
+                                </th>
+                                <th class=" w-4/6">
+                                    <div class="flex flex-row items-stretch text-gray-500">
+                                        <label for="title" class=" flex-none py-2 bg-gray-100 px-2 rounded-l-md">
+                                            <x-icons.lupa  class="w-3 h-3 fill-current" />
+                                        </label>
+                                        <input type="text" autocomplete="off" id="title" placeholder="title"
+                                               wire:model.debounce.500ms="searchFields.title"
+                                               class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm  w-0"
+                                        >
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for ($row = 1; $row <= $max_rows; $row++)
+                                @if($row <= $sources->count())
+                                    <?php $source = $sources[$row-1] ?>
+                                    <tr data-key="{{ $source->key }}" data-id="{{ $source->id }}"
+                                        x-on:mouseup="seleccionar"
+                                        class="cursor-pointer hover:bg-indigo-200" x-bind:class="{'bg-indigo-100' : selected === '{{ $source->key }}'}"
+                                    >
+                                        <td class="text-sm px-2 py-1 border-b border-gray-100">
+                                            {{ $source->key }}
+                                        </td>
+                                        <td class="text-sm px-2 py-1 border-b border-gray-100 text-ellipsis" title="{{$source->data['title']}}">
+                                            {{ $source->data['title'] }}
+                                        </td>
+                                    </tr>
+                                @else
+                                    @if ($sources->count())
+                                        <tr>
+                                            <td class="text-sm px-2 py-1 border-b border-gray-100">
+                                                &nbsp;
+                                            </td>
+                                            <td class="text-sm px-2 py-1 border-b border-gray-100">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td class="text-sm px-2 py-1 border-b border-gray-100 text-gray-500 text-center" colspan="2">
+                                                @if($row == 1) <i> {{ __('logos.no-records') }}</i> @endif &nbsp;
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endif
+                            @endfor
+                        </tbody>
+                    </table>
                     {{-- pagination --}}
-{{--
                     <div class="px-1">
                         <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
                             @if ($sources->hasPages() && $sources->count())
                                 <span>
-                                    {{-- Previous Page Link -/-}}
+                                    {{-- Previous Page Link --}}
                                     @if ($sources->onFirstPage())
                                         <span
                                             class="relative inline-flex items-center text-sm font-medium text-gray-400 cursor-default leading-5 rounded-md">
@@ -44,7 +101,7 @@
                                     </span>
                                 @endif
                                 <span>
-                                    {{-- Next Page Link -/-}}
+                                    {{-- Next Page Link --}}
                                     @if ($sources->hasMorePages())
                                         <button wire:click="nextPage" wire:loading.attr="disabled" rel="next"
                                             class="relative inline-flex items-center text-sm font-medium text-gray-700  leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
@@ -62,8 +119,6 @@
                             @endif
                         </nav>
                     </div>
-  --}}
-
                 </div>
                 <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end items-center">
                     {{-- <x-form.button title="Edit Source" class="mr-2 disabled:cursor-default disabled:pointer-events-none disabled:opacity-50 "
@@ -90,7 +145,6 @@
     {{-- </template> --}}
 
     <script>
-
         function modalCitation() {
                 return {
                     selected: null,
@@ -98,10 +152,10 @@
                     display: false,
                     showModal: false,
                     ui: null,
-                    // seleccionar: function (e) {
-                    //     this.selected = e.currentTarget.dataset.key
-                    //     this.selected_id = e.currentTarget.dataset.id
-                    // },
+                    seleccionar: function (e) {
+                        this.selected = e.currentTarget.dataset.key
+                        this.selected_id = e.currentTarget.dataset.id
+                    },
                     respond: a => console.log(a),
                     handleInvocation: function (e) {
                         console.log(e.detail)
@@ -112,10 +166,10 @@
                     show: function () {
                         this.showModal = true;
                         this.display = true;
-                        // this.$nextTick(() => {
-                        //     this.$refs.key.value = '';
-                        //     this.$refs.key.focus()
-                        // });
+                        this.$nextTick(() => {
+                            this.$refs.key.value = '';
+                            this.$refs.key.focus()
+                        });
                     },
                     solve: function () {
                         this.display = false;
@@ -154,8 +208,8 @@
                     close: function () {
                         this.display = false,
                         this.showModal = false;
-                        // this.$wire.resetPage();
-                        // this.$wire.reiniciarFields()
+                        this.$wire.resetPage();
+                        this.$wire.reiniciarFields()
                         this.selected = ''
                         this.selected_id = null
                     },
