@@ -138,35 +138,31 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         $authors = array_filter(
             $params['participations'],
             /** @todo seleccionar creador primario */
-            /** @todo hacer que sea compatible con creadores creados */
-            fn ($part) => $part['role'] == 'author' && !isset($part['creator']['creatorID'])
+            fn ($part) => $part['role'] == 'author'
         );
         $authors = array_values($authors);
         if (count($authors)) {
             /** @todo seleccionar el más relevante */
             $participation = $authors[0];
         } else {
-            $participations = array_filter(
-                $params['participations'],
-                /** @todo hacer que sea compatible con creadores creados */
-                fn ($part) => !isset($part['creator']['creatorID'])
-            );
-            if (count($participations)) {
-                $participation = $participations[0];
-            } else {
-                $participation = null;
-            }
+            $participation = $params['participations'][0];
         }
-        if (!$participation) {
-            return '';
+
+        $creator = [];
+        if (isset($participation['creator']['creatorID'])) {
+            $creator = $this->creators->get(
+                $participation['creator']['creatorID']
+            )->toArray();
+        } else {
+            $creator = $participation['creator'];
         }
 
         // get some relevant attribute
-        if ($participation['creator']['type'] == 'person') {
-            return $participation['creator']['attributes']['lastName'];
+        if ($creator['type'] == 'person') {
+            return $creator['attributes']['lastName'];
         }
 
-        return array_values($participation['creator']['attributes'])[0];
+        return array_values($creator['attributes'])[0];
     }
 
     protected function getDiferenciator(int $i): string

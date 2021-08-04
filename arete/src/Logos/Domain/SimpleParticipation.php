@@ -128,6 +128,4 @@ class SimpleParticipation implements Participation
         $this->relevance = $relevance;
         return $this;
     }
-
-
 }
