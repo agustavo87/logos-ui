@@ -135,7 +135,7 @@ class SourcesRepositoryTest extends TestCase
         $sources = $this->app->make(SourcesRepository::class);
         $originalAbstract = $storedSource->abstractNote;
         // generete an proabably unique key to look for
-        $randomWords = $this->faker->word() . ' ' . str_shuffle($this->faker->word());
+        $randomWords = $this->faker->word() . ' ' . str_shuffle(implode('', $this->faker->words(6, false)));
         $storedSource->abstractNote .= ' << ' . $randomWords . ' >>.';
         $sources->save($storedSource);
 

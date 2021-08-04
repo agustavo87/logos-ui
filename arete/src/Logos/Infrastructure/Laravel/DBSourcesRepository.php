@@ -110,18 +110,61 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
 
     protected static function generateKeyWord(array $params): string
     {
-        /** @todo mejorar la búsqueda del apellido o atributo principal del creador principal */
-        if (isset($params['participations'][0]['creator']['attributes']['lastName'])) {
-            $keyWord = $params['participations'][0]['creator']['attributes']['lastName'];
-        } elseif (isset($params['title'])) {
+        $keyWord = self::getCreatorKeyWord($params);
+
+        if ($keyWord == '' && isset($params['title'])) {
             $keyWord = explode(' ', $params['title'])[0];
         } else {
             $keyWord = 'anon';
         }
+
         $keyWord = simplifyWord($keyWord);
-        /** @todo acá agregar el año */
+        if (isset($params['date'])) {
+            $keyWord .= $params['date']->format('Y');
+        }
 
         return $keyWord;
+    }
+
+    protected static function getCreatorKeyWord(array $params): string
+    {
+        if (!isset($params['participations'])) {
+            return '';
+        }
+
+        // look for valid relevant participation
+        $authors = array_filter(
+            $params['participations'],
+            /** @todo seleccionar creador primario */
+            /** @todo hacer que sea compatible con creadores creados */
+            fn ($part) => $part['role'] == 'author' && !isset($part['creator']['creatorID'])
+        );
+        $authors = array_values($authors);
+        if (count($authors)) {
+            /** @todo seleccionar el más relevante */
+            $participation = $authors[0];
+        } else {
+            $participations = array_filter(
+                $params['participations'],
+                /** @todo hacer que sea compatible con creadores creados */
+                fn ($part) => !isset($part['creator']['creatorID'])
+            );
+            if (count($participations)) {
+                $participation = $participations[0];
+            } else {
+                $participation = null;
+            }
+        }
+        if (!$participation) {
+            return '';
+        }
+
+        // get some relevant attribute
+        if ($participation['creator']['type'] == 'person') {
+            return $participation['creator']['attributes']['lastName'];
+        }
+
+        return array_values($participation['creator']['attributes'])[0];
     }
 
     protected function getDiferenciator(int $i): string
