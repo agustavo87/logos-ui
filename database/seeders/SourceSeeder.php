@@ -63,13 +63,8 @@ class SourceSeeder extends Seeder
             $pageEnd = $pageInit + $this->faker->numberBetween(1, 20);
             $creator = $creators->random();
             $date  = DateTime::createFromFormat('Y', $this->faker->numberBetween(1980, 2021));
-            // $creatorLastName = str_replace(["'", ' '], '', $creator->lastName);
-            // $creatorLastName = strtolower($creatorLastName);
-            // //remove accents
-            // $creatorLastName = iconv('UTF-8', 'ASCII//TRANSLIT', $creatorLastName);
 
             $this->sources->createFromArray([
-                // 'key'  =>  $creatorLastName . $date->format('Y'),
                 'key'  =>  simplifyWord($creator->lastName) . $date->format('Y'),
                 'type' => 'journalArticle',
                 'attributes' => [
