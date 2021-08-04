@@ -6,14 +6,29 @@ namespace Arete\Common;
 
 trait FillsProperties
 {
+    /**
+     * Fill via array object properties and merges
+     * with default properties declared in 'defaultPropeties' field.
+     *
+     * @param array $properties
+     *
+     * @return void
+     */
     public function fill(array $properties)
     {
-        /**
-         * @todo revisar que no se use el fill para rellenar propiedades individuales
-         * y que por error no se termine sobreescribiendo innintencionadamente propiedades
-         * anteriores debido a la combinación con valores por defecto.
-         */
         $properties = $this->mergeIfDefaults($properties);
+        $this->simpleFill($properties);
+    }
+
+    /**
+     * Fills object properties without merging with defaults.
+     *
+     * @param array $properties
+     *
+     * @return void
+     */
+    public function simpleFill(array $properties)
+    {
         foreach ($properties as $property => $value) {
             $this->$property = $value;
         }

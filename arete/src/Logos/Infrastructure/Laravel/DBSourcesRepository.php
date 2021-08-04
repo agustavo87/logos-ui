@@ -82,7 +82,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
                 );
             }
         }
-        $source->fill([
+        $source->simpleFill([
             'participations' => $participations
         ]);
 
@@ -185,7 +185,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
 
         // lets add participations in it's creation.
         $participations = new ParticipationSet($source, $this->creators, $this->participations);
-        $source->fill([
+        $source->simpleFill([
             'participations' => $participations->load()
         ]);
         $this->cache[$id] = $source;

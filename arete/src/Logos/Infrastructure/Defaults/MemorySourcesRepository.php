@@ -89,7 +89,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
                 );
             }
         }
-        $source->fill([
+        $source->simpleFill([
             'participations' => $participations
         ]);
 

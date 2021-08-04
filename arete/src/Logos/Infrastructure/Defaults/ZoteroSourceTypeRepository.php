@@ -81,7 +81,7 @@ class ZoteroSourceTypeRepository implements SourceTypeRepository
                 ])
             );
         }
-        $type->fill([
+        $type->simpleFill([
             'roles' => $roleCollection
         ]);
 
