@@ -98,7 +98,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         if (isset($params['key'])) {
             $keyWord = $params['key'];
         } else {
-            $keyWord = self::generateKeyWord($params);
+            $keyWord = $this->generateKeyWord($params);
         }
         $i = 1;
         $baseKeyWord = $keyWord;
@@ -108,9 +108,9 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         return $keyWord;
     }
 
-    protected static function generateKeyWord(array $params): string
+    protected function generateKeyWord(array $params): string
     {
-        $keyWord = self::getCreatorKeyWord($params);
+        $keyWord = $this->getCreatorKeyWord($params);
 
         if ($keyWord == '') {
             if (isset($params['title'])) {
@@ -128,7 +128,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         return $keyWord;
     }
 
-    protected static function getCreatorKeyWord(array $params): string
+    protected function getCreatorKeyWord(array $params): string
     {
         if (!isset($params['participations'])) {
             return '';
