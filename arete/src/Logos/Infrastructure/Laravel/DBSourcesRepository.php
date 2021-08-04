@@ -112,15 +112,17 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     {
         $keyWord = self::getCreatorKeyWord($params);
 
-        if ($keyWord == '' && isset($params['title'])) {
-            $keyWord = explode(' ', $params['title'])[0];
-        } else {
-            $keyWord = 'anon';
+        if ($keyWord == '') {
+            if (isset($params['title'])) {
+                $keyWord = explode(' ', $params['title'])[0];
+            } else {
+                $keyWord = 'anon';
+            }
         }
 
         $keyWord = simplifyWord($keyWord);
-        if (isset($params['date'])) {
-            $keyWord .= $params['date']->format('Y');
+        if (isset($params['attributes']['date'])) {
+            $keyWord .= $params['attributes']['date']->format('Y');
         }
 
         return $keyWord;
