@@ -54,10 +54,12 @@ if (!function_exists(__NAMESPACE__ . '\simplifyWord')) {
      */
     function simplifyWord(string $word): string
     {
-        $word = str_replace(["'", ' '], '', $word);
-        $word = strtolower($word);
-        // remove accents
+        $word =  mb_convert_encoding($word, 'UTF-8', 'UTF-8');
+        // remove accents and other characters
         $word = iconv('UTF-8', 'ASCII//TRANSLIT', $word);
+        /** @todo filtar caracteres no alfannuméricos */
+        $word = str_replace(["'", ' ', '~'], '', $word);
+        $word = strtolower($word);
         return $word;
     }
 }

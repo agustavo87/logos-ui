@@ -93,21 +93,12 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         return $source;
     }
 
-    protected function getKey(array $params): string
+    public function getKey(array $params): string
     {
         if (isset($params['key'])) {
             $keyWord = $params['key'];
         } else {
-            /** @todo mejorar la búsqueda del apellido o atributo principal del creador principal */
-            if (isset($params['participations'][0]['creator']['attributes']['lastName'])) {
-                $keyWord = $params['participations'][0]['creator']['attributes']['lastName'];
-            } elseif (isset($params['title'])) {
-                $keyWord = explode(' ', $params['title'])[0];
-            } else {
-                $keyWord = 'anon';
-            }
-            $keyWord = simplifyWord($keyWord);
-            /** @todo acá agregar el año */
+            $keyWord = self::generateKeyWord($params);
         }
         $i = 1;
         $baseKeyWord = $keyWord;
@@ -117,7 +108,21 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         return $keyWord;
     }
 
+    protected static function generateKeyWord(array $params): string
+    {
+        /** @todo mejorar la búsqueda del apellido o atributo principal del creador principal */
+        if (isset($params['participations'][0]['creator']['attributes']['lastName'])) {
+            $keyWord = $params['participations'][0]['creator']['attributes']['lastName'];
+        } elseif (isset($params['title'])) {
+            $keyWord = explode(' ', $params['title'])[0];
+        } else {
+            $keyWord = 'anon';
+        }
+        $keyWord = simplifyWord($keyWord);
+        /** @todo acá agregar el año */
 
+        return $keyWord;
+    }
 
     protected function getDiferenciator(int $i): string
     {
