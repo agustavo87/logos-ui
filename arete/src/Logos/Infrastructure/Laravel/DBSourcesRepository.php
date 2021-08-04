@@ -18,6 +18,8 @@ use Arete\Logos\Domain\Source;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\ParticipationSet;
 
+use function Arete\Common\simplifyWord;
+
 class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort, ComplexSourcesRepository
 {
     protected CreatorsRepository $creators;
@@ -104,6 +106,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
             } else {
                 $keyWord = 'anon';
             }
+            $keyWord = simplifyWord($keyWord);
             /** @todo acá agregar el año */
         }
         $i = 1;
@@ -113,6 +116,8 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         }
         return $keyWord;
     }
+
+
 
     protected function getDiferenciator(int $i): string
     {

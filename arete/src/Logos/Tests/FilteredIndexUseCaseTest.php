@@ -111,9 +111,9 @@ class FilteredIndexUseCaseTest extends TestCase
 
     public function testTestBindingsWorking(): FilteredIndexUseCase
     {
-        $filteredIndexUC = LogosContainer::get(FilteredIndexUseCase::class);
-        $this->assertInstanceOf(FilteredIndexUseCase::class, $filteredIndexUC);
-        return $filteredIndexUC;
+        $filter = LogosContainer::get(FilteredIndexUseCase::class);
+        $this->assertInstanceOf(FilteredIndexUseCase::class, $filter);
+        return $filter;
     }
 
     /**

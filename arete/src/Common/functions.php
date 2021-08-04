@@ -43,3 +43,21 @@ if (!function_exists(__NAMESPACE__ . '\var_dump_ret')) {
         return $content;
     }
 }
+if (!function_exists(__NAMESPACE__ . '\simplifyWord')) {
+
+    /**
+     * Simplify a word removing 'special characters', accents and spaces.
+     *
+     * @param string $word
+     *
+     * @return string
+     */
+    function simplifyWord(string $word): string
+    {
+        $word = str_replace(["'", ' '], '', $word);
+        $word = strtolower($word);
+        // remove accents
+        $word = iconv('UTF-8', 'ASCII//TRANSLIT', $word);
+        return $word;
+    }
+}
