@@ -14,8 +14,8 @@ class SourceSelect extends Component
     public $listen = 'source-get';
 
     public $searchFields = [
-        // 'key' => '',
-        'title' => 'gato'
+        'key' => '',
+        'title' => ''
     ];
 
     public $sources = [];
@@ -36,14 +36,18 @@ class SourceSelect extends Component
 
     public function render(FilteredIndexUseCase $filter)
     {
+        $params = [];
         foreach ($this->searchFields as $field => $value) {
-            if ($field == 'title') {
-                $results = $filter->filter([
-                    'attributes' => ['title' => $value]
-                ]);
-                $this->sources = $this->sourcesToArray($results);
+            if ($field == 'title' && !($value == '' || $value == null)) {
+                $params['attributes'] = ['title' => $value];
+            }
+            if ($field == 'key'  && !($value == '' || $value == null)) {
+                $params['key'] = $value;
             }
         }
+
+        $results = $filter->filter($params);
+        $this->sources = $this->sourcesToArray($results);
 
         return view('livewire.source-select');
     }

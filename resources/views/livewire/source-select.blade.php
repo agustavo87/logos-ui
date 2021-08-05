@@ -17,6 +17,7 @@
                     <label for="title"></label>
                     <x-sources.select-table  wire:model="sources" initial-title="$wire.searchFields.title"
                         x-on:input:title.debounce.500m="$wire.set('searchFields.title', $event.detail)"
+                        x-on:input:key.debounce.500m="$wire.set('searchFields.key', $event.detail)"
                     />
 
                     {{-- pagination --}}

@@ -18,7 +18,9 @@
                             <x-icons.lupa  class="w-3 h-3 fill-current" />
                         </label>
                         <input type="text" autocomplete="off" placeholder="key" name="key" id="key" x-ref="key"
-                        class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm w-0"
+                            class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm w-0"
+                            x-model="key"
+                            x-on:input="$dispatch('input:key', $event.target.value)"
                         >
                     </div>
                 </th>
@@ -40,7 +42,7 @@
             <template x-for="i in 8" x-bind:key="i">
                 <tr x-bind:class="{'cursor-pointer hover:bg-indigo-200': sources[i-1] }">
                     <td class="text-sm px-2 py-1 border-b border-gray-100">
-                        <span x-text="sources[i-1] ? 'author2020': '&nbsp;' "></span>
+                        <span x-text="sources[i-1] ? sources[i-1].key : '&nbsp;' "></span>
                     </td>
                     <td class="text-sm px-2 py-1 border-b border-gray-100 text-ellipsis">
                         <span x-text="sources[i-1] ? sources[i-1].attributes.title : '&nbsp;' "></span>
@@ -58,7 +60,8 @@
         Alpine.data('alpSelectTable', (options) => {
             return {
                 sources: options.entangles.sources,
-                title: options.title,
+                key: '',
+                title: '',
                 maxRows: options.maxRows
             }
         })

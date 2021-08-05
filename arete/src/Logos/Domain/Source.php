@@ -65,6 +65,7 @@ class Source extends Attributable implements SourceContract
     public function toArray(?string $participationsOrderBy = 'id'): array
     {
         $sourceInfo = parent::toArray();
+        $sourceInfo['key'] = $this->key();
         $sourceInfo['participations'] = $this->participations->toArray($participationsOrderBy);
         return $sourceInfo;
     }
