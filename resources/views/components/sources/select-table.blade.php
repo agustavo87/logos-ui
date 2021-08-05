@@ -5,7 +5,6 @@
                 entangles : {
                     sources: @entangle( $attributes->wire('model') ),
                 },
-                title: {{ $initialTitle }},
                 maxRows: {{ $maxRows }}
             })
            "

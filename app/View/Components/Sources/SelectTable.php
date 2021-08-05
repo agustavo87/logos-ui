@@ -9,8 +9,6 @@ class SelectTable extends Component
 
     public $maxRows = 8;
 
-    public string $initialTitle;
-
     /**
      * Create a new component instance.
      *
