@@ -7,33 +7,41 @@
 }
 
 .ring-loader-xs {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-  }
-  .ring-loader-xs:after {
-    content: " ";
-    display: block;
-    width: 12px;
-    height: 12px;
-    margin: 0px;
-    border-radius: 50%;
-    border: 3px solid #ccc;
-    border-color: rgba(96, 165, 250, 1) transparent rgba(96, 165, 250, 1) transparent;
-    animation: ring-loader-xs 1.2s linear infinite;
-  }
-  @keyframes ring-loader-xs {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  .ring-loader-xs.dim::after {
-    border-color: rgba(96, 165, 250, 0.2) transparent rgba(96, 165, 250, 0.2) transparent;
-  }
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
 
-  .blanco {
-      background: red;
+.ring-loader-xs:after {
+  content: " ";
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: 0px;
+  border-radius: 50%;
+  border: 3px solid #ccc;
+  border-color: rgba(96, 165, 250, 1) transparent rgba(96, 165, 250, 1) transparent;
+  animation: ring-loader-xs 1.2s linear infinite;
+}
+@keyframes ring-loader-xs {
+  0% {
+    transform: rotate(0deg);
   }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.ring-loader-xs.dim::after {
+  border-color: rgba(96, 165, 250, 0.2) transparent rgba(96, 165, 250, 0.2) transparent;
+}
+
+.loader-text {
+  font-size: 12px;
+  line-height: 12px;
+  position: relative;
+  top: -1px;
+}
+
+.blanco {
+    background: red;
+}

@@ -19,6 +19,14 @@
                         x-on:input:title.debounce.500m="$wire.set('searchFields.title', $event.detail)"
                         x-on:input:key.debounce.500m="$wire.set('searchFields.key', $event.detail)"
                     />
+                    <div class="my-1 h-5 flex items-center">
+                        <div wire:loading>
+                            <div class="flex items-center" >
+                                <span class="ring-loader-xs"></span>
+                                <span class=" ml-1 text-gray-600 loader-text">Procesando...</span>
+                            </div>
+                        </div>
+                    </div>
 
                     {{-- pagination --}}
 {{--
