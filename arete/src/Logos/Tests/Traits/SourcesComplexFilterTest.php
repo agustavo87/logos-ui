@@ -116,11 +116,35 @@ trait SourcesComplexFilterTest
         return $sources;
     }
 
+    /**
+     * @param ComplexSourcesRepository $sources
+     *
+     * @depends testFilterByOwner
+     * @return ComplexSourcesRepository
+     */
+    public function testFilterByKey(ComplexSourcesRepository $sources): ComplexSourcesRepository
+    {
+        $results = $sources->complexFilter([
+            'key' => 'guinazu',
+            'attributes' => [
+                'title' => 'gato'
+            ]
+        ]);
+
+        $this->assertGreaterThan(0, count($results));
+        $source = $results[0];
+        $this->assertEquals('guinazu1988', $source->key());
+        $this->assertEquals('Todos los gatos van al Cielo.', $source->title);
+        $this->assertEquals('Journal of Trans-Species Metaphysics.', $source->publicationTitle);
+        return $sources;
+    }
+
     public static function seedSources(ComplexSourcesRepository $sources)
     {
         $sources->flush();
 
         $sources->createFromArray([
+            'key' => 'carabajal1988',
             'type' => 'journalArticle',
             'attributes' => [
                 'title' => "Todos los gatos van al infierno.",
@@ -146,6 +170,7 @@ trait SourcesComplexFilterTest
         ], 3);
 
         $sources->createFromArray([
+            'key' => 'guinazu1988',
             'type' => 'journalArticle',
             'attributes' => [
                 'title' => "Todos los gatos van al Cielo.",
@@ -183,6 +208,7 @@ trait SourcesComplexFilterTest
 
         $sources->createFromArray(
             [
+                'key' => 'guinazubook',
                 'type' => 'book',
                 'attributes' => [
                     'title' => "Animal Metaphysics Handbook",

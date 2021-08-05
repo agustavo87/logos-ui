@@ -98,16 +98,6 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
 
     protected function getKey(array $params): string
     {
-        // Algoritmo "ideal"
-        // 1.a) ver si tiene key
-        // 1.b.1.a) ver sitene creaor autor -> buscar el apellido
-        // 1.b.1.b) ver si tiene algún creador -> buscar el primer atributo
-        // 1.b.1.c) buscar primera palabra del título.
-        // 1.b.1.d) palabra aleatoria
-        // 1.b.2.a) ver si tiene fecha-> obtener el año -> agregarla.
-        // 2.a) ver si existe -> si no -> devolverla
-        // 2.b) agregarle un numero al final -> c.1.a
-
         if (isset($params['key'])) {
             $keyWord = $params['key'];
         } else {
@@ -215,14 +205,14 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
 
     public function complexFilter(array $params): array
     {
-        // if there's no sources nothing can be filtered
+        /* if there's no sources nothing can be filtered */
         if (!count(self::$sources)) {
             return [];
         }
         $result = [];
-        $ownerID = isset($params['ownerID']) ? $params['ownerID'] : null;
 
-        // filter by source attributes
+        /* filter by source attributes */
+        $ownerID = isset($params['ownerID']) ? $params['ownerID'] : null;
         if (isset($params['attributes'])) {
             foreach ($params['attributes'] as $attribute => $condition) {
                 $subset = $this->pluckIds($result);
@@ -235,7 +225,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
             }
         }
 
-        // filter by owner
+        /* filter by owner */
         if (isset($params['ownerID'])) {
             // if there is results, start from there, if not, start with all sources.
             $result = count($result) ? $result : self::$sources;
@@ -245,8 +235,17 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
             );
         }
 
+        /* Filter by key */
+        if (isset($params['key'])) {
+            $result = count($result) ? $result : self::$sources;
+            $result = array_filter(
+                $result,
+                fn (Source $source) => (string) str_contains($source->key(), $params['key'])
+            );
+        }
 
-        // filter by creators/participants
+
+        /* filter by creators/participants */
         if (isset($params['participations'])) {
             // if there is results, start from there, if not, start with all sources.
             $result = count($result) ? $result : self::$sources;

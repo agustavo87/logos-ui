@@ -28,6 +28,7 @@ class FilteredIndexUseCaseTest extends TestCase
         $sources->flush();
 
         $sources->createFromArray([
+            'key' => 'gatos1988',
             'type' => 'journalArticle',
             'attributes' => [
                 'title' => "Todos los gatos van al infierno.",
@@ -40,6 +41,7 @@ class FilteredIndexUseCaseTest extends TestCase
         ], 3);
 
         $sources->createFromArray([
+            'key' => 'guinazu1988',
             'type' => 'journalArticle',
             'attributes' => [
                 'title' => "Todos los gatos van al Cielo.",
@@ -77,6 +79,7 @@ class FilteredIndexUseCaseTest extends TestCase
 
         $sources->createFromArray(
             [
+                'key' => 'guinazubook',
                 'type' => 'book',
                 'attributes' => [
                     'title' => "Animal Metaphysics Handbook",
@@ -199,6 +202,25 @@ class FilteredIndexUseCaseTest extends TestCase
         $this->assertGreaterThan(0, count($results));
         $source = $results[0];
         $this->assertEquals('Animal Metaphysics Handbook', $source->title);
+        return $filter;
+    }
+
+    /**
+     * @param FilteredIndexUseCase $filter
+     *
+     * @depends testFilterByOwner
+     * @return FilteredIndexUseCase
+     */
+    public function testFilterByKey(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    {
+        $source = $filter->filter([
+            'key' => 'guinazu',
+            'attributes' => [
+                'title' => 'gatos'
+            ]
+        ])[0];
+        $this->assertEquals('Todos los gatos van al Cielo.', $source->title);
+
         return $filter;
     }
 

@@ -557,6 +557,10 @@ class DB
             $query->where($this->logos->getOwnersTableData()->FK, '=', $params['ownerID']);
         }
 
+        if (isset($params['key'])) {
+            $query->where('key', 'LIKE', "%{$params['key']}%");
+        }
+
         if (isset($params['type'])) {
             $query->where('source_type_code_name', 'LIKE', "%{$params['type']}%");
         }
