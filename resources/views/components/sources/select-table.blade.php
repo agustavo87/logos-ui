@@ -39,7 +39,9 @@
         </thead>
         <tbody>
             <template x-for="i in 8" x-bind:key="i">
-                <tr x-bind:class="{'cursor-pointer hover:bg-indigo-200': sources[i-1] }">
+            <tr x-bind:class="{'cursor-pointer hover:bg-indigo-200': sources[i-1], 'bg-indigo-200': selected == $el.dataset.key}"
+                    x-on:click="sourceSelected($dispatch)" x-bind:data-key="sources[i-1] ? sources[i-1].key : null "
+                >
                     <td class="text-sm px-2 py-1 border-b border-gray-100">
                         <span x-text="sources[i-1] ? sources[i-1].key : '&nbsp;' "></span>
                     </td>
@@ -61,7 +63,12 @@
                 sources: options.entangles.sources,
                 key: '',
                 title: '',
-                maxRows: options.maxRows
+                maxRows: options.maxRows,
+                selected: '',
+                sourceSelected: function ($dispatch) {
+                    this.selected = this.$el.dataset.key
+                    $dispatch('selection-change', this.selected)
+                }
             }
         })
     })
