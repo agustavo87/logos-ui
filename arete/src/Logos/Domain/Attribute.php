@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Arete\Logos\Domain;
 
 use Arete\Common\FillableProperties;
+use Arete\Logos\Domain\Comparators\ComparatorFactory;
+use Arete\Logos\Domain\Comparators\ComparatorInterface;
 
 class Attribute extends FillableProperties
 {
@@ -32,6 +34,19 @@ class Attribute extends FillableProperties
      * @var int order of presentation
      */
     public int $order = 0;
+
+    protected ComparatorInterface $comparator;
+
+    public function __construct($params)
+    {
+        parent::__construct($params);
+        $this->comparator = (new ComparatorFactory())->get($params['type']);
+    }
+
+    public function compare($a, $b): int
+    {
+        return $this->comparator->compare($a, $b);
+    }
 
     protected function fillDefaultsAttributes()
     {

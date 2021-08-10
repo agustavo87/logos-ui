@@ -125,7 +125,7 @@ trait SourcesComplexFilterTest
     public function testFilterByKey(ComplexSourcesRepository $sources): ComplexSourcesRepository
     {
         $results = $sources->complexFilter([
-            'key' => 'guinazu',
+            'key' => 'guinazu19',
             'attributes' => [
                 'title' => 'gato'
             ]
@@ -137,6 +137,145 @@ trait SourcesComplexFilterTest
         $this->assertEquals('Todos los gatos van al Cielo.', $source->title);
         $this->assertEquals('Journal of Trans-Species Metaphysics.', $source->publicationTitle);
         return $sources;
+    }
+
+    /**
+     * @param ComplexSourcesRepository $sources
+     *
+     * @depends testFilterByKey
+     * @return array
+     */
+    public function testLimitResults(ComplexSourcesRepository $sources): array
+    {
+        $uid = uniqid();
+        $prototypeSource = [
+            'type' => 'journalArticle',
+            'attributes' => [
+                'title' => "Las palomas con DNI '{$uid}' de ",
+                'volume' => 4,
+                'issue' => 3
+            ],
+            'participations' => [
+                [
+                    'role' => 'author',
+                    'relevance' => 2,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Peteco Mario",
+                            'lastName' => "Carabajal"
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $varianceData = [
+            ['Marta', '1978', 'Cruz', 5],
+            ['Samanta', '1959', 'Cirigliano', 2],
+            ['Pablo', '1997', 'Saucedo', 22],
+            ['Don Ramón', '1967', 'Simplicio', 12],
+            ['María', '2005', 'Cibrian', 32],
+            ['Claudia', '2006', 'Leuco', 35],
+            ['Petiza Violenta', '1998', 'Cruz', 21],
+            ['Petiza Embaucadora', '1999', 'Cruz', 22],
+            ['Cintia', '2007', 'Milei', 38],
+            ['Roberto', '1988', 'Etanislao', 19],
+            ['Shakira', '2008', 'Sanmartin', 38],
+            ['Luigi', '2018', 'Lopez', 45],
+        ];
+
+        foreach ($varianceData as $data) {
+            $sourceParams = $prototypeSource;
+            $sourceParams['attributes']['title'] .= $data[0];
+            $sourceParams['attributes']['date'] = new DateTime('01-01-' . $data[1]);
+            $sourceParams['attributes']['volume'] = $data[3];
+            $sourceParams['participations'][0]['creator']['attributes']['lastName'] = $data[2];
+            $sources->createFromArray($sourceParams);
+        }
+
+        $mySources = $sources->limit(3)
+                             ->offset(2)
+                             ->orderBy('date', 'attributes')
+                             ->complexFilter(['attributes' => ['title' => $uid]]);
+
+        $this->assertEquals(3, count($mySources));
+        $this->assertEquals(
+            'Cruz',
+            $mySources[0]->participations()->byRelevance('author')[0]->lastName,
+            'No obtiene el apellido esperado si los resultados se ordenaran por fecha'
+        );
+        $this->assertStringContainsString('Marta', $mySources[0]->title);
+
+        return [$sources, $uid];
+    }
+
+    /**
+     * @param array $data
+     *
+     * @depends testLimitResults
+     * @return ComplexSourcesRepository
+     */
+    public function testOrderByKey(array $data)
+    {
+        /** @var ComplexSourcesRepository */
+        $sources = $data[0];
+        $uid = $data[1];
+        $mySources = $sources->orderBy('key', 'source')
+                             ->offset(0)
+                             ->limit(3)
+                             ->complexFilter(['attributes' => ['title' => $uid]]);
+
+        $this->assertEquals(3, count($mySources));
+        $testSource = $mySources[0];
+        $this->assertStringContainsString('cibrian', $mySources[0]->key());
+        return [$sources, $uid];
+    }
+
+    /**
+     * @param mixed $data
+     *
+     * @depends testOrderByKey
+     * @return void
+     */
+    public function testOrderByNumberAttribute($data)
+    {
+        /** @var ComplexSourcesRepository */
+        $sources = $data[0];
+        $uid = $data[1];
+
+        $mySources = $sources->orderBy('volume', 'attributes')
+                             ->offset(0)
+                             ->limit(4)
+                             ->complexFilter(['attributes' => ['title' => $uid]]);
+
+        $this->assertEquals(4, count($mySources));
+        $this->assertStringContainsString('cirigliano1959', $mySources[0]->key());
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @depends testOrderByNumberAttribute
+     * @return array
+     */
+    public function testOrderByCreatorAttribute(array $data): array
+    {
+        /** @var ComplexSourcesRepository */
+        $sources = $data[0];
+        $uid = $data[1];
+
+        $mySources = $sources->orderBy('lastName', 'creator')
+                             ->offset(0)
+                             ->limit(3)
+                             ->complexFilter(['attributes' => ['title' => $uid]]);
+
+        $this->assertEquals(3, count($mySources));
+        $this->assertEquals('Cibrian', $mySources[0]->participations()->byRelevance('author')[0]->lastName);
+
+        return $data;
     }
 
     public static function seedSources(ComplexSourcesRepository $sources)

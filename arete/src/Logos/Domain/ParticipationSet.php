@@ -116,9 +116,13 @@ class ParticipationSet implements Arrayable
      *
      * @return Participation[]
      */
-    public function byRelevance(string $role): array
+    public function byRelevance(?string $role = null): array
     {
-        $participations = $this->$role;
+        if ($role === null) {
+            $participations = array_merge(...array_values($this->attributes));
+        } else {
+            $participations = $this->$role;
+        }
         usort($participations, function ($a, $b) {
             $a = $a->relevance();
             $b = $b->relevance();

@@ -52,6 +52,23 @@ class Source extends Attributable implements SourceContract
         return $this->key;
     }
 
+    public function compareProperty(string $property, Source $b): int
+    {
+        switch ($property) {
+            case 'type':
+                return strcmp($this->typeCode(), $b->typeCode());
+                break;
+            case 'key':
+                return strcmp($this->key(), $b->key());
+                break;
+            case 'id':
+                return $this->id() <=> $b->id();
+                break;
+            default:
+                return 0;
+        }
+    }
+
     /**
      *  Returns an array representation of the source
      *

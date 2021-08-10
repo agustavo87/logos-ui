@@ -12,16 +12,18 @@ use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Application\Ports\Interfaces\ParticipationRepository;
 use Arete\Logos\Domain\Contracts\Formatter;
+use Arete\Logos\Domain\IndexResults;
 use Arete\Logos\Infrastructure\Laravel\Common\DBRepository;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
 use Arete\Logos\Domain\Source;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\ParticipationSet;
-
-use function Arete\Common\simplifyWord;
+use Arete\Logos\Domain\SourcesKeyGenerator;
 
 class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort, ComplexSourcesRepository
 {
+    use IndexResults;
+
     protected CreatorsRepository $creators;
     protected SourceTypeRepository $sourceTypes;
     protected CreatorTypeRepository $creatorTypes;
@@ -31,10 +33,8 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     protected array $cache = [];
     protected array $cacheByKey = [];
     protected Formatter $defaultFormatter;
-    public static array $diferenciators = [
-        'a','b','c','d','e','f','g','h','i','j','k','m','n','o','p',
-        'q', 'r', 's', 't', 'u', 'b', 'w', 'x', 'y', 'z'
-    ];
+
+    protected SourcesKeyGenerator $keyGenerator;
 
     public function __construct(
         CreatorsRepository $creators,
@@ -53,14 +53,17 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         $this->participations = $participations;
         $this->defaultFormatter = $defaultFormatter;
         $this->schema = $schema;
+        $this->keyGenerator = new SourcesKeyGenerator($this, $creators);
     }
 
     public function createFromArray(array $params, $ownerID = null): Source
     {
         $ownerID = $ownerID ?? $this->logos->getOwner();
 
-        // first, let's create the source and insert it's attributes
-        $key = $this->getKey($params);
+        $key = $this->keyGenerator->getKey($params);
+
+        /* Create the source and insert it's attributes */
+        /** @todo Averiguar si hay que inertar un formatter */
         $source = new Source($this->sourceTypes, $this->defaultFormatter);
         $source->fill([
             'typeCode' => $params['type'],
@@ -68,13 +71,20 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
             'key'     => $key
         ]);
 
+        /**
+         * @todo    Quitar lógica de dominio de lógica de persistencia.
+         *          Aquí para insertar los atributos DB tiene que "conocer"
+         *          su estructura, esto acopla la DB al dominio, cuando
+         *          sólo debería estar acoplada a la persistencia.
+         * */
         $this->db->insertEntityAttributes(
             $source,
             $params['attributes']
         );
 
-        // then add the participations
+        /* Add the participations */
         $participations = new ParticipationSet($source, $this->creators, $this->participations);
+
         if (array_key_exists('participations', $params)) {
             foreach ($params['participations'] as $participationData) {
                 $participations->pushNew(
@@ -88,92 +98,13 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
             'participations' => $participations
         ]);
 
+        /* Cache it and return it */
         $this->cache[$source->id()] = $source;
         $this->cacheBykey[$source->key()] = $source;
         return $source;
     }
 
-    public function getKey(array $params): string
-    {
-        if (isset($params['key'])) {
-            $keyWord = $params['key'];
-        } else {
-            $keyWord = $this->generateKeyWord($params);
-        }
-        $i = 1;
-        $baseKeyWord = $keyWord;
-        while ($this->keyExist($keyWord)) {
-            $keyWord = $baseKeyWord . $this->getDiferenciator(++$i);
-        }
-        return $keyWord;
-    }
-
-    protected function generateKeyWord(array $params): string
-    {
-        $keyWord = $this->getCreatorKeyWord($params);
-
-        if ($keyWord == '') {
-            if (isset($params['title'])) {
-                $keyWord = explode(' ', $params['title'])[0];
-            } else {
-                $keyWord = 'anon';
-            }
-        }
-
-        $keyWord = simplifyWord($keyWord);
-        if (isset($params['attributes']['date'])) {
-            $keyWord .= $params['attributes']['date']->format('Y');
-        }
-
-        return $keyWord;
-    }
-
-    protected function getCreatorKeyWord(array $params): string
-    {
-        if (!isset($params['participations'])) {
-            return '';
-        }
-
-        // look for valid relevant participation
-        $authors = array_filter(
-            $params['participations'],
-            /** @todo seleccionar creador primario */
-            fn ($part) => $part['role'] == 'author'
-        );
-        $authors = array_values($authors);
-        if (count($authors)) {
-            /** @todo seleccionar el más relevante */
-            $participation = $authors[0];
-        } else {
-            $participation = $params['participations'][0];
-        }
-
-        $creator = [];
-        if (isset($participation['creator']['creatorID'])) {
-            $creator = $this->creators->get(
-                $participation['creator']['creatorID']
-            )->toArray();
-        } else {
-            $creator = $participation['creator'];
-        }
-
-        // get some relevant attribute
-        if ($creator['type'] == 'person') {
-            return $creator['attributes']['lastName'];
-        }
-
-        return array_values($creator['attributes'])[0];
-    }
-
-    protected function getDiferenciator(int $i): string
-    {
-        if ($i < count(self::$diferenciators)) {
-            return self::$diferenciators[$i - 1];
-        }
-        return '-' . $i;
-    }
-
-    public function keyExist($key)
+    public function keyExist($key): bool
     {
         return $this->db->sourceKeyExist($key);
     }
@@ -186,7 +117,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         return $this->getNewByKey($key);
     }
 
-    /** @todo agregarlo a la interfas */
+    /** @todo agregarlo a la interfáz */
     public function getNewByKey($key)
     {
         return $this->getNew($this->db->getSourceIDByKey($key));
@@ -211,9 +142,10 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
      */
     public function getNew(int $id): Source
     {
+        /** @todo Esto es lógica de persistencia, no debería estar aquí. */
         $ownerFKColumn = $this->logos->getOwnersTableData()->FK;
 
-        // lets create the source with it's attributes
+        /* Create the source with it's attributes */
         $attributes = $this->db->getEntityAttributes($id);
         $sourceEntry = $attributes->first();
         $source = new Source(
@@ -234,7 +166,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
             );
         }
 
-        // lets add participations in it's creation.
+        /* Add participations in it's creation. */
         $participations = new ParticipationSet($source, $this->creators, $this->participations);
         $source->simpleFill([
             'participations' => $participations->load()
@@ -277,7 +209,17 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
 
     public function complexFilter(array $params): array
     {
-        $selectedIDs = $this->db->getSourceIDsWith($params);
+        $selectedIDs = $this->db->getSourceIDsWith(
+            $params,
+            [
+                'limit' => $this->limit,
+                'offset' => $this->offset,
+                'orderBy' => [
+                    'group' => $this->orderBy['group'],
+                    'field' => $this->orderBy['field']
+                ]
+            ]
+        );
         $sources = [];
         foreach ($selectedIDs as $sourceID) {
             $sources[] = $this->get($sourceID);

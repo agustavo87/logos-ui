@@ -33,6 +33,15 @@ class DB
         'complex' => 'complex_value'
     ];
 
+    public static $indexParams = [
+        'limit'     => 10,
+        'offset'    => 0,
+        'orderBy'   => [
+            'group'     => 'source',
+            'field'     => 'key'
+        ]
+    ];
+
     protected LogosEnviroment $logos;
     public Connection $db;
     public Schema $schema;
@@ -549,10 +558,13 @@ class DB
         ->get();
     }
 
-    public function getSourceIDsWith(array $params): array
+    public function getSourceIDsWith(array $params, array $indexParams = []): array
     {
-        $query = $this->db->table('sources');
+        $selectColumns = [];
 
+        $indexParams = array_merge(self::$indexParams, $indexParams);
+
+        $query = $this->db->table('sources');
         if (isset($params['ownerID'])) {
             $query->where($this->logos->getOwnersTableData()->FK, '=', $params['ownerID']);
         }
@@ -565,6 +577,7 @@ class DB
             $query->where('source_type_code_name', 'LIKE', "%{$params['type']}%");
         }
 
+        /* Filters by attributes */
         if (isset($params['attributes'])) {
             $attrTypes = $this->getAttributeTypes(array_keys($params['attributes']));
             foreach ($params['attributes'] as $attrName => $attrValue) {
@@ -586,6 +599,7 @@ class DB
             }
         }
 
+        /* Filters by creators attributes */
         if (isset($params['participations'])) {
             $query->whereIn('sources.id', function (QueryBuilder $query) use ($params) {
                 $query->select('source_id')
@@ -613,9 +627,47 @@ class DB
             });
         }
 
-        return $query->get('sources.id')
-                     ->map(fn (object $row) => $row->id)
-                     ->toArray();
+        if ($indexParams['orderBy']['group'] == 'source') {
+            switch ($indexParams['orderBy']['field']) {
+                case 'key':
+                    $query->orderBy('key');
+                    break;
+                case 'type':
+                    $query->orderBy('source_type_code_name');
+                    break;
+                default:
+                    $query->orderBy('id');
+            }
+        } elseif ($indexParams['orderBy']['group'] == 'attributes') {
+            $field = $indexParams['orderBy']['field'];
+            $fieldValueType = $this->getAttributeTypes([$field])[$field]->value_type;
+            $query->join('attributes', 'sources.id', '=', 'attributes.attributable_id')
+                  ->where('attributable_genus', $this->schema::GENUS['source'])
+                  ->where('attribute_type_code_name', '=', $field)
+                  ->orderBy($this::VALUE_COLUMS[$fieldValueType]);
+        } elseif ($indexParams['orderBy']['group'] == 'creator') {
+            $field = $indexParams['orderBy']['field'];
+            $fieldValueType = $this->getAttributeTypes([$field])[$field]->value_type;
+            $attributeValueColumn = $this::VALUE_COLUMS[$fieldValueType];
+            $query->join('participations', 'sources.id', '=', 'participations.source_id')
+                  ->join('attributes', 'attributes.attributable_id', '=', 'participations.creator_id')
+                  ->where('attributable_genus', $this->schema::GENUS['creator'])
+                  ->where('attribute_type_code_name', '=', $field)
+                //   ->groupBy('id')
+                  ->orderBy($attributeValueColumn);
+            $selectColumns[] = $attributeValueColumn;
+        }
+
+        /** Order & limit results */
+        $query->offset($indexParams['offset'])
+        ->limit($indexParams['limit']);
+
+        $selectColumns[] = 'sources.id';
+        $query->select($selectColumns);
+        $result = $query->get();
+        $result = $result->map(fn (object $row) => $row->id);
+        $result = $result->toArray();
+        return $result;
     }
 
     /**

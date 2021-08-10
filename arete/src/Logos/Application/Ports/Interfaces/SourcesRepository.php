@@ -50,4 +50,11 @@ interface SourcesRepository
      * @return void
      */
     public function flush();
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function keyExist(string $key): bool;
 }

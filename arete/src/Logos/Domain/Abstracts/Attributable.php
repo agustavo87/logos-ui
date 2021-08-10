@@ -78,6 +78,15 @@ abstract class Attributable implements Arrayable
         return $this->ownerID;
     }
 
+    public function compare(string $attrName, $a, $b): int
+    {
+        if (!$this->has($attrName)) {
+            return 1;
+        }
+        $attr = $this->type()->$attrName;
+        return $attr->compare($a, $b);
+    }
+
     public function toArray(): array
     {
         return [

@@ -10,11 +10,11 @@ WHERE attributable_genus = 'source'
 # AND user_id = 3
 
 ## Selección por attributos
-# AND sources.id IN (SELECT attributable_id FROM attributes WHERE attributable_genus = 'source' AND text_value LIKE '%e%' AND attribute_type_code_name = 'title')
-# AND sources.id IN (SELECT attributable_id FROM attributes WHERE attributable_genus = 'source' AND text_value LIKE '%a%' AND attribute_type_code_name = 'abstractNote')
+AND sources.id IN (SELECT attributable_id FROM attributes WHERE attributable_genus = 'source' AND text_value LIKE '%e%' AND attribute_type_code_name = 'title')
+AND sources.id IN (SELECT attributable_id FROM attributes WHERE attributable_genus = 'source' AND text_value LIKE '%a%' AND attribute_type_code_name = 'abstractNote')
 
 ## Se selecciona por datos de participacion y/o creador
-AND sources.id IN (
+/*AND sources.id IN (
 	# Selecciona ID de fuentes según datos del rol y/o creador
 	SELECT source_id
 	FROM attributes INNER JOIN participations ON attributable_id = creator_id
@@ -26,7 +26,13 @@ AND sources.id IN (
 	AND text_value LIKE '%Miguel%'
 	# también se puede especificar el rol
 	AND role_code_name = 'reviewedAuthor'
-)
+)*/
 
 ## Limitamos los attributos mostrados a unos cuantos para hacer más sencillo de ver
-AND attribute_type_code_name IN ('title', 'abstractNote', 'name');
+AND attribute_type_code_name IN ('title', 'abstractNote')
+
+# Ordenamos los resultados
+ORDER BY sources.id
+
+#Limitamos la cantidd de resultados
+LIMIT 20,5;

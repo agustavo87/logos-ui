@@ -37,7 +37,7 @@ bg=cyan
       <x>900</x>
       <y>72</y>
       <w>153</w>
-      <h>117</h>
+      <h>126</h>
     </coordinates>
     <panel_attributes>Attribute
 --
@@ -47,6 +47,7 @@ bg=cyan
 + type
 + order :int
 --
++ compare(attrA, attrB): int
 /options() : array/</panel_attributes>
     <additional_attributes/>
   </element>
@@ -214,8 +215,8 @@ bg=red</panel_attributes>
     <coordinates>
       <x>324</x>
       <y>117</y>
-      <w>144</w>
-      <h>135</h>
+      <w>189</w>
+      <h>171</h>
     </coordinates>
     <panel_attributes>/Attributable/
 --
@@ -230,6 +231,7 @@ bg=red</panel_attributes>
 + typeCode(): string
 + genus(): ?string
 + ownerID(): mixed
++ compare(attrName, attrA, attrB): int 
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -283,23 +285,23 @@ m1=*</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>387</x>
-      <y>243</y>
+      <y>279</y>
       <w>27</w>
-      <h>162</h>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>387</x>
-      <y>243</y>
+      <y>279</y>
       <w>594</w>
-      <h>117</h>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;110.0;640.0;110.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0;640.0;70.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -326,13 +328,13 @@ m1=*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>459</x>
+      <x>504</x>
       <y>54</y>
-      <w>207</w>
+      <w>162</w>
       <h>162</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>10.0;160.0;50.0;160.0;190.0;10.0;210.0;10.0</additional_attributes>
+    <additional_attributes>10.0;160.0;30.0;160.0;140.0;10.0;160.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
