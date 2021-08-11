@@ -7,6 +7,9 @@ namespace Arete\Logos\Application\Ports\Interfaces;
 interface ComplexSourcesRepository extends SourcesRepository
 {
     /**
+     * Filter sources by source properties ('key', 'id'), 'attributes'
+     * or 'creator' attributes.
+     *
      * @param array $params
      *
      * @return \Arete\Logos\Domain\Source[]

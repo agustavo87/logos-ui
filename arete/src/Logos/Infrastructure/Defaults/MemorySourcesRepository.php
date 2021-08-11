@@ -18,6 +18,9 @@ use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\ParticipationSet;
 use Arete\Logos\Domain\SourcesKeyGenerator;
 
+/**
+ * Use temporal memory as sources repository. For test purpouses.
+ */
 class MemorySourcesRepository implements SourcesRepository, ComplexSourcesRepository
 {
     use IndexResults;

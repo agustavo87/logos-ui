@@ -9,7 +9,6 @@ namespace Arete\Logos\Infrastructure\Laravel\Common;
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\Source;
-use Arete\Logos\Domain\Abstracts\Attributable;
 use Arete\Logos\Domain\Abstracts\Type;
 use Arete\Logos\Domain\Creator;
 use Arete\Logos\Domain\Role;

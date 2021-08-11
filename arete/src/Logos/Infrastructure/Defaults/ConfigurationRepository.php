@@ -12,6 +12,7 @@ class ConfigurationRepository extends ConfigurationRepositoryPort
 
     public function __construct(?array $config = null)
     {
+        // If the configuration is not inyected just hard-code it
         if ($config) {
             $this->config = $config;
             return;

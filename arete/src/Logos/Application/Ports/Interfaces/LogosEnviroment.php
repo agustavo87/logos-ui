@@ -6,6 +6,12 @@ namespace Arete\Logos\Application\Ports\Interfaces;
 
 interface LogosEnviroment
 {
+    /**
+     * Returns info about table name and key of owner in a relational
+     * DB table.
+     *
+     * @return \stdClass
+     */
     public function getOwnersTableData(): \stdClass;
 
     /**
