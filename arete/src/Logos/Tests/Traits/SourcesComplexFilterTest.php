@@ -166,31 +166,44 @@ trait SourcesComplexFilterTest
                             'lastName' => "Carabajal"
                         ]
                     ]
+                ],[
+                    'role' => 'author',
+                    'relevance' => 3,
+                    'creator' => [
+                        'type' => 'person',
+                        'attributes' => [
+                            'name' => "Carlos Saul",
+                            'lastName' => "Abad"
+                        ]
+                    ]
                 ]
             ]
         ];
 
         $varianceData = [
-            ['Marta', '1978', 'Cruz', 5],
-            ['Samanta', '1959', 'Cirigliano', 2],
-            ['Pablo', '1997', 'Saucedo', 22],
-            ['Don Ramón', '1967', 'Simplicio', 12],
-            ['María', '2005', 'Cibrian', 32],
-            ['Claudia', '2006', 'Leuco', 35],
-            ['Petiza Violenta', '1998', 'Cruz', 21],
-            ['Petiza Embaucadora', '1999', 'Cruz', 22],
-            ['Cintia', '2007', 'Milei', 38],
-            ['Roberto', '1988', 'Etanislao', 19],
-            ['Shakira', '2008', 'Sanmartin', 38],
-            ['Luigi', '2018', 'Lopez', 45],
+            ['Marta', '1978', 'Cruz', 5,3,'Abad'],
+            ['Samanta', '1959', 'Cirigliano', 2,3,'Abad'],
+            ['Pablo', '1997', 'Saucedo', 22,3,'Abad'],
+            ['Don Ramón', '1967', 'Simplicio', 12,1,'Zalazar'],
+            ['María', '2005', 'Cibrian', 32,3,'Abad'],
+            ['Claudia', '2006', 'Leuco', 35,3,'Abad'],
+            ['Petiza Violenta', '1998', 'Cruz', 21,3,'Abad'],
+            ['Petiza Embaucadora', '1999', 'Cruz', 22,3,'Abad'],
+            ['Cintia', '2007', 'Milei', 38,3,'Abad'],
+            ['Roberto', '1988', 'Etanislao', 19,1,'Zalazar'],
+            ['Shakira', '2008', 'Sanmartin', 38,1,'Abciso'],
+            ['Luigi', '2018', 'Lopez', 45,3,'Abad'],
         ];
 
         foreach ($varianceData as $data) {
             $sourceParams = $prototypeSource;
             $sourceParams['attributes']['title'] .= $data[0];
             $sourceParams['attributes']['date'] = new DateTime('01-01-' . $data[1]);
-            $sourceParams['attributes']['volume'] = $data[3];
             $sourceParams['participations'][0]['creator']['attributes']['lastName'] = $data[2];
+            $sourceParams['attributes']['volume'] = $data[3];
+            // This alternates the 'first' -most relevant- author to sort with.
+            $sourceParams['participations'][1]['relevance'] = $data[4];
+            $sourceParams['participations'][1]['creator']['attributes']['lastName'] = $data[5];
             $sources->createFromArray($sourceParams);
         }
 
@@ -200,12 +213,11 @@ trait SourcesComplexFilterTest
                              ->complexFilter(['attributes' => ['title' => $uid]]);
 
         $this->assertEquals(3, count($mySources));
-        $this->assertEquals(
-            'Cruz',
-            $mySources[0]->participations()->byRelevance('author')[0]->lastName,
-            'No obtiene el apellido esperado si los resultados se ordenaran por fecha'
+        $this->assertStringContainsString(
+            'Marta',
+            $mySources[0]->title,
+            'No obtiene el nombre esperado en el título si los resultados se ordenaran por fecha'
         );
-        $this->assertStringContainsString('Marta', $mySources[0]->title);
 
         return [$sources, $uid];
     }
@@ -273,7 +285,8 @@ trait SourcesComplexFilterTest
                              ->complexFilter(['attributes' => ['title' => $uid]]);
 
         $this->assertEquals(3, count($mySources));
-        $this->assertEquals('Cibrian', $mySources[0]->participations()->byRelevance('author')[0]->lastName);
+
+        $this->assertEquals('Abciso', $mySources[0]->participations()->byRelevance('author')[0]->lastName);
 
         return $data;
     }

@@ -16,6 +16,7 @@ use Arete\Exceptions\PersistenceException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB as LvDB;
 use Illuminate\Support\Facades\Log;
@@ -608,7 +609,7 @@ class DB
                 foreach ($params['participations'] as $role => $creatorConditions) {
                     $query->where('role_code_name', $role);
                     if (count($creatorConditions)) {
-                        // se podría filtrar también por el tipo pero complicaría las cosas porque
+                        // se podría filtrar también por el tipo de creador pero complicaría las cosas porque
                         // habría que unir la tabla del creador
                         if (isset($creatorConditions['attributes'])) {
                             $attrTypes = $this->getAttributeTypes(array_keys($creatorConditions['attributes']));
@@ -645,29 +646,80 @@ class DB
                   ->where('attribute_type_code_name', '=', $field)
                   ->orderBy($this::VALUE_COLUMS[$fieldValueType]);
         } elseif ($indexParams['orderBy']['group'] == 'creator') {
-            $field = $indexParams['orderBy']['field'];
-            $fieldValueType = $this->getAttributeTypes([$field])[$field]->value_type;
-            $attributeValueColumn = $this::VALUE_COLUMS[$fieldValueType];
-            $query->join('participations', 'sources.id', '=', 'participations.source_id')
-                  ->join('attributes', 'attributes.attributable_id', '=', 'participations.creator_id')
-                  ->where('attributable_genus', $this->schema::GENUS['creator'])
-                  ->where('attribute_type_code_name', '=', $field)
-                //   ->groupBy('id')
-                  ->orderBy($attributeValueColumn);
-            $selectColumns[] = $attributeValueColumn;
+            $query->joinSub(
+                $this->getSourcesFirstParticipationWithAttribute($indexParams['orderBy']['field']),
+                'first_participations',
+                'first_participations.source_id',
+                '=',
+                'sources.id'
+            )->orderBy('attribute_value');
+            $selectColumns[] = 'attribute_value';
         }
 
-        /** Order & limit results */
-        $query->offset($indexParams['offset'])
-        ->limit($indexParams['limit']);
-
         $selectColumns[] = 'sources.id';
-        $query->select($selectColumns);
-        $result = $query->get();
-        $result = $result->map(fn (object $row) => $row->id);
-        $result = $result->toArray();
-        return $result;
+        $selectColumns[] = 'sources.key';
+
+        /* Order & limit results */
+        $query->offset($indexParams['offset'])
+              ->limit($indexParams['limit'])
+              ->select($selectColumns)
+              ->orderBy('sources.key');
+
+        return $query->get()
+                     ->map(fn (object $row) => $row->id)
+                     ->toArray();
     }
+
+    /**
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getSourcesParticipationsWithMinRelevance()
+    {
+        return $this->db
+                    ->table('participations')
+                    ->select('source_id', $this->db->raw('MIN(relevance) AS min_relevance'))
+                    ->groupBy('source_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getSourcesFirstParticipations()
+    {
+        return $this->db
+                    ->table('participations')
+                    ->joinSub(
+                        $this->getSourcesParticipationsWithMinRelevance(),
+                        'min_relevances',
+                        function (JoinClause $join) {
+                            $join->on('participations.source_id', '=', 'min_relevances.source_id');
+                        }
+                    )->whereRaw('participations.relevance = min_relevances.min_relevance');
+    }
+
+    /**
+     * @param string $attributeCode
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getSourcesFirstParticipationWithAttribute(string $attributeCode)
+    {
+        $valueColumn =  $this::VALUE_COLUMS[$this->getAttributeTypes([$attributeCode])[$attributeCode]->value_type];
+        return $this->getSourcesFirstParticipations()
+                    ->select(
+                        'participations.source_id',
+                        'participations.creator_id',
+                        'participations.role_code_name',
+                        'participations.relevance',
+                        'attribute_type_code_name',
+                        "$valueColumn as attribute_value"
+                    )
+                    ->join('attributes', 'attributes.attributable_id', '=', 'participations.creator_id')
+                    ->whereRaw("attributes.attributable_genus  =  '{$this->schema::GENUS['creator']}'")
+                    ->whereRaw("attributes.attribute_type_code_name  = '$attributeCode'")
+                    ->orderBy('attribute_value');
+    }
+
 
     /**
      * @return \Illuminate\Support\Collection

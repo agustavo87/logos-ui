@@ -1,4 +1,4 @@
-SELECT sources.id, sources.key, attributes.* 
+SELECT sources.id, text_value , sources.key
 FROM 
 
 (
@@ -9,7 +9,7 @@ FROM
 # SELECT BY ATTRIBUTES
 WHERE sources.id IN (
 	SELECT DISTINCT sources.id FROM sources
-	WHERE sources.id IN (SELECT attributable_id FROM attributes WHERE attributable_genus = 'source' AND text_value LIKE '%ar%' AND attribute_type_code_name = 'title')
+	WHERE sources.id IN (SELECT attributable_id FROM attributes WHERE attributable_genus = 'source' AND text_value LIKE '%6113d6216ce4c%' AND attribute_type_code_name = 'title')
 )
 
 AND attributes.attributable_genus = 'creator'
@@ -21,9 +21,10 @@ AND attributes.attribute_type_code_name = 'lastName'
 # ORDER BY attributes.date_value
 
 # ORDER BY CREATOR PROPERTIES
-ORDER BY attributes.text_value DESC
+#GROUP BY id
+ORDER BY attributes.text_value ASC, sources.`key`
 
 # LIMIT
-#LIMIT 5 
-#OFFSET 2
+ LIMIT 3 
+ OFFSET 0
 
