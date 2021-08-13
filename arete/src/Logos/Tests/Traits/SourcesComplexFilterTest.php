@@ -139,31 +139,6 @@ trait SourcesComplexFilterTest
         return $sources;
     }
 
-    /**
-     * @param ComplexSourcesRepository $sources
-     *
-     * @depends testFilterByKey
-     * @return array
-     */
-    public function testLimitResults(ComplexSourcesRepository $sources): array
-    {
-        $uid = uniqid();
-        $this->seedIndexTestData($sources, $uid);
-
-        $mySources = $sources->limit(3)
-                             ->offset(2)
-                             ->orderBy('date', 'attributes')
-                             ->complexFilter(['attributes' => ['title' => $uid]]);
-
-        $this->assertEquals(3, count($mySources));
-        $this->assertStringContainsString(
-            'Marta',
-            $mySources[0]->title,
-            'No obtiene el nombre esperado en el título si los resultados se ordenaran por fecha'
-        );
-
-        return [$sources, $uid];
-    }
 
     public function seedIndexTestData(ComplexSourcesRepository $sources, string $uid)
     {
@@ -225,6 +200,32 @@ trait SourcesComplexFilterTest
             $sourceParams['participations'][1]['creator']['attributes']['lastName'] = $data[5];
             $sources->createFromArray($sourceParams);
         }
+    }
+
+    /**
+     * @param ComplexSourcesRepository $sources
+     *
+     * @depends testFilterByKey
+     * @return array
+     */
+    public function testLimitResults(ComplexSourcesRepository $sources): array
+    {
+        $uid = uniqid();
+        $this->seedIndexTestData($sources, $uid);
+
+        $mySources = $sources->limit(3)
+                             ->offset(2)
+                             ->orderBy('date', 'attributes')
+                             ->complexFilter(['attributes' => ['title' => $uid]]);
+
+        $this->assertEquals(3, count($mySources));
+        $this->assertStringContainsString(
+            'Marta',
+            $mySources[0]->title,
+            'No obtiene el nombre esperado en el título si los resultados se ordenaran por fecha'
+        );
+
+        return [$sources, $uid];
     }
 
     /**
