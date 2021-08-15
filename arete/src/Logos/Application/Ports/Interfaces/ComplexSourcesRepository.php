@@ -14,7 +14,7 @@ interface ComplexSourcesRepository extends SourcesRepository
      *
      * @return \Arete\Logos\Domain\Source[]
      */
-    public function complexFilter(array $params): array;
+    public function complexFilter(array $params = []): array;
 
     /**
      * Limit the ammount of results
@@ -41,8 +41,9 @@ interface ComplexSourcesRepository extends SourcesRepository
      *                              - source : the main properties of the source
      *                              - attributes : an attribute of the source
      *                              - creator : an attribute of the most relevant creator
+     * @param bool      $asc   in ascending order.
      * @todo in creator, order by the most relevant _primary_ creator.
      * @return self
      */
-    public function orderBy(string $field, $group = 'source'): self;
+    public function orderBy(string $field, $group = 'source', bool $asc = true): self;
 }

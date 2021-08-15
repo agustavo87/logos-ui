@@ -55,10 +55,15 @@ class SimpleFormatter implements Formatter
         $date = '';
         if ($source->has('date')) {
             // /** @var \DateTime */
-            $dateObj = new \DateTime($source->date);
+            $dateObj = $this->datesize($source->date);
             $date = $dateObj->format('Y');
         }
         return $date;
+    }
+
+    protected function datesize($date)
+    {
+        return $date instanceof \DateTime ? $date : new \DateTime((string) $date);
     }
 
     public function getSourceFormat(Source $source): string

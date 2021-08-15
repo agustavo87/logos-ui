@@ -38,7 +38,8 @@ class DB
         'offset'    => 0,
         'orderBy'   => [
             'group'     => 'source',
-            'field'     => 'key'
+            'field'     => 'key',
+            'asc'       => 'true'
         ]
     ];
 
@@ -564,6 +565,8 @@ class DB
 
         $indexParams = array_merge(self::$indexParams, $indexParams);
 
+        $orderDirection = $indexParams['orderBy']['asc'] ? 'asc' : 'desc';
+
         $query = $this->db->table('sources');
         if (isset($params['ownerID'])) {
             $query->where($this->logos->getOwnersTableData()->FK, '=', $params['ownerID']);
@@ -630,13 +633,13 @@ class DB
         if ($indexParams['orderBy']['group'] == 'source') {
             switch ($indexParams['orderBy']['field']) {
                 case 'key':
-                    $query->orderBy('key');
+                    $query->orderBy('key', $orderDirection);
                     break;
                 case 'type':
-                    $query->orderBy('source_type_code_name');
+                    $query->orderBy('source_type_code_name', $orderDirection);
                     break;
                 default:
-                    $query->orderBy('id');
+                    $query->orderBy('id', $orderDirection);
             }
         } elseif ($indexParams['orderBy']['group'] == 'attributes') {
             $field = $indexParams['orderBy']['field'];
@@ -644,7 +647,7 @@ class DB
             $query->join('attributes', 'sources.id', '=', 'attributes.attributable_id')
                   ->where('attributable_genus', $this->schema::GENUS['source'])
                   ->where('attribute_type_code_name', '=', $field)
-                  ->orderBy($this::VALUE_COLUMS[$fieldValueType]);
+                  ->orderBy($this::VALUE_COLUMS[$fieldValueType], $orderDirection);
         } elseif ($indexParams['orderBy']['group'] == 'creator') {
             $query->joinSub(
                 $this->getSourcesFirstParticipationWithAttribute($indexParams['orderBy']['field']),
@@ -652,7 +655,7 @@ class DB
                 'first_participations.source_id',
                 '=',
                 'sources.id'
-            )->orderBy('attribute_value');
+            )->orderBy('attribute_value', $orderDirection);
             $selectColumns[] = 'attribute_value';
         }
 
@@ -663,7 +666,7 @@ class DB
         $query->offset($indexParams['offset'])
               ->limit($indexParams['limit'])
               ->select($selectColumns)
-              ->orderBy('sources.key');
+              ->orderBy('sources.key', $orderDirection);
 
         return $query->get()
                      ->map(fn (object $row) => $row->id)

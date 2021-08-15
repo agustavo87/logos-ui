@@ -14,7 +14,7 @@ trait ExposeAttributes
 
     public function __get($name)
     {
-        return $this->attributes[$name] ? $this->attributes[$name] : null;
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public function __set($name, $value)

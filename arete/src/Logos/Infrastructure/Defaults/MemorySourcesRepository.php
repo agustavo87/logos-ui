@@ -195,17 +195,17 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         return $results;
     }
 
-    public function complexFilter(array $params): array
+    public function complexFilter(array $params = []): array
     {
         /* if there's no sources nothing can be filtered */
         if (!count(self::$sources)) {
             return [];
         }
-        $result = [];
 
-        $ownerID = isset($params['ownerID']) ? $params['ownerID'] : null;
+        $result = self::$sources;
 
         /* Filter by source attributes */
+        $ownerID = isset($params['ownerID']) ? $params['ownerID'] : null;
         if (isset($params['attributes'])) {
             foreach ($params['attributes'] as $attribute => $condition) {
                 $subset = $this->pluckIds($result);
@@ -220,9 +220,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         }
 
         /* Filter by owner */
-        if (isset($params['ownerID'])) {
-            // if there is results, start from there, if not, start with all sources.
-            $result = count($result) ? $result : self::$sources;
+        if ($ownerID) {
             $result = array_filter(
                 $result,
                 fn (Source $source) => (string) $source->ownerID() == $params['ownerID']
@@ -231,7 +229,6 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
 
         /* Filter by key */
         if (isset($params['key'])) {
-            $result = count($result) ? $result : self::$sources;
             $result = array_filter(
                 $result,
                 fn (Source $source) => (string) str_contains($source->key(), $params['key'])
@@ -240,9 +237,6 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
 
         /* Filter by creators/participants */
         if (isset($params['participations'])) {
-            // if there is results, start from there, if not, start with all sources.
-            $result = count($result) ? $result : self::$sources;
-
             foreach ($params['participations'] as $role => $properties) {
                 // filter the sources that have some creator with the specified role.
                 $result = array_filter(
@@ -269,7 +263,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         }
 
         /* Order the results */
-        $result = array_values($this->order($result));
+        $result = array_values($this->order($result, $this->orderBy['asc']));
 
         /* Limit the results */
         $result = $this->limitResult($result);
@@ -289,17 +283,17 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
      *
      * @return  \Arete\Logos\Domain\Source[]
      */
-    protected function order(array $sources): array
+    protected function order(array $sources, bool $asc): array
     {
         switch ($this->orderBy['group']) {
             case 'attributes':
-                return $this->orderByAttributes($sources, $this->orderBy['field']);
+                return $this->orderByAttributes($sources, $this->orderBy['field'], $asc);
                 break;
             case 'source':
-                return $this->orderByProperties($sources, $this->orderBy['field']);
+                return $this->orderByProperties($sources, $this->orderBy['field'], $asc);
                 break;
             case 'creator':
-                return $this->orderByCreatorAttributes($sources, $this->orderBy['field']);
+                return $this->orderByCreatorAttributes($sources, $this->orderBy['field'], $asc);
             default:
                 return $sources;
                 break;
@@ -312,33 +306,47 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
      *
      * @return \Arete\Logos\Domain\Source[]
      */
-    protected function orderByProperties(array $sources, string $field): array
+    protected function orderByProperties(array $sources, string $field, bool $asc = true): array
     {
+        $direction = $asc ? 1 : -1;
         usort(
             $sources,
-            fn (Source $a, Source $b) => $a->compareProperty($field, $b)
+            fn (Source $a, Source $b) => $a->compareProperty($field, $b) * $direction
         );
         return $sources;
     }
 
-    protected function orderByAttributes(array $sources, string $field): array
+    protected function orderByAttributes(array $sources, string $field, bool $asc = true): array
     {
+        $direction = $asc ? 1 : -1;
         usort(
             $sources,
-            fn (Source $a, Source $b) => $a->compare($field, $a->$field, $b->$field)
+            function (Source $a, Source $b) use ($field, $direction) {
+                if ($a->has($field) && $b->has($field)) {
+                    $order = $a->compare($field, $a->$field, $b->$field);
+                } elseif ($a->has($field)) {
+                    $order = -1;
+                } elseif ($b->has($field)) {
+                    $order =  1;
+                } else {
+                    $order =  0;
+                }
+                return $order * $direction;
+            }
         );
 
         return $sources;
     }
 
-    protected function orderByCreatorAttributes(array $sources, string $field): array
+    protected function orderByCreatorAttributes(array $sources, string $field, bool $asc = true): array
     {
+        $direction = $asc ? 1 : -1;
         usort(
             $sources,
-            function (Source $a, Source $b) use ($field) {
+            function (Source $a, Source $b) use ($field, $direction) {
                 $creatorA = $a->participations()->byRelevance()[0]->creator();
                 $creatorB = $b->participations()->byRelevance()[0]->creator();
-                return $creatorA->compare($field, $creatorA->$field, $creatorB->$field);
+                return $creatorA->compare($field, $creatorA->$field, $creatorB->$field) * $direction;
             }
         );
         return $sources;
@@ -357,7 +365,10 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
             $attributables,
             function ($attributable) use ($attrCode, $attrValue) {
                 if ($attributable->has($attrCode)) {
-                    return (string) $attributable->$attrCode == $attrValue;
+                    return str_contains(
+                        (string) $attributable->$attrCode,
+                        $attrValue
+                    );
                 }
                 return false;
             }

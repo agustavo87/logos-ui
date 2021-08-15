@@ -178,7 +178,7 @@ trait SourcesComplexFilterTest
             ['Marta', '1978', 'Cruz', 5,3,'Abad'],
             ['Samanta', '1959', 'Cirigliano', 2,3,'Abad'],
             ['Pablo', '1997', 'Saucedo', 22,3,'Abad'],
-            ['Don Ramón', '1967', 'Simplicio', 12,1,'Zalazar'],
+            ['Don Ramón', '1967', 'Simplicio', 12,1,'Zsalazar'],
             ['María', '2005', 'Cibrian', 32,3,'Abad'],
             ['Claudia', '2006', 'Leuco', 35,3,'Abad'],
             ['Petiza Violenta', '1998', 'Cruz', 21,3,'Abad'],
@@ -296,6 +296,93 @@ trait SourcesComplexFilterTest
 
         return $data;
     }
+
+    /**
+     * @param array $data
+     *
+     * @depends testOrderByCreatorAttribute
+     * @return array
+     */
+    public function testOrderByAttributeInDescendingOrder(array $data): array
+    {
+        /** @var ComplexSourcesRepository */
+        $sources = $data[0];
+        $uid = $data[1];
+        $oldest = $sources->orderBy('date', 'attributes', false)
+                          ->offset(0)
+                          ->limit(1)
+                          ->complexFilter(['attributes' => ['title' => $uid]])[0];
+
+        $this->assertEquals('2018', $oldest->date->format('Y'));
+        $this->assertStringContainsString('Luigi', $oldest->title);
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @depends testOrderByAttributeInDescendingOrder
+     * @return array
+     */
+    public function testOrderByCreatorAttributeInDescendingOrder(array $data): array
+    {
+        /** @var ComplexSourcesRepository */
+        $sources = $data[0];
+        $uid = $data[1];
+        $testSource = $sources->orderBy('lastName', 'creator', false)
+                          ->offset(0)
+                          ->limit(1)
+                          ->complexFilter([
+                              'attributes' => [
+                                  'title' => $uid
+                              ],
+                              'participations' => [
+                                  'author' => [
+                                      'attributes' => [
+                                          'name' => 'Peteco'
+                                      ]
+                                  ]
+                              ]
+                          ])[0];
+
+        $this->assertEquals('Zsalazar', $testSource->participations()->byRelevance('author')[0]->lastName);
+        $this->assertStringContainsString('Don Ramón', $testSource->title);
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @depends testOrderByCreatorAttributeInDescendingOrder
+     * @return array
+     */
+    public function testOrderByKeyInDescendingOrder(array $data): array
+    {
+        /** @var ComplexSourcesRepository */
+        $sources = $data[0];
+        $uid = $data[1];
+        $results = $sources->orderBy('key', 'source', false)
+                          ->offset(0)
+                          ->limit(10)
+                          ->complexFilter([
+                              'key' => '19',
+                              'attributes' => [
+                                  'title' => $uid
+                              ]
+                          ]);
+
+        /* For debug *
+        foreach ($results as $source) {
+            print_r('[' . $source->key() . '] ' . $source->render() . "\n");
+        }
+        //*/
+        $testSource = $results[0];
+        $this->assertStringContainsString('simplicio1967', $testSource->key());
+        $this->assertEquals('1967', $testSource->date->format('Y'));
+        $this->assertStringContainsString('Don Ramón', $testSource->title);
+        return $data;
+    }
+
 
     public static function seedSources(ComplexSourcesRepository $sources)
     {

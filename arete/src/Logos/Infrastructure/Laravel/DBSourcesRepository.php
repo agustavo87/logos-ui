@@ -207,7 +207,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         return $result;
     }
 
-    public function complexFilter(array $params): array
+    public function complexFilter(array $params = []): array
     {
         $selectedIDs = $this->db->getSourceIDsWith(
             $params,
@@ -216,7 +216,8 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
                 'offset' => $this->offset,
                 'orderBy' => [
                     'group' => $this->orderBy['group'],
-                    'field' => $this->orderBy['field']
+                    'field' => $this->orderBy['field'],
+                    'asc'   => $this->orderBy['asc']
                 ]
             ]
         );

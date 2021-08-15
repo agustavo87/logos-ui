@@ -8,7 +8,7 @@ trait IndexResults
 {
     protected int $limit = 10;
     protected int $offset = 0;
-    protected array $orderBy = ['group' => 'source', 'field' => 'key'];
+    protected array $orderBy = ['group' => 'source', 'field' => 'key', 'asc' => true];
 
     public function limit(int $n): self
     {
@@ -22,11 +22,12 @@ trait IndexResults
         return $this;
     }
 
-    public function orderBy(string $field, $group = 'source'): self
+    public function orderBy(string $field, $group = 'source', bool $asc = true): self
     {
         $this->orderBy = [
             'group' => $group,
-            'field' => $field
+            'field' => $field,
+            'asc' => $asc
         ];
         return $this;
     }
