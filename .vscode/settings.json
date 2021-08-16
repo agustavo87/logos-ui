@@ -30,7 +30,7 @@
     "phpParameterHint.opacity": 0.2,
     "intelephense.environment.documentRoot": "public/",
     "workbench.colorCustomizations": {
-        "phpParameterHint.hintForeground": "#95a9a7",
-        "phpParameterHint.hintBackground": "#293339"
+        "phpParameterHint.hintForeground": "#00a9a7",
+        "phpParameterHint.hintBackground": "#aa3339"
     }
 }

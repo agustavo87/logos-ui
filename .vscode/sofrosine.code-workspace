@@ -24,10 +24,11 @@
 		"intelephense.diagnostics.languageConstraints": false,
 		"materialTheme.accent": "Lime",
 		"explorer.decorations.badges": true,
-		"phpParameterHint.opacity": 0.2,
+		"phpParameterHint.opacity": 0.9,
 		"workbench.colorCustomizations": {
-			"phpParameterHint.hintForeground": "#95a9a7",
-			"phpParameterHint.hintBackground": "#293339"
-		}
+			"phpParameterHint.hintForeground": "#7d8c94",
+			"phpParameterHint.hintBackground": "#222e33"
+		},
+		"phpParameterHint.collapseHintsWhenEqual": true
 	}
 }
