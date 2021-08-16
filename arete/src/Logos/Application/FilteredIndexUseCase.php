@@ -11,6 +11,16 @@ use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
 
 class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
 {
+    protected static $defaultIndexParams = [
+        'orderBy' => [
+            'field' => 'key',
+            'group' => 'source',
+            'asc' => true
+        ],
+        'offset' => 0,
+        'limit' => 10
+    ];
+
     protected ComplexSourcesRepository $sources;
     protected SourceTypeRepository $sourceTypes;
 
@@ -45,6 +55,8 @@ class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
      */
     public function filter(array $params): array
     {
+        $indexParams = $this->mergeIndexParams($params);
+
         $type = $params['type'] ?? null;
         if ($type) {
             if (!$this->validateSourceType($type)) {
@@ -61,7 +73,21 @@ class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
                 );
             };
         }
-        return $this->sources->complexFilter($params);
+        return $this->sources
+                    ->offset($indexParams['offset'])
+                    ->limit($indexParams['limit'])
+                    ->orderBy(
+                        $indexParams['orderBy']['field'],
+                        $indexParams['orderBy']['group'],
+                        $indexParams['orderBy']['asc']
+                    )
+                    ->complexFilter($params);
+    }
+
+    protected function mergeIndexParams(array $params): array
+    {
+        $indexParams = array_intersect_key($params, self::$defaultIndexParams);
+        return array_merge(self::$defaultIndexParams, $indexParams);
     }
 
     protected function validateSourceType(string $sourceType): bool

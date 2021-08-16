@@ -48,7 +48,7 @@ class FilteredIndexUseCaseTest extends TestCase
                 'abstractNote' =>   "La historia del trato secreto de Dios con una especie diseñada " .
                                     "para llevar a los humanos a ejercitar su paciencia.",
                 'publicationTitle' => 'Journal of Trans-Species Metaphysics.',
-                'date' => new DateTime('01-01-1988'),
+                'date' => new DateTime('01-01-1987'),
                 'volume' => 4,
                 'issue' => 3
             ],
@@ -220,6 +220,36 @@ class FilteredIndexUseCaseTest extends TestCase
             ]
         ])[0];
         $this->assertEquals('Todos los gatos van al Cielo.', $source->title);
+
+        return $filter;
+    }
+
+    /**
+     * @param FilteredIndexUseCase $filter
+     *
+     * @depends testFilterByKey
+     * @return FilteredIndexUseCase
+     */
+    public function testFilterByDateInDescendingOrder(FilteredIndexUseCase $filter): FilteredIndexUseCase
+    {
+        $sources = $filter->filter([
+            'attributes' => [
+                'title' => 'gatos'
+            ],
+            'orderBy' => [
+                'group' => 'attributes',
+                'field' => 'date',
+                'asc' => false
+            ],
+            'offset' => 0,
+            'limit' => 1
+        ]);
+
+        $testSource = $sources[0];
+
+        $this->assertEquals(1, count($sources));
+        $this->assertEquals('1988', $testSource->date->format('Y'));
+        $this->assertStringContainsString('infierno', $testSource->title);
 
         return $filter;
     }
