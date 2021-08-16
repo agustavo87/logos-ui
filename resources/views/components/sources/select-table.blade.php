@@ -84,7 +84,6 @@
                     document.addEventListener('source-select:reset', () => this.reset())
                 },
                 reset: function() {
-                    console.log('resetando')
                     this.selected = ''
                     this.title = ''
                     this.asc= true

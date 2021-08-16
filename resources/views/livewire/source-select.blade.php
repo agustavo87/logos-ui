@@ -13,7 +13,26 @@
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
                  @click.outside="cancel"
             >
-                <div class="px-5 pt-6">
+            <ul class="flex gap-2 px-5 pt-5">
+                <li>
+                    <button x-on:click="tab = 'select'" x-bind:disabled="tab == 'select'"
+                        class="py-1 px-2 ml-2 rounded-t focus:outline-none disabled:cursor-default"
+                        x-bind:class="tab == 'select' ? 'text-gray-800' : 'bg-gray-200 hover:bg-blue-100 active:bg-white'"
+                    >
+                        Seleccionar
+                    </button>
+                </li>
+                <li>
+                    <button x-on:click="tab = 'new'" x-bind:disabled="tab == 'new'"
+                        class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
+                        x-bind:class="tab == 'new' ? 'text-gray-800' : 'bg-gray-200 hover:bg-blue-100 active:bg-white'"
+                    >
+                        Nueva
+                    </button>
+                </li>
+            </ul>
+            <div class="relative">
+                <div class="px-5 pt-0 relative" x-bind:class="tab != 'select' ? 'invisible' : ''">
                     <label for="title"></label>
                     <x-sources.select-table  wire:model="sources"
                         x-on:selection-change="selectionChanged($event.detail)"
@@ -31,17 +50,19 @@
                     </div>
 
                 </div>
+
+                <div class="px-5 pt-0 absolute inset-0" x-bind:class="tab != 'new' ? 'invisible' : ''">
+                    <h1>Nueva Referencia</h1>
+                </div>
+            </div>
+
+
                 <div class="mt-3 bg-gray-100 px-5 rounded-b-xl pt-3 pb-4 flex justify-end items-center">
                     {{-- <x-form.button title="Edit Source" class="mr-2 disabled:cursor-default disabled:pointer-events-none disabled:opacity-50 "
                                    x-on:click="edit" x-bind:disabled="!selected_id"
                     >
                         Edit
                     </x-form.button> --}}
-                    {{-- <button x-on:click="newReference" title=" {{ __('ui.new') }}"
-                        class="h-9 w-9 flex justify-center items-center bg-green-200 text-blue-900 rounded-full mr-2"
-                    >
-                        <x-icons.cross class="w-5 h-5" />
-                    </button> --}}
                     <x-form.button x-on:click="solve"  class="mr-2">
                         {{ __('ui.insert') }}
                     </x-form.button>
@@ -59,6 +80,7 @@
 
         function modalCitation() {
                 return {
+                    tab: 'select',
                     selected: null,
                     display: false,
                     showModal: false,
@@ -84,18 +106,9 @@
                         this.respond(this.selected);
                         this.close()
                     },
-                    // newReference: function () {
-                    //     this.showModal = false;
-                    //     this.ui.dialogGet('source-edit', {
-                    //         withBg:false,
-                    //         ui:this.ui,
-                    //         source_id: null
-                    //     })
-                    //         .then((r) => {
-                    //             console.log(r);
-                    //             this.showModal = true;
-                    //         })
-                    // },
+                    newReference: function () {
+                        this.tab = 'new'
+                    },
                     // edit: function() {
                     //     this.showModal = false;
                     //     this.ui.dialogGet('source-edit', {
@@ -109,7 +122,6 @@
                     //         })
                     // },
                     cancel: function () {
-                        console.log('source-select canceling')
                         this.close()
                         this.respond(null);
                     },
