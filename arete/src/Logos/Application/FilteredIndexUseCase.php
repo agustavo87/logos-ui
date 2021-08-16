@@ -57,18 +57,18 @@ class FilteredIndexUseCase implements FilteredIndexUseCaseInterface
     {
         $indexParams = $this->mergeIndexParams($params);
 
-        $type = $params['type'] ?? null;
-        if ($type) {
-            if (!$this->validateSourceType($type)) {
-                throw new IncorrectDataStructureException("Inexistent Source Type: '$type'", 22);
+        $sourceType = $params['type'] ?? null;
+        if ($sourceType) {
+            if (!$this->validateSourceType($sourceType)) {
+                throw new IncorrectDataStructureException("Inexistent Source Type: '$sourceType'", 22);
             };
         }
 
         if (isset($params['attributes'])) {
-            $attrValidation = $this->validateSourceTypeAttributes($params['attributes'], $type);
+            $attrValidation = $this->validateSourceTypeAttributes($params['attributes'], $sourceType);
             if (!$attrValidation['result']) {
                 throw new IncorrectDataStructureException(
-                    "The '{$attrValidation['attribute']}' attribute don't exist in the source type: '$type'",
+                    "The '{$attrValidation['attribute']}' attribute don't exist in the source type: '$sourceType'",
                     23
                 );
             };

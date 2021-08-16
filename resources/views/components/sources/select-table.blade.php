@@ -20,7 +20,13 @@
                             class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm w-0"
                             x-model="key"
                             x-on:input="$dispatch('input:key', $event.target.value)"
+                            x-on:source-select:start.window="$el.focus()"
                         >
+                        <button class="flex-none py-2 bg-gray-100 px-2 hover:opacity-80 focus:outline-none active:opacity-100"
+                            x-on:click="orderChanged($dispatch)"
+                        >
+                            <x-icons.sort-direction class="w-3 h-3 fill-current" />
+                        </button>
                     </div>
                 </th>
                 <th class="w-4/6">
@@ -63,11 +69,26 @@
                 sources: options.entangles.sources,
                 key: '',
                 title: '',
+                asc: true,
                 maxRows: options.maxRows,
                 selected: '',
                 sourceSelected: function ($dispatch) {
                     this.selected = this.$el.dataset.key
                     $dispatch('selection-change', this.selected)
+                },
+                orderChanged: function($dispatch) {
+                    this.asc = !this.asc
+                    $dispatch('order-change', this.asc)
+                },
+                init: function () {
+                    document.addEventListener('source-select:reset', () => this.reset())
+                },
+                reset: function() {
+                    console.log('resetando')
+                    this.selected = ''
+                    this.title = ''
+                    this.asc= true
+                    this.key= ''
                 }
             }
         })

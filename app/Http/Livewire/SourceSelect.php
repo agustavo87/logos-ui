@@ -13,10 +13,14 @@ class SourceSelect extends Component
 
     public $listen = 'source-get';
 
+    public $asc = true;
+
     public $searchFields = [
         'key' => '',
         'title' => ''
     ];
+
+    protected $maxRows = 10;
 
     public $sources = [];
 
@@ -36,7 +40,15 @@ class SourceSelect extends Component
 
     public function render(FilteredIndexUseCase $filter)
     {
-        $params = [];
+        $params = [
+            'orderBy' => [
+                'group' => 'source',
+                'field' => 'key',
+                'asc' => $this->asc
+            ],
+            'offset' => 0,
+            'limit' => $this->maxRows
+        ];
         foreach ($this->searchFields as $field => $value) {
             if ($field == 'title' && !($value == '' || $value == null)) {
                 $params['attributes'] = ['title' => $value];
@@ -46,14 +58,16 @@ class SourceSelect extends Component
             }
         }
 
+
+
         $results = $filter->filter($params);
         $this->sources = $this->sourcesToArray($results);
 
         return view('livewire.source-select');
     }
 
-    public function refreshSources()
+    public function flush()
     {
-        $this->searchFields['title'] = 'infierno';
+        $this->reset();
     }
 }

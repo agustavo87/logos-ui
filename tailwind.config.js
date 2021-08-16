@@ -13,7 +13,7 @@ module.exports = {
     extend: {
       pointerEvents: ['disabled'],
       cursor: ['disabled'],
-      opacity: ['disabled']
+      opacity: ['disabled', 'active']
     },
   },
   plugins: [],
