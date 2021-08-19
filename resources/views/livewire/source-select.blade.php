@@ -2,7 +2,9 @@
     x-data="modalCitation()"
     x-show="display" x-on:{{ $listen }}.window="handleInvocation"
     x-on:keydown.escape.window="handleEscape"
-    class="fixed z-10 inset-0 flex flex-col justify-center items-center">
+    class="fixed z-10 inset-0 flex flex-col justify-center items-center"
+    x-ref="root"
+    >
 
     <div class="absolute inset-0 bg-gray-700 opacity-40"></div>
 
@@ -17,7 +19,7 @@
                 <li>
                     <button x-on:click="tab = 'select'" x-bind:disabled="tab == 'select'"
                         class="py-1 px-2 ml-2 rounded-t focus:outline-none disabled:cursor-default"
-                        x-bind:class="tab == 'select' ? 'text-gray-800' : 'bg-gray-200 hover:bg-blue-100 active:bg-white'"
+                        x-bind:class="tab == 'select' ?  'bg-gray-100' : ' text-black text-opacity-90 hover:bg-blue-100 active:bg-white'"
                     >
                         Seleccionar
                     </button>
@@ -25,13 +27,14 @@
                 <li>
                     <button x-on:click="tab = 'new'" x-bind:disabled="tab == 'new'"
                         class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
-                        x-bind:class="tab == 'new' ? 'text-gray-800' : 'bg-gray-200 hover:bg-blue-100 active:bg-white'"
+                        x-bind:class="tab == 'new' ? 'bg-gray-100' : 'text-black text-opacity-90 hover:bg-blue-100 active:bg-white'"
                     >
                         Nueva
                     </button>
                 </li>
             </ul>
             <div class="relative">
+                {{-- TODO: extraer a un componente --}}
                 <div class="px-5 pt-0 relative" x-bind:class="tab != 'select' ? 'invisible' : ''">
                     <label for="title"></label>
                     <x-sources.select-table  wire:model="sources"
@@ -40,19 +43,22 @@
                         x-on:input:key.debounce.500m="$wire.set('searchFields.key', $event.detail)"
                         x-on:order-change="$wire.set('asc', $event.detail)"
                     />
-                    <div class="my-1 h-5 flex items-center">
-                        <div wire:loading>
-                            <div class="flex items-center" >
-                                <span class="ring-loader-xs"></span>
-                                <span class=" ml-1 text-gray-600 loader-text">Procesando...</span>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
-                <div class="px-5 pt-0 absolute inset-0" x-bind:class="tab != 'new' ? 'invisible' : ''">
-                    <h1>Nueva Referencia</h1>
+                <div class="absolute inset-0" x-bind:class="tab != 'new' ? 'invisible' : ''">
+                    <livewire:source-new />
+                </div>
+            </div>
+            {{-- Loader --}}
+            <div class="my-2 px-5 h-5 flex items-center">
+                <div x-data="{loading:false}"
+                     x-bind:class="{'invisible': !loading}"
+                     x-on:lw:message-change.window="loading = $event.detail.loading"
+                >
+                    <div class="flex items-center" >
+                        <span class="ring-loader-xs"></span>
+                        <span class=" ml-1 text-gray-600 loader-text">Procesando...</span>
+                    </div>
                 </div>
             </div>
 
@@ -101,13 +107,15 @@
                             document.dispatchEvent(new CustomEvent('source-select:start', {bubbles: true}))
                         });
                     },
-                    solve: function () {
-                        this.display = false;
-                        this.respond(this.selected);
-                        this.close()
-                    },
                     newReference: function () {
                         this.tab = 'new'
+                    },
+                    init: function () {
+                        this.$watch('tab', (value) => {
+                            this.$refs.root.dispatchEvent(
+                                new CustomEvent('source-select:tab-change', {bubbles:true, detail:value})
+                            )
+                        })
                     },
                     // edit: function() {
                     //     this.showModal = false;
@@ -121,6 +129,17 @@
                     //             this.showModal = true;
                     //         })
                     // },
+                    solve: function () {
+                        if (this.tab == 'select') {
+                            this.display = false;
+                            this.respond(this.selected);
+                            this.close()
+                        }
+                            this.$refs.root.dispatchEvent(
+                                new CustomEvent('source-select:solve', {bubbles:true})
+                            )
+
+                    },
                     cancel: function () {
                         this.close()
                         this.respond(null);

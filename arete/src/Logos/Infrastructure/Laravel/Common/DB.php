@@ -733,19 +733,62 @@ class DB
     }
 
     /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSourceTypeData($colums = ['*'])
+    {
+        return $this->db->table('source_types')->get($colums);
+    }
+
+    /**
      * @param string|null $type
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getSourceTypeAttributes(?string $type = null)
-    {
+    public function getSourceTypeAttributes(
+        ?string $type = null,
+        ?string $version = null,
+        bool $withDataType = false,
+        array $select = ['attribute_type_code_name']
+    ) {
         $query = $this->db->table('schema_attributes');
+
         if ($type) {
+            if (!$version) {
+                $version = $this->getSchemas('source', $type)->first()->version;
+            }
             $query->join('schemas', 'schema_attributes.schema_id', '=', 'schemas.id')
-                  ->where('schemas.type_code_name', '=', $type);
+                  ->where('schemas.type_code_name', '=', $type)
+                  ->where('schemas.version', $version);
         }
-        return $query->select('attribute_type_code_name')
+
+        if ($withDataType) {
+            $query->join(
+                'attribute_types',
+                'schema_attributes.attribute_type_code_name',
+                '=',
+                'attribute_types.code_name'
+            );
+        }
+
+        return $query->select($select)
                      ->distinct()
                      ->get();
+    }
+
+    /**
+     * @param string $genus
+     * @param string $typeCode
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getSchemas(string $genus, string $typeCode, array $select = ['*'])
+    {
+        return $this->db
+             ->table('schemas')
+             ->where('type', $this->schema::GENUS[$genus])
+             ->where('type_code_name', $typeCode)
+             ->orderBy('created_at', 'desc')
+             ->get($select);
     }
 }

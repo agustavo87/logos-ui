@@ -12,9 +12,9 @@ interface SourceTypeRepository extends TypeRepository
     public function get($codeName): SourceType;
 
     /**
-     * Get available types
+     * Get available types codes
      *
-     * @return array
+     * @return string[]
      */
     public function types(): array;
 

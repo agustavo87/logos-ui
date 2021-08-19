@@ -27,6 +27,16 @@ class SourcesServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC::class,
+            \Arete\Logos\Infrastructure\Laravel\DBSourceTypeRepository::class
+        );
+
+        $this->app->bind(
+            \Arete\Logos\Application\Ports\Interfaces\SourcesTranslator::class,
+            \Arete\Logos\Infrastructure\Laravel\SimpleSourcesTranslator::class
+        );
+
+        $this->app->bind(
             \Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository::class,
             \Arete\Logos\Infrastructure\Laravel\DBCreatorTypeRepository::class
         );
@@ -40,6 +50,8 @@ class SourcesServiceProvider extends ServiceProvider
             \Arete\Logos\Application\Ports\Interfaces\ParticipationRepository::class,
             \Arete\Logos\Infrastructure\Laravel\DBParticipationRepository::class
         );
+
+
 
         $this->app->bind(
             \Arete\Logos\Application\Ports\Interfaces\SourcesRepository::class,
