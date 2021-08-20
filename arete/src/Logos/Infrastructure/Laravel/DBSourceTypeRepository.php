@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Arete\Logos\Infrastructure\Laravel;
 
 use Arete\Logos\Application\DTO\AttributePresentation;
-use Arete\Logos\Application\DTO\SourcePresentation;
+use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
 use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 use Arete\Logos\Application\Ports\Interfaces\SourceTypeRepository;
@@ -67,7 +67,7 @@ class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositor
         foreach ($types as $type) {
             $label = $this->sourcesTranslator->translate($type->code_name, 'types');
             $attributes = $this->getAttributePresentations($type->code_name);
-            $data[$type->code_name] = new SourcePresentation($type->code_name, $label, $attributes);
+            $data[$type->code_name] = new SourceTypePresentation($type->code_name, $label, $attributes);
         }
 
         return $data;

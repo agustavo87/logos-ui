@@ -8,7 +8,7 @@ use Arete\Common\Interfaces\Arrayable;
 use JsonSerializable;
 use Stringable;
 
-class SourcePresentation implements JsonSerializable, Arrayable, Stringable
+class SourceTypePresentation implements JsonSerializable, Arrayable, Stringable
 {
     public string $code;
     public string $label;

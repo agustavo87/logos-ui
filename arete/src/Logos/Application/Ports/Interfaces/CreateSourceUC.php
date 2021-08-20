@@ -9,7 +9,7 @@ interface CreateSourceUC
     /**
      * Return presentation data of source types
      *
-     * @return \Arete\Logos\Application\DTO\SourcePresentation[]
+     * @return \Arete\Logos\Application\DTO\SourceTypePresentation[]
      */
     public function presentSourceTypes(): array;
 }
