@@ -88,10 +88,12 @@ class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositor
         );
         $presentations = [];
         foreach ($attributesData as $attributeData) {
+            $label = $this->sourcesTranslator->translate($attributeData->attribute_type_code_name, 'attributes') ??
+                        ($attributeData->label ?? $attributeData->attribute_type_code_name);
             $presentations[] = new AttributePresentation(
                 $attributeData->attribute_type_code_name,
                 $attributeData->base_attribute_type_code_name,
-                $attributeData->label,
+                $label,
                 $attributeData->value_type,
                 (int) $attributeData->order
             );

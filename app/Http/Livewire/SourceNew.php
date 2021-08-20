@@ -11,7 +11,9 @@ class SourceNew extends Component
 
     public function render(CreateSourceUC $createSource)
     {
+        /*
         $types = array_values($createSource->presentSourceTypes());
+        dd("{$types[1]}");//*/
         return view(
             'livewire.source-new',
             [

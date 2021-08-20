@@ -11,9 +11,9 @@ interface SourcesTranslator
      *
      * @param string $code
      *
-     * @return string
+     * @return string|null
      */
-    public function translate(string $code, string $group = ''): string;
+    public function translate(string $code, string $group = ''): ?string;
 
     /**
      * Sets the _static_ locale for the translator

@@ -8,10 +8,12 @@ use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 
 class SimpleSourcesTranslator implements SourcesTranslator
 {
-    public function translate(string $code, string $group = ''): string
+    public function translate(string $code, string $group = ''): ?string
     {
         $group = $group == '' ? '' : '.' . $group;
-        return __("logos::sources{$group}.{$code}");
+        $path = "logos::sources{$group}.{$code}";
+        $trans = __($path);
+        return $trans != $path ? $trans : null;
     }
 
     public function setLocale(string $locale)
