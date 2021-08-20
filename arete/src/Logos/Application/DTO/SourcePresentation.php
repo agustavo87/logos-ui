@@ -6,8 +6,9 @@ namespace Arete\Logos\Application\DTO;
 
 use Arete\Common\Interfaces\Arrayable;
 use JsonSerializable;
+use Stringable;
 
-class SourcePresentation implements JsonSerializable, Arrayable
+class SourcePresentation implements JsonSerializable, Arrayable, Stringable
 {
     public string $code;
     public string $label;
@@ -21,22 +22,28 @@ class SourcePresentation implements JsonSerializable, Arrayable
     {
         $this->code = $code;
         $this->label = $label;
+        if (count($attributes)) {
+            usort($attributes, fn ($a, $b) => $a->order <=> $b->order);
+        }
         $this->attributes = $attributes;
     }
 
-
-
     public function __toString()
     {
-        return $this->label;
+        return json_encode($this, JSON_PRETTY_PRINT);
     }
 
     public function toArray()
     {
-        return [
+        $data =  [
             'code' => $this->code,
-            'value' => $this->value
+            'label' => $this->label,
+            'attributes' => []
         ];
+        foreach ($this->attributes as $attr) {
+            $data['attributes'][$attr->order] = $attr->toArray();
+        }
+        return $data;
     }
 
     public function jsonSerialize()

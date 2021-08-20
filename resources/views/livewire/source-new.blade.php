@@ -1,19 +1,22 @@
-<div x-data="alpNewSource()" class="h-full mx-5 grid">
+<div x-data="alpNewSource()" class="h-full mx-5 grid border rounded relative">
     <div>
-        <select name="sourceType" id="sourceType" wire:model="selectedType">
+        <select name="sourceType" id="sourceType" wire:model="selectedType"
+                class=" mt-1 py-1 focus:outline-none"
+        >
             @foreach ($types as $type)
                 <option value="{{ $type->code }}">{{ $type->label }}</option>
             @endforeach
         </select>
         <hr class="border my-1">
     </div>
-    <ul class="list-disc list-inside overflow-y-auto px-2">
+    <ul class="list-disc list-inside overflow-y-auto  overflow-hidden px-2 " wire:loading.class.remove="overflow-y-auto" wire:loading.class="">
         @forelse ($types[$selectedType]->attributes as $attribute)
             <li>{{ $attribute->code }}</li>
         @empty
             <li>Sin attributos</li>
         @endforelse
     </ul>
+    <div class="absolute inset-0 bg-gray-200 opacity-40" wire:loading></div>
 </div>
 @once
 @push('head-script')

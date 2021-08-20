@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Application\DTO;
 
-class AttributePresentation
+use Arete\Common\Interfaces\Arrayable;
+use JsonSerializable;
+use Stringable;
+
+class AttributePresentation implements Arrayable, JsonSerializable, Stringable
 {
     public string $code;
     public ?string $baseAttributeCode;
@@ -24,5 +28,26 @@ class AttributePresentation
         $this->label = $label;
         $this->type = $type;
         $this->order = $order;
+    }
+
+    public function toArray()
+    {
+        return [
+            'code' => $this->code,
+            'base'  => $this->baseAttributeCode,
+            'label' => $this->label,
+            'type'  => $this->type,
+            'order' => $this->order
+        ];
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
+
+    public function __toString()
+    {
+        return json_encode($this, JSON_PRETTY_PRINT);
     }
 }
