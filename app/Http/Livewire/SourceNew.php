@@ -61,7 +61,7 @@ class SourceNew extends Component
 
     public function save(CreateSourceUC $createSource)
     {
-        $result = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
-        return $result;
+        $this->sourceKey = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
+        return $this->sourceKey;
     }
 }

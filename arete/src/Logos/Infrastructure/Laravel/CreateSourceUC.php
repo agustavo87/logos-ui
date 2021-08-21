@@ -10,6 +10,8 @@ use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC as ICreateSourceUC;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
+use DateTime;
+use Illuminate\Support\Facades\Log;
 
 class CreateSourceUC implements ICreateSourceUC
 {
@@ -26,6 +28,10 @@ class CreateSourceUC implements ICreateSourceUC
 
     public function presentSourceTypes(): array
     {
+        /**
+         * @todo mover la lógica de DB al repositorio de tipo de fuentes
+         * y extraer la clase UC hacia la aplicación.
+         */
         $types = $this->db->getSourceTypeData(['code_name']);
         $data = [];
         foreach ($types as $type) {
@@ -67,6 +73,20 @@ class CreateSourceUC implements ICreateSourceUC
 
     public function create(string $type, array $attributes, ?string $key = null): string
     {
-        return 'hola desde el repositorio';
+        /** @todo colocar la validación de datos en el adaptador de livewire */
+        if (isset($attributes['date'])) {
+            $attributes['date'] = $this->datesize($attributes['date']);
+        }
+        $source = $this->sources->createFromArray([
+            'type' => $type,
+            'attributes' => $attributes
+        ]);
+        Log::info('source creado', ['source', $source->toArray()]);
+        return $source->key();
+    }
+
+    protected function datesize($date): DateTime
+    {
+        return $date instanceof DateTime ? $date : new DateTime($date);
     }
 }
