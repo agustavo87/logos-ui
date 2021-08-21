@@ -4,7 +4,10 @@ namespace Arete\Logos\Infrastructure\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use Arete\Logos\Application\LogosContainer as Logos;
+use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
+use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 use Arete\Logos\Domain\SimpleFormatter;
+use Arete\Logos\Infrastructure\Laravel\Common\DB;
 
 class SourcesServiceProvider extends ServiceProvider
 {
@@ -28,7 +31,13 @@ class SourcesServiceProvider extends ServiceProvider
 
         $this->app->bind(
             \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC::class,
-            \Arete\Logos\Infrastructure\Laravel\DBSourceTypeRepository::class
+            function ($app) {
+                return new CreateSourceUC(
+                    $app->make(DB::class),
+                    $app->make(SourcesRepository::class),
+                    $app->make(SourcesTranslator::class)
+                );
+            }
         );
 
         $this->app->bind(
@@ -50,8 +59,6 @@ class SourcesServiceProvider extends ServiceProvider
             \Arete\Logos\Application\Ports\Interfaces\ParticipationRepository::class,
             \Arete\Logos\Infrastructure\Laravel\DBParticipationRepository::class
         );
-
-
 
         $this->app->bind(
             \Arete\Logos\Application\Ports\Interfaces\SourcesRepository::class,
