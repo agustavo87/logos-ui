@@ -100,4 +100,9 @@ class DBSourceTypeRepository extends DBRepository implements SourceTypeRepositor
         }
         return $presentations;
     }
+
+    public function create(string $type, array $attributes, ?string $key = null): string
+    {
+        return 'hola desde el repositorio';
+    }
 }

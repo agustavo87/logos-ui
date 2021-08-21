@@ -45,7 +45,10 @@
                     />
                 </div>
 
-                <div class="absolute inset-0" x-bind:class="tab != 'new' ? 'invisible' : ''">
+                <div class="absolute inset-0"
+                     x-bind:class="tab != 'new' ? 'invisible' : ''"
+                     x-on:source-new:save="sourceSave($event.detail)"
+                >
                     <livewire:source-new />
                 </div>
             </div>
@@ -143,6 +146,9 @@
                     cancel: function () {
                         this.close()
                         this.respond(null);
+                    },
+                    sourceSave: function (result) {
+                        console.log('source saved: ', result);
                     },
                     close: function () {
                         this.display = false,

@@ -12,4 +12,13 @@ interface CreateSourceUC
      * @return \Arete\Logos\Application\DTO\SourceTypePresentation[]
      */
     public function presentSourceTypes(): array;
+
+    /**
+     * @param string $type
+     * @param array $attributes
+     * @param string|null $key
+     *
+     * @return string key
+     */
+    public function create(string $type, array $attributes, ?string $key = null): string;
 }

@@ -1,12 +1,22 @@
-<div x-data="alpNewSource()" class="h-full mx-5 grid border rounded relative">
+<div x-data="alpNewSource()" x-ref="root"
+     class="h-full mx-5 grid border rounded relative"
+>
     <div>
         <select name="sourceType" id="sourceType" wire:model="selectedType"
-                class=" mt-1 py-1 focus:outline-none"
+                class=" mt-1 py-1 ml-2 text-sm focus:outline-none"
         >
             @foreach ($types as $type)
                 <option value="{{ $type->code }}">{{ $type->label }}</option>
             @endforeach
         </select>
+        <div class="flex flex-col pb-1 px-2">
+            <label for="source-key" class="flex-grow-0 text-gray-600 text-sm ml-1"">Clave</label>
+            <input type="text" id="source-key" name="source-key"
+                   class=" flex-grow border px-2 py-1 rounded focus:outline-none"
+                   value="{{$sourceKey}}"
+                   wire:change="computeKey($event.target.value)"
+            >
+        </div>
         <hr class="border my-1">
     </div>
     <ul class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:loading.class.remove="overflow-y-auto" wire:loading.class="">
@@ -14,37 +24,47 @@
             <li>
                 @switch($attribute->type)
                     @case('text')
-                        <div class="flex flex-col mt-1">
+                        <div class="flex flex-col mt-2">
                             <label for="{{$attribute->code}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
                                 {{$attribute->label}}:
                             </label>
-                            <input type="text" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
-                                   class=" flex-grow border px-2 py-1 rounded"
-                            >
+                            @if ($attribute->code == "abstractNote")
+                                <textarea name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}" rows="4"
+                                          wire:model.lazy="attributes.{{ $attribute->code }}"
+                                          class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none"
+                                ></textarea>
+                            @else
+                                <input type="text" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
+                                       wire:model.lazy="attributes.{{ $attribute->code }}"
+                                       class=" flex-grow border px-2 py-1 rounded focus:outline-none"
+                                >
+                            @endif
                         </div>
                         @break
                     @case('number')
-                        <div class="flex flex-col mt-1">
+                        <div class="flex flex-col mt-2">
                             <label for="{{$attribute->code}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
                                 {{$attribute->label}}:
                             </label>
                             <input type="number" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
-                                    class=" flex-grow border px-2 py-1 rounded"
+                                   wire:model.lazy="attributes.{{ $attribute->code }}"
+                                   class=" flex-grow border px-2 py-1 rounded focus:outline-none"
                             >
                         </div>
                         @break
                     @case('date')
-                        <div class="flex flex-col mt-1">
+                        <div class="flex flex-col mt-2">
                             <label for="{{$attribute->code}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
                                 {{$attribute->label}}:
                             </label>
                             <input type="date" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
-                                    class=" flex-grow border px-2 py-1 rounded"
+                                   wire:model.lazy="attributes.{{ $attribute->code }}"
+                                   class=" flex-grow border px-2 py-1 rounded focus:outline-none"
                             >
                         </div>
                         @break
                     @default
-                        <div class="flex flex-col mt-1">
+                        <div class="flex flex-col mt-2">
                             default: {{ $attribute->label }}
                         </div>
                 @endswitch
@@ -65,7 +85,15 @@
                 active: false,
                 handleEvent: function (event) {
                     if (event.type == 'source-select:solve') {
-                        console.log('tab change desde source-new. this:', this)
+                        this.$wire.save()
+                            .then(result => {
+                                this.$refs.root.dispatchEvent(
+                                    new CustomEvent(
+                                        'source-new:save',
+                                        {bubbles:true, detail:result}
+                                    )
+                                )
+                            })
                     }
                 },
                 init: function () {
