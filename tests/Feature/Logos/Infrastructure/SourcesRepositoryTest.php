@@ -60,6 +60,8 @@ class SourcesRepositoryTest extends TestCase
         return $source;
     }
 
+
+
     /**
      * @param Source $source
      *
@@ -153,6 +155,20 @@ class SourcesRepositoryTest extends TestCase
         );
         $this->assertEquals(32, $source->volume);
         return $source;
+    }
+
+    /**
+     * @param Source $source
+     *
+     * @depends testGetLikeSource
+     * @return void
+     */
+    public function testRemovesSourceWithoutCreators(Source $source)
+    {
+        /** @var SourcesRepository */
+        $sources = $this->app->make(SourcesRepository::class);
+        $sources->remove($source->id());
+        $this->assertFalse($sources->keyExist($source->key()));
     }
 
     public function checkSourceDataStructure(Source $source, array $expectedAttributes = []): void
@@ -421,6 +437,20 @@ class SourcesRepositoryTest extends TestCase
             $fetchedSource->participations()->author[$firstAuthor->creatorId()]->name
         );
         return $fetchedSource;
+    }
+
+    /**
+     * @param Source $source
+     *
+     * @depends testSaveSourceParticipation
+     * @return void
+     */
+    public function testRemoveSourceWithParticipation(Source $source)
+    {
+        /** @var SourcesRepository */
+        $sources = $this->app->make(SourcesRepository::class);
+        $sources->remove($source->id());
+        $this->assertFalse($sources->keyExist($source->key()));
     }
 
     public function testComplexSourcesRepositoryIsBinded(): ComplexSourcesRepository

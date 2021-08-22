@@ -398,4 +398,11 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
     {
         return count($sources) ? $this->pluck($sources, 'id') : null;
     }
+
+    public function remove(int $id)
+    {
+        if (isset(self::$sources[$id])) {
+            unset(self::$sources[$id]);
+        }
+    }
 }

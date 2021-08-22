@@ -232,4 +232,19 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     {
         $this->cache = [];
     }
+
+    public function remove(int $id)
+    {
+        // 1 - remover atributos
+        // los attributos se deben remover manualmente, porque
+        // no tienen restricciones y acciones automáticas.
+        $this->db->removeAttributes($id, 'source');
+
+        // 2 - remover participaciones
+        // las participaciones deberían removerse automáticamente
+        // porque están programadas así en las tablas de participaciones.
+
+        // 3 - remover fuente
+        $this->db->removeSource($id);
+    }
 }

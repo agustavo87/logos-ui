@@ -547,6 +547,29 @@ class DB
             ->delete();
     }
 
+    public function removeAttributes(int $attributeID, string $genus)
+    {
+        return $this->db
+             ->table('attributes')
+             ->where('attributable_id', $attributeID)
+             ->where('attributable_genus', $genus)
+             ->delete();
+    }
+
+    public function removeSource(int $id): int
+    {
+        return $this->db
+                    ->table('sources')
+                    ->where('id', $id)
+                    ->delete();
+    }
+
+    // public function removeAllParticipations(int $id)
+    // {
+    //     return $this->db
+    //                 ->table('participations')
+    // }
+
     /**
      * @param Source $source
      *

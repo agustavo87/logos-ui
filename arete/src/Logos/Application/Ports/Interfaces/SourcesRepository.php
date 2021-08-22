@@ -10,6 +10,14 @@ interface SourcesRepository
 {
     public function createFromArray(array $params, $ownerID = null): Source;
 
+    /**
+     * Get a source
+     *
+     * Can return a cached version (for new getNew)
+     * @param int $id
+     *
+     * @return Source
+     */
     public function get(int $id): Source;
 
     /**
@@ -31,7 +39,6 @@ interface SourcesRepository
     public function getNew(int $id): Source;
 
     public function save(Source $source): bool;
-
 
     /**
      *  Give the sources who matches the specified criteria
@@ -57,4 +64,13 @@ interface SourcesRepository
      * @return bool
      */
     public function keyExist(string $key): bool;
+
+    /**
+     * Removes a source
+     *
+     * @param int $id
+     *
+     * @return void
+     */
+    public function remove(int $id);
 }
