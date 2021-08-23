@@ -6,8 +6,6 @@ use Livewire\Component;
 use Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase;
 use Arete\Logos\Domain\Source;
 
-// use Livewire\WithPagination;
-
 class SourceSelect extends Component
 {
 
@@ -33,13 +31,17 @@ class SourceSelect extends Component
     {
         return array_map(function (Source $source) {
             $sourceData = $source->toArray('relevance');
-            $sourceData['render'] = $source->render();
             return (object) $sourceData;
         }, $sources);
     }
 
     public function render(FilteredIndexUseCase $filter)
     {
+        /**
+         * @todo ver como evitar que se cargue esto si la vista no es
+         * 'utilizada' por el usuario y solo permanece en segundo plano
+         * en la página.
+         */
         $params = [
             'orderBy' => [
                 'group' => 'source',

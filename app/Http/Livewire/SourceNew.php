@@ -14,14 +14,30 @@ class SourceNew extends Component
 
     public string $sourceKey = 'prueba1-2';
 
+    /**
+     * @todo agregar regla de que siempre el título o atributo similar
+     * sea requerido.
+     */
+    protected static array $attributeRules = [
+        '*' => [
+            'title' => ["required", 'filled']
+        ]
+    ];
+
+    protected static array $typeRules = [
+        'text' => 'string',
+        'number' => 'numeric',
+        'date'  => 'date',
+        'complex' => ''
+    ];
+
+    public array $rules;
+
     public function render(CreateSourceUC $createSource)
     {
-        /*
-        $types = array_values($createSource->presentSourceTypes());
-        dd("{$types[1]}");//*/
         $types = $createSource->presentSourceTypes();
         $this->updateAttributesFields($types[$this->selectedType]->attributes);
-        Log::info('fields', ['fields' => $this->attributes]);
+        // Log::info('fields', ['fields' => $this->attributes]);
         return view(
             'livewire.source-new',
             [
@@ -44,14 +60,8 @@ class SourceNew extends Component
      */
     protected function updateAttributesFields(array $attributes)
     {
-        // limpiar campos vacíos
-        foreach ($this->attributes as $code => $value) {
-            if (!$value) {
-                unset($this->attributes[$code]);
-            }
-        }
+        $this->cleanEmptyAttributes();
 
-        // updates fields
         foreach ($attributes as $attr) {
             if (!isset($this->attributes[$attr->code])) {
                 $this->attributes[$attr->code] = $this->attributes[$attr->baseAttributeCode] ?? null; //
@@ -59,9 +69,36 @@ class SourceNew extends Component
         }
     }
 
+    protected function cleanEmptyAttributes()
+    {
+        foreach ($this->attributes as $code => $value) {
+            if (!$value) {
+                unset($this->attributes[$code]);
+            }
+        }
+    }
+
     public function save(CreateSourceUC $createSource)
     {
+        $this->cleanEmptyAttributes();
+        $this->updateValidationRules($createSource->presentSourceTypes()[$this->selectedType]->attributes);
+        Log::info('validation rules', ['rules' => $this->rules]);
+        $this->validate();
         $this->sourceKey = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
         return $this->sourceKey;
+    }
+
+    /**
+     * @param \Arete\Logos\Application\DTO\AttributePresentation[] $attributes
+     *
+     * @return void
+     */
+    public function updateValidationRules(array $attributes)
+    {
+        foreach ($attributes as $attr) {
+            if (isset(self::$typeRules[$attr->type])) {
+                $this->rules['attributes.' . $attr->code] = self::$typeRules[$attr->type];
+            }
+        }
     }
 }
