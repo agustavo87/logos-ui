@@ -15,11 +15,11 @@
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
                  @click.outside="cancel"
             >
-            <ul class="flex gap-2 px-5 pt-5">
+            <ul class="flex gap-2 px-5 pt-5 text-sm">
                 <li>
                     <button x-on:click="tab = 'select'" x-bind:disabled="tab == 'select'"
                         class="py-1 px-2 ml-2 rounded-t focus:outline-none disabled:cursor-default"
-                        x-bind:class="tab == 'select' ?  'bg-gray-100' : ' text-black text-opacity-90 hover:bg-blue-100 active:bg-white'"
+                        x-bind:class="tab == 'select' ?  'bg-gray-100' : ' text-black text-opacity-80 hover:bg-blue-100 active:bg-white'"
                     >
                         Seleccionar
                     </button>
@@ -27,7 +27,7 @@
                 <li>
                     <button x-on:click="tab = 'new'" x-bind:disabled="tab == 'new'"
                         class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
-                        x-bind:class="tab == 'new' ? 'bg-gray-100' : 'text-black text-opacity-90 hover:bg-blue-100 active:bg-white'"
+                        x-bind:class="tab == 'new' ? 'bg-gray-100' : 'text-black text-opacity-80 hover:bg-blue-100 active:bg-white'"
                     >
                         Nueva
                     </button>

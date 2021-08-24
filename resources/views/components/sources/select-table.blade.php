@@ -16,8 +16,8 @@
                         <label for="key" class="flex-none py-2 bg-gray-100 px-2 rounded-l-md">
                             <x-icons.lupa  class="w-3 h-3 fill-current" />
                         </label>
-                        <input type="text" autocomplete="off" placeholder="key" name="key" id="key" x-ref="key"
-                            class=" flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm w-0"
+                        <input type="search" autocomplete="off" placeholder="key" name="key" id="key" x-ref="key"
+                            class=" flex-grow px-1 focus:outline-none focus:shadow-inner focus:border-blue-400 border rounded-r-md border-gray-100 text-sm w-0"
                             x-model="key"
                             x-on:input="$dispatch('input:key', $event.target.value)"
                             x-on:source-select:start.window="$el.focus()"
@@ -34,8 +34,8 @@
                         <label for="title" class=" flex-none py-2 bg-gray-100 px-2 rounded-l-md">
                             <x-icons.lupa  class="w-3 h-3 fill-current" />
                         </label>
-                        <input type="text" autocomplete="off" id="title" placeholder="title"
-                            class="flex-grow px-1 focus:outline-none focus:shadow-inner border rounded-r-md border-gray-100 text-sm  w-0"
+                        <input type="search" autocomplete="off" id="title" placeholder="title"
+                            class="flex-grow px-1 focus:outline-none focus:shadow-inner focus:border-blue-400 border rounded-r-md border-gray-100 text-sm  w-0"
                             x-model="title"
                             x-on:input="$dispatch('input:title', $event.target.value)"
                         >
@@ -47,7 +47,7 @@
             <template x-for="i in 8" x-bind:key="i">
             <tr x-bind:class="{'cursor-pointer hover:bg-indigo-100': sources[i-1], 'bg-indigo-100': selected == $el.dataset.key}"
                     x-on:click="sourceSelected($dispatch)" x-bind:data-key="sources[i-1] ? sources[i-1].key : null "
-                    x-bind:title="sources[i-1].render"
+                    x-bind:title="sources[i-1] ? sources[i-1].attributes.title : '&nbsp;' "
                 >
                     <td class="text-sm px-2 py-1 border-b border-gray-100">
                         <span x-text="sources[i-1] ? sources[i-1].key : '&nbsp;' "></span>

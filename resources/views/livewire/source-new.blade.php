@@ -9,11 +9,12 @@
                 <option value="{{ $type->code }}">{{ $type->label }}</option>
             @endforeach
         </select>
-        <div class="flex flex-col pb-1 px-2">
-            <label for="source-key" class="flex-grow-0 text-gray-600 text-sm ml-1"">Clave</label>
+        <div class="flex flex-row gap-2 items-baseline ml-1 pb-1 px-2">
+            <label for="source-key" class="flex-grow-0 text-gray-600 text-sm">Clave</label>
             <input type="text" id="source-key" name="source-key"
-                   class=" flex-grow border px-2 py-1 rounded focus:outline-none"
+                   class="border flex-grow focus:outline-none px-2 py-1 rounded text-sm focus:border-blue-400"
                    value="{{$sourceKey}}"
+                   autocomplete="off"
                    wire:change="computeKey($event.target.value)"
             >
         </div>
@@ -31,12 +32,13 @@
                             @if ($attribute->code == "abstractNote")
                                 <textarea name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}" rows="4"
                                           wire:model.lazy="attributes.{{ $attribute->code }}"
-                                          class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none"
+                                          class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none focus:border-blue-400"
                                 ></textarea>
                             @else
                                 <input type="text" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
                                        wire:model.lazy="attributes.{{ $attribute->code }}"
-                                       class=" flex-grow border px-2 py-1 rounded focus:outline-none"
+                                       class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
+                                       autocomplete="off"
                                 >
                             @endif
                         </div>
@@ -48,7 +50,8 @@
                             </label>
                             <input type="number" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
                                    wire:model.lazy="attributes.{{ $attribute->code }}"
-                                   class=" flex-grow border px-2 py-1 rounded focus:outline-none"
+                                   class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
+                                   autocomplete="off"
                             >
                         </div>
                         @break
@@ -59,7 +62,7 @@
                             </label>
                             <input type="date" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
                                    wire:model.lazy="attributes.{{ $attribute->code }}"
-                                   class=" flex-grow border px-2 py-1 rounded focus:outline-none"
+                                   class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                             >
                         </div>
                         @break
