@@ -77,10 +77,14 @@ class CreateSourceUC implements ICreateSourceUC
         if (isset($attributes['date'])) {
             $attributes['date'] = $this->datesize($attributes['date']);
         }
-        $source = $this->sources->createFromArray([
+        $params = [
             'type' => $type,
             'attributes' => $attributes
-        ]);
+        ];
+        if ($key != null || $key != '') {
+            $params['key'] = $key;
+        }
+        $source = $this->sources->createFromArray($params);
         Log::info('source creado', ['source', $source->toArray()]);
         return $source->key();
     }
@@ -88,5 +92,10 @@ class CreateSourceUC implements ICreateSourceUC
     protected function datesize($date): DateTime
     {
         return $date instanceof DateTime ? $date : new DateTime($date);
+    }
+
+    public function sugestKey($params): string
+    {
+        return $this->sources->getKey($params);
     }
 }

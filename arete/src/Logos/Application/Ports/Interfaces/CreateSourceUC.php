@@ -21,4 +21,11 @@ interface CreateSourceUC
      * @return string key
      */
     public function create(string $type, array $attributes, ?string $key = null): string;
+
+    /**
+     * @param array|string $params
+     *
+     * @return string
+     */
+    public function sugestKey($params): string;
 }

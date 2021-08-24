@@ -12,17 +12,7 @@ class SourceNew extends Component
 
     public array $attributes = [];
 
-    public string $sourceKey = 'prueba1-2';
-
-    /**
-     * @todo agregar regla de que siempre el título o atributo similar
-     * sea requerido.
-     */
-    protected static array $attributeRules = [
-        '*' => [
-            'title' => ["required", 'filled']
-        ]
-    ];
+    public string $sourceKey = '';
 
     protected static array $typeRules = [
         'text' => 'string',
@@ -46,9 +36,9 @@ class SourceNew extends Component
         );
     }
 
-    public function computeKey($value)
+    public function computeKey(CreateSourceUC $createSource, $value)
     {
-        $this->sourceKey = $value . '-x';
+        $this->sourceKey = $createSource->sugestKey($value);
     }
 
     /**

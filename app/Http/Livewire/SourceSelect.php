@@ -31,6 +31,7 @@ class SourceSelect extends Component
     {
         return array_map(function (Source $source) {
             $sourceData = $source->toArray('relevance');
+            $sourceData['render'] = $source->render();
             return (object) $sourceData;
         }, $sources);
     }
