@@ -86,6 +86,22 @@ class SourcesRepositoryTest extends TestCase
     }
 
     /**
+     * @param Source $previousSource
+     *
+     * @depends testGetSameAndDiferentInstancesOfSameSource
+     * @return Source
+     */
+    public function testGetDifferentKeySuggestionIfExist(Source $previousSource): Source
+    {
+        /** @var SourcesRepository */
+        $sources = $this->app->make(SourcesRepository::class);
+        $oldKey = $previousSource->key();
+        $newKey = $sources->getKey($oldKey);
+        $this->assertNotEquals($oldKey, $newKey);
+        return $previousSource;
+    }
+
+    /**
      * Test if get a source correctly
      *
      * @param Source $source

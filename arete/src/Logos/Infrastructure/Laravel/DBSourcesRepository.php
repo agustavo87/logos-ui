@@ -60,7 +60,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     {
         $ownerID = $ownerID ?? $this->logos->getOwner();
 
-        $key = $this->keyGenerator->getKey($params);
+        $key = $this->getKey($params);
 
         /* Create the source and insert it's attributes */
         /** @todo Averiguar si hay que inertar un formatter */
@@ -246,5 +246,13 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
 
         // 3 - remover fuente
         $this->db->removeSource($id);
+    }
+
+    public function getKey($params): string
+    {
+        if (is_string($params)) {
+            return $this->keyGenerator->getKey(['key' => $params]);
+        }
+        return $this->keyGenerator->getKey($params);
     }
 }

@@ -66,6 +66,20 @@ interface SourcesRepository
     public function keyExist(string $key): bool;
 
     /**
+     * Returns a valid key based on params
+     *
+     * If params is string, it is considered a key and
+     * checks if key exist. If it does returns a valid alternative.
+     * If it doesn't returns the key.
+     * If params is _createFromArray_ params sugest a valid key
+     * based on it.
+     * @param string|array $params
+     *
+     * @return string
+     */
+    public function getKey($params): string;
+
+    /**
      * Removes a source
      *
      * @param int $id

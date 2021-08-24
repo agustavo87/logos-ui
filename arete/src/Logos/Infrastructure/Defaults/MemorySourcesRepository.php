@@ -74,7 +74,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         $ownerID = $ownerID ?? $this->logos->getOwner();
         $entityID = $this->newId();
 
-        $key = $this->keyGenerator->getKey($params);
+        $key = $this->getKey($params);
 
         $source = new Source($this->sourceTypes, $this->defaultFormatter);
         $source->fill([
@@ -404,5 +404,13 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         if (isset(self::$sources[$id])) {
             unset(self::$sources[$id]);
         }
+    }
+
+    public function getKey($params): string
+    {
+        if (is_string($params)) {
+            return $this->keyGenerator->getKey(['key' => $params]);
+        }
+        return $this->keyGenerator->getKey($params);
     }
 }
