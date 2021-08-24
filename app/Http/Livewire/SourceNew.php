@@ -80,12 +80,29 @@ class SourceNew extends Component
 
     public function save(CreateSourceUC $createSource)
     {
-        $this->cleanEmptyAttributes();
-        $this->updateValidationRules($createSource->presentSourceTypes()[$this->selectedType]->attributes);
+        $typeAttributes = $createSource->presentSourceTypes()[$this->selectedType]->attributes;
+        $this->filterTypeAttributes($typeAttributes);
+        $this->updateValidationRules($typeAttributes);
         Log::info('validation rules', ['rules' => $this->rules]);
         $this->validate();
         $this->sourceKey = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
         return $this->sourceKey;
+    }
+
+    /**
+     * @param \Arete\Logos\Application\DTO\AttributePresentation[] $attributes
+     *
+     * @return void
+     */
+    protected function filterTypeAttributes(array $attributes)
+    {
+        $this->cleanEmptyAttributes();
+        $typeAttrCodes = array_map(fn ($attr) => $attr->code, $attributes);
+        foreach ($this->attributes as $code => $value) {
+            if (!in_array($code, $typeAttrCodes)) {
+                unset($this->attributes[$code]);
+            }
+        }
     }
 
     /**

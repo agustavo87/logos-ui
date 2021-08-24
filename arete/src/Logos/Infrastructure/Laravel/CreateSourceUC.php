@@ -46,7 +46,7 @@ class CreateSourceUC implements ICreateSourceUC
     /**
      * @param string[] $attrCodes
      *
-     * @return \Arete\Logos\Application\DTO\AttributePresentation[]
+     * @return \Arete\Logos\Application\DTO\AttributePresentation[] keyed by attribute code
      */
     public function getAttributePresentations(string $typeCode): array
     {
@@ -60,7 +60,7 @@ class CreateSourceUC implements ICreateSourceUC
         foreach ($attributesData as $attributeData) {
             $label = $this->translator->translate($attributeData->attribute_type_code_name, 'attributes') ??
                         ($attributeData->label ?? $attributeData->attribute_type_code_name);
-            $presentations[] = new AttributePresentation(
+            $presentations[$attributeData->attribute_type_code_name] = new AttributePresentation(
                 $attributeData->attribute_type_code_name,
                 $attributeData->base_attribute_type_code_name,
                 $label,
