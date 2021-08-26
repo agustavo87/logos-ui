@@ -1,6 +1,7 @@
 <div x-data="alpNewSource()" x-ref="root"
      class="h-full mx-5 grid border rounded relative"
 >
+{{-- Source Type Select and Key Section --}}
     <div>
         <select name="sourceType" id="sourceType" wire:model="selectedType"
                 class=" mt-1 py-1 ml-2 text-sm focus:outline-none"
@@ -19,6 +20,8 @@
             >
         </div>
     </div>
+
+{{-- Creators Sections --}}
     <div
         x-data="{open:false}"
         class="flex flex-col items-stretch"
@@ -40,12 +43,24 @@
         <div class="text-sm border-b overflow-hidden transition-all ease-in-out duration-500 "
             x-bind:style="{'max-height': open ?  $el.scrollHeight + 'px' : '0px'}"
         >
-            <ul class="py-1 px-3">
-                <li>Creador 1</li>
-                <li>Creador 2</li>
+            <ul class="py-1 px-3"  >
+                <li x-model="creator">
+                    <div x-data="personEditor" class="flex py-1 items-center">
+                        <div class="flex flex-row gap-1" x-show="isEditing" x-on:keyup.enter="handleChange($dispatch)"  >
+                            <input type="text" x-model="attributes.lastName" x-on:input.stop class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500">
+                            <input type="text" x-model="attributes.name" x-on:input.stop class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500">
+                            <div x-on:click="handleChange($dispatch)" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">ok</div>
+                        </div>
+                        <div x-show="!isEditing" x-on:click="isEditing=true" class="cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
+                            <span x-text="attributes.lastName"></span>, <span x-text="attributes.name"></span>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
+
+    {{-- Attributes Section --}}
     <ul class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:loading.class.remove="overflow-y-auto">
         @forelse ($types[$selectedType]->attributes as $attribute)
             <li>
@@ -112,6 +127,10 @@
         Alpine.data('alpNewSource', () => {
             return {
                 active: false,
+                creator: {
+                    name: "Pepito",
+                    lastName: "Murundanga"
+                },
                 handleEvent: function (event) {
                     if (event.type == 'source-select:solve') {
                         this.$wire.save()
@@ -144,6 +163,20 @@
                     // console.log('desactivando')
                     this.active = false;
                     document.removeEventListener('source-select:solve', this, false)
+                }
+            }
+        })
+
+        Alpine.data('personEditor', () => {
+            return {
+                isEditing: false,
+                attributes: {
+                    name:'',
+                    lastName: ''
+                },
+                handleChange: function($dispatch) {
+                    this.isEditing = false;
+                    $dispatch('input', Object.assign({}, this.attributes))
                 }
             }
         })
