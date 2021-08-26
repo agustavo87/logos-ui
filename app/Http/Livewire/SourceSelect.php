@@ -18,7 +18,7 @@ class SourceSelect extends Component
         'title' => ''
     ];
 
-    protected $maxRows = 10;
+    public int $maxRows = 12;
 
     public $sources = [];
 

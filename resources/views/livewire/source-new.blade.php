@@ -18,9 +18,35 @@
                    wire:change="computeKey($event.target.value)"
             >
         </div>
-        <hr class="border my-1">
     </div>
-    <ul class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:loading.class.remove="overflow-y-auto" wire:loading.class="">
+    <div
+        x-data="{open:false}"
+        class="flex flex-col items-stretch"
+    >
+        <div class="px-2 py-1 bg-gray-100 text-gray-800 flex justify-between items-center"
+            >
+            <div class="flex gap-2 px-1">
+                <h3 class="font-semibold text-sm ">Creadores</h3>
+                <button class="text-blue-500 text-xs hover:text-blue-600">Agregar</small>
+            </div>
+            <button class="bg-gray-50 border p-1 rounded border-blue-200 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none "
+                x-on:click="open = !open"  x-cloak
+            >
+                <x-icons.chevron-down class="w-4 h-4 fill-current transition-transform ease-in-out duration-500"
+                    x-bind:class="{'transform rotate-180': open}"
+                />
+            </button>
+        </div>
+        <div class="text-sm border-b overflow-hidden transition-all ease-in-out duration-500 "
+            x-bind:style="{'max-height': open ?  $el.scrollHeight + 'px' : '0px'}"
+        >
+            <ul class="py-1 px-3">
+                <li>Creador 1</li>
+                <li>Creador 2</li>
+            </ul>
+        </div>
+    </div>
+    <ul class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:loading.class.remove="overflow-y-auto">
         @forelse ($types[$selectedType]->attributes as $attribute)
             <li>
                 @switch($attribute->type)

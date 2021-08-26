@@ -44,7 +44,7 @@
             </tr>
         </thead>
         <tbody>
-            <template x-for="i in 8" x-bind:key="i">
+            <template x-for="i in maxRows" x-bind:key="i">
             <tr x-bind:class="{'cursor-pointer hover:bg-indigo-100': sources[i-1], 'bg-indigo-100': selected == $el.dataset.key}"
                     x-on:click="sourceSelected($dispatch)" x-bind:data-key="sources[i-1] ? sources[i-1].key : null "
                     x-bind:title="sources[i-1] ? sources[i-1].attributes.title : '&nbsp;' "

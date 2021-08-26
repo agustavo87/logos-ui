@@ -151,6 +151,10 @@ Route::group([
         'dinamicfields',
         'prototypes.dinamic-fields'
     );
+    Route::view(
+        'accordions',
+        'prototypes.accordions'
+    );
 });
 
 Route::view('livewire', 'livewire');

@@ -7,16 +7,17 @@ use Illuminate\View\Component;
 class SelectTable extends Component
 {
 
-    public $maxRows = 8;
+    public $maxRows = 10;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($initialTitle = '')
+    public function __construct($initialTitle = '', $maxRows = 10)
     {
         $this->initialTitle = $initialTitle;
+        $this->maxRows = $maxRows;
     }
 
     /**
