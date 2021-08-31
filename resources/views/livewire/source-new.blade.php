@@ -16,8 +16,8 @@
         <select name="sourceType" id="sourceType" wire:model="selectedType"
                 class="border-b border-blue-400 focus:outline-none font-medium mb-2 ml-2 mt-1 py-1 text-gray-800 text-sm"
         >
-            @foreach ($types as $type)
-                <option value="{{ $type->code }}">{{ $type->label }}</option>
+            @foreach ($sourceTypes as $type)
+                <option value="{{ $type['code'] }}">{{ $type['label'] }}</option>
             @endforeach
         </select>
         <div class="flex flex-row gap-2 items-baseline ml-1 pb-1 px-2">
@@ -61,13 +61,6 @@
                     <div
                         class="flex py-1 items-center"
                         x-data="personEditor(@entangle('creators.0').defer)">
-                            {{-- type: @entangle('creators.0.type'),
-                            attributes: {
-                                name: @entangle('creators.0.attributes.name'),
-                                lastName: @entangle('creators.0.attributes.lastName')
-                            }
-                        })" --}}
-                    {{-- > --}}
                         <div class="flex flex-row gap-1" x-show="isEditing" x-on:keyup.enter="handleChange($dispatch)"  >
                             <input type="text" x-model="creator.attributes.lastName" x-on:input.stop class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500">
                             <input type="text" x-model="creator.attributes.name" x-on:input.stop class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500">
@@ -84,58 +77,58 @@
 
     {{-- Attributes Section --}}
     <ul class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:loading.class.remove="overflow-y-auto">
-        @forelse ($types[$selectedType]->attributes as $attribute)
+        @forelse ($sourceTypes[$selectedType]['attributes'] as $order => $attribute)
             <li>
-                @switch($attribute->type)
+                @switch($attribute['type'])
                     @case('text')
                         <div class="flex flex-col mt-2">
-                            <label for="{{$attribute->code}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
-                                {{$attribute->label}}:
+                            <label for="{{$attribute['code']}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
+                                {{$attribute['label']}}:
                             </label>
-                            @if ($attribute->code == "abstractNote")
-                                <textarea name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}" rows="4"
-                                          wire:model.lazy="attributes.{{ $attribute->code }}"
+                            @if ($attribute['code'] == "abstractNote")
+                                <textarea name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}" rows="4"
+                                          wire:model.lazy="attributes.{{ $attribute['code'] }}"
                                           class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none focus:border-blue-400"
                                 ></textarea>
-                                @error("attributes.{$attribute->code}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                                @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
                             @else
-                                <input type="text" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
-                                       wire:model.lazy="attributes.{{ $attribute->code }}"
+                                <input type="text" name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}"
+                                       wire:model.lazy="attributes.{{ $attribute['code'] }}"
                                        class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                                        autocomplete="off"
                                 >
-                                @error("attributes.{$attribute->code}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                                @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
                             @endif
                         </div>
                         @break
                     @case('number')
                         <div class="flex flex-col mt-2">
-                            <label for="{{$attribute->code}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
-                                {{$attribute->label}}:
+                            <label for="{{$attribute['code']}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
+                                {{$attribute['label']}}:
                             </label>
-                            <input type="number" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
-                                   wire:model.lazy="attributes.{{ $attribute->code }}"
+                            <input type="number" name="attribute.{{ $attribute['code'] }}" id="input-{{ $attribute['code'] }}"
+                                   wire:model.lazy="attributes.{{ $attribute['code'] }}"
                                    class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                                    autocomplete="off"
                             >
-                            @error("attributes.{$attribute->code}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                            @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
                         </div>
                         @break
                     @case('date')
                         <div class="flex flex-col mt-2">
-                            <label for="{{$attribute->code}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
-                                {{$attribute->label}}:
+                            <label for="{{$attribute['code']}}" class=" flex-grow-0 text-gray-600 text-sm ml-1">
+                                {{$attribute['label']}}:
                             </label>
-                            <input type="date" name="attribute.{{$attribute->code}}" id="input-{{$attribute->code}}"
-                                   wire:model.lazy="attributes.{{ $attribute->code }}"
+                            <input type="date" name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}"
+                                   wire:model.lazy="attributes.{{ $attribute['code'] }}"
                                    class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                             >
-                            @error("attributes.{$attribute->code}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                            @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
                         </div>
                         @break
                     @default
                         <div class="flex flex-col mt-2">
-                            default: {{ $attribute->label }}
+                            default: {{ $attribute['label'] }}
                         </div>
                 @endswitch
             </li>

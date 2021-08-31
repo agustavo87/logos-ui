@@ -8,6 +8,9 @@ use Arete\Common\Interfaces\Arrayable;
 use JsonSerializable;
 use Stringable;
 
+/**
+ * [Description AttributePresentation]
+ */
 class AttributePresentation implements Arrayable, JsonSerializable, Stringable
 {
     public string $code;
