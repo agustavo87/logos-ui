@@ -2,16 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Livewire\Component;
+use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
-use Illuminate\Support\Facades\App;
 
 class SourceNew extends Component
 {
-    public $selectedType = "journalArticle";
-
     public array $sourceTypes;
+
+    public $selectedType = "journalArticle";
 
     public array $attributes = [];
 
@@ -45,13 +44,12 @@ class SourceNew extends Component
 
     public function mount(CreateSourceUC $createSource)
     {
-        $types = $createSource->presentSourceTypes($this->selectedType);
+        $types = $createSource->presentSourceTypes();
         $this->sourceTypes = array_map(
             fn (SourceTypePresentation $typePresentation) => $typePresentation->toArray(),
             $types
         );
-        $typeAttributes = $types[$this->selectedType]->attributes;
-        $this->updateAttributesFields($typeAttributes); /** @todo esto se puede hacer con el array */
+        $this->updateAttributesFields();
     }
 
     public function render()
@@ -61,8 +59,7 @@ class SourceNew extends Component
 
     public function save(CreateSourceUC $createSource)
     {
-        $typeAttributes = $createSource->presentSourceTypes()[$this->selectedType]->attributes;
-        $this->filterTypeAttributes($typeAttributes);
+        $this->filterTypeAttributes();
         $this->updateValidationRules();
         $this->validate();
         $this->sourceKey = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
@@ -100,28 +97,21 @@ class SourceNew extends Component
 
     public function updatedSelectedType($type)
     {
-        /** @var CreateSourceUC */
-        $createSource = App::make(CreateSourceUC::class);
-        $typeAttributes = $createSource->presentSourceTypes()[$type]->attributes;
-        $this->updateAttributesFields($typeAttributes);
-        $this->updateValidationRules();
+        $this->updateAttributesFields();
     }
 
-
     /**
-     * Create the public Attribute Fields Property to bind input data
-     *
-     * @param \Arete\Logos\Application\DTO\AttributePresentation[] $attributes
+     * Update the public attributes fields to bind the source data
      *
      * @return void
      */
-    protected function updateAttributesFields(array $attributes)
+    protected function updateAttributesFields()
     {
         $this->cleanEmptyAttributes();
-
-        foreach ($attributes as $attr) {
-            if (!isset($this->attributes[$attr->code])) {
-                $this->attributes[$attr->code] = $this->attributes[$attr->baseAttributeCode] ?? null; //
+        foreach ($this->attributesData() as $attr) {
+            list('code' => $code, 'base' => $base) = $attr;
+            if (!isset($this->attributes[$code])) {
+                $this->attributes[$code] = $this->attributes[$base] ?? null;
             }
         }
     }
@@ -136,14 +126,14 @@ class SourceNew extends Component
     }
 
     /**
-     * @param \Arete\Logos\Application\DTO\AttributePresentation[] $attributes
+     * Clean empty attributes and the ones that not belong to current type.
      *
      * @return void
      */
-    protected function filterTypeAttributes(array $attributes)
+    protected function filterTypeAttributes()
     {
         $this->cleanEmptyAttributes();
-        $typeAttrCodes = array_map(fn ($attr) => $attr->code, $attributes);
+        $typeAttrCodes = array_map(fn ($attr) => $attr['code'], $this->attributesData());
         foreach ($this->attributes as $code => $value) {
             if (!in_array($code, $typeAttrCodes)) {
                 unset($this->attributes[$code]);
@@ -152,7 +142,7 @@ class SourceNew extends Component
     }
 
     /**
-     * @param \Arete\Logos\Application\DTO\AttributePresentation[] $attributes
+     * Updates the rules for validation of current attributes.
      *
      * @return void
      */
