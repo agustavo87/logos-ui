@@ -19,6 +19,8 @@ use Arete\Logos\Domain\Source;
 use Arete\Logos\Domain\Schema;
 use Arete\Logos\Domain\ParticipationSet;
 use Arete\Logos\Domain\SourcesKeyGenerator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 
 class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort, ComplexSourcesRepository
 {
@@ -148,6 +150,13 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         /* Create the source with it's attributes */
         $attributes = $this->db->getEntityAttributes($id);
         $sourceEntry = $attributes->first();
+        if (!$sourceEntry) {
+            Log::warning('source without attributes', [
+                'source id' => $id,
+                'request' => Request::toArray()
+            ]);
+            $sourceEntry =  $this->db->getSource($id);
+        }
         $source = new Source(
             $this->sourceTypes,
             $this->defaultFormatter,

@@ -33,14 +33,16 @@ class CreateSourcesTable extends Migration
             $table->unsignedBigInteger($users->FK);
             $table->foreign($users->FK)
                   ->references($users->PK)
-                  ->on($users->table)
-                  ->onDelete('cascade');
+                  ->on($users->table);
+                //   ->onDelete('cascade');
 
             $table->string('source_type_code_name', 50);
             $table->foreign('source_type_code_name')
                   ->references('code_name')
-                  ->on('source_types')
-                  ->onDelete('cascade');
+                  ->on('source_types');
+                //   ->onDelete('cascade');
+
+            $table->unique(['key', $users->FK]);
         });
     }
 

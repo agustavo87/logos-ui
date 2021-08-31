@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'key' => 'clave',
     'type' => 'Tipo',
     'types' => [
         'any' => 'Cualquiera',

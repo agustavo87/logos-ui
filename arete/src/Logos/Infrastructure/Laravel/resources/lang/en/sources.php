@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'key' => 'key',
     'type' => 'Type',
     'types' => [
         'any' => 'Any',

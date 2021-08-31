@@ -186,6 +186,9 @@ return [
         'username'              => 'usuario',
         'year'                  => 'año',
         'locale'                => 'localidad',
-        'language'              => 'lenguaje'
+        'language'              => 'lenguaje',
+
+        // sources attributes
+        // 'attributes.title'      => 'título'
     ],
 ];

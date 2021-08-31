@@ -153,7 +153,10 @@ return [
 
     'attributes' => [
         'attribute.*.name' => 'atribrute name',
-        'attribute.*.value' => 'atribrute value'
+        'attribute.*.value' => 'atribrute value',
+
+        // sources attributes
+        // 'attributes.title'      => 'title'
     ],
 
 ];

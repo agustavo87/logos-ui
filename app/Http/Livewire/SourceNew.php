@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
-use Illuminate\Support\Facades\Log;
 
 class SourceNew extends Component
 {
@@ -14,6 +13,9 @@ class SourceNew extends Component
 
     public string $sourceKey = '';
 
+    /** @todo evitar que se pueda crear una fuente sin al menos un atributo
+     * por ej 'title'
+     */
     protected static array $typeRules = [
         'text' => 'string',
         'number' => 'numeric',
@@ -21,13 +23,24 @@ class SourceNew extends Component
         'complex' => ''
     ];
 
-    public array $rules;
+    public array $creators = [
+        [
+            'type' => 'person',
+            'attributes' => [
+                'name' => 'Martinez',
+                'lastName' => "Mario"
+            ]
+        ]
+    ];
+
+    public array $rules = [];
+
+    protected array $validationAttributes = [];
 
     public function render(CreateSourceUC $createSource)
     {
         $types = $createSource->presentSourceTypes();
         $this->updateAttributesFields($types[$this->selectedType]->attributes);
-        // Log::info('fields', ['fields' => $this->attributes]);
         return view(
             'livewire.source-new',
             [
@@ -36,10 +49,33 @@ class SourceNew extends Component
         );
     }
 
+    public function save(CreateSourceUC $createSource)
+    {
+        $typeAttributes = $createSource->presentSourceTypes()[$this->selectedType]->attributes;
+        $this->filterTypeAttributes($typeAttributes);
+        $this->updateValidationRules($typeAttributes);
+        $this->filterTypeAttributes($typeAttributes);
+        $this->validate();
+        $this->sourceKey = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
+        return $this->sourceKey;
+    }
+
     public function computeKey(CreateSourceUC $createSource, $value)
     {
         $this->sourceKey = $createSource->sugestKey($value);
     }
+
+    public function hydrate()
+    {
+        $this->validationAttributes['sourceKey'] = strtolower(__('sources.key'));
+    }
+
+
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
+
 
     /**
      * Create the public Attribute Fields Property to bind input data
@@ -68,17 +104,6 @@ class SourceNew extends Component
         }
     }
 
-    public function save(CreateSourceUC $createSource)
-    {
-        $typeAttributes = $createSource->presentSourceTypes()[$this->selectedType]->attributes;
-        $this->filterTypeAttributes($typeAttributes);
-        $this->updateValidationRules($typeAttributes);
-        Log::info('validation rules', ['rules' => $this->rules]);
-        $this->validate();
-        $this->sourceKey = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
-        return $this->sourceKey;
-    }
-
     /**
      * @param \Arete\Logos\Application\DTO\AttributePresentation[] $attributes
      *
@@ -103,9 +128,13 @@ class SourceNew extends Component
     public function updateValidationRules(array $attributes)
     {
         foreach ($attributes as $attr) {
+            $path = 'attributes.' . $attr->code;
+            $this->rules[$path] = [];
             if (isset(self::$typeRules[$attr->type])) {
-                $this->rules['attributes.' . $attr->code] = self::$typeRules[$attr->type];
+                $this->rules[$path][] = self::$typeRules[$attr->type];
             }
+            $this->validationAttributes[$path] = strtolower($attr->label);
         }
+        $this->rules['attributes.title'][] = 'required';
     }
 }
