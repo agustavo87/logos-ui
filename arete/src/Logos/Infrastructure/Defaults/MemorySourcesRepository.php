@@ -31,7 +31,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
     protected ParticipationRepository $participations;
     protected Schema $schema;
     protected Formatter $defaultFormatter;
-    protected LogosEnviroment $logos;
+    protected LogosEnviroment $env;
 
     /**
      * @var \Arete\Logos\Domain\Source[]
@@ -48,7 +48,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         ParticipationRepository $participations,
         Formatter $defaultFormatter,
         Schema $schema,
-        LogosEnviroment $logos
+        LogosEnviroment $env
     ) {
         $this->creators = $creators;
         $this->sourceTypes = $sourceTypes;
@@ -56,7 +56,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         $this->participations = $participations;
         $this->defaultFormatter = $defaultFormatter;
         $this->schema = $schema;
-        $this->logos = $logos;
+        $this->env = $env;
         $this->keyGenerator = new SourcesKeyGenerator($this, $creators);
     }
 
@@ -74,7 +74,7 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
 
     public function createFromArray(array $params, $ownerID = null): Source
     {
-        $ownerID = $ownerID ?? $this->logos->getOwner();
+        $ownerID = $ownerID ?? $this->env->getOwner();
         $entityID = $this->newId();
 
         $key = $this->getKey($params);
@@ -127,7 +127,10 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
     {
         foreach (self::$sources as $id => $source) {
             if ($source->key() == $key) {
-                return $ownerID ? $source->ownerID() == $ownerID : true;
+                if ($ownerID) {
+                    return $source->ownerID() == $ownerID;
+                }
+                return true;
             }
         }
         return false;
@@ -412,7 +415,10 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
     public function getKey($params): string
     {
         if (is_string($params)) {
-            return $this->keyGenerator->getKey(['key' => $params]);
+            $params = [
+                'ownerID' => $this->env->getOwner(),
+                'key' => $params
+            ];
         }
         return $this->keyGenerator->getKey($params);
     }

@@ -109,23 +109,20 @@ class SourcesRepositoryTest extends TestCase
         $alienKeyA = 'fakeAlienKey123A';
         $alienKeyB = 'fakeAlienKey123B';
 
-        $this->actingAs($userA);
         $sources->createFromArray([
-            'ownerID' => $userA->id,
             'key' => $alienKeyA,
             'type'  => 'journalArticle',
             'attributes' => [
                 'title' => "El despertar de Matsurana a la atención plena."
             ]
-        ]);
+        ], $userA->id);
         $sources->createFromArray([
-            'ownerID' => $userA->id,
             'key' => $alienKeyB,
             'type'  => 'journalArticle',
             'attributes' => [
                 'title' => "El despertar de Matsurana a la atención plena."
             ]
-        ]);
+        ], $userA->id);
 
         $this->actingAs($userB);
         $this->assertEquals($userB->id, $env->getOwner());

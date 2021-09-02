@@ -103,14 +103,27 @@ class SourcesRepositoryTest extends TestCase
     public function testGetDifferentKeySuggestionIfExist(Source $previousSource): Source
     {
         $sources = self::$sources;
-        $oldKey = $previousSource->key();
-        $newKeyA = $sources->getKey($oldKey);
-        $newKeyB = $sources->getKey([
-            'userID' => self::$env->getOwner(),
-            'key' => $oldKey
+        $alienKey = 'fakeAlienKey123';
+
+        $sources->createFromArray([
+            'key' => $alienKey,
+            'type'  => 'journalArticle',
+            'attributes' => [
+                'title' => "El despertar de Matsurana a la atención plena."
+            ]
+        ], self::$testOwnerID['A']);
+
+        $newKeyA = $sources->getKey([
+            'ownerID' => self::$testOwnerID['A'],     // the key in this user exist
+            'key'     => $alienKey                    // so a different key should be sugested.
         ]);
-        $this->assertNotEquals($oldKey, $newKeyA);
-        $this->assertNotEquals($oldKey, $newKeyB);
+        $this->assertNotEquals($alienKey, $newKeyA);
+
+        $newKeyB = $sources->getKey([
+            'ownerID' => self::$testOwnerID['B'],    // in this user this key not exist
+            'key' => $alienKey                      // so should return the same key.
+        ]);
+        $this->assertEquals($alienKey, $newKeyB);
         return $previousSource;
     }
 
