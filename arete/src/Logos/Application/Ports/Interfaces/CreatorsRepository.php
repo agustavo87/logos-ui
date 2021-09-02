@@ -46,7 +46,7 @@ interface CreatorsRepository
      * @param string    $attributeValue
      * @param mixed     $ownerID = null           the owner of the creators.
      *
-     * @return array
+     * @return Creator[]
      */
     public function getLike(string $attributeCode, string $attributeValue, $ownerID = null): array;
 
