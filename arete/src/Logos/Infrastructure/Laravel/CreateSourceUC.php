@@ -71,7 +71,7 @@ class CreateSourceUC implements ICreateSourceUC
         return $presentations;
     }
 
-    public function create(string $type, array $attributes, ?string $key = null): string
+    public function create($ownerID, string $type, array $attributes, ?string $key = null): string
     {
         /** @todo colocar la validación de datos en el adaptador de livewire */
         if (isset($attributes['date'])) {
@@ -84,7 +84,7 @@ class CreateSourceUC implements ICreateSourceUC
         if ($key != null || $key != '') {
             $params['key'] = $key;
         }
-        $source = $this->sources->createFromArray($params);
+        $source = $this->sources->createFromArray($params, $ownerID);
         Log::info('source creado', ['source', $source->toArray()]);
         return $source->key();
     }

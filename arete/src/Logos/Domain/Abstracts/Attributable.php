@@ -25,7 +25,6 @@ abstract class Attributable implements Arrayable
     protected ?Type $type = null;
     protected TypeRepository $types;
     protected ?string $genus = null;
-    protected $ownerID = null;
 
     protected array $dirtyAttributes = [];
 

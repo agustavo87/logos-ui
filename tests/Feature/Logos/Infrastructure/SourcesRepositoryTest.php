@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos\Infrastructure;
 
+use App\Models\User;
 use Tests\TestCase;
 use Arete\Logos\Application\LogosContainer;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Domain\Source;
 use Arete\Logos\Domain\Abstracts\SourceType;
 use Arete\Logos\Domain\ParticipationSet;
@@ -95,9 +97,63 @@ class SourcesRepositoryTest extends TestCase
     {
         /** @var SourcesRepository */
         $sources = $this->app->make(SourcesRepository::class);
-        $oldKey = $previousSource->key();
-        $newKey = $sources->getKey($oldKey);
-        $this->assertNotEquals($oldKey, $newKey);
+
+        /** @var \Arete\Logos\Application\Ports\Interfaces\LogosEnviroment */
+        $env =  $this->env = $this->app->make(LogosEnviroment::class);
+
+        /** @var \App\Models\User */
+        $userA = User::factory()->create();
+        /** @var \App\Models\User */
+        $userB = User::factory()->create();
+
+        $alienKeyA = 'fakeAlienKey123A';
+        $alienKeyB = 'fakeAlienKey123B';
+
+        $this->actingAs($userA);
+        $sources->createFromArray([
+            'ownerID' => $userA->id,
+            'key' => $alienKeyA,
+            'type'  => 'journalArticle',
+            'attributes' => [
+                'title' => "El despertar de Matsurana a la atención plena."
+            ]
+        ]);
+        $sources->createFromArray([
+            'ownerID' => $userA->id,
+            'key' => $alienKeyB,
+            'type'  => 'journalArticle',
+            'attributes' => [
+                'title' => "El despertar de Matsurana a la atención plena."
+            ]
+        ]);
+
+        $this->actingAs($userB);
+        $this->assertEquals($userB->id, $env->getOwner());
+
+        $newKey = $sources->getKey($alienKeyA);                 // now the key NOT exist so
+        $this->assertEquals($alienKeyA, $newKey);      // should return the same key
+
+        $ownSourceA = $sources->createFromArray([
+            'key' => $alienKeyA, // The same key can be repeated in different users
+            'type'  => 'journalArticle',
+            'attributes' => [
+                'title' => "El despertar de Matsurana a la atención plena."
+            ]
+        ]);
+        $this->assertEquals($ownSourceA->key(), $alienKeyA);
+
+        $newKey = $sources->getKey($alienKeyA);                 // now the key exist so
+        $this->assertNotEquals($alienKeyA, $newKey);    // a diferent key should be suggested.
+
+        $otherAlienKey = $sources->getKey([
+            'ownerID' => $userA->id,                    // the key in this user exist
+            'key'     => $alienKeyB                     // so a different key should be sugested.
+        ]);
+
+        $this->assertNotEquals($alienKeyB, $otherAlienKey);
+
+        self::$testOwnerID['A'] = $userA->id;
+        self::$testOwnerID['B'] = $userB->id;
         return $previousSource;
     }
 

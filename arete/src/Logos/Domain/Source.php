@@ -16,6 +16,7 @@ class Source extends Attributable implements SourceContract
     protected ParticipationSet $participations;
     protected Formatter $formater;
     protected string $key;
+    protected $ownerID;
 
     /** @todo find all references to constructor an update */
     public function __construct(
@@ -85,5 +86,10 @@ class Source extends Attributable implements SourceContract
         $sourceInfo['key'] = $this->key();
         $sourceInfo['participations'] = $this->participations->toArray($participationsOrderBy);
         return $sourceInfo;
+    }
+
+    public function ownerID()
+    {
+        return $this->ownerID;
     }
 }

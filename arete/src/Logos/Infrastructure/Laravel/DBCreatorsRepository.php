@@ -19,10 +19,10 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
     public function __construct(
         DB $db,
-        LogosEnviroment $logos,
+        LogosEnviroment $env,
         CreatorTypeRepository $creatorTypes
     ) {
-        parent::__construct($db, $logos);
+        parent::__construct($db, $env);
         $this->creatorTypes = $creatorTypes;
     }
 
@@ -36,7 +36,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
      */
     public function createFromArray(array $params, $ownerID = null): Creator
     {
-        $ownerID = $ownerID ?? $this->logos->getOwner();
+        $ownerID = $ownerID ?? $this->env->getOwner();
         $creator = new Creator(
             $this->creatorTypes,
             [
@@ -74,7 +74,7 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
      */
     public function getNew(int $id): ?Creator
     {
-        $ownerFKColumn = $this->logos->getOwnersTableData()->FK;
+        $ownerFKColumn = $this->env->getOwnersTableData()->FK;
 
         $attributes = $this->db->getEntityAttributes($id, 'creator');
         $creatorEntry = $attributes->first();

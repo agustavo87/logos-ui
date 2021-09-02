@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Tests\Traits;
 
+use Arete\Logos\Application\LogosContainer;
 use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use DateTime;
 
 trait SourcesComplexFilterTest
 {
+    protected static $testOwnerID = [
+        'A' => 3,
+        'B' => 1
+    ];
+
     /**
      * @param ComplexSourcesRepository $sources
      *
@@ -19,6 +26,9 @@ trait SourcesComplexFilterTest
         ComplexSourcesRepository $sources
     ): ComplexSourcesRepository {
         $this->assertInstanceOf(ComplexSourcesRepository::class, $sources);
+        /** @var \Arete\Logos\Application\Ports\Interfaces\LogosEnviroment */
+        $env = LogosContainer::get(LogosEnviroment::class);
+        $env->setOwner(self::$testOwnerID['A']);
         $this->seedSources($sources);
         return $sources;
     }
@@ -101,7 +111,7 @@ trait SourcesComplexFilterTest
     public function testFilterByOwner(ComplexSourcesRepository $sources): ComplexSourcesRepository
     {
         $results = $sources->complexFilter([
-            'ownerID' => '1',
+            'ownerID' => self::$testOwnerID['B'],
             'participations' => [
                 'author' => [
                     'attributes' => [
@@ -142,6 +152,7 @@ trait SourcesComplexFilterTest
 
     public function seedIndexTestData(ComplexSourcesRepository $sources, string $uid)
     {
+
         $prototypeSource = [
             'type' => 'journalArticle',
             'attributes' => [
@@ -412,7 +423,7 @@ trait SourcesComplexFilterTest
                     ]
                 ]
             ]
-        ], 3);
+        ], self::$testOwnerID['A']);
 
         $sources->createFromArray([
             'key' => 'guinazu1988',
@@ -449,7 +460,7 @@ trait SourcesComplexFilterTest
                     ]
                 ]
             ]
-        ], 3);
+        ], self::$testOwnerID['A']);
 
         $sources->createFromArray(
             [
@@ -474,7 +485,7 @@ trait SourcesComplexFilterTest
                     ]
                 ]
             ],
-            1
+            self::$testOwnerID['B']
         );
     }
 }

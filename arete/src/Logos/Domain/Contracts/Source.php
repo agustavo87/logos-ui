@@ -6,7 +6,7 @@ namespace Arete\Logos\Domain\Contracts;
 
 use Arete\Logos\Domain\ParticipationSet;
 
-interface Source
+interface Source extends Ownerable
 {
     public function participations(): ParticipationSet;
 

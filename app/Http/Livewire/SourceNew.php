@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
+use Illuminate\Support\Facades\Auth;
 
 class SourceNew extends Component
 {
@@ -62,13 +63,21 @@ class SourceNew extends Component
         $this->filterTypeAttributes();
         $this->updateValidationRules();
         $this->validate();
-        $this->sourceKey = $createSource->create($this->selectedType, $this->attributes, $this->sourceKey);
+        $this->sourceKey = $createSource->create(
+            Auth::user()->id,
+            $this->selectedType,
+            $this->attributes,
+            $this->sourceKey
+        );
         return $this->sourceKey;
     }
 
     public function computeKey(CreateSourceUC $createSource, $value)
     {
-        $this->sourceKey = $createSource->sugestKey($value);
+        $this->sourceKey = $createSource->sugestKey([
+            'ownerID'   => Auth::user()->id,
+            'key'       => $value
+        ]);
     }
 
     public function hydrate()

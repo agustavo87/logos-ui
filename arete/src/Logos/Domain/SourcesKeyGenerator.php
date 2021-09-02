@@ -35,8 +35,9 @@ class SourcesKeyGenerator
             $keyWord = $this->generateKeyWord($params);
         }
         $i = 1;
+        $ownerID = $params['ownerID'] ?? null;
         $baseKeyWord = $keyWord;
-        while ($this->sources->keyExist($keyWord)) {
+        while ($this->sources->keyExist($keyWord, $ownerID)) {
             $keyWord = $baseKeyWord . $this->getDiferenciator(++$i);
         }
         return $keyWord;

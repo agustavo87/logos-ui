@@ -6,10 +6,12 @@ namespace Arete\Logos\Domain;
 
 use Arete\Logos\Domain\Abstracts\Attributable;
 use Arete\Logos\Application\Ports\Interfaces\CreatorTypeRepository;
+use Arete\Logos\Domain\Contracts\Ownerable;
 
-class Creator extends Attributable
+class Creator extends Attributable implements Ownerable
 {
     protected ?string $genus = 'creator';
+    protected $ownerID;
 
     public function __construct(
         CreatorTypeRepository $types,
@@ -18,5 +20,10 @@ class Creator extends Attributable
     ) {
         parent::__construct($types, $properties);
         $this->attributes = $attributes;
+    }
+
+    public function ownerID()
+    {
+        return $this->ownerID;
     }
 }

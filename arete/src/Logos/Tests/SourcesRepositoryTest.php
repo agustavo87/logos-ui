@@ -6,6 +6,7 @@ namespace Arete\Logos\Tests;
 
 use Arete\Logos\Application\LogosContainer;
 use Arete\Logos\Application\Ports\Interfaces\ComplexSourcesRepository;
+use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\TestSourcesProvider;
 use Arete\Logos\Domain\Abstracts\SourceType;
@@ -22,6 +23,7 @@ class SourcesRepositoryTest extends TestCase
 
     public static SourcesRepository $sources;
     protected Generator $faker;
+    protected static LogosEnviroment $env;
 
     public function __construct(...$args)
     {
@@ -37,6 +39,7 @@ class SourcesRepositoryTest extends TestCase
         LogosContainer::load();
         self::$sources = LogosContainer::get(SourcesRepository::class);
         self::$sources->flush();
+        self::$env = LogosContainer::get(LogosEnviroment::class);
     }
 
     public function testSourcesRepositoryIsBinded(): SourcesRepository
@@ -101,8 +104,13 @@ class SourcesRepositoryTest extends TestCase
     {
         $sources = self::$sources;
         $oldKey = $previousSource->key();
-        $newKey = $sources->getKey($oldKey);
-        $this->assertNotEquals($oldKey, $newKey);
+        $newKeyA = $sources->getKey($oldKey);
+        $newKeyB = $sources->getKey([
+            'userID' => self::$env->getOwner(),
+            'key' => $oldKey
+        ]);
+        $this->assertNotEquals($oldKey, $newKeyA);
+        $this->assertNotEquals($oldKey, $newKeyB);
         return $previousSource;
     }
 

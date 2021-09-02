@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase;
 use Arete\Logos\Domain\Source;
+use Illuminate\Support\Facades\Auth;
 
 class SourceSelect extends Component
 {
@@ -44,6 +45,7 @@ class SourceSelect extends Component
          * en la página.
          */
         $params = [
+            'ownerID' => Auth::user()->id,
             'orderBy' => [
                 'group' => 'source',
                 'field' => 'key',
@@ -60,8 +62,6 @@ class SourceSelect extends Component
                 $params['key'] = $value;
             }
         }
-
-
 
         $results = $filter->filter($params);
         $this->sources = $this->sourcesToArray($results);

@@ -11,12 +11,12 @@ use Arete\Logos\Infrastructure\Defaults\Support\Inflect;
 class LogosEnviroment implements LogosEnviromentPort
 {
     protected ConfigurationRepository $config;
-    protected $defaultOwner;
+    protected static $defaultOwner = null;
 
     public function __construct(ConfigurationRepository $config)
     {
         $this->config = $config;
-        $this->defaultOwner = $config->get('defaultOwner');
+        self::$defaultOwner = self::$defaultOwner ?? $config->get('defaultOwner');
     }
     public function getOwnersTableData(): \stdClass
     {
@@ -32,13 +32,18 @@ class LogosEnviroment implements LogosEnviromentPort
         ];
     }
 
-    public function setOwner(string $id)
+    public function setOwner($id)
     {
-        $this->defaultOwner = $id;
+        self::$defaultOwner = $id;
     }
 
     public function getOwner()
     {
-        return $this->defaultOwner;
+        return self::$defaultOwner;
+    }
+
+    public function authenticated(): bool
+    {
+        return true;
     }
 }

@@ -33,6 +33,9 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
     protected Formatter $defaultFormatter;
     protected LogosEnviroment $logos;
 
+    /**
+     * @var \Arete\Logos\Domain\Source[]
+     */
     public static array $sources = [];
     public static array $ids = [0];
 
@@ -120,11 +123,11 @@ class MemorySourcesRepository implements SourcesRepository, ComplexSourcesReposi
         return null;
     }
 
-    public function keyExist(string $key): bool
+    public function keyExist(string $key, $ownerID = null): bool
     {
         foreach (self::$sources as $id => $source) {
             if ($source->key() == $key) {
-                return true;
+                return $ownerID ? $source->ownerID() == $ownerID : true;
             }
         }
         return false;

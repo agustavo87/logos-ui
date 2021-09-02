@@ -14,16 +14,21 @@ interface CreateSourceUC
     public function presentSourceTypes(): array;
 
     /**
+     * @param $ownerID
      * @param string $type
      * @param array $attributes
      * @param string|null $key
      *
      * @return string key
      */
-    public function create(string $type, array $attributes, ?string $key = null): string;
+    public function create($ownerID, string $type, array $attributes, ?string $key = null): string;
 
     /**
-     * @param array|string $params
+     * Suggest a valid (unique) key.
+     *
+     * @param array|string $params  A simple string to check or a set of
+     *                              key => value parameters array for example
+     *                              ['ownerID' => 2, 'key' => 'beck2020']
      *
      * @return string
      */

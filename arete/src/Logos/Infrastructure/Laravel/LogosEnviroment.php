@@ -6,6 +6,7 @@ namespace Arete\Logos\Infrastructure\Laravel;
 
 use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment as LogosEnviromentPort;
 use Arete\Logos\Application\Ports\Abstracts\ConfigurationRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class LogosEnviroment implements LogosEnviromentPort
@@ -16,7 +17,7 @@ class LogosEnviroment implements LogosEnviromentPort
     public function __construct(ConfigurationRepository $config)
     {
         $this->config = $config;
-        $this->defaultOwner = $config->get('defaultOwner');
+        $this->defaultOwner = $this->config->get('defaultOwner');
     }
     public function getOwnersTableData(): \stdClass
     {
@@ -31,13 +32,20 @@ class LogosEnviroment implements LogosEnviromentPort
         ];
     }
 
-    public function setOwner(string $id)
+    public function authenticated(): bool
+    {
+        return Auth::check();
+    }
+
+    public function setOwner($id)
     {
         $this->defaultOwner = $id;
     }
 
     public function getOwner()
     {
-        return $this->defaultOwner;
+        return $this->authenticated() ?
+            Auth::user()->id :
+            $this->defaultOwner;
     }
 }

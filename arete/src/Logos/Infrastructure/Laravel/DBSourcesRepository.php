@@ -46,9 +46,9 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         Formatter $defaultFormatter,
         Schema $schema,
         DB $db,
-        LogosEnviroment $logos
+        LogosEnviroment $env
     ) {
-        parent::__construct($db, $logos);
+        parent::__construct($db, $env);
         $this->creators = $creators;
         $this->sourceTypes = $sourceTypes;
         $this->creatorTypes = $creatorTypes;
@@ -60,7 +60,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
 
     public function createFromArray(array $params, $ownerID = null): Source
     {
-        $ownerID = $ownerID ?? $this->logos->getOwner();
+        $ownerID = $ownerID ?? $this->env->getOwner();
 
         $key = $this->getKey($params);
 
@@ -106,9 +106,9 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
         return $source;
     }
 
-    public function keyExist($key): bool
+    public function keyExist($key, $ownerID = null): bool
     {
-        return $this->db->sourceKeyExist($key);
+        return $this->db->sourceKeyExist($key, $ownerID);
     }
 
     public function getByKey(string $key)
@@ -145,7 +145,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     public function getNew(int $id): Source
     {
         /** @todo Esto es lógica de persistencia, no debería estar aquí. */
-        $ownerFKColumn = $this->logos->getOwnersTableData()->FK;
+        $ownerFKColumn = $this->env->getOwnersTableData()->FK;
 
         /* Create the source with it's attributes */
         $attributes = $this->db->getEntityAttributes($id);
@@ -198,7 +198,7 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
 
     public function getLike($attributeCode, $attributeValue, $ownerID = null, $page = null): array
     {
-        $user = $user ?? $this->logos->getOwner();
+        $user = $user ?? $this->env->getOwner();
         $entitiesIDs = $this->db->findEntitiesWith(
             'source',
             $attributeCode,
@@ -260,7 +260,10 @@ class DBSourcesRepository extends DBRepository implements SourcesRepositoryPort,
     public function getKey($params): string
     {
         if (is_string($params)) {
-            return $this->keyGenerator->getKey(['key' => $params]);
+            $params = ['key' => $params];
+        }
+        if (!isset($params['ownerID'])) {
+            $params['ownerID'] = $this->env->getOwner();
         }
         return $this->keyGenerator->getKey($params);
     }

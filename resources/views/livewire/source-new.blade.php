@@ -1,4 +1,5 @@
 <div x-data="alpNewSource()" x-ref="root"
+     x-on:lw:message-change.window="loading = $event.detail.loading"
      class="h-full mx-5 grid border rounded relative"
 >
 {{-- @if ($errors->any())
@@ -12,8 +13,10 @@
     </div>
 @endif --}}
 {{-- Source Type Select and Key Section --}}
+
     <div>
         <select name="sourceType" id="sourceType" wire:model="selectedType"
+                x-bind:disabled="loading"
                 class="border-b border-blue-400 focus:outline-none font-medium mb-2 ml-2 mt-1 py-1 text-gray-800 text-sm"
         >
             @foreach ($sourceTypes as $type)
@@ -24,6 +27,7 @@
             <label for="source-key" class="flex-grow-0 text-gray-600 text-sm">{{ __('sources.key') }}</label>
             <div class="flex flex-col flex-grow">
                 <input type="text" id="source-key" name="source-key"
+                       x-bind:disabled="loading"
                        class="border flex-grow focus:outline-none px-2 py-1 rounded text-sm focus:border-blue-400"
                        value="{{$sourceKey}}"
                        autocomplete="off"
@@ -88,6 +92,7 @@
                             @if ($attribute['code'] == "abstractNote")
                                 <textarea name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}" rows="4"
                                           wire:model.lazy="attributes.{{ $attribute['code'] }}"
+                                          x-bind:disabled="loading"
                                           class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none focus:border-blue-400"
                                 ></textarea>
                                 @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
@@ -96,6 +101,7 @@
                                        wire:model.lazy="attributes.{{ $attribute['code'] }}"
                                        class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                                        autocomplete="off"
+                                       x-bind:disabled="loading"
                                 >
                                 @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
                             @endif
@@ -108,6 +114,7 @@
                             </label>
                             <input type="number" name="attribute.{{ $attribute['code'] }}" id="input-{{ $attribute['code'] }}"
                                    wire:model.lazy="attributes.{{ $attribute['code'] }}"
+                                   x-bind:disabled="loading"
                                    class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                                    autocomplete="off"
                             >
@@ -121,6 +128,7 @@
                             </label>
                             <input type="date" name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}"
                                    wire:model.lazy="attributes.{{ $attribute['code'] }}"
+                                   x-bind:disabled="loading"
                                    class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                             >
                             @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
@@ -146,6 +154,7 @@
         Alpine.data('alpNewSource', () => {
             return {
                 active: false,
+                loading:false,
                 creator: {
                     name: "Pepito",
                     lastName: "Murundanga"

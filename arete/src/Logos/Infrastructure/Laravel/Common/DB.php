@@ -43,16 +43,16 @@ class DB
         ]
     ];
 
-    protected LogosEnviroment $logos;
+    protected LogosEnviroment $env;
     public Connection $db;
     public Schema $schema;
 
     public function __construct(
-        LogosEnviroment $logos,
+        LogosEnviroment $env,
         Schema $schema,
         DatabaseManager $dbManager
     ) {
-        $this->logos = $logos;
+        $this->env = $env;
         $this->schema = $schema;
         $this->db = $dbManager->connection();
     }
@@ -254,7 +254,7 @@ class DB
             $this->db->beginTransaction();
 
             // insert entity entry
-            $ownerColumn = $this->logos->getOwnersTableData()->FK;
+            $ownerColumn = $this->env->getOwnersTableData()->FK;
             $genusName = $entityObject->genus() . '_type_code_name';
             $insertingAttributes = [
                 'updated_at'    => $updated,
@@ -381,9 +381,15 @@ class DB
         ])->first();
     }
 
-    public function sourceKeyExist($key): bool
+    public function sourceKeyExist($key, $ownerID = null): bool
     {
-        return LvDB::table('sources')->where('key', $key)->exists();
+        $result = LvDB::table('sources')
+            ->when($ownerID, function (QueryBuilder $query, $ownerID) {
+                return $query->where($this->env->getOwnersTableData()->FK, $ownerID);
+            })
+            ->where('key', $key)
+            ->exists();
+        return $result;
     }
 
     public function getSourceIDByKey($key): int
@@ -411,7 +417,7 @@ class DB
         return LvDB::table('sources')->insertGetId([
         'updated_at' => $updated,
         'created_at' => $created,
-        $this->logos->getOwnersTableData()->FK => $userId,
+        $this->env->getOwnersTableData()->FK => $userId,
         'source_type_code_name' => $type
         ]);
     }
@@ -443,7 +449,7 @@ class DB
         return LvDB::table('creators')->insertGetId([
         'updated_at' => $updated,
         'created_at' => $created,
-        $this->logos->getOwnersTableData()->FK => $userId,
+        $this->env->getOwnersTableData()->FK => $userId,
         'creator_type_code_name' => $type
         ]);
     }
@@ -483,7 +489,7 @@ class DB
         ->where($this::VALUE_COLUMS[$valueType], 'LIKE', '%' . $attributeValue . '%');
         if ($ownerID) {
             $query->where(
-                $this->logos->getOwnersTableData()->FK,
+                $this->env->getOwnersTableData()->FK,
                 $ownerID
             );
         }
@@ -592,7 +598,7 @@ class DB
 
         $query = $this->db->table('sources');
         if (isset($params['ownerID'])) {
-            $query->where($this->logos->getOwnersTableData()->FK, '=', $params['ownerID']);
+            $query->where($this->env->getOwnersTableData()->FK, '=', $params['ownerID']);
         }
 
         if (isset($params['key'])) {

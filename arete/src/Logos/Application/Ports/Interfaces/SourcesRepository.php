@@ -60,10 +60,11 @@ interface SourcesRepository
 
     /**
      * @param string $key
+     * @param mixed $ownerID if null defaults to current env
      *
      * @return bool
      */
-    public function keyExist(string $key): bool;
+    public function keyExist(string $key, $ownerID = null): bool;
 
     /**
      * Returns a valid key based on params

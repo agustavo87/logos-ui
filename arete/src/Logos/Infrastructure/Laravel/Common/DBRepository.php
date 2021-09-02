@@ -13,11 +13,11 @@ use Arete\Logos\Application\Ports\Interfaces\LogosEnviroment;
 abstract class DBRepository
 {
     protected DB $db;
-    protected LogosEnviroment $logos;
+    protected LogosEnviroment $env;
 
-    public function __construct(DB $db, LogosEnviroment $logos)
+    public function __construct(DB $db, LogosEnviroment $env)
     {
         $this->db = $db;
-        $this->logos = $logos;
+        $this->env = $env;
     }
 }
