@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Logos\Infrastructure;
 
+use App\Models\User;
 use Tests\TestCase;
 use Arete\Logos\Domain\Creator;
 use Arete\Logos\Domain\Abstracts\CreatorType;
@@ -92,5 +93,47 @@ class CreatorsRepositoryTest extends TestCase
         $this->assertStringContainsString($randomWord, $creator->name);
         $this->assertEquals($storedCreator->lastName, $creator->lastName);
         return $creator;
+    }
+
+    /**
+     * @param Creator $storedCreator
+     *
+     * @depends testGetLikeCreator
+     * @return Creator
+     */
+    public function testGetCreatorByOwner(Creator $storedCreator): Creator
+    {
+        /** @var CreatorsRepository */
+        $creators = $this->app->make(CreatorsRepository::class);
+
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $lastName = uniqid('Romero_');
+        $alienCreator = $creators->createFromArray([
+            'type' => 'person',
+            'attributes' => [
+                'name'      => "Samuel",
+                'lastName'  => $lastName
+            ]
+        ], $userA->id);
+
+        $notExistentCreator = $creators->getLike(
+            'lastName',
+            $lastName,
+            $userB->id
+        );
+
+        $this->assertEquals(0, count($notExistentCreator));
+        $existentCreator = $creators->getLike(
+            'lastName',
+            $lastName,
+            $userA->id
+        );
+
+        $this->assertGreaterThan(0, count($existentCreator));
+        $this->checkCreatoreDataStructure($existentCreator[0], $alienCreator->toArray()['attributes']);
+
+        return $storedCreator;
     }
 }

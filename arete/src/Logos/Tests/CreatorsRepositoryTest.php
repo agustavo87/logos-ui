@@ -13,6 +13,10 @@ use Arete\Logos\Application\TestSourcesProvider;
 
 class CreatorsRepositoryTest extends TestCase
 {
+    public static $testUser = [
+        'A' => 2,
+        'B' => 5
+    ];
     public static CreatorsRepository $creators;
     public static function setUpBeforeClass(): void
     {
@@ -37,7 +41,7 @@ class CreatorsRepositoryTest extends TestCase
                 'lastName'  => "Ayala"
             ]
         ];
-        $creator = self::$creators->createFromArray($expectedProperties);
+        $creator = self::$creators->createFromArray($expectedProperties, self::$testUser['A']);
 
         $this->checkCreatoreDataStructure($creator, $expectedProperties['attributes']);
         return $creator;
@@ -102,5 +106,39 @@ class CreatorsRepositoryTest extends TestCase
         $this->assertStringContainsString($randomWord, $creator->name);
         $this->assertEquals($storedCreator->lastName, $creator->lastName);
         return $creator;
+    }
+
+    /**
+     * @param Creator $storedCreator
+     *
+     * @depends testGetLikeCreator
+     * @return Creator
+     */
+    public function testGetCreatorByOwner(Creator $storedCreator): Creator
+    {
+        $lastName = uniqid('Romero_');
+        $alienCreator = self::$creators->createFromArray([
+            'type' => 'person',
+            'attributes' => [
+                'name'      => "Samuel",
+                'lastName'  => $lastName
+            ]
+        ], self::$testUser['B']);
+
+        $notExistentCreator = self::$creators->getLike(
+            'lastName',
+            $lastName,
+            self::$testUser['A']
+        );
+        $this->assertEquals(0, count($notExistentCreator));
+        $existentCreator = self::$creators->getLike(
+            'lastName',
+            $lastName,
+            self::$testUser['B']
+        );
+        $this->assertGreaterThan(0, count($existentCreator));
+        $this->checkCreatoreDataStructure($existentCreator[0], $alienCreator->toArray()['attributes']);
+
+        return $storedCreator;
     }
 }
