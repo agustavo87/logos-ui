@@ -23,9 +23,6 @@ class SourceNew extends Component
 
     protected array $validationAttributes = [];
 
-    /** @todo evitar que se pueda crear una fuente sin al menos un atributo
-     * por ej 'title'
-     */
     protected static array $typeRules = [
         'text' => ['string'],
         'number' => ['numeric'],

@@ -230,7 +230,6 @@ bg=red</panel_attributes>
 + type(): Type
 + typeCode(): string
 + genus(): ?string
-+ ownerID(): mixed
 + compare(attrName, attrA, attrB): int 
 </panel_attributes>
     <additional_attributes/>
@@ -441,20 +440,6 @@ Proxies attributes of ^</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>693</x>
-      <y>369</y>
-      <w>99</w>
-      <h>45</h>
-    </coordinates>
-    <panel_attributes>/Ownerable/
---
-ownerID(): string
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>Relation</id>
     <coordinates>
       <x>387</x>
@@ -475,5 +460,19 @@ ownerID(): string
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;200.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>693</x>
+      <y>369</y>
+      <w>99</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>/Ownerable/
+--
+ownerID(): string
+</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

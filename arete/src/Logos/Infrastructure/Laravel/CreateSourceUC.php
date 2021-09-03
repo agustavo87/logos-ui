@@ -73,7 +73,7 @@ class CreateSourceUC implements ICreateSourceUC
 
     public function create($ownerID, string $type, array $attributes, ?string $key = null): string
     {
-        /** @todo colocar la validación de datos en el adaptador de livewire */
+        // should be validated on adapter, but just to be sure.
         if (isset($attributes['date'])) {
             $attributes['date'] = $this->datesize($attributes['date']);
         }
