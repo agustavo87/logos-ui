@@ -47,10 +47,14 @@
             >
             <div class="flex gap-2 px-1">
                 <h3 class="font-semibold text-sm ">Creadores</h3>
-                <button class="text-blue-500 text-xs hover:text-blue-600">Agregar</small>
+                <button class="text-blue-500 text-xs hover:text-blue-600"
+                    wire:click="addCreator"
+                >
+                    Agregar
+                </button>
             </div>
             <button class="bg-gray-50 border p-1 rounded border-gray-300 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none "
-                x-on:click="open = !open"  x-cloak
+                x-on:click="open = !open" x-cloak
             >
                 <x-icons.chevron-down class="w-4 h-4 fill-current transition-transform ease-in-out duration-500"
                     x-bind:class="{'transform rotate-180': open}"
@@ -58,23 +62,31 @@
             </button>
         </div>
         <div class="text-sm border-b overflow-hidden transition-all ease-in-out duration-500 "
-            x-bind:style="{'max-height': open ?  $el.scrollHeight + 'px' : '0px'}"
+             x-bind:style="{'max-height': open ?  $el.scrollHeight + 'px' : '0px'}" {{-- Se puede agregar una longitud máxima por si el scrollHeight llega a ser muy grande --}}
         >
-            <ul class="py-1 px-3"  >
-                <li x-model="creator">
-                    <div
-                        class="flex py-1 items-center"
-                        x-data="personEditor(@entangle('creators.0').defer)">
-                        <div class="flex flex-row gap-1" x-show="isEditing" x-on:keyup.enter="handleChange($dispatch)"  >
-                            <input type="text" x-model="creator.attributes.lastName" x-on:input.stop class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500">
-                            <input type="text" x-model="creator.attributes.name" x-on:input.stop class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500">
-                            <div x-on:click="handleChange($dispatch)" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">ok</div>
-                        </div>
-                        <div x-show="!isEditing" x-on:click="isEditing=true" class="cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
-                            <span x-text="creator.attributes.lastName"></span>, <span x-text="creator.attributes.name"></span>
-                        </div>
-                    </div>
-                </li>
+        <ul class="py-1 px-3"  >
+                @foreach ($creators as $i => $creator)
+                    <li wire:key="{{$i}}">
+                                <div
+                                class="flex py-1 items-center"
+                                x-data="personEditor">
+                                    <form x-on:submit.prevent="commitChange" class="flex flex-row gap-1" x-show="isEditing" x-on:keyup.enter="handleChange($dispatch)"  >
+                                        <input type="text" wire:model.defer="creators.{{$i}}.attributes.lastName" class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500">
+                                        <input type="text" wire:model.defer="creators.{{$i}}.attributes.name" class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500">
+                                        <button type="submit" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">
+                                            ok
+                                        </button type="submit">
+                                        <button x-on:click="removeCreator({{$i}})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer">
+                                            x
+                                        </button>
+                                    </form>
+                                    <div x-show="!isEditing" x-on:click="isEditing=true" class="cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
+                                        <span>{{$creator['attributes']['lastName']}}</span>, <span>{{$creator['attributes']['name']}}</span>
+                                    </div>
+                                </div>
+
+                    </li>
+                @endforeach
             </ul>
         </div>
     </div>
@@ -156,8 +168,11 @@
                 active: false,
                 loading:false,
                 creator: {
-                    name: "Pepito",
-                    lastName: "Murundanga"
+                    type: 'person',
+                    attributes: {
+                        name: "Pepito",
+                        lastName: "Murundanga"
+                    }
                 },
                 handleEvent: function (event) {
                     if (event.type == 'source-select:solve') {
@@ -178,6 +193,8 @@
                         'source-select:tab-change',
                         (e) => e.detail == 'new' ? this.activate(): (this.active ? this.deactivate(): null)
                     )
+
+                    this.$watch('creator', value => console.log(value));
                 },
                 activate: function () {
                     this.active = true;
@@ -195,14 +212,16 @@
             }
         })
 
-        Alpine.data('personEditor', (creator) => {
-            console.log(creator)
+        Alpine.data('personEditor', () => {
             return {
                 isEditing: false,
-                creator: creator,
-                handleChange: function($dispatch) {
+                commitChange: function() {
                     this.isEditing = false;
-                    $dispatch('input', Object.assign({}, this.creator.attributes))
+                    this.$wire.changeCreator()
+                },
+                removeCreator: function (i) {
+                    this.isEditing = false;
+                    this.$wire.removeCreator(i);
                 }
             }
         })

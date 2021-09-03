@@ -44,11 +44,13 @@ class CreateSourceUC implements ICreateSourceUC
     }
 
     /**
-     * @param string[] $attrCodes
+     * Returns a source type attribute presentations
+     *
+     * @param string $typeCode
      *
      * @return \Arete\Logos\Application\DTO\AttributePresentation[] keyed by attribute code
      */
-    public function getAttributePresentations(string $typeCode): array
+    protected function getAttributePresentations(string $typeCode): array
     {
         $attributesData = $this->db->getSourceTypeAttributes(
             $typeCode,

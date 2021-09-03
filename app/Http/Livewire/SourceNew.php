@@ -6,6 +6,7 @@ use Livewire\Component;
 use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SourceNew extends Component
 {
@@ -34,10 +35,23 @@ class SourceNew extends Component
         [
             'type' => 'person',
             'attributes' => [
-                'name' => 'Martinez',
-                'lastName' => "Mario"
+                'name' => 'Pedro',
+                'lastName' => "Saucedo"
             ]
-        ]
+        ], [
+            'type' => 'person',
+            'attributes' => [
+                'name' => 'Juan',
+                'lastName' => "Ramirez"
+            ]
+        ],
+        // [
+        //     'type' => 'organization',
+        //     'attributes' => [
+        //         'name' => 'American Psychological Association',
+        //         'acronym' => "APA"
+        //     ]
+        // ]
     ];
 
     public function mount(CreateSourceUC $createSource)
@@ -79,11 +93,13 @@ class SourceNew extends Component
 
     public function hydrate()
     {
+        Log::info('[hydrate] creators', $this->creators);
         $this->validationAttributes['sourceKey'] = strtolower(__('sources.key'));
     }
 
     public function updated($propertyName)
     {
+        Log::info('[updated] creators', $this->creators);
         $props = explode('.', $propertyName);
         if ($props[0] == 'attributes') {
             list(
@@ -189,5 +205,27 @@ class SourceNew extends Component
             'rules' => $rules,
             'label' => strtolower($attr['label'])
         ];
+    }
+
+    public function addCreator()
+    {
+        $this->creators[] = [
+            'type' => 'person',
+            'attributes' => [
+                'name'  => '',
+                'lastName'  => ''
+            ]
+        ];
+        Log::info('agregando creador');
+    }
+
+    public function removeCreator($i)
+    {
+        unset($this->creators[$i]);
+    }
+
+    public function changeCreator()
+    {
+        Log::info('change-creator', $this->creators);
     }
 }
