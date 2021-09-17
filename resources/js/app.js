@@ -18,7 +18,8 @@ const LivewireLiveMsjs = {
             detail:{
                 count:this.count,
                 kind: kind,
-                component, component,
+                component: component,
+                componentName: component.fingerprint.name,
                 loading: this.count > 0,
             }
         }))
@@ -26,8 +27,8 @@ const LivewireLiveMsjs = {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    Livewire.hook('message.sent', (message, component) => LivewireLiveMsjs.handleEvent('sent', component.fingerprint.name))
-    Livewire.hook('message.failed', (message, component) => LivewireLiveMsjs.handleEvent('failed', component.fingerprint.name))
-    Livewire.hook('message.received', (message, component) => LivewireLiveMsjs.handleEvent('received', component.fingerprint.name))
-    Livewire.hook('message.processed', (message, component) => LivewireLiveMsjs.handleEvent('processed', component.fingerprint.name))
+    Livewire.hook('message.sent', (message, component) => LivewireLiveMsjs.handleEvent('sent', component))
+    Livewire.hook('message.failed', (message, component) => LivewireLiveMsjs.handleEvent('failed', component))
+    Livewire.hook('message.received', (message, component) => LivewireLiveMsjs.handleEvent('received', component))
+    Livewire.hook('message.processed', (message, component) => LivewireLiveMsjs.handleEvent('processed', component))
 })

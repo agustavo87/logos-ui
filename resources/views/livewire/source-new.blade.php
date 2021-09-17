@@ -22,10 +22,12 @@
             class="px-2 py-1 rounded border w-full"
 
         >
-        <ul class="h-36 rounded border bg-white text-sm p-1 overflow-y-auto overflow-x-hidden" >
+        <ul class="h-36 rounded border border-blue-200 bg-gray-50 text-xs p-1 overflow-y-auto overflow-x-hidden" >
             @foreach ($creatorSuggestions as $suggestion)
-                <li class="hover:bg-blue-100 rounded p-1 cursor-pointer">
-                    {{" {$suggestion['lastName']}, {$suggestion['name']} "}}
+                <li>
+                    <button class="hover:bg-blue-100 hover:text-blue-800 rounded p-1 cursor-pointer w-full text-left">
+                        {{" {$suggestion['lastName']}, {$suggestion['name']} "}}
+                    </button>
                 </li>
             @endforeach
         </ul>
@@ -104,7 +106,7 @@
                              x-on:creator-added.window = "$event.detail.creator.id == myperson.id ? editNew: null"
                              x-ref="root"
                         >
-                            <div  class="flex flex-row gap-1" x-show="isEditing" x-on:keyup.enter="isEditing = false"  >
+                            <div  class="flex flex-row gap-1 w-full justify-between" x-show="isEditing" x-on:keyup.enter="isEditing = false"  >
                                 <input type="text" class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500"
                                        x-model="myperson.attributes.lastName"
                                        x-ref="lastName"
@@ -136,7 +138,9 @@
 
 
     {{-- Attributes Section --}}
-    <ul class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:loading.class.remove="overflow-y-auto">
+    <ul class="overflow-y-auto overflow-hidden px-2 pb-2 "
+        {{-- wire:loading.class.remove="overflow-y-auto" --}}
+    >
         @forelse ($sourceTypes[$selectedType]['attributes'] as $order => $attribute)
             <li>
                 @switch($attribute['type'])
@@ -147,14 +151,14 @@
                             </label>
                             @if ($attribute['code'] == "abstractNote")
                                 <textarea name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}" rows="4"
-                                          wire:model.lazy="attributes.{{ $attribute['code'] }}"
+                                          wire:model.defer="attributes.{{ $attribute['code'] }}"
                                           x-bind:disabled="loading"
                                           class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none focus:border-blue-400"
                                 ></textarea>
                                 @error("attributes.{$attribute['code']}") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
                             @else
                                 <input type="text" name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}"
-                                       wire:model.lazy="attributes.{{ $attribute['code'] }}"
+                                       wire:model.defer="attributes.{{ $attribute['code'] }}"
                                        class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                                        autocomplete="off"
                                        x-bind:disabled="loading"
@@ -169,7 +173,7 @@
                                 {{$attribute['label']}}:
                             </label>
                             <input type="number" name="attribute.{{ $attribute['code'] }}" id="input-{{ $attribute['code'] }}"
-                                   wire:model.lazy="attributes.{{ $attribute['code'] }}"
+                                   wire:model.defer="attributes.{{ $attribute['code'] }}"
                                    x-bind:disabled="loading"
                                    class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                                    autocomplete="off"
@@ -183,7 +187,7 @@
                                 {{$attribute['label']}}:
                             </label>
                             <input type="date" name="attribute.{{$attribute['code']}}" id="input-{{$attribute['code']}}"
-                                   wire:model.lazy="attributes.{{ $attribute['code'] }}"
+                                   wire:model.defer="attributes.{{ $attribute['code'] }}"
                                    x-bind:disabled="loading"
                                    class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                             >
@@ -199,8 +203,14 @@
         @empty
             <li>Sin attributos</li>
         @endforelse
+        {{-- Loading Overlay --}/}
+        <div class="absolute inset-0 bg-gray-200 opacity-40"
+            x-data="{loading:false}"
+            x-show="loading"
+            x-on:lw:message-change.window="console.log('loading: ', $event.detail);loading = $event.detail.loading"
+        ></div>
+        {{-- / Loading Overlay --}}
     </ul>
-    <div class="absolute inset-0 bg-gray-200 opacity-40" wire:loading></div>
 </div>
 @once
 @push('head-script')
