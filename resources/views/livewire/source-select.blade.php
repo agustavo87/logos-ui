@@ -11,7 +11,10 @@
 
     {{-- modal container --}}
     {{-- <template x-if="showModal"> --}}
-        <div class="relative max-w-lg w-full px-2 py-2" x-show="showModal" x-transition>
+        <div class="relative max-w-lg w-full px-2 py-2" x-show="showModal" x-transition
+            x-on:transitioned="handleEndTransition($event, $dispatch)"
+            x-on:transitioncancel="handleEndTransition($event, $dispatch)"
+        >
             {{-- modal --}}
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
                  @click.outside="cancel"
@@ -158,11 +161,20 @@
                         this.selected = null
                         this.$wire.call('flush')
                         this.$el.dispatchEvent(new CustomEvent('source-select:reset', {bubbles:true}))
+
                     },
-                    handleEscape: function () {
+                    handleEscape: function ($dispatch) {
                         if (this.showModal) {
                             this.cancel();
                         }
+                    },
+                    handleEndTransition: function ($event, $dispatch) {
+                        if (!this.display) {
+                            this.clean()
+                        }
+                    },
+                    clean: function () {
+                        this.tab = 'select'
                     }
                 }
             }

@@ -12,6 +12,7 @@
         x-ref="root"
         x-show="visible"
         x-on:creator-blur.window="visible = false"
+        x.on:source-select:reset.window="deactivate"
         x-transition:enter.duration.20ms
         x-transition:leave.duration.100ms
         x-transition.opacity
@@ -256,7 +257,6 @@
                     this.$nextTick(() => {
                             this.openCreators = true;
                             this.$refs.creators.style.maxHeight = this.$refs.creators.scrollHeight + 'px'
-                            // dispatch('creator-added', {creator: this.creators[index]})
                         }
                     )
                 }
