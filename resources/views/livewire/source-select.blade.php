@@ -4,13 +4,14 @@
     x-on:keydown.escape.window="handleEscape"
     class="fixed z-10 inset-0 flex flex-col justify-center items-center"
     x-ref="root"
+    x-transition.opacity
     >
 
     <div class="absolute inset-0 bg-gray-700 opacity-40"></div>
 
     {{-- modal container --}}
     {{-- <template x-if="showModal"> --}}
-        <div class="relative max-w-lg w-full px-2 py-2" x-show="showModal">
+        <div class="relative max-w-lg w-full px-2 py-2" x-show="showModal" x-transition>
             {{-- modal --}}
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
                  @click.outside="cancel"

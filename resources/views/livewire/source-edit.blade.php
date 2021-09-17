@@ -1,10 +1,10 @@
-<div 
-    class="fixed inset-0 z-10 flex flex-row justify-center items-center" 
+<div
+    class="fixed inset-0 z-10 flex flex-row justify-center items-center"
     x-data="editSource({
         data: @entangle('data').defer,
         schema: @entangle('sourceSchema').defer,
         source_id: @entangle('source_id').defer
-    })" 
+    })"
     x-show="display" x-init="init($dispatch)"
     x-on:{{ $listen }}.window="handleInvocation($event, $dispatch)">
 
@@ -14,16 +14,16 @@
     </template>
 
     {{-- modal --}}
-    <div class="source-edit-modal rounded-lg bg-white relative" 
+    <div class="source-edit-modal rounded-lg bg-white relative"
         x-show="showModal" @click.away="cancel"
         x-on:keydown.escape.window="handleEscape">
         <div class="py-5 px-5 w-full relative" >
             {{-- Loading Message --}}
-            <div class="absolute bg-gray-100 text-gray-700 rounded-t-lg inset-0 flex justify-center items-center" x-show="!data_loaded"> 
+            <div class="absolute bg-gray-100 text-gray-700 rounded-t-lg inset-0 flex justify-center items-center" x-show="!data_loaded">
                 Cargando...
             </div>
             <div :class="{
-                'visible': data_loaded, 
+                'visible': data_loaded,
                 'invisible': !data_loaded
             }">
                 <div>
@@ -40,9 +40,9 @@
                 <div class=" h-64 overflow-y-auto" x-on:data-change.debounce.750ms="$wire.set('data', $event.detail)">
                     <x-logos.citation-book-filler />
                     <x-logos.citation-article-filler />
-                </div> 
+                </div>
             </div>
-        </div> 
+        </div>
         <div class="py-5 px-5 w-full">
             <x-form.button @click="solve">Add</x-form.button>
             <x-form.button wire:click="save">Guardar</x-form.button>
@@ -85,7 +85,7 @@
                         .then( (r) => {
                             $dispatch('set-schema', {
                                 schema: this.sourceSchema,
-                                data: this.data 
+                                data: this.data
                             });
                             this.data_loaded = true;
                         });
@@ -94,7 +94,7 @@
                 solve: function() {
                     this.display = false;
                     this.showModal = false;
-                    this.resolve('ok') 
+                    this.resolve('ok')
                 },
 
                 cancel: function() {
