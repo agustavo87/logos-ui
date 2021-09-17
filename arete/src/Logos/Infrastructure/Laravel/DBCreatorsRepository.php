@@ -122,4 +122,33 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
 
         return $result;
     }
+
+    public function suggestCreators(
+        $owner,
+        string $hint,
+        string $attribute = 'lastName',
+        string $type = 'person',
+        string $orderBy = 'lastName',
+        bool $asc = true,
+        int $limit = 5
+    ): array {
+        $data = $this->db->suggestCreators(
+            $owner,
+            $hint,
+            $attribute,
+            $type,
+            $orderBy,
+            $asc,
+            $limit
+        );
+        $result = $data->reduce(function ($items, $item) {
+            if (!isset($items[$item->id])) {
+                $items[$item->id] = [];
+            }
+            $items[$item->id][$item->attribute] = $item->value;
+            return $items;
+        }, []);
+        // dd($result);
+        return $result;
+    }
 }

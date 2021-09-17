@@ -7,6 +7,7 @@ namespace Arete\Logos\Infrastructure\Laravel;
 use Arete\Logos\Application\DTO\AttributePresentation;
 use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC as ICreateSourceUC;
+use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
@@ -18,11 +19,17 @@ class CreateSourceUC implements ICreateSourceUC
     protected DB $db;
     protected SourcesRepository $sources;
     protected SourcesTranslator $translator;
+    protected CreatorsRepository $creators;
 
-    public function __construct(DB $db, SourcesRepository $sources, SourcesTranslator $translator)
-    {
+    public function __construct(
+        DB $db,
+        SourcesRepository $sources,
+        CreatorsRepository $creators,
+        SourcesTranslator $translator
+    ) {
         $this->db = $db;
         $this->sources = $sources;
+        $this->creators = $creators;
         $this->translator = $translator;
     }
 
@@ -99,5 +106,25 @@ class CreateSourceUC implements ICreateSourceUC
     public function sugestKey($params): string
     {
         return $this->sources->getKey($params);
+    }
+
+    public function suggestCreators(
+        $owner,
+        string $hint,
+        string $attribute = 'lastName',
+        string $type = 'person',
+        string $orderBy = 'lastName',
+        bool $asc = true,
+        int $limit = 5
+    ): array {
+        return $this->creators->suggestCreators(
+            $owner,
+            $hint,
+            $attribute,
+            $type,
+            $orderBy,
+            $asc,
+            $limit
+        );
     }
 }

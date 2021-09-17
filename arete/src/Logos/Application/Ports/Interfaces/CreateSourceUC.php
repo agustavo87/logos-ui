@@ -32,5 +32,16 @@ interface CreateSourceUC
      *
      * @return string
      */
+
     public function sugestKey($params): string;
+
+    public function suggestCreators(
+        $owner,
+        string $hint,
+        string $attribute = 'lastName',
+        string $type = 'person',
+        string $orderBy = 'lastName',
+        bool $asc = true,
+        int $limit = 5
+    ): array;
 }

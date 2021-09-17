@@ -135,4 +135,16 @@ class MemoryCreatorRepository implements CreatorsRepository
     {
         return clone self::$creators[$id];
     }
+
+    public function suggestCreators(
+        $owner,
+        string $hint,
+        string $attribute = 'lastName',
+        string $type = 'person',
+        string $orderBy = 'lastName',
+        bool $asc = true,
+        int $limit = 5
+    ): array {
+        return [];
+    }
 }

@@ -1,7 +1,37 @@
+
 <div x-data="alpNewSource()" x-ref="root"
      x-on:lw:message-change.window="loading = $event.detail.loading"
+     x-on:add-creator="handleAddCreator($event, $dispatch)"
      class="h-full mx-5 grid border rounded relative"
 >
+    {{-- Creators Selection --}}
+
+     <div class=" absolute bottom-0 right-0"
+        x-data="creatorsHint"
+        x-on:hint-updated.window = "newHints($event)"
+        x-ref="root"
+        x-show="visible"
+        x-on:creator-blur.window="visible = false"
+        x-transition:enter.duration.20ms
+        x-transition:leave.duration.100ms
+        x-transition.opacity
+
+     >
+        <input type="hidden" wire:model.debounce.500ms="creatorSuggestionParams.hint"
+            class="px-2 py-1 rounded border w-full"
+
+        >
+        <ul class="h-36 rounded border bg-white text-sm p-1 overflow-y-auto overflow-x-hidden" >
+            @foreach ($creatorSuggestions as $suggestion)
+                <li class="hover:bg-blue-100 rounded p-1 cursor-pointer">
+                    {{" {$suggestion['lastName']}, {$suggestion['name']} "}}
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
+    {{-- / CreatorsSelection --}}
+
 {{-- @if ($errors->any())
     <div class="border border-red-500 bg-red-50 text-red-900 p-2">
         Erorres:
@@ -39,57 +69,70 @@
     </div>
 
 {{-- Creators Sections --}}
-    <div
-        x-data="{open:false}"
-        class="flex flex-col items-stretch"
-    >
-        <div class="bg-gray-100 flex items-center justify-between px-2 py-1 text-gray-500"
-            >
+    <div class="flex flex-col items-stretch">
+        <div class="bg-gray-100 flex items-center justify-between px-2 py-1 text-gray-500">
             <div class="flex gap-2 px-1">
                 <h3 class="font-semibold text-sm ">Creadores</h3>
-                <button class="text-blue-500 text-xs hover:text-blue-600"
-                    wire:click="addCreator"
+                <button class="text-blue-600 text-xs hover:text-blue-500"
+                        x-on:click="$dispatch('add-creator')"
                 >
                     Agregar
                 </button>
             </div>
             <button class="bg-gray-50 border p-1 rounded border-gray-300 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none "
-                x-on:click="open = !open" x-cloak
+                    x-on:click="openCreators = !openCreators" x-cloak
             >
                 <x-icons.chevron-down class="w-4 h-4 fill-current transition-transform ease-in-out duration-500"
-                    x-bind:class="{'transform rotate-180': open}"
+                                      x-bind:class="{'transform rotate-180': openCreators}"
                 />
             </button>
         </div>
         <div class="text-sm border-b overflow-hidden transition-all ease-in-out duration-500 "
-             x-bind:style="{'max-height': open ?  $el.scrollHeight + 'px' : '0px'}" {{-- Se puede agregar una longitud máxima por si el scrollHeight llega a ser muy grande --}}
+             x-ref="creators"
+             x-bind:style="{'max-height': openCreators ?  $el.scrollHeight + 'px' : '0px'}" {{-- Se puede agregar una longitud máxima por si el scrollHeight llega a ser muy grande --}}
         >
-        <ul class="py-1 px-3"  >
-                @foreach ($creators as $i => $creator)
-                    <li wire:key="{{$i}}">
-                                <div
-                                class="flex py-1 items-center"
-                                x-data="personEditor">
-                                    <form x-on:submit.prevent="commitChange" class="flex flex-row gap-1" x-show="isEditing" x-on:keyup.enter="handleChange($dispatch)"  >
-                                        <input type="text" wire:model.defer="creators.{{$i}}.attributes.lastName" class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500">
-                                        <input type="text" wire:model.defer="creators.{{$i}}.attributes.name" class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500">
-                                        <button type="submit" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">
-                                            ok
-                                        </button type="submit">
-                                        <button x-on:click="removeCreator({{$i}})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer">
-                                            x
-                                        </button>
-                                    </form>
-                                    <div x-show="!isEditing" x-on:click="isEditing=true" class="cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
-                                        <span>{{$creator['attributes']['lastName']}}</span>, <span>{{$creator['attributes']['name']}}</span>
-                                    </div>
-                                </div>
-
+            <ul x-data="creatorsList({creators: logosCreators})" class="py-1 px-3" wire:ignore
+                x-on:remove-creator="handleRemoveCreator($event, $dispatch)"
+                x-on:add-creator.window="handleAddCreator($event, $dispatch)"
+            >
+                <template x-for="creator in creators" x-bind:key="creator.id">
+                    <li>
+                        <div class="flex py-1 items-center"
+                             x-data="personInput({creator:creator})"
+                            {{-- setTimeout 500 porque hay que esperar que termine la transición --}}
+                             x-on:creator-added.window = "$event.detail.creator.id == myperson.id ? editNew: null"
+                             x-ref="root"
+                        >
+                            <div  class="flex flex-row gap-1" x-show="isEditing" x-on:keyup.enter="isEditing = false"  >
+                                <input type="text" class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500"
+                                       x-model="myperson.attributes.lastName"
+                                       x-ref="lastName"
+                                       x-on:blur="$dispatch('creator-blur')"
+                                >
+                                <input type="text" class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500"
+                                    x-model="myperson.attributes.name"
+                                    x-on:blur="$dispatch('creator-blur')"
+                                >
+                                <button x-on:click="isEditing = false" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">
+                                    ok
+                                </button>
+                                {{-- <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer"> --}}
+                                <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer">
+                                    x
+                                </button>
+                            </div>
+                            <div x-show="!isEditing" x-on:click="isEditing=true" class="cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
+                                <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
+                            </div>
+                        </div>
                     </li>
-                @endforeach
+                </template>
             </ul>
         </div>
     </div>
+    {{-- / Creators Sections --}}
+
+
 
     {{-- Attributes Section --}}
     <ul class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:loading.class.remove="overflow-y-auto">
@@ -162,18 +205,17 @@
 @push('head-script')
 
 <script>
+    let logosCreators = @json($creators, JSON_PRETTY_PRINT);
+</script>
+
+<script>
     document.addEventListener('alpine:init', () => {
+        // Alpine.data('alpNewSource', (options) => {
         Alpine.data('alpNewSource', () => {
             return {
                 active: false,
                 loading:false,
-                creator: {
-                    type: 'person',
-                    attributes: {
-                        name: "Pepito",
-                        lastName: "Murundanga"
-                    }
-                },
+                openCreators: false,
                 handleEvent: function (event) {
                     if (event.type == 'source-select:solve') {
                         this.$wire.save()
@@ -188,16 +230,14 @@
                     }
                 },
                 init: function () {
-                    // console.log('iniciando new-source')
                     document.addEventListener(
                         'source-select:tab-change',
                         (e) => e.detail == 'new' ? this.activate(): (this.active ? this.deactivate(): null)
                     )
-
-                    this.$watch('creator', value => console.log(value));
                 },
                 activate: function () {
                     this.active = true;
+                    this.$refs.creators.classList.add('transition-all', 'duration-500')
                     document.addEventListener(
                         'source-select:solve',
                         this,
@@ -205,23 +245,85 @@
                     )
                 },
                 deactivate: function () {
-                    // console.log('desactivando')
-                    this.active = false;
-                    document.removeEventListener('source-select:solve', this, false)
+                    this.$refs.creators.classList.remove('transition-all', 'duration-500')
+                    this.$nextTick(() => {
+                        this.openCreators = false
+                        this.active = false
+                        document.removeEventListener('source-select:solve', this, false)
+                    })
+                },
+                handleAddCreator: function(e, dispatch) {
+                    this.$nextTick(() => {
+                            this.openCreators = true;
+                            this.$refs.creators.style.maxHeight = this.$refs.creators.scrollHeight + 'px'
+                            // dispatch('creator-added', {creator: this.creators[index]})
+                        }
+                    )
                 }
             }
         })
 
-        Alpine.data('personEditor', () => {
+        Alpine.data('creatorsList', (options) => {
             return {
-                isEditing: false,
-                commitChange: function() {
-                    this.isEditing = false;
-                    this.$wire.changeCreator()
+                creators: options.creators,
+                newCreators: 0,
+                handleAddCreator: function(e, dispatch) {
+                    let index = this.creators.push({
+                        id: ++this.newCreators,
+                        type: 'person',
+                        attributes: {
+                            name: '',
+                            lastName: ''
+                        }
+
+                    }) - 1;
+                    this.$nextTick(() => dispatch('creator-added', {creator: this.creators[index]}))
                 },
-                removeCreator: function (i) {
-                    this.isEditing = false;
-                    this.$wire.removeCreator(i);
+                handleRemoveCreator: function (event, dispatch) {
+                    let index = this.creators.findIndex((c) => c.id == event.detail.creator.id)
+                    console.log('removiendo creator id' + event.detail.creator.id + ' index : ', index)
+                    this.$nextTick(() => this.creators.splice(index, 1))
+                }
+            }
+        })
+
+        Alpine.data('personInput', (options) => {
+            return {
+                myperson: options.creator,
+                isEditing: false,
+                init: function () {
+                    this.$watch('myperson.attributes.lastName', (value) => this.emitCreatorInput('lastName', value))
+                    this.$watch('myperson.attributes.name', (value) => this.emitCreatorInput('name', value))
+                },
+                editNew: function () {
+                    this.isEditing = true;
+                    window.setTimeout(() => this.$refs.lastName.focus(), 500)
+                },
+                emitCreatorInput: function (attribute, value) {
+                    this.$wire.creatorInput('person', attribute, value)
+                        .then((result) => {
+                            this.$refs.root.dispatchEvent(new CustomEvent('hint-updated', {
+                                bubbles: true,
+                                detail: {
+                                    type: 'person',
+                                    attribute: attribute,
+                                    value: value
+                                }
+                            }))
+                        })
+                }
+            }
+        })
+
+        Alpine.data('creatorsHint', function () {
+            return {
+                visible: false,
+                newHints: function (event) {
+                    let margin= 8
+                    this.$refs.root.style.top = event.target.offsetTop + event.target.offsetHeight + margin + 'px'
+                    this.$refs.root.style.left = event.target.offsetLeft + 'px'
+                    this.$refs.root.style.width = event.target.clientWidth + 'px'
+                    this.visible = true;
                 }
             }
         })

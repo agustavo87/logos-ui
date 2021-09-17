@@ -4,6 +4,7 @@ namespace Arete\Logos\Infrastructure\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use Arete\Logos\Application\LogosContainer as Logos;
+use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 use Arete\Logos\Domain\SimpleFormatter;
@@ -35,6 +36,7 @@ class SourcesServiceProvider extends ServiceProvider
                 return new CreateSourceUC(
                     $app->make(DB::class),
                     $app->make(SourcesRepository::class),
+                    $app->make(CreatorsRepository::class),
                     $app->make(SourcesTranslator::class)
                 );
             }

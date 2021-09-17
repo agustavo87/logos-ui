@@ -33,12 +33,14 @@ class SourceNew extends Component
 
     public array $creators = [
         [
+            'id'    => 23,
             'type' => 'person',
             'attributes' => [
                 'name' => 'Pedro',
                 'lastName' => "Saucedo"
             ]
         ], [
+            'id' => 32,
             'type' => 'person',
             'attributes' => [
                 'name' => 'Juan',
@@ -54,6 +56,17 @@ class SourceNew extends Component
         // ]
     ];
 
+    public $creatorSuggestions = [];
+
+    public $creatorSuggestionParams = [
+        'hint' => 'ar',
+        'attribute' => 'lastName',
+        'type' => 'person',
+        'orderBy' => 'created_at', // attribute, 'created_at', 'updated_at'
+        'asc'  => false,
+        'limit' => 7
+    ];
+
     public function mount(CreateSourceUC $createSource)
     {
         $types = $createSource->presentSourceTypes();
@@ -62,6 +75,38 @@ class SourceNew extends Component
             $types
         );
         $this->updateAttributesFields();
+        $this->iupdateCreatorSuggestion($createSource);
+    }
+
+    protected function iupdateCreatorSuggestion(?CreateSourceUC $createUC = null)
+    {
+        /** @var \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC */
+        $createUC = $createUC ?? app(CreateSourceUC::class);
+        $this->creatorSuggestions = $createUC->suggestCreators(
+            Auth::user()->id,
+            $this->creatorSuggestionParams['hint'],
+            $this->creatorSuggestionParams['attribute'],
+            $this->creatorSuggestionParams['type'],
+            $this->creatorSuggestionParams['orderBy'],
+            $this->creatorSuggestionParams['asc'],
+            $this->creatorSuggestionParams['limit']
+        );
+    }
+
+    public function creatorInput($type, $attribute, $value)
+    {
+        $data = [
+            'type' => $type,
+            'attribute' => $attribute,
+            'hint' => $value
+        ];
+        $this->creatorSuggestionParams = array_merge($this->creatorSuggestionParams, $data);
+        $this->iupdateCreatorSuggestion();
+    }
+
+    public function updatedCreatorSuggestionParamsHint($value)
+    {
+        $this->iupdateCreatorSuggestion();
     }
 
     public function render()
@@ -93,7 +138,7 @@ class SourceNew extends Component
 
     public function hydrate()
     {
-        Log::info('[hydrate] creators', $this->creators);
+        // Log::info('[hydrate] creators', $this->creators);
         $this->validationAttributes['sourceKey'] = strtolower(__('sources.key'));
     }
 
