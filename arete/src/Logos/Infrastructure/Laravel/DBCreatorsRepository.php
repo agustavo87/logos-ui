@@ -141,14 +141,13 @@ class DBCreatorsRepository extends DBRepository implements CreatorsRepository
             $asc,
             $limit
         );
-        $result = $data->reduce(function ($items, $item) {
+        $result = $data->reduce(function ($items, $item) use ($type) {
             if (!isset($items[$item->id])) {
-                $items[$item->id] = [];
+                $items[$item->id] = ['id' => $item->id, 'type' => $type, 'attributes' => []];
             }
-            $items[$item->id][$item->attribute] = $item->value;
+            $items[$item->id]['attributes'][$item->attribute] = $item->value;
             return $items;
         }, []);
-        // dd($result);
         return $result;
     }
 }

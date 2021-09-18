@@ -1,5 +1,5 @@
 
-<div x-data="alpNewSource()" x-ref="root"
+<div x-data="alpNewSource" x-ref="root"
      x-on:lw:message-change.window="loading = $event.detail.loading"
      x-on:add-creator="handleAddCreator($event, $dispatch)"
      class="h-full mx-5 grid border rounded relative"
@@ -7,29 +7,35 @@
     {{-- Creators Selection --}}
 
      <div class=" absolute bottom-0 right-0"
-        x-data="creatorsHint"
+        x-data="creatorsHint({creators: @entangle('creatorSuggestions') })"
         x-on:hint-updated.window = "newHints($event)"
         x-ref="root"
         x-show="visible"
-        x-on:creator-blur.window="visible = false"
-        x.on:source-select:reset.window="deactivate"
+        x-on:creator-blur.window="decideHidding"
+        x-on:click.outside="decideHidding"
         x-transition:enter.duration.20ms
         x-transition:leave.duration.100ms
         x-transition.opacity
+
 
      >
         <input type="hidden" wire:model.debounce.500ms="creatorSuggestionParams.hint"
             class="px-2 py-1 rounded border w-full"
 
         >
-        <ul class="h-36 rounded border border-blue-200 bg-gray-50 text-xs p-1 overflow-y-auto overflow-x-hidden" >
-            @foreach ($creatorSuggestions as $suggestion)
+        <ul class="h-36 rounded border border-blue-200 bg-gray-50 text-xs p-1 overflow-y-auto overflow-x-hidden"
+            x-on:mouseover="mouseover = true"
+            x-on:mouseleave="mouseover = false"
+        >
+           <template x-for="suggestion in creators" x-bind:key="suggestion.id">
                 <li>
-                    <button class="hover:bg-blue-100 hover:text-blue-800 rounded p-1 cursor-pointer w-full text-left">
-                        {{" {$suggestion['lastName']}, {$suggestion['name']} "}}
+                    <button class="hover:bg-blue-100 hover:text-blue-800 rounded p-1 cursor-pointer w-full text-left"
+                        x-on:click="acceptSugestion(suggestion.id, $dispatch)"
+                    >
+                        <span x-text="suggestion.attributes.lastName + ', ' + suggestion.attributes.name"></span>
                     </button>
                 </li>
-            @endforeach
+           </template>
         </ul>
     </div>
 
@@ -101,30 +107,38 @@
                 <template x-for="creator in creators" x-bind:key="creator.id">
                     <li>
                         <div class="flex py-1 items-center"
-                             x-data="personInput({creator:creator})"
-                            {{-- setTimeout 500 porque hay que esperar que termine la transición --}}
+                             x-data="personInput({creator:creator, nuevo: creator.nuevo ? true: false})"
                              x-on:creator-added.window = "$event.detail.creator.id == myperson.id ? editNew: null"
+                             x-on:suggestion-acepted.window="handleSuggestion($event)"
                              x-ref="root"
+                             x-bind:class="nuevo ? 'border border-red-500' : ''"
+
                         >
-                            <div  class="flex flex-row gap-1 w-full justify-between" x-show="isEditing" x-on:keyup.enter="isEditing = false"  >
+                            <div  class="flex flex-row gap-1 w-full justify-between" x-show="isEditing" x-on:keyup.enter="isEditing = false"
+
+                             >
                                 <input type="text" class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500"
                                        x-model="myperson.attributes.lastName"
                                        x-ref="lastName"
                                        x-on:blur="$dispatch('creator-blur')"
+                                       x-bind:data-id="myperson.id"
                                 >
                                 <input type="text" class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500"
                                     x-model="myperson.attributes.name"
                                     x-on:blur="$dispatch('creator-blur')"
+                                    x-bind:data-id="myperson.id"
                                 >
-                                <button x-on:click="isEditing = false" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">
-                                    ok
-                                </button>
-                                {{-- <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer"> --}}
-                                <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer">
-                                    x
-                                </button>
+                                <div class="flex flex-row gap-1">
+                                    <button x-on:click="isEditing = false" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">
+                                        ok
+                                    </button>
+                                    {{-- <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer"> --}}
+                                    <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer">
+                                        x
+                                    </button>
+                                </div>
                             </div>
-                            <div x-show="!isEditing" x-on:click="isEditing=true" class="cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
+                            <div x-show="!isEditing" x-on:click="isEditing=true" class="w-full cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
                                 <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
                             </div>
                         </div>
@@ -221,7 +235,6 @@
 
 <script>
     document.addEventListener('alpine:init', () => {
-        // Alpine.data('alpNewSource', (options) => {
         Alpine.data('alpNewSource', () => {
             return {
                 active: false,
@@ -279,7 +292,8 @@
                 newCreators: 0,
                 handleAddCreator: function(e, dispatch) {
                     let index = this.creators.push({
-                        id: ++this.newCreators,
+                        id: 'n-' + ++this.newCreators,
+                        nuevo: true,
                         type: 'person',
                         attributes: {
                             name: '',
@@ -300,6 +314,7 @@
         Alpine.data('personInput', (options) => {
             return {
                 myperson: options.creator,
+                nuevo: options.nuevo,
                 isEditing: false,
                 init: function () {
                     this.$watch('myperson.attributes.lastName', (value) => this.emitCreatorInput('lastName', value))
@@ -317,23 +332,48 @@
                                 detail: {
                                     type: 'person',
                                     attribute: attribute,
-                                    value: value
+                                    value: value,
+                                    creator: JSON.parse(JSON.stringify(this.myperson))
                                 }
                             }))
                         })
+                },
+                handleSuggestion:function ($event) {
+                    if ($event.detail.client.id == this.myperson.id) {
+                        console.log('el mismo origen: ', event.detail.creator)
+                    }
                 }
             }
         })
 
-        Alpine.data('creatorsHint', function () {
+        Alpine.data('creatorsHint', function (options) {
             return {
+                lastCreator: null,
                 visible: false,
+                mouseover: false,
+                creators: options.creators,
+                acceptSugestion: function(id, $dispatch) {
+                    $dispatch('suggestion-acepted', {
+                        creator: this.creators[id],
+                        client: this.lastCreator
+                    })
+                },
                 newHints: function (event) {
                     let margin= 8
                     this.$refs.root.style.top = event.target.offsetTop + event.target.offsetHeight + margin + 'px'
                     this.$refs.root.style.left = event.target.offsetLeft + 'px'
                     this.$refs.root.style.width = event.target.clientWidth + 'px'
                     this.visible = true;
+                    this.lastCreator = event.detail.creator
+                },
+                decideHidding: function () {
+                    if (this.visible && !this.mouseover) {
+                        this.$nextTick(() => {
+                            if (!(document.activeElement.dataset.id == this.lastCreator.id)) {
+                                this.visible = false
+                            }
+                        })
+                    }
                 }
             }
         })
