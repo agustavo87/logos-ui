@@ -18,7 +18,18 @@ class SourceTypePresentation implements JsonSerializable, Arrayable, Stringable
      */
     public array $attributes;
 
-    public function __construct($code, $label, array $attributes = [])
+    /**
+     * @var \Arete\Logos\Application\DTO\RolePresentation[]
+     */
+    public array $roles;
+
+    /**
+     * @param string $code
+     * @param string $label
+     * @param \Arete\Logos\Application\DTO\AttributePresentation[] $attributes
+     * @param \Arete\Logos\Application\DTO\RolePresentation[] $roles
+     */
+    public function __construct(string $code, string $label, array $attributes = [], array $roles = [])
     {
         $this->code = $code;
         $this->label = $label;
@@ -26,6 +37,7 @@ class SourceTypePresentation implements JsonSerializable, Arrayable, Stringable
             usort($attributes, fn ($a, $b) => $a->order <=> $b->order);
         }
         $this->attributes = $attributes;
+        $this->roles = $roles;
     }
 
     public function __toString()
@@ -38,10 +50,14 @@ class SourceTypePresentation implements JsonSerializable, Arrayable, Stringable
         $data =  [
             'code' => $this->code,
             'label' => $this->label,
-            'attributes' => []
+            'attributes' => [],
+            'roles' => []
         ];
         foreach ($this->attributes as $attr) {
             $data['attributes'][$attr->order] = $attr->toArray();
+        }
+        foreach ($this->roles as $roles) {
+            $data['roles'][$roles->code] = $roles->toArray();
         }
         return $data;
     }

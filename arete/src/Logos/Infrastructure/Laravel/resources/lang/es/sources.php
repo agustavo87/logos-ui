@@ -46,5 +46,12 @@ return [
         'rights'    => 'Derechos',
         'language' => 'Idioma',
         'extra' => 'Extra',
+    ],
+    'roles' => [
+        'author' => "Autor",
+        'editor'    => "Editor",
+        'contributor' => "Colaborador",
+        'translator'    => "Traductor",
+        'reviewedAuthor' => "Autor Revisado"
     ]
 ];

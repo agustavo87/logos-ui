@@ -31,9 +31,15 @@ class SourceNew extends Component
         'complex' => []
     ];
 
+    public array $logosRoles = [
+        'person' => ['author', 'contributor', 'editor', 'translator', 'reviewedAuthor']
+    ];
+
     public array $creators = [
         [
             'id'    => 23,
+            'role' => 'author',
+            'relevance' => 1,
             'type' => 'person',
             'attributes' => [
                 'name' => 'Pedro',
@@ -42,6 +48,8 @@ class SourceNew extends Component
         ], [
             'id' => 32,
             'type' => 'person',
+            'role' => 'editor',
+            'relevance' => 2,
             'attributes' => [
                 'name' => 'Juan',
                 'lastName' => "Ramirez"
@@ -114,8 +122,12 @@ class SourceNew extends Component
         return view('livewire.source-new');
     }
 
-    public function save(CreateSourceUC $createSource)
+    public function save(CreateSourceUC $createSource, $data)
     {
+        // dd($this->selectedType);
+
+        // dd($data);
+        $this->attributes = $data['attributes'];
         $this->filterTypeAttributes();
         $this->updateValidationRules();
         $this->validate();

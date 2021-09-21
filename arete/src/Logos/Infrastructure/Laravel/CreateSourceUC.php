@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Arete\Logos\Infrastructure\Laravel;
 
 use Arete\Logos\Application\DTO\AttributePresentation;
+use Arete\Logos\Application\DTO\RolePresentation;
 use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC as ICreateSourceUC;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
@@ -44,10 +45,37 @@ class CreateSourceUC implements ICreateSourceUC
         foreach ($types as $type) {
             $label = $this->translator->translate($type->code_name, 'types');
             $attributes = $this->getAttributePresentations($type->code_name);
-            $data[$type->code_name] = new SourceTypePresentation($type->code_name, $label, $attributes);
+            $roles = $this->getRolesPresentations($type->code_name);
+            $data[$type->code_name] = new SourceTypePresentation(
+                $type->code_name,
+                $label,
+                $attributes,
+                $roles
+            );
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $typeCode
+     *
+     * @return \Arete\Logos\Application\DTO\RolePresentation[]
+     */
+    protected function getRolesPresentations(string $typeCode): array
+    {
+        /**
+         * @todo retornar los roles del tipo correspondiente con RolePresentation
+         */
+        return $this->db->getRoles($typeCode)
+                ->map(function ($item, $key) {
+                    return new RolePresentation(
+                        $item->code_name,
+                        $this->translator->translate($item->code_name, 'roles') ??
+                                    ($item->label ?? $item->code_name),
+                        (bool) $item->primary
+                    );
+                })->toArray();
     }
 
     /**

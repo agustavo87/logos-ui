@@ -7,7 +7,7 @@
     {{-- Creators Selection --}}
 
      <div class=" absolute bottom-0 right-0"
-        x-data="creatorsHint({creators: @entangle('creatorSuggestions') })"
+        x-data="creatorsHint({creators: @entangle('creatorSuggestions').defer })"
         x-on:hint-updated.window = "newHints($event)"
         x-ref="root"
         x-show="visible"
@@ -16,8 +16,6 @@
         x-transition:enter.duration.20ms
         x-transition:leave.duration.100ms
         x-transition.opacity
-
-
      >
         <input type="hidden" wire:model.debounce.500ms="creatorSuggestionParams.hint"
             class="px-2 py-1 rounded border w-full"
@@ -52,15 +50,17 @@
     </div>
 @endif --}}
 {{-- Source Type Select and Key Section --}}
-
     <div>
-        <select name="sourceType" id="sourceType" wire:model="selectedType"
-                x-bind:disabled="loading"
-                class="border-b border-blue-400 focus:outline-none font-medium mb-2 ml-2 mt-1 py-1 text-gray-800 text-sm"
-        >
-            @foreach ($sourceTypes as $type)
-                <option value="{{ $type['code'] }}">{{ $type['label'] }}</option>
-            @endforeach
+        <select
+        x-data="selectSourceType({type: @entangle('selectedType').defer })"
+        x-model="type" class="font-medium p-2 rounded text-xs focus:outline-none cursor-pointer hover:text-blue-900">
+            <template x-for="sType in $store.sourceTypes.list">
+                <option
+                x-bind:value="sType.code"
+                x-text="sType.label"
+                x-bind:selected="sType.code == type">
+                </option>
+            </template>
         </select>
         <div class="flex flex-row gap-2 items-baseline ml-1 pb-1 px-2">
             <label for="source-key" class="flex-grow-0 text-gray-600 text-sm">{{ __('sources.key') }}</label>
@@ -96,50 +96,89 @@
                 />
             </button>
         </div>
-        <div class="text-sm border-b overflow-hidden transition-all ease-in-out duration-500 "
-             x-ref="creators"
-             x-bind:style="{'max-height': openCreators ?  $el.scrollHeight + 'px' : '0px'}" {{-- Se puede agregar una longitud máxima por si el scrollHeight llega a ser muy grande --}}
+        <div
+        x-ref="creators"
+        x-bind:style="{'max-height': openCreators ?  $el.scrollHeight + 'px' : '0px'}" {{-- Se puede agregar una longitud máxima por si el scrollHeight llega a ser muy grande --}}
+        class="text-sm border-b overflow-hidden transition-all ease-in-out duration-500 "
         >
-            <ul x-data="creatorsList({creators: logosCreators})" class="py-1 px-3" wire:ignore
-                x-on:remove-creator="handleRemoveCreator($event, $dispatch)"
-                x-on:add-creator.window="handleAddCreator($event, $dispatch)"
-            >
-                <template x-for="creator in creators" x-bind:key="creator.id">
-                    <li>
-                        <div class="flex py-1 items-center"
-                             x-data="personInput({creator:creator, nuevo: creator.nuevo ? true: false})"
-                             x-on:creator-added.window = "$event.detail.creator.id == myperson.id ? editNew: null"
-                             x-on:suggestion-acepted.window="handleSuggestion($event)"
-                             x-ref="root"
-                             x-bind:class="nuevo ? 'border border-red-500' : ''"
 
+        {{-- Creators List --}}
+            <ul x-data="creatorsList({
+                creators: logosCreators
+            })"
+            x-on:remove-creator="handleRemoveCreator($event, $dispatch)"
+            x-on:add-creator.window="handleAddCreator($event, $dispatch)"
+            x-effect="roles = $store.sourceTypes.roles($store.sourceTypes.selected)"
+            wire:ignore
+            class="py-1 px-3"
+            >
+                <template x-for="(creator, index ) in creators" x-bind:key="creator.i">
+                    <li>
+                        {{-- Person Input --}}
+                        <div
+                        x-data="personInput({creator:creator})"
+                        x-on:creator-added.window = "$event.detail.creator.i == myperson.i ? editNew: null"
+                        x-on:suggestion-acepted.window="handleSuggestion($event)"
+                        x-ref="root"
+                        class="flex py-1 items-center"
                         >
                             <div  class="flex flex-row gap-1 w-full justify-between" x-show="isEditing" x-on:keyup.enter="isEditing = false"
 
                              >
-                                <input type="text" class="px-2 border-b border-gray-100  focus:outline-none focus:border-blue-500"
-                                       x-model="myperson.attributes.lastName"
-                                       x-ref="lastName"
-                                       x-on:blur="$dispatch('creator-blur')"
-                                       x-bind:data-id="myperson.id"
+                             <div class="flex flex-row gap-1">
+                                <input type="text" class="px-2 border-b border-gray-100 w-2/5 focus:outline-none focus:border-blue-500"
+                                x-bind:value="myperson.attributes.lastName"
+                                x-on:input="creatorInput('lastName', $event.target.value)"
+                                x-ref="lastName"
+                                x-on:blur="$dispatch('creator-blur')"
+                                x-bind:data-i="myperson.i"
                                 >
-                                <input type="text" class="px-2 border-b border-gray-100 focus:outline-none focus:border-blue-500"
-                                    x-model="myperson.attributes.name"
+                                <input type="text" class="px-2 w-2/5 border-b border-gray-100 focus:outline-none focus:border-blue-500"
+                                    x-bind:value="myperson.attributes.name"
+                                    x-on:input="creatorInput('name', $event.target.value)"
                                     x-on:blur="$dispatch('creator-blur')"
-                                    x-bind:data-id="myperson.id"
+                                    x-bind:data-i="myperson.i"
                                 >
-                                <div class="flex flex-row gap-1">
-                                    <button x-on:click="isEditing = false" class="h-6 w-6 leading-none border text-blue-900 border-blue-500 rounded hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer">
-                                        ok
+                                <select class="border ml-1 rounded text-xs focus:outline-none"
+                                    x-model="myperson.role"
+                                >
+                                    <template x-for="role in roles">
+                                        <option x-bind:value="role.code" x-text="role.label" x-bind:selected="role.code == validRole"></option>
+                                    </template>
+                                </select>
+                             </div>
+
+                                <div class="flex flex-row gap-1 ml-2">
+                                    <button x-on:click="isEditing = false" class="h-5 w-5 text-xs font-bold leading-none border text-blue-900 border-blue-500 rounded-full hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer focus:outline-none">
+                                        &#10003;
                                     </button>
                                     {{-- <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer"> --}}
-                                    <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-6 w-6 leading-none border text-red-900 border-red-500 rounded hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer">
-                                        x
+                                    <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-5 w-5 text-xs font-bold leading-none border text-red-900 border-red-500 rounded-full hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer focus:outline-none">
+                                        &#10005;
                                     </button>
                                 </div>
                             </div>
-                            <div x-show="!isEditing" x-on:click="isEditing=true" class="w-full cursor-pointer hover:bg-blue-50 px-1 rounded-md italic">
-                                <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
+                            <div class="align-middle cursor-pointer flex hover:bg-blue-50 italic justify-between rounded-full w-full"
+                                x-show="!isEditing" x-on:click="isEditing=true"
+
+                            >
+                                <div class="flex items-center ml-1">
+                                    <div>
+                                        <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
+                                    </div>
+                                    <span class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"
+                                        x-text="validRole(roles).label"
+                                        {{-- Mejorar esto para que en caso de no estar disponible el rol primario sea utilizado provisto por validRole --}}
+                                    ></span>
+                                </div>
+                                <div>
+                                    <button class="text-white rounded-full m-1 bg-blue-400 hover:bg-white hover:text-blue-500 h-5 w-5 flex align-middle justify-center focus:outline-none"
+                                        x-on:click.stop="moveUp(creator.i)"
+                                        x-show="index > 0"
+                                    >
+                                        &uarr;
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -152,9 +191,40 @@
 
 
     {{-- Attributes Section --}}
-    <ul class="overflow-y-auto overflow-hidden px-2 pb-2 "
-        {{-- wire:loading.class.remove="overflow-y-auto" --}}
+    <ul
+    x-data="sourceAttributes"
+    class="overflow-y-auto overflow-hidden px-2 pb-2 "
     >
+    <template x-for="attribute in $store.sourceTypes.attributes">
+        <li>
+            <div class="flex flex-col mt-2">
+                <label
+                x-bind:for="'attribute.' + attribute.code"
+                x-text="attribute.label"
+                class=" flex-grow-0 text-gray-600 text-sm ml-1"
+                ></label>
+                <input
+                x-bind:type="type(attribute.type)"
+                x-bind:name="'attribute.' + attribute.code"
+                x-bind:id="'input-' + attribute.code"
+                x-show="attribute.code != 'abstractNote'"
+                x-bind:value="$store.source.attributes[attribute.code] ? $store.source.attributes[attribute.code] : ($store.source.attributes[attribute.base] ? $store.source.attributes[attribute.base] : null)"
+                x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
+                class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
+                >
+                <textarea
+                x-bind:name="'attribute.' + attribute.code"
+                x-bind:id="'input-' + attribute.code"
+                x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
+                x-bind:value="$store.source.attributes[attribute.code] ? $store.source.attributes[attribute.code] : ($store.source.attributes[attribute.base] ? $store.source.attributes[attribute.base] : null)"
+                x-show="attribute.code == 'abstractNote'"
+                rows="4"
+                class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none focus:border-blue-400"
+                ></textarea>
+            </div>
+        </li>
+    </template>
+    {{--
         @forelse ($sourceTypes[$selectedType]['attributes'] as $order => $attribute)
             <li>
                 @switch($attribute['type'])
@@ -217,6 +287,8 @@
         @empty
             <li>Sin attributos</li>
         @endforelse
+        --}}
+
         {{-- Loading Overlay --}/}
         <div class="absolute inset-0 bg-gray-200 opacity-40"
             x-data="{loading:false}"
@@ -231,10 +303,34 @@
 
 <script>
     let logosCreators = @json($creators, JSON_PRETTY_PRINT);
+    let logosRoles = @json($logosRoles, JSON_PRETTY_PRINT);
+    let logosSourceTypes = @json($sourceTypes, JSON_PRETTY_PRINT);
 </script>
 
 <script>
     document.addEventListener('alpine:init', () => {
+        Alpine.store('sourceTypes', {
+            list: @json($sourceTypes, JSON_PRETTY_PRINT),
+            selected: null,
+            attributes: {},
+            init: function () {
+                this.updateAttributes()
+            },
+            updateAttributes: function () {
+                this.attributes = Object.values(this.list[this.selected ? this.selected : 'journalArticle'].attributes)
+            },
+            updateSelected: function (sType) {
+                this.selected = sType;
+                this.updateAttributes();
+            },
+            roles: function (sourceType) {
+                return this.list[sourceType].roles
+            },
+        })
+        Alpine.store('source', {
+            attributes: {}
+        })
+
         Alpine.data('alpNewSource', () => {
             return {
                 active: false,
@@ -242,7 +338,7 @@
                 openCreators: false,
                 handleEvent: function (event) {
                     if (event.type == 'source-select:solve') {
-                        this.$wire.save()
+                        this.$wire.save(this.$store.source)
                             .then(result => {
                                 this.$refs.root.dispatchEvent(
                                     new CustomEvent(
@@ -287,13 +383,35 @@
         })
 
         Alpine.data('creatorsList', (options) => {
+            let i = 1;
+            options.creators.forEach(creator => creator.i = i++)
+            // console.log('procesed creators: ',  options.creators)
+            // console.log('source types: ', options.sourceTypes)
+
             return {
+                i:i,
                 creators: options.creators,
-                newCreators: 0,
+                // selectedType: options.selectedType,
+                roles: {},
+                init: function () {
+                    // this.updateRoles()
+                    // this.$watch('selectedType', () => this.updateRoles())
+                },
+                updateRoles: function () {
+                    // this.roles = this.$store.sourceTypes.roles(this.selectedType)
+                    // console.log('actualizando roles: ', this.roles)
+                },
+                moveUp: function (i) {
+                    let tempCreators = JSON.parse(JSON.stringify(this.creators))
+                    let index = tempCreators.findIndex((person) => person.i == i)
+                    let movingCreator = tempCreators.splice(index,1)[0]
+                    tempCreators.splice(index - 1, 0,movingCreator)
+                    this.creators = tempCreators;
+                },
                 handleAddCreator: function(e, dispatch) {
                     let index = this.creators.push({
-                        id: 'n-' + ++this.newCreators,
-                        nuevo: true,
+                        i: i++,
+                        id: null,
                         type: 'person',
                         attributes: {
                             name: '',
@@ -301,11 +419,11 @@
                         }
 
                     }) - 1;
-                    this.$nextTick(() => dispatch('creator-added', {creator: this.creators[index]}))
+                    this.$nextTick(() => dispatch('creator-added', {creator: JSON.parse(JSON.stringify(this.creators[index]))}))
                 },
                 handleRemoveCreator: function (event, dispatch) {
-                    let index = this.creators.findIndex((c) => c.id == event.detail.creator.id)
-                    console.log('removiendo creator id' + event.detail.creator.id + ' index : ', index)
+                    let index = this.creators.findIndex((c) => c.i == event.detail.creator.i)
+                    console.log('removiendo creator i' + event.detail.creator.i + ' index : ', index)
                     this.$nextTick(() => this.creators.splice(index, 1))
                 }
             }
@@ -314,11 +432,15 @@
         Alpine.data('personInput', (options) => {
             return {
                 myperson: options.creator,
-                nuevo: options.nuevo,
+                // In case the saved role is not available on current source type roles.
+                validRole: function (roles) {
+                    return roles[this.myperson.role] ?? Object.values(roles).find(role => role.primary)
+                },
                 isEditing: false,
-                init: function () {
-                    this.$watch('myperson.attributes.lastName', (value) => this.emitCreatorInput('lastName', value))
-                    this.$watch('myperson.attributes.name', (value) => this.emitCreatorInput('name', value))
+                creatorInput: function(attr, value) {
+                    console.log('creator input', attr, value)
+                    this.myperson.attributes[attr] = value
+                    this.emitCreatorInput('lastName', value)
                 },
                 editNew: function () {
                     this.isEditing = true;
@@ -339,8 +461,12 @@
                         })
                 },
                 handleSuggestion:function ($event) {
-                    if ($event.detail.client.id == this.myperson.id) {
-                        console.log('el mismo origen: ', event.detail.creator)
+                    if ($event.detail.client.i == this.myperson.i) {
+                        let creator = event.detail.creator;
+                        console.log('el mismo origen: ', creator)
+                        this.myperson.attributes.name  = creator.attributes.name
+                        this.myperson.attributes.lastName  = creator.attributes.lastName
+                        this.myperson.id = creator.id
                     }
                 }
             }
@@ -354,8 +480,8 @@
                 creators: options.creators,
                 acceptSugestion: function(id, $dispatch) {
                     $dispatch('suggestion-acepted', {
-                        creator: this.creators[id],
-                        client: this.lastCreator
+                        creator: JSON.parse(JSON.stringify(this.creators[id])),
+                        client: JSON.parse(JSON.stringify(this.lastCreator))
                     })
                 },
                 newHints: function (event) {
@@ -369,7 +495,7 @@
                 decideHidding: function () {
                     if (this.visible && !this.mouseover) {
                         this.$nextTick(() => {
-                            if (!(document.activeElement.dataset.id == this.lastCreator.id)) {
+                            if (!(document.activeElement.dataset.i == this.lastCreator.i)) {
                                 this.visible = false
                             }
                         })
@@ -377,7 +503,40 @@
                 }
             }
         })
+
+        Alpine.data('selectSourceType', function (options) {
+            return {
+                type: options.type,
+                init: function () {
+                    this.shareType()
+                    this.$watch('type', () => this.shareType())
+                },
+                shareType: function () {
+                    this.$store.sourceTypes.updateSelected(this.type)
+                }
+            }
+        })
+
+        Alpine.data('sourceAttributes', () => {
+            return {
+                attributes: {},
+                type: function(typeCode) {
+                    switch (typeCode) {
+                        case 'text':
+                            return 'text'
+                        case 'number':
+                            return 'number'
+                        case 'date':
+                            return 'date'
+                        default:
+                            return 'text'
+                            break;
+                    }
+                }
+            }
+        })
     })
+
 </script>
 
 @endpush
