@@ -16,6 +16,7 @@
 
     {{ $slot }}
 
+    @stack('foot')
     @livewireScripts
     <script src="{{ mix('/js/app.js') }}"></script>
     @stack('foot-script')
