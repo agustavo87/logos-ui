@@ -14,6 +14,11 @@ class SourceNew extends Component
 
     public $selectedType = "journalArticle";
 
+    /**
+     * Source attributes
+     *
+     * @var array
+     */
     public array $attributes = [];
 
     public string $sourceKey = '';
@@ -24,15 +29,17 @@ class SourceNew extends Component
 
     protected array $validationAttributes = [];
 
+    /**
+     * A map of the laravel rules tags in relation to the
+     * source attribute data types
+     *
+     * @var array
+     */
     protected static array $typeRules = [
         'text' => ['string'],
         'number' => ['numeric'],
         'date'  => ['date'],
         'complex' => []
-    ];
-
-    public array $logosRoles = [
-        'person' => ['author', 'contributor', 'editor', 'translator', 'reviewedAuthor']
     ];
 
     public array $creators = [
@@ -55,17 +62,20 @@ class SourceNew extends Component
                 'lastName' => "Ramirez"
             ]
         ],
-        // [
-        //     'type' => 'organization',
-        //     'attributes' => [
-        //         'name' => 'American Psychological Association',
-        //         'acronym' => "APA"
-        //     ]
-        // ]
     ];
 
+    /**
+     * Creators suggestions to user input
+     *
+     * @var array
+     */
     public $creatorSuggestions = [];
 
+    /**
+     * Parameters for the suggestion of creators
+     *
+     * @var array
+     */
     public $creatorSuggestionParams = [
         'hint' => 'ar',
         'attribute' => 'lastName',
@@ -82,14 +92,45 @@ class SourceNew extends Component
             fn (SourceTypePresentation $typePresentation) => $typePresentation->toArray(),
             $types
         );
-        $this->updateAttributesFields();
-        $this->iupdateCreatorSuggestion($createSource);
+        $this->mapSourceAttributesFields();
+        $this->myUpdateCreatorSuggestions($createSource);
     }
 
-    protected function iupdateCreatorSuggestion(?CreateSourceUC $createUC = null)
+    public function render()
+    {
+        return view('livewire.source-new');
+    }
+
+    public function hydrate()
+    {
+        $this->validationAttributes['sourceKey'] = strtolower(__('sources.key'));
+    }
+
+    public function updated($propertyName)
+    {
+        // Validates the current updated property if it is an attribute
+        $props = explode('.', $propertyName);
+        if ($props[0] == 'attributes') {
+            list(
+                'rules' => $rules,
+                'label' => $label
+            ) = $this->getAttributeRuleData($this->attributeData($props[1]));
+            $this->validateOnly(
+                $propertyName,
+                [$propertyName => $rules],
+                [],
+                [$propertyName => $label]
+            );
+        } else {
+            $this->validateOnly($propertyName);
+        }
+    }
+
+    protected function myUpdateCreatorSuggestions(?CreateSourceUC $createUC = null)
     {
         /** @var \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC */
         $createUC = $createUC ?? app(CreateSourceUC::class);
+
         $this->creatorSuggestions = $createUC->suggestCreators(
             Auth::user()->id,
             $this->creatorSuggestionParams['hint'],
@@ -109,24 +150,29 @@ class SourceNew extends Component
             'hint' => $value
         ];
         $this->creatorSuggestionParams = array_merge($this->creatorSuggestionParams, $data);
-        $this->iupdateCreatorSuggestion();
+        $this->myUpdateCreatorSuggestions();
     }
 
     public function updatedCreatorSuggestionParamsHint($value)
     {
-        $this->iupdateCreatorSuggestion();
+        $this->myUpdateCreatorSuggestions();
     }
 
-    public function render()
+    public function computeKey(CreateSourceUC $createSource, $value)
     {
-        return view('livewire.source-new');
+        $this->sourceKey = $createSource->sugestKey([
+            'ownerID'   => Auth::user()->id,
+            'key'       => $value
+        ]);
+    }
+
+    public function updatedSelectedType($type)
+    {
+        $this->mapSourceAttributesFields();
     }
 
     public function save(CreateSourceUC $createSource, $data)
     {
-        // dd($this->selectedType);
-
-        // dd($data);
         $this->attributes = $data['attributes'];
         $this->filterTypeAttributes();
         $this->updateValidationRules();
@@ -140,54 +186,19 @@ class SourceNew extends Component
         return $this->sourceKey;
     }
 
-    public function computeKey(CreateSourceUC $createSource, $value)
-    {
-        $this->sourceKey = $createSource->sugestKey([
-            'ownerID'   => Auth::user()->id,
-            'key'       => $value
-        ]);
-    }
-
-    public function hydrate()
-    {
-        // Log::info('[hydrate] creators', $this->creators);
-        $this->validationAttributes['sourceKey'] = strtolower(__('sources.key'));
-    }
-
-    public function updated($propertyName)
-    {
-        Log::info('[updated] creators', $this->creators);
-        $props = explode('.', $propertyName);
-        if ($props[0] == 'attributes') {
-            list(
-                'rules' => $rules,
-                'label' => $label
-            ) = $this->getAttributeRuleData($this->attributeData($props[1]));
-            $this->validateOnly(
-                $propertyName,
-                [$propertyName => $rules],
-                [],
-                [$propertyName => $label]
-            );
-        } else {
-            $this->validateOnly($propertyName);
-        }
-    }
-
-    public function updatedSelectedType($type)
-    {
-        $this->updateAttributesFields();
-    }
-
     /**
-     * Update the public attributes fields to bind the source data
+     * Updates the public attributes fields to match to the selected source type attributes.
+     *
+     * Also recicles the available data according to attribute type and base type.
+     * It don't deletes the attributes that don't belong to the current type to be available
+     * for an eventual change of source type
      *
      * @return void
      */
-    protected function updateAttributesFields()
+    protected function mapSourceAttributesFields()
     {
-        $this->cleanEmptyAttributes();
-        foreach ($this->attributesData() as $attr) {
+        $this->deleteEmptyAttributes();
+        foreach ($this->currentSourceTypeAttributes() as $attr) {
             list('code' => $code, 'base' => $base) = $attr;
             if (!isset($this->attributes[$code])) {
                 $this->attributes[$code] = $this->attributes[$base] ?? null;
@@ -195,7 +206,12 @@ class SourceNew extends Component
         }
     }
 
-    protected function cleanEmptyAttributes()
+    /**
+     * Deletes the attributes that are empty
+     *
+     * @return void
+     */
+    protected function deleteEmptyAttributes()
     {
         foreach ($this->attributes as $code => $value) {
             if (!$value) {
@@ -211,8 +227,8 @@ class SourceNew extends Component
      */
     protected function filterTypeAttributes()
     {
-        $this->cleanEmptyAttributes();
-        $typeAttrCodes = array_map(fn ($attr) => $attr['code'], $this->attributesData());
+        $this->deleteEmptyAttributes();
+        $typeAttrCodes = array_map(fn ($attr) => $attr['code'], $this->currentSourceTypeAttributes());
         foreach ($this->attributes as $code => $value) {
             if (!in_array($code, $typeAttrCodes)) {
                 unset($this->attributes[$code]);
@@ -227,7 +243,7 @@ class SourceNew extends Component
      */
     protected function updateValidationRules()
     {
-        foreach ($this->attributesData() as $order => $attr) {
+        foreach ($this->currentSourceTypeAttributes() as $order => $attr) {
             list(
                 'path' => $path,
                 'rules' => $rules,
@@ -238,29 +254,45 @@ class SourceNew extends Component
         }
     }
 
-    protected function attributesData()
+    protected function currentSourceTypeAttributes()
     {
         return $this->sourceTypes[$this->selectedType]['attributes'];
     }
 
-    protected function attributeData($code)
+    /**
+     * Returns the data of a particular attribute of the current
+     * selected type
+     *
+     * @param mixed $code
+     *
+     * @return array
+     */
+    protected function attributeData($code): array
     {
         return array_values(
-            array_filter($this->attributesData(), fn ($attr) => $attr['code'] == $code)
+            array_filter($this->currentSourceTypeAttributes(), fn ($attr) => $attr['code'] == $code)
         )[0];
     }
 
-    protected function getAttributeRuleData(array $attr)
+    /**
+     * Returns an array of rule data corresponding
+     * to a particular attribute type
+     *
+     * @param array $attributeData
+     *
+     * @return void
+     */
+    protected function getAttributeRuleData(array $attributeData)
     {
-        $path = 'attributes.' . $attr['code'];
+        $path = 'attributes.' . $attributeData['code'];
         $rules = $this->rules[$path] ?? [];
-        if (isset(self::$typeRules[$attr['type']])) {
-            $rules = array_merge($rules, self::$typeRules[$attr['type']]);
+        if (isset(self::$typeRules[$attributeData['type']])) {
+            $rules = array_merge($rules, self::$typeRules[$attributeData['type']]);
         }
         return [
             'path' => $path,
             'rules' => $rules,
-            'label' => strtolower($attr['label'])
+            'label' => strtolower($attributeData['label'])
         ];
     }
 
@@ -273,7 +305,6 @@ class SourceNew extends Component
                 'lastName'  => ''
             ]
         ];
-        Log::info('agregando creador');
     }
 
     public function removeCreator($i)

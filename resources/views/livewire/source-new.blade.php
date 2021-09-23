@@ -155,7 +155,7 @@ class="h-full mx-5 grid border rounded relative"
                                 <div>
                                     <button
                                     x-on:click.stop="moveUp(creator.i)"
-                                    x-show="index > 0"
+                                    x-bind:class="index > 0 ? '' : 'invisible'"
                                     class="text-white rounded-full m-1 bg-blue-400 hover:bg-white hover:text-blue-500 h-5 w-5 flex align-middle justify-center focus:outline-none"
                                     >
                                         &uarr;
@@ -256,7 +256,6 @@ class="h-full mx-5 grid border rounded relative"
 @push('head-script')
 <script>
     let logosCreators = @json($creators, JSON_PRETTY_PRINT);
-    let logosRoles = @json($logosRoles, JSON_PRETTY_PRINT);
     let logosSourceTypes = @json($sourceTypes, JSON_PRETTY_PRINT);
 </script>
 
