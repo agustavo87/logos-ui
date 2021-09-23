@@ -10,7 +10,19 @@ use Illuminate\Support\Facades\Log;
 
 class SourceNew extends Component
 {
+    /**
+     * Current available source types data
+     *
+     * @var array
+     */
     public array $sourceTypes;
+
+    /**
+     * Current source key
+     *
+     * @var string
+     */
+    public string $sourceKey = '';
 
     public $selectedType = "journalArticle";
 
@@ -21,8 +33,6 @@ class SourceNew extends Component
      */
     public array $attributes = [];
 
-    public string $sourceKey = '';
-
     protected array $rules = [
         'attributes.title' => ['required']
     ];
@@ -30,8 +40,8 @@ class SourceNew extends Component
     protected array $validationAttributes = [];
 
     /**
-     * A map of the laravel rules tags in relation to the
-     * source attribute data types
+     * A map of the laravel rules tags in relation to
+     * source attributes data types
      *
      * @var array
      */
@@ -42,6 +52,10 @@ class SourceNew extends Component
         'complex' => []
     ];
 
+    /**
+     * Creators data
+     * @var array
+     */
     public array $creators = [
         [
             'id'    => 23,
