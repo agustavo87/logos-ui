@@ -31,7 +31,9 @@ class SourceNew extends Component
      *
      * @var array
      */
-    public array $attributes = [];
+    public array $attributes = [
+        'title' => 'attributo inicial'
+    ];
 
     protected array $rules = [
         'attributes.title' => ['required']
@@ -91,7 +93,7 @@ class SourceNew extends Component
      * @var array
      */
     public $creatorSuggestionParams = [
-        'hint' => 'ar',
+        'hint' => '',
         'attribute' => 'lastName',
         'type' => 'person',
         'orderBy' => 'created_at', // attribute, 'created_at', 'updated_at'
@@ -187,6 +189,8 @@ class SourceNew extends Component
 
     public function save(CreateSourceUC $createSource, $data)
     {
+        Log::info('saving source', $data);
+        dd($this->processSavingData($data));
         $this->attributes = $data['attributes'];
         $this->filterTypeAttributes();
         $this->updateValidationRules();
@@ -198,6 +202,16 @@ class SourceNew extends Component
             $this->sourceKey
         );
         return $this->sourceKey;
+    }
+
+    protected function processSavingData($data)
+    {
+          $creators = $data['creators'];
+          $creators = array_map(
+              fn ($creator) => $creator['id'] ? ['creatorID' => $creator['id']] :  $creator,
+              $creators
+          );
+          return $creators;
     }
 
     /**

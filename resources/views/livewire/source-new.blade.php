@@ -102,22 +102,25 @@ class="h-full mx-5 grid border rounded relative"
                         class="flex py-1 items-center"
                         >
                             <div
-                            x-show="isEditing" x-on:keyup.enter="isEditing = false"
+                            x-show="isEditing"
+                            x-on:keyup.enter="commit"
+                            x-on:keydown.escape.stop="cancel"
                             class="flex flex-row gap-1 w-full justify-between"
                             >
                              <div class="flex flex-row gap-1">
                                 <input
-                                x-bind:value="myperson.attributes.lastName"
                                 x-on:input="creatorInput('lastName', $event.target.value)"
                                 x-ref="lastName"
                                 x-on:blur="$dispatch('creator-blur')"
+                                x-on:focus="$dispatch('creator-focus')"
                                 x-bind:data-i="myperson.i"
                                 type="text" class="px-2 border-b border-gray-100 w-2/5 focus:outline-none focus:border-blue-500"
                                 >
                                 <input
-                                x-bind:value="myperson.attributes.name"
                                 x-on:input="creatorInput('name', $event.target.value)"
+                                x-ref="name"
                                 x-on:blur="$dispatch('creator-blur')"
+                                x-on:focus="$dispatch('creator-focus')"
                                 x-bind:data-i="myperson.i"
                                 type="text" class="px-2 w-2/5 border-b border-gray-100 focus:outline-none focus:border-blue-500"
                                 >
@@ -131,19 +134,24 @@ class="h-full mx-5 grid border rounded relative"
                              </div>
 
                                 <div class="flex flex-row gap-1 ml-2">
-                                    <button x-on:click="isEditing = false" class="h-5 w-5 text-xs font-bold leading-none border text-blue-900 border-blue-500 rounded-full hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer focus:outline-none">
+                                    <button
+                                    x-on:click="commit"
+                                    x-bind:class="dirtyInput ? 'visible' : 'invisible' "
+                                    title="Commit"
+                                    class="h-5 w-5 mr-1 text-xs font-bold leading-none border text-blue-900 border-blue-500 rounded-full hover:bg-blue-500 hover:text-white flex items-center justify-center cursor-pointer focus:outline-none"
+                                    >
                                         &#10003;
                                     </button>
-                                    <button x-on:click="$dispatch('remove-creator', {creator: creator})" class="h-5 w-5 text-xs font-bold leading-none border text-red-900 border-red-500 rounded-full hover:bg-red-500 hover:text-white flex items-center justify-center cursor-pointer focus:outline-none">
-                                        &#10005;
+                                    <button x-on:click="cancel" title="Discard Changes" class="transform rotate-180 h-5 w-5 mr-1 text-xs text-gray-600 leading-none border hover:bg-gray-500 hover:text-white border-transparent hover:border-gray-500 rounded-full flex items-center justify-center cursor-pointer focus:outline-none">
+                                        &#10551;
                                     </button>
                                 </div>
                             </div>
                             <div
-                            x-show="!isEditing" x-on:click="isEditing=true"
+                            x-show="!isEditing" x-on:click="edit" x-on:mouseover="showControls = true" x-on:mouseout="showControls = false"
                             class="align-middle cursor-pointer flex hover:bg-blue-50 italic justify-between rounded-full w-full"
                             >
-                                <div class="flex items-center ml-1">
+                                <div class="flex items-center ml-1" x-bind:class="myperson.id && myperson.dirty ? 'text-blue-900' : ''">
                                     <div>
                                         <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
                                     </div>
@@ -152,13 +160,28 @@ class="h-full mx-5 grid border rounded relative"
                                     class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"
                                     ></span>
                                 </div>
-                                <div>
+                                <div class="flex" x-bind:class="showControls ? 'visible': 'invisible'">
+                                    <button x-on:click.stop="restore"
+                                    x-bind:class="myperson.dirty && myperson.id ? '' : 'invisible' "
+                                    title="Discard Changes"
+                                    class="w-5 h-5 transform rotate-180 flex bg-gray-400 text-white hover:bg-white hover:text-gray-500 justify-center m-1 rounded-full focus:outline-none"
+                                    >
+                                        &#10551;
+                                    </button>
                                     <button
                                     x-on:click.stop="moveUp(creator.i)"
                                     x-bind:class="index > 0 ? '' : 'invisible'"
+                                    title="Move Up"
                                     class="text-white rounded-full m-1 bg-blue-400 hover:bg-white hover:text-blue-500 h-5 w-5 flex align-middle justify-center focus:outline-none"
                                     >
                                         &uarr;
+                                    </button>
+                                    <button
+                                    x-on:click.stop="$dispatch('remove-creator', {creator: creator})"
+                                    title="Delete"
+                                    class="rounded-full m-1 text-red-900 hover:bg-red-500 hover:text-white border-red-500  h-5 w-5 flex align-middle justify-center focus:outline-none"
+                                    >
+                                        &#10005;
                                     </button>
                                 </div>
                             </div>
@@ -219,7 +242,9 @@ class="h-full mx-5 grid border rounded relative"
     x-on:hint-updated.window = "newHints($event)"
     x-ref="root"
     x-show="visible"
-    x-on:creator-blur.window="decideHidding"
+    x-on:close-hints.window="decideHidding"
+    x-on:creator-blur.window="focusCount--"
+    x-on:creator-focus.window="focusCount++"
     x-on:click.outside="decideHidding"
     x-transition:enter.duration.20ms
     x-transition:leave.duration.100ms
@@ -281,7 +306,8 @@ class="h-full mx-5 grid border rounded relative"
         })
 
         Alpine.store('source', {
-            attributes: {}
+            attributes: @json($attributes, JSON_PRETTY_PRINT),
+            creators: @json($creators, JSON_PRETTY_PRINT)
         })
 
         Alpine.data('alpNewSource', () => {
@@ -336,12 +362,18 @@ class="h-full mx-5 grid border rounded relative"
         })
 
         Alpine.data('creatorsList', (options) => {
-            let i = 1;
-            options.creators.forEach(creator => creator.i = i++)
+
             return {
-                i:i,
-                creators: options.creators,
+                i:0,
+                creators: [],
                 roles: {},
+                init: function () {
+                    let creators = this.$store.source.creators
+                    let i = 1;
+                    creators.forEach(creator => creator.i = i++)
+                    this.creators = creators
+                    this.i = i
+                },
                 moveUp: function (i) {
                     let tempCreators = JSON.parse(JSON.stringify(this.creators))
                     let index = tempCreators.findIndex((person) => person.i == i)
@@ -351,7 +383,7 @@ class="h-full mx-5 grid border rounded relative"
                 },
                 handleAddCreator: function(e, dispatch) {
                     let index = this.creators.push({
-                        i: i++,
+                        i: this.i++,
                         id: null,
                         type: 'person',
                         attributes: {
@@ -373,19 +405,59 @@ class="h-full mx-5 grid border rounded relative"
         Alpine.data('personInput', (options) => {
             return {
                 myperson: options.creator,
-                // In case the saved role is not available on current source type roles.
+                dirtyInput: false,
+                isEditing: false,
+                showControls: false,
+                cache: {
+                    myperson: JSON.parse(JSON.stringify(options.creator))
+                },
                 validRole: function (roles) {
                     return roles[this.myperson.role] ?? Object.values(roles).find(role => role.primary)
                 },
-                isEditing: false,
+                fillInputs: function() {
+                    let attributeNames = Object.getOwnPropertyNames(this.myperson.attributes)
+                    attributeNames.forEach(
+                        attrName => this.$refs[attrName].value = this.myperson.attributes[attrName]
+                    )
+                },
                 creatorInput: function(attr, value) {
-                    console.log('creator input', attr, value)
-                    this.myperson.attributes[attr] = value
-                    this.emitCreatorInput('lastName', value)
+                    this.dirtyInput = true;
+                    this.emitCreatorInput(attr, value)
+                },
+                edit: function () {
+                    this.fillInputs()
+                    this.dirtyInput = false;
+                    this.isEditing = true;
                 },
                 editNew: function () {
                     this.isEditing = true;
                     window.setTimeout(() => this.$refs.lastName.focus(), 500)
+                },
+                commit: function () {
+                    this.closeHints(true)
+                    let attributeNames = Object.getOwnPropertyNames(this.myperson.attributes)
+                    attributeNames.forEach(
+                        attrName => this.myperson.attributes[attrName] = this.$refs[attrName].value
+                    )
+                    this.myperson.dirty = this.dirtyInput
+                    this.isEditing = false;
+                },
+                closeHints: function (force = false) {
+                    this.$refs.root.dispatchEvent(
+                        new CustomEvent('close-hints', {bubbles: true, detail: {force:force}})
+                    )
+                },
+                cancel: function () {
+                    this.closeHints(true)
+                    if (!this.myperson.dirty) {
+                        this.dirtyInput = false
+                    }
+                    this.isEditing = false
+                },
+                restore: function () {
+                    if (this.cache.myperson != undefined) {
+                        this.myperson = this.cache.myperson
+                    }
                 },
                 emitCreatorInput: function (attribute, value) {
                     this.$wire.creatorInput('person', attribute, value)
@@ -401,13 +473,17 @@ class="h-full mx-5 grid border rounded relative"
                             }))
                         })
                 },
-                handleSuggestion:function ($event) {
+                handleSuggestion:function ($event, $dispatch) {
                     if ($event.detail.client.i == this.myperson.i) {
+                        // console.log('suggestion is to me - \n\tclient:', $event.detail.client, '\n\tme:', this.myperson)
                         let creator = event.detail.creator;
-                        console.log('el mismo origen: ', creator)
                         this.myperson.attributes.name  = creator.attributes.name
                         this.myperson.attributes.lastName  = creator.attributes.lastName
                         this.myperson.id = creator.id
+                        this.myperson.dirty = false;
+                        this.cache['myperson'] = JSON.parse(JSON.stringify(this.myperson));
+                        this.isEditing = false;
+                        this.closeHints(true)
                     }
                 }
             }
@@ -419,6 +495,21 @@ class="h-full mx-5 grid border rounded relative"
                 visible: false,
                 mouseover: false,
                 creators: options.creators,
+                count: null,
+                focusCount: 0,
+                haveNewHints: false,
+                init: function () {
+                    this.$watch('creators', value => this.count = this.countCreators())
+                    this.$watch('count', value => this.decideHidding())
+                },
+                countCreators: function (creators) {
+                    if (Array.isArray(this.creators)) {
+                        return this.creators.length
+                    } else if (typeof this.creators == 'object') {
+                        return Object.getOwnPropertyNames(this.creators).length
+                    }
+                    return null
+                },
                 acceptSugestion: function(id, $dispatch) {
                     $dispatch('suggestion-acepted', {
                         creator: JSON.parse(JSON.stringify(this.creators[id])),
@@ -426,21 +517,31 @@ class="h-full mx-5 grid border rounded relative"
                     })
                 },
                 newHints: function (event) {
+                    this.haveNewHints = true
                     let margin= 8
                     this.$refs.root.style.top = event.target.offsetTop + event.target.offsetHeight + margin + 'px'
                     this.$refs.root.style.left = event.target.offsetLeft + 'px'
                     this.$refs.root.style.width = event.target.clientWidth + 'px'
-                    this.visible = true;
                     this.lastCreator = event.detail.creator
+                    this.decideHidding()
                 },
-                decideHidding: function () {
-                    if (this.visible && !this.mouseover) {
-                        this.$nextTick(() => {
-                            if (!(document.activeElement.dataset.i == this.lastCreator.i)) {
-                                this.visible = false
-                            }
-                        })
+                decideHidding: function (event) {
+                    if (event && event.detail.force) {
+                        this.visible = false
+                        return
                     }
+                    if (this.count <= 0) {
+                        this.visible = false
+                        return
+                    }
+                    if (this.visible && !this.mouseover && this.focusCount <= 0) {
+                        this.visible = false
+                        return
+                    } else if (this.haveNewHints) {
+                        this.visible = true
+                        this.haveNewHints = false
+                    }
+
                 }
             }
         })
@@ -460,7 +561,7 @@ class="h-full mx-5 grid border rounded relative"
 
         Alpine.data('sourceAttributes', () => {
             return {
-                attributes: {},
+                attributes: @json($attributes, JSON_PRETTY_PRINT),
                 type: function(typeCode) {
                     switch (typeCode) {
                         case 'text':
