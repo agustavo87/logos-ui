@@ -208,7 +208,10 @@ class SourceNew extends Component
     {
           $creators = $data['creators'];
           $creators = array_map(
-              fn ($creator) => $creator['id'] ? ['creatorID' => $creator['id']] :  $creator,
+              fn ($creator) =>
+                $creator['id']  && isset($creator['dirty']) && !$creator['dirty'] ?
+                ['creatorID' => $creator['id']] :
+                $creator,
               $creators
           );
           return $creators;

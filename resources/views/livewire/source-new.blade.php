@@ -374,7 +374,10 @@ class="h-full mx-5 grid border rounded relative"
                 init: function () {
                     let creators = this.$store.source.creators
                     let i = 1;
-                    creators.forEach(creator => creator.i = i++)
+                    creators.forEach(creator => {
+                        creator.i = i++
+                        creator.dirty =  false
+                    })
                     this.creators = creators
                     this.i = i
                 },
@@ -393,7 +396,8 @@ class="h-full mx-5 grid border rounded relative"
                         attributes: {
                             name: '',
                             lastName: ''
-                        }
+                        },
+                        dirty: false
 
                     }) - 1;
                     this.$nextTick(() => dispatch('creator-added', {creator: JSON.parse(JSON.stringify(this.creators[index]))}))
