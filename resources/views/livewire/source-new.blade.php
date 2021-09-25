@@ -151,7 +151,11 @@ class="h-full mx-5 grid border rounded relative"
                             x-show="!isEditing" x-on:click="edit" x-on:mouseover="showControls = true" x-on:mouseout="showControls = false"
                             class="align-middle cursor-pointer flex hover:bg-blue-50 italic justify-between rounded-full w-full"
                             >
-                                <div class="flex items-center ml-1" x-bind:class="myperson.id && myperson.dirty ? 'text-blue-900' : ''">
+                                <div
+                                x-bind:class="myperson.id && myperson.dirty ? 'text-blue-900' : ''"
+                                x-bind:title="myperson.id && myperson.dirty ? 'Modified' : null"
+                                class="flex items-center ml-1"
+                                >
                                     <div>
                                         <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
                                     </div>
