@@ -476,9 +476,71 @@ class SourcesRepositoryTest extends TestCase
     }
 
     /**
-     * @param Source $source
+     * @param Source $previousSource
      *
      * @depends testSaveSourceParticipation
+     * @return Source
+     */
+    public function testChangeRoleOfParticipation(Source $previousSource): Source
+    {
+        $sources = self::$sources;
+
+        $firstAuthor = $previousSource
+            ->participations()
+            ->byRelevance('author')[0];
+
+        $firstAuthor->setRole($previousSource->type()->roles()->contributor);
+
+        $sources->save($previousSource);
+
+        $newSource = $sources->getNew($previousSource->id());
+
+        $this->assertEquals(
+            $firstAuthor->creator()->toArray(),
+            $newSource->participations()->contributor[$firstAuthor->creatorId()]->creator()->toArray()
+        );
+        $this->assertNotEquals(
+            $firstAuthor->creatorId(),
+            $newSource->participations()->byRelevance('author')[0]->creatorId()
+        );
+
+        return $newSource;
+    }
+
+    /**
+     * @param Source $previousSource
+     *
+     * @depends testChangeRoleOfParticipation
+     * @return Source
+     */
+    public function testChangeRoleOfParticipationAndEmptyPreviousRole(Source $previousSource): Source
+    {
+        $sources = self::$sources;
+
+        $reviewedAuthor = $previousSource
+            ->participations()
+            ->byRelevance('reviewedAuthor')[0];
+
+
+        $reviewedAuthor->setRole($previousSource->type()->roles()->contributor);
+
+        $sources->save($previousSource);
+
+        $newSource = $sources->getNew($previousSource->id());
+
+        $this->assertEquals(
+            $reviewedAuthor->creator()->toArray(),
+            $newSource->participations()->contributor[$reviewedAuthor->creatorId()]->creator()->toArray()
+        );
+        $this->assertFalse($newSource->participations()->has('reviewedAuthor'));
+
+        return $newSource;
+    }
+
+    /**
+     * @param Source $source
+     *
+     * @depends testChangeRoleOfParticipation
      * @return void
      */
     public function testRemoveSourceWithParticipation(Source $source)

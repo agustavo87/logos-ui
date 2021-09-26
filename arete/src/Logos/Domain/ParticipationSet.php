@@ -52,19 +52,30 @@ class ParticipationSet implements Arrayable
             foreach ($participations as $creatorID => $participation) {
                 $creator = $participation->creator();
                 if ($creator->isDirty()) {
-                    // if there is more than one instance of same creator modified is undertimend wich is saved.
+                    // in each role a creator can be only once per source
+                    // if there is more than one instance of same creator modified is undetermined wich is saved.
                     $dirtyCreators[$creator->id()] = $creator;
                 }
                 /** @todo ¿por qué no se chequea si está sucia la participación a guardar ? */
-                $toBeSavedParticipations[] = $participation;
+                if ($participation->isDirty()) {
+                    $toBeSavedParticipations[] = $participation;
+                }
             }
         }
+        // save dirty creators
         foreach ($dirtyCreators as $creator) {
             $this->creators->save($creator);
         }
+        // save participations
         if (count($toBeSavedParticipations)) {
             $this->participations->save($toBeSavedParticipations);
         }
+        return $this;
+    }
+
+    public function update(callable $strategy): self
+    {
+        $strategy($this->attributes);
         return $this;
     }
 

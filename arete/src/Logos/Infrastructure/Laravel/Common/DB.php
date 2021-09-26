@@ -525,6 +525,7 @@ class DB
      */
     public function saveParticipations($participationsData): int
     {
+        $this->clearDirtyParticipations($participationsData);
         $preparedData = [];
         foreach ($participationsData as $participation) {
             $preparedData[] = [
@@ -540,6 +541,25 @@ class DB
                 ['source_id', 'creator_id', 'role_code_name'],
                 ['relevance']
             );
+    }
+
+    /**
+     * @param Participation[] $participationData
+     *
+     * @return void
+     */
+    public function clearDirtyParticipations($participationData): void
+    {
+        foreach ($participationData as $participation) {
+            if ($participation->isDirty('role')) {
+                $this->db->table('participations')
+                         ->where([
+                            'source_id' => $participation->source()->id(),
+                            'creator_id' => $participation->creatorId(),
+                            'role_code_name' => $participation->original('role')->code,
+                        ])->delete();
+            }
+        }
     }
 
     public function removeParticipation(Source $source, $roleCode, $creatorID): int

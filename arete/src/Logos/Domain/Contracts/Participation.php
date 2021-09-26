@@ -19,4 +19,27 @@ interface Participation extends Arrayable
     public function role(): Role;
     public function relevance(): int;
     public function setRelevance(int $relevance): self;
+
+    /**
+     * Indicates if the own attributes of the participations are dirty
+     *
+     * @param string|null $attribute
+     *
+     * @return bool
+     */
+    public function isDirty(string $attribute = null): bool;
+
+    /**
+     * @param string $attribute
+     *
+     * @return void
+     */
+    public function original(string $attribute);
+
+    /**
+     * @param Role|string $role
+     *
+     * @return self
+     */
+    public function setRole($role): self;
 }

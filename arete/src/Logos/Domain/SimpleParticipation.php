@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Domain;
 
-use Arete\Logos\Domain\Traits\ExposeAttributes;
 use Arete\Logos\Domain\Contracts\Participation;
 use Arete\Logos\Domain\Abstracts\CreatorType;
 use Arete\Logos\Domain\Source;
@@ -15,6 +14,7 @@ class SimpleParticipation implements Participation
     protected ?Creator $creator = null;
     protected Role $role;
     protected Source $source;
+    protected array $dirtyAttributes = [];
 
     public function __construct(
         Source $source,
@@ -74,9 +74,9 @@ class SimpleParticipation implements Participation
     public function toArray(): array
     {
         return [
-            'role' => $this->role->code,
-            'relevance' => $this->relevance,
-            'creator' => $this->creator->toArray()
+        'role' => $this->role->code,
+        'relevance' => $this->relevance,
+        'creator' => $this->creator->toArray()
         ];
     }
 
@@ -125,7 +125,74 @@ class SimpleParticipation implements Participation
 
     public function setRelevance(int $relevance): Participation
     {
+        if (!$this->isDirty('relevance')) {
+            $this->dirtyAttributes['relevance'] = $this->relevance;
+        }
         $this->relevance = $relevance;
+
         return $this;
+    }
+
+    /**
+     * @param Role|string $role
+     *
+     * @return Participation
+     * @todo update the participation set index
+     */
+    public function setRole($role): Participation
+    {
+        $roleCode = $role instanceof Role ? $role->code : $role;
+        $this->validateRole($roleCode);
+        if (!$this->isDirty('role')) {
+            $this->dirtyAttributes['role'] = $this->role;
+        }
+        $previousRoleCode = $this->role->code;
+        $this->role = $this->source->type()->roles()->$roleCode;
+        $this->source->participations()->update(function (&$participations) use ($previousRoleCode) {
+            unset($participations[$previousRoleCode][$this->creator->id()]);
+            if (!count($participations[$previousRoleCode])) {
+                unset($participations[$previousRoleCode]);
+            }
+        });
+        $this->source->participations()->push($roleCode, $this);
+        /* // For debug purposes
+        $this->source->participations()->update(function ($allParticipations) {
+            foreach ($allParticipations as $role => $roleParticipations) {
+                echo "\n $role --------------\n";
+                foreach ($roleParticipations as $creatorID => $participationData) {
+                    echo "id:$creatorID |" . json_encode($participationData->toArray(), JSON_PRETTY_PRINT) . "\n";
+                }
+            }
+        });
+        //*/
+        return $this;
+    }
+
+    /**
+     * @param string $role
+     * @throws \OutOfBoundsException
+     * @return bool
+     */
+    protected function validateRole(string $role): bool
+    {
+        if ($this->source->type()->roles()->has($role)) {
+            return true;
+        }
+        throw new \OutOfBoundsException(
+            "The role '$role' do not belong to the source '{$this->source->type()->code()}'"
+        );
+    }
+
+    public function isDirty(string $attribute = null): bool
+    {
+        if (!$attribute) {
+            return count($this->dirtyAttributes) > 0;
+        }
+        return key_exists($attribute, $this->dirtyAttributes);
+    }
+
+    public function original(string $attribute)
+    {
+        return $this->dirtyAttributes[$attribute];
     }
 }
