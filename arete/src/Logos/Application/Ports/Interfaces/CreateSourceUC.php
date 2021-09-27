@@ -17,11 +17,12 @@ interface CreateSourceUC
      * @param $ownerID
      * @param string $type
      * @param array $attributes
+     * @param array $creators
      * @param string|null $key
      *
      * @return string key
      */
-    public function create($ownerID, string $type, array $attributes, ?string $key = null): string;
+    public function create($ownerID, string $type, array $attributes, array $creators, ?string $key = null): string;
 
     /**
      * Suggest a valid (unique) key.

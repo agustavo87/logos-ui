@@ -1,0 +1,59 @@
+{
+    "attributes": {
+        "title": "Aquí va un título",
+        "abstractNote": "Una breve descripción",
+        "publicationTitle": "Historias breves del litoral",
+        "volume": "23",
+        "issue": "2",
+        "pages": "223-239",
+        "date": "2011-01-27",
+        "series": null,
+        "seriesTitle": null,
+        "seriesText": null,
+        "journalAbbreviation": null,
+        "language": null,
+        "DOI": null,
+        "ISSN": null,
+        "shortTitle": null,
+        "url": null,
+        "accessDate": null,
+        "archive": null,
+        "archiveLocation": null,
+        "libraryCatalog": null,
+        "callNumber": null,
+        "rights": null,
+        "extra": null
+    },
+    "creators": [
+        {
+            "i": 1,
+            "id": null,
+            "type": "person",
+            "attributes": {
+                "name": "",
+                "lastName": ""
+            },
+            "dirty": false
+        },
+        {
+            "i": 2,
+            "id": 3,
+            "type": "person",
+            "attributes": {
+                "name": "Estefania Mario",
+                "lastName": "Jast"
+            },
+            "dirty": false
+        },
+        {
+            "i": 3,
+            "id": 25,
+            "type": "person",
+            "attributes": {
+                "name": "María Cannario",
+                "lastName": "Procopio"
+            },
+            "dirty": true
+        }
+    ]
+}

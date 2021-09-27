@@ -89,7 +89,7 @@ type(): SourceType</panel_attributes>
       <x>531</x>
       <y>459</y>
       <w>342</w>
-      <h>171</h>
+      <h>180</h>
     </coordinates>
     <panel_attributes>ParticipationSet
 --
@@ -105,6 +105,7 @@ type(): SourceType</panel_attributes>
 + remove (role :str, creatorId :int): bool
 + load(): self
 + save()
++ update(strategy :callable): void
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -114,7 +115,7 @@ type(): SourceType</panel_attributes>
       <x>954</x>
       <y>477</y>
       <w>162</w>
-      <h>135</h>
+      <h>198</h>
     </coordinates>
     <panel_attributes>Participation[id]
 --
@@ -127,8 +128,12 @@ type(): SourceType</panel_attributes>
 + creatorId()
 + creatorType():CreatorType
 + role(): Role
++ setRole(role Role|string): self
 + relevance() :int
 + setRelevance(rel :int)
++ isDirty(attribute :string): bool
++ original(attribute :string)
+
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -473,6 +478,19 @@ Proxies attributes of ^</panel_attributes>
 --
 ownerID(): string
 </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>531</x>
+      <y>648</y>
+      <w>162</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>strategy callback args:
+- participations[role][creator id]
+bg=yellow</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

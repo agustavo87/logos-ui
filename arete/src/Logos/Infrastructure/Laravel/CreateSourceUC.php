@@ -108,7 +108,7 @@ class CreateSourceUC implements ICreateSourceUC
         return $presentations;
     }
 
-    public function create($ownerID, string $type, array $attributes, ?string $key = null): string
+    public function create($ownerID, string $type, array $attributes, array $creators, ?string $key = null): string
     {
         // should be validated on adapter, but just to be sure.
         if (isset($attributes['date'])) {

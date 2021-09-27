@@ -26,6 +26,8 @@ class SourceNew extends Component
 
     public $selectedType = "journalArticle";
 
+    public array $sharedErrors = [];
+
     /**
      * Source attributes
      *
@@ -58,27 +60,27 @@ class SourceNew extends Component
      * Creators data
      * @var array
      */
-    public array $creators = [
-        [
-            'id'    => 23,
-            'role' => 'author',
-            'relevance' => 1,
-            'type' => 'person',
-            'attributes' => [
-                'name' => 'Pedro',
-                'lastName' => "Saucedo"
-            ]
-        ], [
-            'id' => 32,
-            'type' => 'person',
-            'role' => 'editor',
-            'relevance' => 2,
-            'attributes' => [
-                'name' => 'Juan',
-                'lastName' => "Ramirez"
-            ]
-        ],
-    ];
+    public array $creators = [];
+    //     [
+    //         'id'    => 23,
+    //         'role' => 'author',
+    //         'relevance' => 1,
+    //         'type' => 'person',
+    //         'attributes' => [
+    //             'name' => 'Pedro',
+    //             'lastName' => "Saucedo"
+    //         ]
+    //     ], [
+    //         'id' => 32,
+    //         'type' => 'person',
+    //         'role' => 'editor',
+    //         'relevance' => 2,
+    //         'attributes' => [
+    //             'name' => 'Juan',
+    //             'lastName' => "Ramirez"
+    //         ]
+    //     ],
+    // ];
 
     /**
      * Creators suggestions to user input
@@ -114,7 +116,17 @@ class SourceNew extends Component
 
     public function render()
     {
+        $this->sharedErrors = $this->getShareableErrors();
         return view('livewire.source-new');
+    }
+
+    public function getShareableErrors(): array
+    {
+        $shareableErrors = [];
+        foreach ($this->getErrorBag()->toArray() as $error => $message) {
+            $shareableErrors[] = ['key' => $error, 'messages' => $message];
+        }
+        return $shareableErrors;
     }
 
     public function hydrate()
@@ -190,15 +202,18 @@ class SourceNew extends Component
     public function save(CreateSourceUC $createSource, $data)
     {
         Log::info('saving source', $data);
-        dd($this->processSavingData($data));
+        $creatorsData = $this->processSavingData($data);
+        Log::info('creators data', $creatorsData);
         $this->attributes = $data['attributes'];
         $this->filterTypeAttributes();
         $this->updateValidationRules();
         $this->validate();
+        /** @todo elegir si se actualiza o se crea una fuente */
         $this->sourceKey = $createSource->create(
             Auth::user()->id,
             $this->selectedType,
             $this->attributes,
+            $creatorsData,
             $this->sourceKey
         );
         return $this->sourceKey;

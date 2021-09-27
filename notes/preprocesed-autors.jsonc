@@ -1,0 +1,25 @@
+[
+    {
+        "i": 1,
+        "id": null,                 // ID Null create new
+        "type": "person",
+        "attributes": {
+            "name": "Pedro Raúl",
+            "lastName": "Zamudio"
+        },
+        "dirty": true
+    },
+    {
+        "creatorID": 3              // Just ID Associate
+    },
+    {
+        "i": 3,
+        "id": 25,
+        "type": "person",
+        "attributes": {
+            "name": "María Cannario",
+            "lastName": "Procopio"
+        },
+        "dirty": true               // With ID and Dirty - Update
+    }
+]
