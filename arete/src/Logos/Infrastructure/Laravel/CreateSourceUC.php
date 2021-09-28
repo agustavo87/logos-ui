@@ -114,6 +114,7 @@ class CreateSourceUC implements ICreateSourceUC
         if (isset($attributes['date'])) {
             $attributes['date'] = $this->datesize($attributes['date']);
         }
+        $creators = $this->processCreators($creators);
         $params = [
             'type' => $type,
             'attributes' => $attributes
@@ -124,6 +125,13 @@ class CreateSourceUC implements ICreateSourceUC
         $source = $this->sources->createFromArray($params, $ownerID);
         Log::info('source creado', ['source', $source->toArray()]);
         return $source->key();
+    }
+
+    protected function processCreators(array $creators): array
+    {
+        foreach ($creators as $creator) {
+
+        }
     }
 
     protected function datesize($date): DateTime

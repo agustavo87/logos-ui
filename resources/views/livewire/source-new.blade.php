@@ -114,7 +114,6 @@ class="h-full mx-5 grid border rounded relative"
             })"
             x-on:remove-creator="handleRemoveCreator($event, $dispatch)"
             x-on:add-creator.window="handleAddCreator($event, $dispatch)"
-            x-effect="roles = $store.sourceTypes.roles($store.sourceTypes.selected)"
             wire:ignore
             class="py-1 px-3"
             >
@@ -124,6 +123,7 @@ class="h-full mx-5 grid border rounded relative"
                         {{-- Person Input --}}
                         <div
                         x-data="personInput({creator:creator})"
+                        x-effect="roles = $store.sourceTypes.roles($store.sourceTypes.selected)"
                         x-on:creator-added.window = "$event.detail.creator.i == myperson.i ? editNew: null"
                         x-on:suggestion-acepted.window="handleSuggestion($event)"
                         x-ref="root"
@@ -156,7 +156,7 @@ class="h-full mx-5 grid border rounded relative"
                                     x-model="myperson.role"
                                 >
                                     <template x-for="role in roles">
-                                        <option x-bind:value="role.code" x-text="role.label" x-bind:selected="role.code == validRole"></option>
+                                        <option x-bind:value="role.code" x-text="role.label" x-bind:selected="myperson.role ? (role.code == myperson.role) : false"></option>
                                     </template>
                                 </select>
                              </div>
@@ -188,7 +188,7 @@ class="h-full mx-5 grid border rounded relative"
                                         <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
                                     </div>
                                     <span
-                                    x-text="validRole(roles).label"
+                                    x-text="myperson.role ? (roles[myperson.role] ? roles[myperson.role].label : '') : ''"
                                     class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"
                                     ></span>
                                 </div>
@@ -394,11 +394,9 @@ class="h-full mx-5 grid border rounded relative"
         })
 
         Alpine.data('creatorsList', (options) => {
-
             return {
                 i:0,
                 creators: [],
-                roles: {},
                 init: function () {
                     let creators = this.$store.source.creators
                     let i = 1;
@@ -441,14 +439,25 @@ class="h-full mx-5 grid border rounded relative"
         Alpine.data('personInput', (options) => {
             return {
                 myperson: options.creator,
+                roles: {},
                 dirtyInput: false,
                 isEditing: false,
                 showControls: false,
                 cache: {
                     myperson: JSON.parse(JSON.stringify(options.creator))
                 },
-                validRole: function (roles) {
-                    return roles[this.myperson.role] ?? Object.values(roles).find(role => role.primary)
+                init: function () {
+                    this.$watch('roles', this.getRole.bind(this))
+                },
+                getRole: function() {
+                    let roles = Object.values(this.roles)
+                    let primary = roles.find(role => role.primary)
+                    if (!this.myperson.role) {
+                        this.myperson.role  = primary.code
+                    } else if(roles.find((role) => role.code == this.myperson.role) == undefined) {
+                        console.log('no existe ', this.myperson.role, ' dentro de ', Object.getOwnPropertyNames(this.roles))
+                        this.myperson.role  = primary.code
+                    }
                 },
                 fillInputs: function() {
                     let attributeNames = Object.getOwnPropertyNames(this.myperson.attributes)
