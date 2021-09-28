@@ -153,7 +153,7 @@ class="h-full mx-5 grid border rounded relative"
                                 type="text" class="px-2 w-2/5 border-b border-gray-100 focus:outline-none focus:border-blue-500"
                                 >
                                 <select class="border ml-1 rounded text-xs focus:outline-none"
-                                    x-model="myperson.role"
+                                    x-model="myRole"
                                 >
                                     <template x-for="role in roles">
                                         <option x-bind:value="role.code" x-text="role.label" x-bind:selected="myperson.role ? (role.code == myperson.role) : false"></option>
@@ -188,7 +188,7 @@ class="h-full mx-5 grid border rounded relative"
                                         <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
                                     </div>
                                     <span
-                                    x-text="myperson.role ? (roles[myperson.role] ? roles[myperson.role].label : '') : ''"
+                                    x-text="myRole ? (roles[myRole] ? roles[myRole].label : '') : ''"
                                     class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"
                                     ></span>
                                 </div>
@@ -439,6 +439,7 @@ class="h-full mx-5 grid border rounded relative"
         Alpine.data('personInput', (options) => {
             return {
                 myperson: options.creator,
+                myRole: null,
                 roles: {},
                 dirtyInput: false,
                 isEditing: false,
@@ -452,11 +453,11 @@ class="h-full mx-5 grid border rounded relative"
                 getRole: function() {
                     let roles = Object.values(this.roles)
                     let primary = roles.find(role => role.primary)
-                    if (!this.myperson.role) {
-                        this.myperson.role  = primary.code
-                    } else if(roles.find((role) => role.code == this.myperson.role) == undefined) {
-                        console.log('no existe ', this.myperson.role, ' dentro de ', Object.getOwnPropertyNames(this.roles))
-                        this.myperson.role  = primary.code
+                    if (!this.myRole) {
+                        this.myRole  = primary.code
+                    } else if(roles.find((role) => role.code == this.myRole) == undefined) {
+                        console.log('no existe ', this.myRole, ' dentro de ', Object.getOwnPropertyNames(this.roles))
+                        this.myRole  = primary.code
                     }
                 },
                 fillInputs: function() {
