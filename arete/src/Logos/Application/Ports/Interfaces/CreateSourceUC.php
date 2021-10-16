@@ -11,7 +11,7 @@ interface CreateSourceUC
      *
      * @return \Arete\Logos\Application\DTO\SourceTypePresentation[]
      */
-    public function presentSourceTypes(): array;
+    public function getSourceTypesPresentations(): array;
 
     /**
      * @param $ownerID

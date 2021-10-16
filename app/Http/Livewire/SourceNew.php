@@ -5,31 +5,36 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
+use Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @property \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC $caseOperations
+ * @property \Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase $sourcesFilter
+ */
 class SourceNew extends Component
 {
-    /**
-     * Current available source types data
-     *
-     * @var array
-     */
-    public array $sourceTypes;
+    public $sourceID = null;
 
     /**
      * Current source key
      *
      * @var string
      */
-    public string $sourceKey = '';
+    public string $key = '';
 
-    public $selectedType = "journalArticle";
-
-    public array $sharedErrors = [];
+    public $ownerID = null;
 
     /**
-     * Source attributes
+     * Current source type
+     *
+     * @var string
+     */
+    public $type = "journalArticle";
+
+    /**
+     * Current Source attributes
      *
      * @var array
      */
@@ -37,6 +42,11 @@ class SourceNew extends Component
         'title' => 'attributo inicial'
     ];
 
+    /**
+     * Current Source attributes validation rules
+     *
+     * @var array
+     */
     protected array $rules = [
         'attributes.title' => ['required']
     ];
@@ -56,8 +66,11 @@ class SourceNew extends Component
         'complex' => []
     ];
 
+    public array $participations = [];
+
     /**
      * Creators data
+     *
      * @var array
      */
     public array $creators = [];
@@ -103,15 +116,49 @@ class SourceNew extends Component
         'limit' => 7
     ];
 
-    public function mount(CreateSourceUC $createSource)
+    /**
+     * Current available source types data
+     *
+     * @var array
+     */
+    public array $types;
+
+    public array $sharedErrors = [];
+
+    protected CreateSourceUC $createSourceUseCase;
+
+    protected FilteredIndexUseCase $filter;
+
+    public function mount()
     {
-        $types = $createSource->presentSourceTypes();
-        $this->sourceTypes = array_map(
+        $testSource = $this->sourcesFilter->filter([
+            'key' => 'za'
+        ])[0]->toArray();
+        $this->mountSource($testSource);
+        $types = $this->caseOperations->getSourceTypesPresentations();
+        $this->types = array_map(
             fn (SourceTypePresentation $typePresentation) => $typePresentation->toArray(),
             $types
         );
-        $this->mapSourceAttributesFields();
-        $this->myUpdateCreatorSuggestions($createSource);
+        $this->mountSourceTypeAttributesFields();
+        $this->syncCreatorsSuggestions();
+    }
+
+    protected function mountSource(array $source)
+    {
+        $this->sourceID  = $source['id'];
+        $this->key = $source['key'];
+        $this->ownerID = $source['ownerID'];
+        $this->type = $source['type'];
+        $this->attributes = $source['attributes'];
+
+        $participations = [];
+        foreach ($source['participations'] as $role => $roleParticipations) {
+            foreach ($roleParticipations as $creatorID => $participationData) {
+                $participations[] = $participationData;
+            }
+        }
+        $this->participations = $participations;
     }
 
     public function render()
@@ -131,7 +178,7 @@ class SourceNew extends Component
 
     public function hydrate()
     {
-        $this->validationAttributes['sourceKey'] = strtolower(__('sources.key'));
+        $this->validationAttributes['key'] = strtolower(__('sources.key'));
     }
 
     public function updated($propertyName)
@@ -154,12 +201,51 @@ class SourceNew extends Component
         }
     }
 
-    protected function myUpdateCreatorSuggestions(?CreateSourceUC $createUC = null)
+    /**
+     * Returns an array of rule data corresponding
+     * to a particular attribute type
+     *
+     * @param array $attributeData
+     *
+     * @return void
+     */
+    protected function getAttributeRuleData(array $attributeData)
     {
-        /** @var \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC */
-        $createUC = $createUC ?? app(CreateSourceUC::class);
+        $path = 'attributes.' . $attributeData['code'];
+        $rules = $this->rules[$path] ?? [];
+        if (isset(self::$typeRules[$attributeData['type']])) {
+            $rules = array_merge($rules, self::$typeRules[$attributeData['type']]);
+        }
+        return [
+            'path' => $path,
+            'rules' => $rules,
+            'label' => strtolower($attributeData['label'])
+        ];
+    }
 
-        $this->creatorSuggestions = $createUC->suggestCreators(
+    /**
+     * Returns the data of a particular attribute of the current
+     * selected type
+     *
+     * @param mixed $code
+     *
+     * @return array
+     */
+    protected function attributeData($code): array
+    {
+        return array_values(
+            array_filter($this->currentSourceTypeAttributes(), fn ($attr) => $attr['code'] == $code)
+        )[0];
+    }
+
+    protected function currentSourceTypeAttributes()
+    {
+        return $this->types[$this->type]['attributes'];
+    }
+
+    protected function syncCreatorsSuggestions()
+    {
+        $this->creatorSuggestions = $this->caseOperations->suggestCreators(
             Auth::user()->id,
             $this->creatorSuggestionParams['hint'],
             $this->creatorSuggestionParams['attribute'],
@@ -178,48 +264,53 @@ class SourceNew extends Component
             'hint' => $value
         ];
         $this->creatorSuggestionParams = array_merge($this->creatorSuggestionParams, $data);
-        $this->myUpdateCreatorSuggestions();
+        $this->syncCreatorsSuggestions();
     }
 
     public function updatedCreatorSuggestionParamsHint($value)
     {
-        $this->myUpdateCreatorSuggestions();
+        $this->syncCreatorsSuggestions();
     }
 
-    public function computeKey(CreateSourceUC $createSource, $value)
+    public function computeKey($value)
     {
-        $this->sourceKey = $createSource->sugestKey([
+        /** @todo
+         * si la key es de una fuente ya montada no hace falta sugerir una nueva
+         * solo si esta es cambiada. Probablemente, para evitar problemas
+         * si la key es de una fuente existente no debería permitirse el cambio.
+         */
+        $this->key = $this->caseOperations->sugestKey([
             'ownerID'   => Auth::user()->id,
             'key'       => $value
         ]);
     }
 
-    public function updatedSelectedType($type)
+    public function updatedType($type)
     {
-        $this->mapSourceAttributesFields();
+        $this->mountSourceTypeAttributesFields();
     }
 
-    public function save(CreateSourceUC $createSource, $data)
+    public function save($data)
     {
         Log::info('saving source', $data);
-        $creatorsData = $this->processSavingData($data);
+        $creatorsData = $this->adaptCreatorsData($data);
         Log::info('creators data', $creatorsData);
         $this->attributes = $data['attributes'];
         $this->filterTypeAttributes();
         $this->updateValidationRules();
         $this->validate();
         /** @todo elegir si se actualiza o se crea una fuente */
-        $this->sourceKey = $createSource->create(
+        $this->key = $this->caseOperations->create(
             Auth::user()->id,
-            $this->selectedType,
+            $this->type,
             $this->attributes,
             $creatorsData,
-            $this->sourceKey
+            $this->key
         );
-        return $this->sourceKey;
+        return $this->key;
     }
 
-    protected function processSavingData($data)
+    protected function adaptCreatorsData($data)
     {
           $creators = $data['creators'];
           $creators = array_map(
@@ -241,7 +332,7 @@ class SourceNew extends Component
      *
      * @return void
      */
-    protected function mapSourceAttributesFields()
+    protected function mountSourceTypeAttributesFields()
     {
         $this->deleteEmptyAttributes();
         foreach ($this->currentSourceTypeAttributes() as $attr) {
@@ -300,48 +391,6 @@ class SourceNew extends Component
         }
     }
 
-    protected function currentSourceTypeAttributes()
-    {
-        return $this->sourceTypes[$this->selectedType]['attributes'];
-    }
-
-    /**
-     * Returns the data of a particular attribute of the current
-     * selected type
-     *
-     * @param mixed $code
-     *
-     * @return array
-     */
-    protected function attributeData($code): array
-    {
-        return array_values(
-            array_filter($this->currentSourceTypeAttributes(), fn ($attr) => $attr['code'] == $code)
-        )[0];
-    }
-
-    /**
-     * Returns an array of rule data corresponding
-     * to a particular attribute type
-     *
-     * @param array $attributeData
-     *
-     * @return void
-     */
-    protected function getAttributeRuleData(array $attributeData)
-    {
-        $path = 'attributes.' . $attributeData['code'];
-        $rules = $this->rules[$path] ?? [];
-        if (isset(self::$typeRules[$attributeData['type']])) {
-            $rules = array_merge($rules, self::$typeRules[$attributeData['type']]);
-        }
-        return [
-            'path' => $path,
-            'rules' => $rules,
-            'label' => strtolower($attributeData['label'])
-        ];
-    }
-
     public function addCreator()
     {
         $this->creators[] = [
@@ -361,5 +410,21 @@ class SourceNew extends Component
     public function changeCreator()
     {
         Log::info('change-creator', $this->creators);
+    }
+
+    public function getSourcesFilterProperty()
+    {
+        if (!isset($this->filter)) {
+            $this->filter = app(FilteredIndexUseCase::class);
+        }
+        return  $this->filter;
+    }
+
+    public function getCaseOperationsProperty()
+    {
+        if (!isset($this->CreateSourceUseCase)) {
+            $this->createSourceUseCase = app(CreateSourceUC::class);
+        }
+        return  $this->createSourceUseCase;
     }
 }

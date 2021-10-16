@@ -1,8 +1,8 @@
 <div
-x-data="alpNewSource" x-ref="root"
-x-on:lw:message-change.window="loading = $event.detail.loading"
-x-on:add-creator="handleAddCreator($event, $dispatch)"
-class="h-full mx-5 grid border rounded relative"
+    x-data="alpNewSource" x-ref="root"
+    x-on:lw:message-change.window="loading = $event.detail.loading"
+    x-on:add-participation="handleAddParticipation($event, $dispatch)"
+    class="h-full mx-5 grid border rounded relative"
 >
 
 {{-- @if ($errors->any())
@@ -47,7 +47,7 @@ class="h-full mx-5 grid border rounded relative"
     {{-- Source Type Select and Key Section --}}
     <div>
         <select
-        x-data="selectSourceType({type: @entangle('selectedType').defer })"
+        x-data="selectSourceType({type: @entangle('type').defer })"
         x-model="type" class="font-medium p-2 rounded text-xs focus:outline-none cursor-pointer hover:text-blue-900">
             <template x-for="sType in $store.sourceTypes.list">
                 <option
@@ -63,12 +63,12 @@ class="h-full mx-5 grid border rounded relative"
                 <input
                 wire:change="computeKey($event.target.value)"
                 x-bind:disabled="loading"
-                value="{{$sourceKey}}"
+                value="{{$key}}"
                 type="text" id="source-key" name="source-key"
                 autocomplete="off"
                 class="border flex-grow focus:outline-none px-2 py-1 rounded text-sm focus:border-blue-400"
                 >
-                @error("sourceKey") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                @error("key") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
             </div>
         </div>
     </div>
@@ -82,18 +82,18 @@ class="h-full mx-5 grid border rounded relative"
             <div class="flex gap-2 px-1">
                 <h3 class="font-semibold text-sm ">Creadores</h3>
                 <button
-                x-on:click="$dispatch('add-creator')"
+                x-on:click="$dispatch('add-participation')"
                 class="text-blue-600 text-xs hover:text-blue-500"
                 >
                     Agregar
                 </button>
             </div>
             <button
-            x-on:click="openCreators = !openCreators" x-cloak
+            x-on:click="openParticipations = !openParticipations" x-cloak
             class="bg-gray-50 border p-1 rounded border-gray-300 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none "
             >
                 <x-icons.chevron-down
-                x-bind:class="{'transform rotate-180': openCreators}"
+                x-bind:class="{'transform rotate-180': openParticipations}"
                 class="w-4 h-4 fill-current transition-transform ease-in-out duration-500"
                 />
             </button>
@@ -102,29 +102,27 @@ class="h-full mx-5 grid border rounded relative"
 
         {{-- Accordion Content --}}
         <div
-        x-ref="creators"
-        x-bind:style="{'max-height': openCreators ?  $el.scrollHeight + 'px' : '0px'}" {{-- Se puede agregar una longitud máxima por si el scrollHeight llega a ser muy grande --}}
+        x-ref="participations"
+        x-bind:style="{'max-height': openParticipations ?  $el.scrollHeight + 'px' : '0px'}" {{-- Se puede agregar una longitud máxima por si el scrollHeight llega a ser muy grande --}}
         class="text-sm border-b overflow-hidden transition-all ease-in-out duration-500 "
         >
 
             {{-- Creators List --}}
             <ul
-            x-data="creatorsList({
-                creators: logosCreators
-            })"
-            x-on:remove-creator="handleRemoveCreator($event, $dispatch)"
-            x-on:add-creator.window="handleAddCreator($event, $dispatch)"
+            x-data="participationList()"
+            x-on:remove-particpation="handleRemoveParticipation($event, $dispatch)"
+            x-on:add-participation.window="handleAddParticipation($event, $dispatch)"
             wire:ignore
             class="py-1 px-3"
             >
-                <template x-for="(creator, index ) in creators" x-bind:key="creator.i">
+                <template x-for="(participation, index ) in participations" x-bind:key="participation.i">
                     <li>
 
                         {{-- Person Input --}}
                         <div
-                        x-data="personInput({creator:creator})"
+                        x-data="personInput({participation:participation})"
                         x-effect="roles = $store.sourceTypes.roles($store.sourceTypes.selected)"
-                        x-on:creator-added.window = "$event.detail.creator.i == myperson.i ? editNew: null"
+                        x-on:participation-added.window = "$event.detail.participation.i == myperson.i ? editNew: null"
                         x-on:suggestion-acepted.window="handleSuggestion($event)"
                         x-ref="root"
                         class="flex py-1 items-center"
@@ -141,7 +139,7 @@ class="h-full mx-5 grid border rounded relative"
                                 x-ref="lastName"
                                 x-on:blur="$dispatch('creator-blur')"
                                 x-on:focus="$dispatch('creator-focus')"
-                                x-bind:data-i="myperson.i"
+                                x-bind:data-i="i"
                                 type="text" class="px-2 border-b border-gray-100 w-2/5 focus:outline-none focus:border-blue-500"
                                 >
                                 <input
@@ -149,14 +147,14 @@ class="h-full mx-5 grid border rounded relative"
                                 x-ref="name"
                                 x-on:blur="$dispatch('creator-blur')"
                                 x-on:focus="$dispatch('creator-focus')"
-                                x-bind:data-i="myperson.i"
+                                x-bind:data-i="i"
                                 type="text" class="px-2 w-2/5 border-b border-gray-100 focus:outline-none focus:border-blue-500"
                                 >
                                 <select class="border ml-1 rounded text-xs focus:outline-none"
                                     x-model="myRole"
                                 >
                                     <template x-for="role in roles">
-                                        <option x-bind:value="role.code" x-text="role.label" x-bind:selected="myperson.role ? (role.code == myperson.role) : false"></option>
+                                        <option x-bind:value="role.code" x-text="role.label" x-bind:selected="myRole ? (role.code == myRole) : false"></option>
                                     </template>
                                 </select>
                              </div>
@@ -201,7 +199,7 @@ class="h-full mx-5 grid border rounded relative"
                                         &#10551;
                                     </button>
                                     <button
-                                    x-on:click.stop="moveUp(creator.i)"
+                                    x-on:click.stop="moveUp(participation.i)"
                                     x-bind:class="index > 0 ? '' : 'invisible'"
                                     title="Move Up"
                                     class="text-white rounded-full m-1 bg-blue-400 hover:bg-white hover:text-blue-500 h-5 w-5 flex align-middle justify-center focus:outline-none"
@@ -209,7 +207,7 @@ class="h-full mx-5 grid border rounded relative"
                                         &uarr;
                                     </button>
                                     <button
-                                    x-on:click.stop="$dispatch('remove-creator', {creator: creator})"
+                                    x-on:click.stop="$dispatch('remove-particpation', {participation: participation})"
                                     title="Delete"
                                     class="rounded-full m-1 text-red-900 hover:bg-red-500 hover:text-white border-red-500  h-5 w-5 flex align-middle justify-center focus:outline-none"
                                     >
@@ -313,17 +311,17 @@ class="h-full mx-5 grid border rounded relative"
 @push('head-script')
 <script>
     let logosCreators = @json($creators, JSON_PRETTY_PRINT);
-    let logosSourceTypes = @json($sourceTypes, JSON_PRETTY_PRINT);
 </script>
 
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.store('sourceTypes', {
-            list: @json($sourceTypes, JSON_PRETTY_PRINT),
+            list: @json($types, JSON_PRETTY_PRINT),
             selected: null,
             attributes: {},
             init: function () {
                 this.updateAttributes()
+                console.log('this $wire: ', this.$wire)
             },
             updateAttributes: function () {
                 this.attributes = Object.values(this.list[this.selected ? this.selected : 'journalArticle'].attributes)
@@ -339,14 +337,15 @@ class="h-full mx-5 grid border rounded relative"
 
         Alpine.store('source', {
             attributes: @json($attributes, JSON_PRETTY_PRINT),
-            creators: @json($creators, JSON_PRETTY_PRINT)
+            creators: @json($creators, JSON_PRETTY_PRINT),
+            participations: @json($participations, JSON_PRETTY_PRINT)
         })
 
         Alpine.data('alpNewSource', () => {
             return {
                 active: false,
                 loading:false,
-                openCreators: false,
+                openParticipations: false,
                 handleEvent: function (event) {
                     if (event.type == 'source-select:solve') {
                         this.$wire.save(this.$store.source)
@@ -368,7 +367,7 @@ class="h-full mx-5 grid border rounded relative"
                 },
                 activate: function () {
                     this.active = true;
-                    this.$refs.creators.classList.add('transition-all', 'duration-500')
+                    this.$refs.participations.classList.add('transition-all', 'duration-500')
                     document.addEventListener(
                         'source-select:solve',
                         this,
@@ -376,76 +375,84 @@ class="h-full mx-5 grid border rounded relative"
                     )
                 },
                 deactivate: function () {
-                    this.$refs.creators.classList.remove('transition-all', 'duration-500')
+                    this.$refs.participations.classList.remove('transition-all', 'duration-500')
                     this.$nextTick(() => {
-                        this.openCreators = false
+                        this.openParticipations = false
                         this.active = false
                         document.removeEventListener('source-select:solve', this, false)
                     })
                 },
-                handleAddCreator: function(e, dispatch) {
+                handleAddParticipation: function(e, dispatch) {
                     this.$nextTick(() => {
-                            this.openCreators = true;
-                            this.$refs.creators.style.maxHeight = this.$refs.creators.scrollHeight + 'px'
+                            this.openParticipations = true;
+                            this.$refs.participations.style.maxHeight = this.$refs.participations.scrollHeight + 'px'
                         }
                     )
                 }
             }
         })
 
-        Alpine.data('creatorsList', (options) => {
+        Alpine.data('participationList', (options) => {
             return {
                 i:0,
-                creators: [],
+                participations: [],
                 init: function () {
-                    let creators = this.$store.source.creators
+                    let participations = this.$store.source.participations
                     let i = 1;
-                    creators.forEach(creator => {
-                        creator.i = i++
-                        creator.dirty =  false
+                    participations.forEach(participation => {
+                        participation.i = i++
+                        participation.dirty =  false
+                        participation.creator.dirty =  false
                     })
-                    this.creators = creators
+                    this.participations = participations
                     this.i = i
                 },
                 moveUp: function (i) {
-                    let tempCreators = JSON.parse(JSON.stringify(this.creators))
-                    let index = tempCreators.findIndex((person) => person.i == i)
-                    let movingCreator = tempCreators.splice(index,1)[0]
-                    tempCreators.splice(index - 1, 0,movingCreator)
-                    this.creators = tempCreators;
+                    let tempParticipations = JSON.parse(JSON.stringify(this.participations))
+                    let index = tempParticipations.findIndex((person) => person.i == i)
+                    let movingParticipation = tempParticipations.splice(index,1)[0]
+                    tempParticipations.splice(index - 1, 0,movingParticipation)
+                    this.participations = tempParticipations;
                 },
-                handleAddCreator: function(e, dispatch) {
-                    let index = this.creators.push({
-                        i: this.i++,
-                        id: null,
-                        type: 'person',
-                        attributes: {
-                            name: '',
-                            lastName: ''
+                handleAddParticipation: function(e, dispatch) {
+                    let index = this.participations.push({
+                        i:  this.i++,
+                        role: null,
+                        relevance: null,
+                        creator: {
+                            id: null,
+                            type:"person",
+                            attributes: {
+                                name: '',
+                                lastName: ''
+                            },
+                            dirty: false
                         },
                         dirty: false
 
                     }) - 1;
-                    this.$nextTick(() => dispatch('creator-added', {creator: JSON.parse(JSON.stringify(this.creators[index]))}))
+                    this.$nextTick(() => dispatch('participation-added', {participation: JSON.parse(JSON.stringify(this.participations[index]))}))
                 },
-                handleRemoveCreator: function (event, dispatch) {
-                    let index = this.creators.findIndex((c) => c.i == event.detail.creator.i)
-                    console.log('removiendo creator i' + event.detail.creator.i + ' index : ', index)
-                    this.$nextTick(() => this.creators.splice(index, 1))
+                handleRemoveParticipation: function (event, dispatch) {
+                    let index = this.participations.findIndex((c) => c.i == event.detail.participation.i)
+                    console.log('removiendo participación i' + event.detail.participation.i + ' index : ', index)
+                    this.$nextTick(() => this.participations.splice(index, 1))
                 }
             }
         })
 
         Alpine.data('personInput', (options) => {
             return {
-                myperson: options.creator,
-                myRole: null,
+                i: options.participation.i,
+                myperson: options.participation.creator,
+                myRole: options.participation.role,
+                dirty: options.participation.dirty,
                 roles: {},
                 dirtyInput: false,
                 isEditing: false,
                 showControls: false,
                 cache: {
-                    myperson: JSON.parse(JSON.stringify(options.creator))
+                    myperson: JSON.parse(JSON.stringify(options.participation.creator))
                 },
                 init: function () {
                     this.$watch('roles', this.getRole.bind(this))
@@ -514,14 +521,14 @@ class="h-full mx-5 grid border rounded relative"
                                     type: 'person',
                                     attribute: attribute,
                                     value: value,
-                                    creator: JSON.parse(JSON.stringify(this.myperson))
+                                    participation: JSON.parse(JSON.stringify({i: this.i, creator:this.myperson}))
                                 }
                             }))
                         })
                 },
                 handleSuggestion:function ($event, $dispatch) {
-                    if ($event.detail.client.i == this.myperson.i) {
-                        // console.log('suggestion is to me - \n\tclient:', $event.detail.client, '\n\tme:', this.myperson)
+                    if ($event.detail.client.i == this.i) {
+                        console.log('suggestion is to me - \n\tclient:', $event.detail.client, '\n\tme:', this.myperson)
                         let creator = event.detail.creator;
                         this.myperson.attributes.name  = creator.attributes.name
                         this.myperson.attributes.lastName  = creator.attributes.lastName
@@ -568,7 +575,7 @@ class="h-full mx-5 grid border rounded relative"
                     this.$refs.root.style.top = event.target.offsetTop + event.target.offsetHeight + margin + 'px'
                     this.$refs.root.style.left = event.target.offsetLeft + 'px'
                     this.$refs.root.style.width = event.target.clientWidth + 'px'
-                    this.lastCreator = event.detail.creator
+                    this.lastCreator = event.detail.participation
                     this.decideHidding()
                 },
                 decideHidding: function (event) {

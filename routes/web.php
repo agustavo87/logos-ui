@@ -155,6 +155,8 @@ Route::group([
         'accordions',
         'prototypes.accordions'
     );
+
+    Route::view('dinamic-store', 'prototypes.dinamic-store');
 });
 
 Route::view('livewire', 'livewire');

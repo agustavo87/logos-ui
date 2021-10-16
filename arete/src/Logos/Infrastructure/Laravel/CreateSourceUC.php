@@ -34,7 +34,7 @@ class CreateSourceUC implements ICreateSourceUC
         $this->translator = $translator;
     }
 
-    public function presentSourceTypes(): array
+    public function getSourceTypesPresentations(): array
     {
         /**
          * @todo mover la lógica de DB al repositorio de tipo de fuentes
@@ -129,9 +129,10 @@ class CreateSourceUC implements ICreateSourceUC
 
     protected function processCreators(array $creators): array
     {
-        foreach ($creators as $creator) {
+        return $creators;
+        // foreach ($creators as $creator) {
 
-        }
+        // }
     }
 
     protected function datesize($date): DateTime

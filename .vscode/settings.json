@@ -31,6 +31,6 @@
     "intelephense.environment.documentRoot": "public/",
     "workbench.colorCustomizations": {
         "phpParameterHint.hintForeground": "#00a9a7",
-        "phpParameterHint.hintBackground": "#aa3339"
+        "phpParameterHint.hintBackground": "#3e50686c"
     }
 }
