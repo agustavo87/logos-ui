@@ -317,11 +317,10 @@
     document.addEventListener('alpine:init', () => {
         Alpine.store('sourceTypes', {
             list: @json($types, JSON_PRETTY_PRINT),
-            selected: null,
+            selected: @json($type),
             attributes: {},
             init: function () {
                 this.updateAttributes()
-                console.log('this $wire: ', this.$wire)
             },
             updateAttributes: function () {
                 this.attributes = Object.values(this.list[this.selected ? this.selected : 'journalArticle'].attributes)
