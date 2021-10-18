@@ -8,6 +8,7 @@ use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 use Arete\Logos\Domain\SimpleFormatter;
+use Arete\Logos\Infrastructure\Laravel\Commands\PublishSourcesJsAssets;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
 
 class SourcesServiceProvider extends ServiceProvider
@@ -157,6 +158,11 @@ class SourcesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                PublishSourcesJsAssets::class
+            ]);
+        }
         $this->publishes([
             __DIR__  . '/config/sources.php' => config_path('sources.php'),
         ]);

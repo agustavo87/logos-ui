@@ -257,15 +257,17 @@
         let logosCreators = @json($creators, JSON_PRETTY_PRINT);
     </script>
 
+    <script src="{{ asset('js/lgassets.js') }}"></script>
+
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('sourceTypes', {
                 list: null,
                 selected: null,
-                // {{--
-                // list: @json($types, JSON_PRETTY_PRINT),
-                // selected: @json($type),
-                // --}}
+
+                list: Lg.sourceTypes, // {{-- asset in js/lgassets.js--}}
+                selected: @json($type),
+
                 attributes: {},
                 init: function () {
                     this.updateAttributes()

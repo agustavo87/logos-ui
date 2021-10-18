@@ -13,6 +13,7 @@ use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
 use DateTime;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
 class CreateSourceUC implements ICreateSourceUC
@@ -32,6 +33,17 @@ class CreateSourceUC implements ICreateSourceUC
         $this->sources = $sources;
         $this->creators = $creators;
         $this->translator = $translator;
+    }
+
+    public function publishSourceTypesPresentationScript()
+    {
+        $stubPath = realpath(__DIR__ . '/stubs/lgassets.js.stub');
+        $targetPath = public_path('js/' . basename($stubPath, '.stub'));
+
+        $presentations = json_encode($this->getSourceTypesPresentations());
+        $stub = File::get($stubPath);
+        $stub = str_replace('{{ sourceTypes }}', $presentations, $stub);
+        return File::put($targetPath, $stub);
     }
 
     public function getSourceTypesPresentations(): array

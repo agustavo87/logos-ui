@@ -45,4 +45,6 @@ interface CreateSourceUC
         bool $asc = true,
         int $limit = 5
     ): array;
+
+    public function publishSourceTypesPresentationScript();
 }

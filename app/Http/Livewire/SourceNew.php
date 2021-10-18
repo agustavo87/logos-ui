@@ -119,9 +119,12 @@ class SourceNew extends Component
     /**
      * Current available source types data
      *
+     * In the front end are retrieved by a js asset file that has to
+     * be updated by corresponding command.
+     *
      * @var array
      */
-    public array $types;
+    protected array $types;
 
     public array $sharedErrors = [];
 
