@@ -262,9 +262,6 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('sourceTypes', {
-                list: null,
-                selected: null,
-
                 list: Lg.sourceTypes, // {{-- asset in js/lgassets.js--}}
                 selected: @json($type),
 
