@@ -120,7 +120,7 @@
                                             x-bind:data-i="i"
                                             type="text" class="px-2 w-2/5 border-b border-gray-100 focus:outline-none focus:border-blue-500"
                                         >
-                                        <select x-model="myRole" class="border ml-1 rounded text-xs focus:outline-none" >
+                                        <select x-show="showRoles" x-model="myRole" class="border ml-1 rounded text-xs focus:outline-none" >
                                             <template x-for="role in roles">
                                                 <option x-bind:value="role.code" x-text="role.label" x-bind:selected="myRole ? (role.code == myRole) : false"></option>
                                             </template>
