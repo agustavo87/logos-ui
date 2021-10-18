@@ -47,4 +47,5 @@ interface CreateSourceUC
     ): array;
 
     public function publishSourceTypesPresentationScript();
+    public function getSourceTypePresentationsStub();
 }

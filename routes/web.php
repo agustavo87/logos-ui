@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
 use Arete\Sofrosine\Services\Locale;
 use App\Http\Controllers\{
     ArticleController,
@@ -114,6 +115,9 @@ Route::group([
     ], function () {
         Route::get('/', [SourceController::class, 'index'])->name('index');
         Route::get('/{source}/edit', [SourceController::class, 'edit'])->name('edit');
+        Route::get('jsstypes', function (CreateSourceUC $sources) {
+            return $sources->getSourceTypePresentationsStub();
+        })->name('jsstypes');
     });
 });
 

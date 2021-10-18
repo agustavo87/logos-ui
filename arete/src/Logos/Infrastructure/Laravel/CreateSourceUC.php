@@ -22,6 +22,7 @@ class CreateSourceUC implements ICreateSourceUC
     protected SourcesRepository $sources;
     protected SourcesTranslator $translator;
     protected CreatorsRepository $creators;
+    protected $stubpath;
 
     public function __construct(
         DB $db,
@@ -33,17 +34,22 @@ class CreateSourceUC implements ICreateSourceUC
         $this->sources = $sources;
         $this->creators = $creators;
         $this->translator = $translator;
+        $this->stubpath = realpath(__DIR__ . '/stubs/lgassets.js.stub');
     }
 
     public function publishSourceTypesPresentationScript()
     {
-        $stubPath = realpath(__DIR__ . '/stubs/lgassets.js.stub');
-        $targetPath = public_path('js/' . basename($stubPath, '.stub'));
+        $targetPath = public_path('js/' . basename($this->stubpath, '.stub'));
+        return File::put($targetPath, $this->getSourceTypePresentationsStub());
+    }
 
+    public function getSourceTypePresentationsStub()
+    {
         $presentations = json_encode($this->getSourceTypesPresentations());
-        $stub = File::get($stubPath);
+        // dd('uno', $this->stubpath);
+        $stub = File::get($this->stubpath);
         $stub = str_replace('{{ sourceTypes }}', $presentations, $stub);
-        return File::put($targetPath, $stub);
+        return $stub;
     }
 
     public function getSourceTypesPresentations(): array

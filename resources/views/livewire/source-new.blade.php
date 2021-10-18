@@ -257,14 +257,14 @@
         let logosCreators = @json($creators, JSON_PRETTY_PRINT);
     </script>
 
-    <script src="{{ asset('js/lgassets.js') }}"></script>
+    {{-- The sources are generated depending on locale (labels are localized) and can be cached --}}
+    <script src="{{ route('sources.jsstypes')}}"></script>
 
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('sourceTypes', {
-                list: Lg.sourceTypes, // {{-- asset in js/lgassets.js--}}
+                list: Lg.sourceTypes, // {{-- asset returned by route sources.jsstypes --}}
                 selected: @json($type),
-
                 attributes: {},
                 init: function () {
                     this.updateAttributes()
