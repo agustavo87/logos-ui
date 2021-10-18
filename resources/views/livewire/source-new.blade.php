@@ -2,7 +2,7 @@
     x-ref="root"
     x-on:lw:message-change.window="loading = $event.detail.loading"
     x-on:add-participation="handleAddParticipation($event, $dispatch)"
-    class="h-full mx-5 grid border rounded relative"
+    class="h-full mx-5 flex flex-col border rounded relative"
 >
 
 {{-- Errors Notifications --}}
@@ -35,14 +35,9 @@
 {{-- / Source Type Select and Source Key Input Section --}}
     <div>
     {{-- Source Type Select --}}
-        <select
-        x-data="selectSourceType({type: @entangle('type').defer })"
-        x-model="type" class="font-medium p-2 rounded text-xs focus:outline-none cursor-pointer hover:text-blue-900">
+        <select x-bind:class="{'invisible':$store.sourceTypes.list == null}" x-data="selectSourceType({type: @entangle('type').defer })" x-model="type" class="font-medium p-2 rounded text-xs focus:outline-none cursor-pointer hover:text-blue-900">
             <template x-for="sType in $store.sourceTypes.list">
-                <option
-                x-bind:value="sType.code"
-                x-text="sType.label"
-                x-bind:selected="sType.code == type">
+                <option x-bind:value="sType.code" x-text="sType.label" x-bind:selected="sType.code == type">
                 </option>
             </template>
         </select>
@@ -158,7 +153,7 @@
                                         <div>
                                             <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
                                         </div>
-                                        <span x-text="myRole ? (roles[myRole] ? roles[myRole].label : '') : ''" class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"></span>
+                                        <span x-show="showRoles" x-text="myRole ? (roles[myRole] ? roles[myRole].label : '') : ''" class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"></span>
                                     </div>
                                     <div class="flex" x-bind:class="showControls ? 'visible': 'invisible'">
                                         <button x-on:click.stop="restore"
@@ -195,67 +190,52 @@
 {{-- / Creators Section --}}
 
 {{-- Attributes Section --}}
-    <ul
-    x-data="sourceAttributes"
-    class="overflow-y-auto overflow-hidden px-2 pb-2 "
-    >
-    <template x-for="attribute in $store.sourceTypes.attributes">
-        <li>
-            <div class="flex flex-col mt-2">
-                <label
-                x-bind:for="'attribute.' + attribute.code"
-                x-text="attribute.label"
-                class=" flex-grow-0 text-gray-600 text-sm ml-1"
-                ></label>
-                <input
-                x-bind:type="type(attribute.type)"
-                x-bind:name="'attribute.' + attribute.code"
-                x-bind:id="'input-' + attribute.code"
-                x-show="attribute.code != 'abstractNote'"
-                x-bind:value="$store.source.attributes[attribute.code] ? $store.source.attributes[attribute.code] : ($store.source.attributes[attribute.base] ? $store.source.attributes[attribute.base] : null)"
-                x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
-                class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
-                >
-                <textarea
-                x-bind:name="'attribute.' + attribute.code"
-                x-bind:id="'input-' + attribute.code"
-                x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
-                x-bind:value="$store.source.attributes[attribute.code] ? $store.source.attributes[attribute.code] : ($store.source.attributes[attribute.base] ? $store.source.attributes[attribute.base] : null)"
-                x-show="attribute.code == 'abstractNote'"
-                rows="4"
-                class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none focus:border-blue-400"
-                ></textarea>
-            </div>
-        </li>
-    </template>
+    <ul x-data="sourceAttributes" class="overflow-y-auto overflow-hidden px-2 pb-2 ">
+        <template x-for="attribute in $store.sourceTypes.attributes">
+            <li>
+                <div class="flex flex-col mt-2">
+                    <label x-bind:for="'attribute.' + attribute.code" x-text="attribute.label" class=" flex-grow-0 text-gray-600 text-sm ml-1"></label>
+                    <input x-show="attribute.code != 'abstractNote'"
+                        x-bind:type="type(attribute.type)"
+                        x-bind:name="'attribute.' + attribute.code"
+                        x-bind:id="'input-' + attribute.code"
+                        x-bind:value="$store.source.attributes[attribute.code] ? $store.source.attributes[attribute.code] : ($store.source.attributes[attribute.base] ? $store.source.attributes[attribute.base] : null)"
+                        x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
+                        class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
+                    >
+                    <textarea x-show="attribute.code == 'abstractNote'"
+                        x-bind:name="'attribute.' + attribute.code"
+                        x-bind:id="'input-' + attribute.code"
+                        x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
+                        x-bind:value="$store.source.attributes[attribute.code] ? $store.source.attributes[attribute.code] : ($store.source.attributes[attribute.base] ? $store.source.attributes[attribute.base] : null)"
+                        rows="4"
+                        class=" flex-grow border px-2 py-1 rounded text-sm resize-none focus:outline-none focus:border-blue-400"
+                    ></textarea>
+                </div>
+            </li>
+        </template>
     </ul>
 {{-- / Attributes Section --}}
 
 {{-- Creators Suggestion --}}
-    <div
-    x-data="creatorsHint({creators: @entangle('creatorSuggestions').defer })"
-    x-on:hint-updated.window = "newHints($event)"
-    x-ref="root"
-    x-show="visible"
-    x-on:close-hints.window="decideHidding"
-    x-on:creator-blur.window="focusCount--"
-    x-on:creator-focus.window="focusCount++"
-    x-on:click.outside="decideHidding"
-    x-transition:enter.duration.20ms
-    x-transition:leave.duration.100ms
-    x-transition.opacity
-    class="absolute bottom-0 right-0 z-40"
+    <div x-data="creatorsHint({creators: @entangle('creatorSuggestions').defer })"
+        x-on:hint-updated.window = "newHints($event)"
+        x-ref="root"
+        x-show="visible"
+        x-on:close-hints.window="decideHidding"
+        x-on:creator-blur.window="focusCount--"
+        x-on:creator-focus.window="focusCount++"
+        x-on:click.outside="decideHidding"
+        x-transition:enter.duration.20ms
+        x-transition:leave.duration.100ms
+        x-transition.opacity
+        class="absolute bottom-0 right-0 z-40"
     >
-        <input
-        wire:model.debounce.500ms="creatorSuggestionParams.hint"
-        type="hidden"
-        class="px-2 py-1 rounded border w-full"
+        <input wire:model.debounce.500ms="creatorSuggestionParams.hint"
+            type="hidden"
+            class="px-2 py-1 rounded border w-full"
         >
-        <ul
-        x-on:mouseover="mouseover = true"
-        x-on:mouseleave="mouseover = false"
-        class="h-36 rounded border border-blue-200 bg-gray-50 text-xs p-1 overflow-y-auto overflow-x-hidden"
-        >
+        <ul x-on:mouseover="mouseover = true" x-on:mouseleave="mouseover = false" class="h-36 rounded border border-blue-200 bg-gray-50 text-xs p-1 overflow-y-auto overflow-x-hidden">
            <template x-for="suggestion in creators" x-bind:key="suggestion.id">
                 <li>
                     <button
@@ -280,13 +260,18 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('sourceTypes', {
-                list: @json($types, JSON_PRETTY_PRINT),
-                selected: @json($type),
+                list: null,
+                selected: null,
+                // {{--
+                // list: @json($types, JSON_PRETTY_PRINT),
+                // selected: @json($type),
+                // --}}
                 attributes: {},
                 init: function () {
                     this.updateAttributes()
                 },
                 updateAttributes: function () {
+                    if (!this.list) return;
                     this.attributes = Object.values(this.list[this.selected ? this.selected : 'journalArticle'].attributes)
                 },
                 updateSelected: function (sType) {
@@ -294,6 +279,7 @@
                     this.updateAttributes();
                 },
                 roles: function (sourceType) {
+                    if (!this.list) return {};
                     return this.list[sourceType].roles
                 },
             })
@@ -411,6 +397,7 @@
                     myRole: options.participation.role,
                     dirty: options.participation.dirty,
                     roles: {},
+                    showRoles: false,
                     dirtyInput: false,
                     isEditing: false,
                     showControls: false,
@@ -422,6 +409,12 @@
                     },
                     getRole: function() {
                         let roles = Object.values(this.roles)
+                        if (!roles.length) {
+                            this.showRoles = false;
+                            return;
+                        }
+                        this.showRoles = true;
+
                         let primary = roles.find(role => role.primary)
                         if (!this.myRole) {
                             this.myRole  = primary.code
@@ -569,6 +562,7 @@
                         this.shareType()
                         this.$watch('type', () => this.shareType())
                     },
+
                     shareType: function () {
                         this.$store.sourceTypes.updateSelected(this.type)
                     }
