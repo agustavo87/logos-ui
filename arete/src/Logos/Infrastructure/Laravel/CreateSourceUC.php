@@ -126,16 +126,17 @@ class CreateSourceUC implements ICreateSourceUC
         return $presentations;
     }
 
-    public function create($ownerID, string $type, array $attributes, array $creators, ?string $key = null): string
+    public function create($ownerID, string $type, array $attributes, array $participations, ?string $key = null): string
     {
         // should be validated on adapter, but just to be sure.
         if (isset($attributes['date'])) {
             $attributes['date'] = $this->datesize($attributes['date']);
         }
-        $creators = $this->processCreators($creators);
+
         $params = [
             'type' => $type,
-            'attributes' => $attributes
+            'attributes' => $attributes,
+            'participations' => $participations
         ];
         if ($key != null || $key != '') {
             $params['key'] = $key;
@@ -143,14 +144,6 @@ class CreateSourceUC implements ICreateSourceUC
         $source = $this->sources->createFromArray($params, $ownerID);
         Log::info('source creado', ['source', $source->toArray()]);
         return $source->key();
-    }
-
-    protected function processCreators(array $creators): array
-    {
-        return $creators;
-        // foreach ($creators as $creator) {
-
-        // }
     }
 
     protected function datesize($date): DateTime

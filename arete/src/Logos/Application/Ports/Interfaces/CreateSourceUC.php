@@ -22,7 +22,13 @@ interface CreateSourceUC
      *
      * @return string key
      */
-    public function create($ownerID, string $type, array $attributes, array $creators, ?string $key = null): string;
+    public function create(
+        $ownerID,
+        string $type,
+        array $attributes,
+        array $participations,
+        ?string $key = null
+    ): string;
 
     /**
      * Suggest a valid (unique) key.

@@ -135,12 +135,12 @@ class SourceNew extends Component
 
     public function mount()
     {
-        $testSource = $this->sourcesFilter->filter([
-            'key' => 'za'
-        ])[0]->toArray('relevance');
-        $this->mountSource($testSource);
+        // $testSource = $this->sourcesFilter->filter([
+        //     'key' => 'za'
+        // ])[0]->toArray('relevance');
+        // $this->mountSource($testSource);
         $this->mountSourceTypeAttributesFields();
-        $this->syncCreatorsSuggestions();
+        $this->fillCreatorSuggestions();
     }
 
     protected function mountSource(array $source)
@@ -254,7 +254,7 @@ class SourceNew extends Component
         return $this->types[$this->type]['attributes'];
     }
 
-    protected function syncCreatorsSuggestions()
+    protected function fillCreatorSuggestions()
     {
         $this->creatorSuggestions = $this->caseOperations->suggestCreators(
             Auth::user()->id,
@@ -275,12 +275,12 @@ class SourceNew extends Component
             'hint' => $value
         ];
         $this->creatorSuggestionParams = array_merge($this->creatorSuggestionParams, $data);
-        $this->syncCreatorsSuggestions();
+        $this->fillCreatorSuggestions();
     }
 
     public function updatedCreatorSuggestionParamsHint($value)
     {
-        $this->syncCreatorsSuggestions();
+        $this->fillCreatorSuggestions();
     }
 
     public function computeKey($value)
@@ -304,8 +304,8 @@ class SourceNew extends Component
     public function save($data)
     {
         Log::info('saving source', $data);
-        $creatorsData = $this->adaptCreatorsData($data);
-        Log::info('creators data', $creatorsData);
+        $participationsData = $this->adaptParticipationsData($data['participations']);
+        Log::info('creators data', $participationsData);
         $this->attributes = $data['attributes'];
         $this->filterTypeAttributes();
         $this->updateValidationRules();
@@ -315,23 +315,41 @@ class SourceNew extends Component
             Auth::user()->id,
             $this->type,
             $this->attributes,
-            $creatorsData,
+            $participationsData,
             $this->key
         );
         return $this->key;
     }
 
-    protected function adaptCreatorsData($data)
+    protected function adaptParticipationsData($participations)
     {
-          $creators = $data['creators'];
-          $creators = array_map(
-              fn ($creator) =>
-                $creator['id']  && isset($creator['dirty']) && !$creator['dirty'] ?
-                ['creatorID' => $creator['id']] :
-                $creator,
-              $creators
-          );
-          return $creators;
+        return array_map(function ($participation, $index) {
+            $rawCreator = $participation['creator'];
+            $params = [
+                'role' => $participation['role'],
+                'relevance' => $index + 1
+            ];
+            if ($rawCreator['id']) {
+                if ($rawCreator['dirty']) {
+                    $creator = [
+                        'id' => $rawCreator['id'],
+                        'type' => $rawCreator['type'],
+                        'attributes' => $rawCreator['attributes']
+                    ];
+                } else {
+                    $creator = [
+                        'creatorID' => $rawCreator['id']
+                    ];
+                }
+            } else {
+                $creator = [
+                    'type' => $rawCreator['type'],
+                    'attributes' => $rawCreator['attributes']
+                ];
+            }
+            $params['creator'] = $creator;
+            return $params;
+        }, $participations, array_keys($participations));
     }
 
     /**

@@ -90,8 +90,13 @@ class ParticipationSet implements Arrayable
     public function pushNew(array $creatorData, string $role, int $relevance): Participation
     {
         if (array_key_exists('creatorID', $creatorData)) {
+            // The creator exists, just getit
             $creator = $this->creators->get($creatorData['creatorID']);
+        } elseif (isset($creatorData['id']) && $creatorData['id'] != null) {
+            // The creator exists, but has to be updated
+            $creator = $this->updateCreator($creatorData);
         } elseif (array_key_exists('attributes', $creatorData) && array_key_exists('type', $creatorData)) {
+            // The creator don't exist, have to be created.
             $creator = $this->creators->createFromArray(
                 [
                     'type' => $creatorData['type'],
@@ -107,6 +112,18 @@ class ParticipationSet implements Arrayable
         $participation = $this->participations->create($this->source, $creator, $role, $relevance);
         $this->push($role, $participation);
         return $participation;
+    }
+
+    // Warining, the type of the creator can't be changed.
+    protected function updateCreator($data)
+    {
+        $creator = $this->creators->get($data['id']);
+        foreach ($creator->attributes() as $attributeName) {
+            $creator->$attributeName = $data['attributes'][$attributeName];
+        }
+        $this->creators->save($creator);
+        // ¿será necesario obtener una instancia fresca?
+        return $creator;
     }
 
     /**

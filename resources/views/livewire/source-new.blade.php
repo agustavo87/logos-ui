@@ -95,7 +95,7 @@
                         {{-- Person Input --}}
                             <div x-data="personInput({participation:participation})"
                                 x-effect="roles = $store.sourceTypes.roles($store.sourceTypes.selected)"
-                                x-on:participation-added.window = "$event.detail.participation.i == myperson.i ? editNew: null"
+                                x-on:participation-added.window = "$event.detail.participation.i == participation.i ? editNew: null"
                                 x-on:suggestion-acepted.window="handleSuggestion($event)"
                                 x-ref="root"
                                 class="flex py-1 items-center"
@@ -110,19 +110,19 @@
                                             x-ref="lastName"
                                             x-on:blur="$dispatch('creator-blur')"
                                             x-on:focus="$dispatch('creator-focus')"
-                                            x-bind:data-i="i"
+                                            x-bind:data-i="participation.i"
                                             type="text" class="px-2 border-b border-gray-100 w-2/5 focus:outline-none focus:border-blue-500"
                                         >
                                         <input x-on:input="creatorInput('name', $event.target.value)"
                                             x-ref="name"
                                             x-on:blur="$dispatch('creator-blur')"
                                             x-on:focus="$dispatch('creator-focus')"
-                                            x-bind:data-i="i"
+                                            x-bind:data-i="participation.i"
                                             type="text" class="px-2 w-2/5 border-b border-gray-100 focus:outline-none focus:border-blue-500"
                                         >
-                                        <select x-show="showRoles" x-model="myRole" class="border ml-1 rounded text-xs focus:outline-none" >
+                                        <select x-show="showRoles" x-model="participation.role" class="border ml-1 rounded text-xs focus:outline-none" >
                                             <template x-for="role in roles">
-                                                <option x-bind:value="role.code" x-text="role.label" x-bind:selected="myRole ? (role.code == myRole) : false"></option>
+                                                <option x-bind:value="role.code" x-text="role.label" x-bind:selected="participation.role ? (role.code == participation.role) : false"></option>
                                             </template>
                                         </select>
                                     </div>
@@ -146,18 +146,18 @@
                                     x-on:mouseout="showControls = false"
                                     class="align-middle cursor-pointer flex hover:bg-blue-50 italic justify-between rounded-full w-full"
                                 >
-                                    <div x-bind:class="myperson.id && myperson.dirty ? 'text-blue-900' : ''"
-                                        x-bind:title="myperson.id && myperson.dirty ? 'Modified' : null"
+                                    <div x-bind:class="participation.creator.id && participation.creator.dirty ? 'text-blue-900' : ''"
+                                        x-bind:title="participation.creator.id && participation.creator.dirty ? 'Modified' : null"
                                         class="flex items-center ml-1"
                                     >
                                         <div>
-                                            <span x-text="myperson.attributes.lastName"></span>, <span x-text="myperson.attributes.name"></span>
+                                            <span x-text="participation.creator.attributes.lastName"></span>, <span x-text="participation.creator.attributes.name"></span>
                                         </div>
-                                        <span x-show="showRoles" x-text="myRole ? (roles[myRole] ? roles[myRole].label : '') : ''" class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"></span>
+                                        <span x-show="showRoles" x-text="participation.role ? (roles[participation.role] ? roles[participation.role].label : '') : ''" class="bg-gray-400 flex h-5 leading-4 ml-2 px-2 rounded-full text-white text-xs"></span>
                                     </div>
                                     <div class="flex" x-bind:class="showControls ? 'visible': 'invisible'">
                                         <button x-on:click.stop="restore"
-                                            x-bind:class="myperson.dirty && myperson.id ? '' : 'invisible' "
+                                            x-bind:class="participation.creator.dirty && participation.creator.id ? '' : 'invisible' "
                                             title="Discard Changes"
                                             class="w-5 h-5 transform rotate-180 flex bg-gray-400 text-white hover:bg-white hover:text-gray-500 justify-center m-1 rounded-full focus:outline-none"
                                         >
@@ -356,14 +356,12 @@
                         this.i = i
                     },
                     moveUp: function (i) {
-                        let tempParticipations = JSON.parse(JSON.stringify(this.participations))
-                        let index = tempParticipations.findIndex((person) => person.i == i)
-                        let movingParticipation = tempParticipations.splice(index,1)[0]
-                        tempParticipations.splice(index - 1, 0,movingParticipation)
-                        this.participations = tempParticipations;
+                        let index = this.participations.findIndex((person) => person.i == i)
+                        let movingParticipation = this.participations.splice(index,1)[0]
+                        this.participations.splice(index - 1, 0,movingParticipation)
                     },
                     handleAddParticipation: function(e, dispatch) {
-                        let index = this.participations.push({
+                        let index = this.$store.source.participations.push({
                             i:  this.i++,
                             role: null,
                             relevance: null,
@@ -391,6 +389,7 @@
 
             Alpine.data('personInput', (options) => {
                 return {
+                    participation: options.participation,
                     i: options.participation.i,
                     myperson: options.participation.creator,
                     myRole: options.participation.role,
@@ -401,7 +400,7 @@
                     isEditing: false,
                     showControls: false,
                     cache: {
-                        myperson: JSON.parse(JSON.stringify(options.participation.creator))
+                        creator: JSON.parse(JSON.stringify(options.participation.creator))
                     },
                     init: function () {
                         this.$watch('roles', this.getRole.bind(this))
@@ -415,17 +414,17 @@
                         this.showRoles = true;
 
                         let primary = roles.find(role => role.primary)
-                        if (!this.myRole) {
-                            this.myRole  = primary.code
-                        } else if(roles.find((role) => role.code == this.myRole) == undefined) {
+                        if (!this.participation.role) {
+                            this.participation.role  = primary.code
+                        } else if(roles.find((role) => role.code == this.participation.role) == undefined) {
                             console.log('no existe ', this.myRole, ' dentro de ', Object.getOwnPropertyNames(this.roles))
-                            this.myRole  = primary.code
+                            this.participation.role  = primary.code
                         }
                     },
                     fillInputs: function() {
-                        let attributeNames = Object.getOwnPropertyNames(this.myperson.attributes)
+                        let attributeNames = Object.getOwnPropertyNames(this.participation.creator.attributes)
                         attributeNames.forEach(
-                            attrName => this.$refs[attrName].value = this.myperson.attributes[attrName]
+                            attrName => this.$refs[attrName].value = this.participation.creator.attributes[attrName]
                         )
                     },
                     creatorInput: function(attr, value) {
@@ -443,11 +442,11 @@
                     },
                     commit: function () {
                         this.closeHints(true)
-                        let attributeNames = Object.getOwnPropertyNames(this.myperson.attributes)
+                        let attributeNames = Object.getOwnPropertyNames(this.participation.creator.attributes)
                         attributeNames.forEach(
-                            attrName => this.myperson.attributes[attrName] = this.$refs[attrName].value
+                            attrName => this.participation.creator.attributes[attrName] = this.$refs[attrName].value
                         )
-                        this.myperson.dirty = this.dirtyInput
+                        this.participation.creator.dirty = this.dirtyInput
                         this.isEditing = false;
                     },
                     closeHints: function (force = false) {
@@ -457,14 +456,14 @@
                     },
                     cancel: function () {
                         this.closeHints(true)
-                        if (!this.myperson.dirty) {
+                        if (!this.participation.creator.dirty) {
                             this.dirtyInput = false
                         }
                         this.isEditing = false
                     },
                     restore: function () {
                         if (this.cache.myperson != undefined) {
-                            this.myperson = this.cache.myperson
+                            this.participation.creator = this.cache.creator
                         }
                     },
                     emitCreatorInput: function (attribute, value) {
@@ -476,20 +475,20 @@
                                         type: 'person',
                                         attribute: attribute,
                                         value: value,
-                                        participation: JSON.parse(JSON.stringify({i: this.i, creator:this.myperson}))
+                                        participation: JSON.parse(JSON.stringify(this.participation))
                                     }
                                 }))
                             })
                     },
                     handleSuggestion:function ($event, $dispatch) {
-                        if ($event.detail.client.i == this.i) {
-                            console.log('suggestion is to me - \n\tclient:', $event.detail.client, '\n\tme:', this.myperson)
+                        if ($event.detail.clientParticipation.i == this.participation.i) {
+                            console.log('suggestion is to me - \n\tclient:', $event.detail.clientParticipation, '\n\tme:', this.participation)
                             let creator = event.detail.creator;
-                            this.myperson.attributes.name  = creator.attributes.name
-                            this.myperson.attributes.lastName  = creator.attributes.lastName
-                            this.myperson.id = creator.id
-                            this.myperson.dirty = false;
-                            this.cache['myperson'] = JSON.parse(JSON.stringify(this.myperson));
+                            this.participation.creator.attributes.name  = creator.attributes.name
+                            this.participation.creator.attributes.lastName  = creator.attributes.lastName
+                            this.participation.creator.id = creator.id
+                            this.participation.creator.dirty = false;
+                            this.cache['creator'] = JSON.parse(JSON.stringify(this.participation.creator));
                             this.isEditing = false;
                             this.closeHints(true)
                         }
@@ -499,7 +498,7 @@
 
             Alpine.data('creatorsHint', function (options) {
                 return {
-                    lastCreator: null,
+                    lastParticipation: null,
                     visible: false,
                     mouseover: false,
                     creators: options.creators,
@@ -521,7 +520,7 @@
                     acceptSugestion: function(id, $dispatch) {
                         $dispatch('suggestion-acepted', {
                             creator: JSON.parse(JSON.stringify(this.creators[id])),
-                            client: JSON.parse(JSON.stringify(this.lastCreator))
+                            clientParticipation: JSON.parse(JSON.stringify(this.lastParticipation))
                         })
                     },
                     newHints: function (event) {
@@ -530,7 +529,7 @@
                         this.$refs.root.style.top = event.target.offsetTop + event.target.offsetHeight + margin + 'px'
                         this.$refs.root.style.left = event.target.offsetLeft + 'px'
                         this.$refs.root.style.width = event.target.clientWidth + 'px'
-                        this.lastCreator = event.detail.participation
+                        this.lastParticipation = event.detail.participation
                         this.decideHidding()
                     },
                     decideHidding: function (event) {
