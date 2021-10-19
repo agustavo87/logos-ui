@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * @property \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC $caseOperations
  * @property \Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase $sourcesFilter
+ * @property \Arete\Logos\Application\DTO\SourceTypePresentation[] $types
  */
 class SourceNew extends Component
 {
@@ -122,9 +123,9 @@ class SourceNew extends Component
      * In the front end are retrieved by a js asset file that has to
      * be updated by corresponding command.
      *
-     * @var array
+     * @var \Arete\Logos\Application\DTO\SourceTypePresentation[]
      */
-    protected array $types;
+    protected array $_types;
 
     public array $sharedErrors = [];
 
@@ -136,13 +137,8 @@ class SourceNew extends Component
     {
         $testSource = $this->sourcesFilter->filter([
             'key' => 'za'
-        ])[0]->toArray();
+        ])[0]->toArray('relevance');
         $this->mountSource($testSource);
-        $types = $this->caseOperations->getSourceTypesPresentations();
-        $this->types = array_map(
-            fn (SourceTypePresentation $typePresentation) => $typePresentation->toArray(),
-            $types
-        );
         $this->mountSourceTypeAttributesFields();
         $this->syncCreatorsSuggestions();
     }
@@ -157,7 +153,7 @@ class SourceNew extends Component
 
         $participations = [];
         foreach ($source['participations'] as $role => $roleParticipations) {
-            foreach ($roleParticipations as $creatorID => $participationData) {
+            foreach ($roleParticipations as $relevance => $participationData) {
                 $participations[] = $participationData;
             }
         }
@@ -168,6 +164,18 @@ class SourceNew extends Component
     {
         $this->sharedErrors = $this->getShareableErrors();
         return view('livewire.source-new');
+    }
+
+    public function getTypesProperty()
+    {
+        if (isset($this->_types)) return $this->_types;
+
+        $types = $this->caseOperations->getSourceTypesPresentations();
+        $this->_types = array_map(
+            fn (SourceTypePresentation $typePresentation) => $typePresentation->toArray(),
+            $types
+        );
+        return $this->_types;
     }
 
     public function getShareableErrors(): array

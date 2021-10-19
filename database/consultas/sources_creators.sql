@@ -10,5 +10,5 @@ SELECT
 	participations.relevance
 FROM (sources INNER JOIN participations ON sources.id = participations.source_id) INNER JOIN attributes ON participations.creator_id = attributes.attributable_id
 WHERE attributes.attributable_genus = 'creator' 
-AND attributes.attribute_type_code_name IN ('name', 'lastName')
-AND sources.id IN (97, 106, 98)
+AND attributes.attribute_type_code_name IN ('lastName')
+#AND sources.id IN (97, 106, 98)
