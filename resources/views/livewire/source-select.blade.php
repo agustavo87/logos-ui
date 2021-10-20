@@ -46,6 +46,7 @@
                         x-on:input:title.debounce.500m="$wire.set('searchFields.title', $event.detail)"
                         x-on:input:key.debounce.500m="$wire.set('searchFields.key', $event.detail)"
                         x-on:order-change="$wire.set('asc', $event.detail)"
+                        x-on:source-edit="$wire.emit('sourceEdit', $event.detail) ; $nextTick(() => { tab = 'new'});"
                         :max-rows="$maxRows"
                     />
                 </div>

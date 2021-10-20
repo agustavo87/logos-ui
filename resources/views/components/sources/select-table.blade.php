@@ -55,10 +55,10 @@
                     <td class="border-b border-gray-100 flex gap-1 px-2 py-1 text-sm">
                         <span x-text="sources[i-1] ? sources[i-1].attributes.title : '&nbsp;' " class="flex-1 text-ellipsis"></span>
                         <span class=" source-controls flex gap-1">
-                            <button class="bg-blue-200 h-5 hover:bg-white rotate-45 rounded-full transform w-5" style="font-family: sans-serif;">
+                            <button x-on:click="$dispatch('source-edit', $el.dataset.id)" x-bind:data-id="sources[i-1] ? sources[i-1].id : null" class="focus:outline-none bg-blue-200 h-5 hover:bg-white rounded-full w-5" style="font-family: sans-serif; transform: rotate(135deg);">
                                 &#x270F;
                             </button>
-                            <button class="bg-blue-200 h-5 rounded-full w-5 hover:bg-white">&#10005;</button>
+                            <button class=" focus:outline-none bg-blue-200 h-5 rounded-full w-5 hover:bg-white">&#10005;</button>
                         </span>
                     </td>
                 </tr>

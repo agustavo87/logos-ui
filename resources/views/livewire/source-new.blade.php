@@ -2,6 +2,7 @@
     x-ref="root"
     x-on:lw:message-change.window="loading = $event.detail.loading"
     x-on:add-participation="handleAddParticipation($event, $dispatch)"
+    x-on:mount-source="mountSource(); $store.sourceTypes.updateAttributes()"
     class="h-full mx-5 flex flex-col border rounded relative"
 >
 
@@ -87,6 +88,7 @@
                 <ul x-data="participationList()"
                     x-on:remove-particpation="handleRemoveParticipation($event, $dispatch)"
                     x-on:add-participation.window="handleAddParticipation($event, $dispatch)"
+                    x-on:source-mounted.window="console.log('ul participationList'); mountParticipations()"
                     wire:ignore
                     class="py-1 px-3"
                 >
@@ -253,10 +255,6 @@
 </div>
 @once
 @push('head-script')
-    <script>
-        let logosCreators = @json($creators, JSON_PRETTY_PRINT);
-    </script>
-
     {{-- The sources are generated depending on locale (labels are localized) and can be cached --}}
     <script src="{{ route('sources.jsstypes')}}"></script>
 
@@ -285,8 +283,11 @@
 
             Alpine.store('source', {
                 attributes: @json($attributes, JSON_PRETTY_PRINT),
-                creators: @json($creators, JSON_PRETTY_PRINT),
-                participations: @json($participations, JSON_PRETTY_PRINT)
+                participations: @json($participations, JSON_PRETTY_PRINT),
+                mount: function (attributes, participations) {
+                    this.attribute = attributes;
+                    this.participations = participations;
+                }
             })
 
             Alpine.data('alpNewSource', () => {
@@ -294,6 +295,14 @@
                     active: false,
                     loading:false,
                     openParticipations: false,
+                    mountSource: function () {
+                        this.$store.source.attributes = JSON.parse(JSON.stringify(this.$wire.attributes))
+                        this.$store.source.participations = JSON.parse(JSON.stringify(this.$wire.participations))
+                        console.log('en mountSource')
+                        this.$refs.root.dispatchEvent(
+                            new CustomEvent('source-mounted', {bubbles: true})
+                        )
+                    },
                     handleEvent: function (event) {
                         if (event.type == 'source-select:solve') {
                             this.$wire.save(this.$store.source)
@@ -345,6 +354,10 @@
                     i:0,
                     participations: [],
                     init: function () {
+                        this.mountParticipations();
+                    },
+                    mountParticipations: function () {
+                        console.log('en participationList.mountParticipations()')
                         let participations = this.$store.source.participations
                         let i = 1;
                         participations.forEach(participation => {

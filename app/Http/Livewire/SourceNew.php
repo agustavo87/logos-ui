@@ -5,17 +5,19 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Arete\Logos\Application\DTO\SourceTypePresentation;
 use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC;
-use Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase;
+use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 /**
  * @property \Arete\Logos\Application\Ports\Interfaces\CreateSourceUC $caseOperations
- * @property \Arete\Logos\Application\Ports\Interfaces\FilteredIndexUseCase $sourcesFilter
+ * @property \Arete\Logos\Application\Ports\Interfaces\SourcesRepository $sources
  * @property \Arete\Logos\Application\DTO\SourceTypePresentation[] $types
  */
 class SourceNew extends Component
 {
+    protected $listeners = ['sourceEdit'];
+
     public $sourceID = null;
 
     /**
@@ -67,34 +69,13 @@ class SourceNew extends Component
         'complex' => []
     ];
 
-    public array $participations = [];
 
     /**
-     * Creators data
+     * Participations data
      *
      * @var array
      */
-    public array $creators = [];
-    //     [
-    //         'id'    => 23,
-    //         'role' => 'author',
-    //         'relevance' => 1,
-    //         'type' => 'person',
-    //         'attributes' => [
-    //             'name' => 'Pedro',
-    //             'lastName' => "Saucedo"
-    //         ]
-    //     ], [
-    //         'id' => 32,
-    //         'type' => 'person',
-    //         'role' => 'editor',
-    //         'relevance' => 2,
-    //         'attributes' => [
-    //             'name' => 'Juan',
-    //             'lastName' => "Ramirez"
-    //         ]
-    //     ],
-    // ];
+    public array $participations = [];
 
     /**
      * Creators suggestions to user input
@@ -127,37 +108,20 @@ class SourceNew extends Component
      */
     protected array $_types;
 
+    /**
+     * @var Arete\Logos\Application\Ports\Interfaces\SourcesRepository
+     */
+    protected $_sources;
+
     public array $sharedErrors = [];
 
     protected CreateSourceUC $createSourceUseCase;
 
-    protected FilteredIndexUseCase $filter;
 
     public function mount()
     {
-        // $testSource = $this->sourcesFilter->filter([
-        //     'key' => 'za'
-        // ])[0]->toArray('relevance');
-        // $this->mountSource($testSource);
         $this->mountSourceTypeAttributesFields();
         $this->fillCreatorSuggestions();
-    }
-
-    protected function mountSource(array $source)
-    {
-        $this->sourceID  = $source['id'];
-        $this->key = $source['key'];
-        $this->ownerID = $source['ownerID'];
-        $this->type = $source['type'];
-        $this->attributes = $source['attributes'];
-
-        $participations = [];
-        foreach ($source['participations'] as $role => $roleParticipations) {
-            foreach ($roleParticipations as $relevance => $participationData) {
-                $participations[] = $participationData;
-            }
-        }
-        $this->participations = $participations;
     }
 
     public function render()
@@ -166,26 +130,6 @@ class SourceNew extends Component
         return view('livewire.source-new');
     }
 
-    public function getTypesProperty()
-    {
-        if (isset($this->_types)) return $this->_types;
-
-        $types = $this->caseOperations->getSourceTypesPresentations();
-        $this->_types = array_map(
-            fn (SourceTypePresentation $typePresentation) => $typePresentation->toArray(),
-            $types
-        );
-        return $this->_types;
-    }
-
-    public function getShareableErrors(): array
-    {
-        $shareableErrors = [];
-        foreach ($this->getErrorBag()->toArray() as $error => $message) {
-            $shareableErrors[] = ['key' => $error, 'messages' => $message];
-        }
-        return $shareableErrors;
-    }
 
     public function hydrate()
     {
@@ -210,6 +154,86 @@ class SourceNew extends Component
         } else {
             $this->validateOnly($propertyName);
         }
+    }
+
+    public function updatedType($type)
+    {
+        $this->mountSourceTypeAttributesFields();
+    }
+
+    public function updatedCreatorSuggestionParamsHint($value)
+    {
+        $this->fillCreatorSuggestions();
+    }
+
+    public function getTypesProperty()
+    {
+        if (isset($this->_types)) return $this->_types;
+
+        $types = $this->caseOperations->getSourceTypesPresentations();
+        $this->_types = array_map(
+            fn (SourceTypePresentation $typePresentation) => $typePresentation->toArray(),
+            $types
+        );
+        return $this->_types;
+    }
+
+    public function getSourcesProperty()
+    {
+        if (!isset($this->_sources)) {
+            $this->_sources = app(SourcesRepository::class);
+        }
+        return  $this->_sources;
+    }
+
+    public function getCaseOperationsProperty()
+    {
+        if (!isset($this->CreateSourceUseCase)) {
+            $this->createSourceUseCase = app(CreateSourceUC::class);
+        }
+        return  $this->createSourceUseCase;
+    }
+
+    /**
+     * Updates the public attributes fields to match to the selected source type attributes.
+     *
+     * Also recicles the available data according to attribute type and base type.
+     * It don't deletes the attributes that don't belong to the current type to be available
+     * for an eventual change of source type
+     *
+     * @return void
+     */
+    protected function mountSourceTypeAttributesFields()
+    {
+        $this->deleteEmptyAttributes();
+        foreach ($this->currentSourceTypeAttributes() as $attr) {
+            list('code' => $code, 'base' => $base) = $attr;
+            if (!isset($this->attributes[$code])) {
+                $this->attributes[$code] = $this->attributes[$base] ?? null;
+            }
+        }
+    }
+
+    protected function fillCreatorSuggestions()
+    {
+        $this->creatorSuggestions = $this->caseOperations->suggestCreators(
+            Auth::user()->id,
+            $this->creatorSuggestionParams['hint'],
+            $this->creatorSuggestionParams['attribute'],
+            $this->creatorSuggestionParams['type'],
+            $this->creatorSuggestionParams['orderBy'],
+            $this->creatorSuggestionParams['asc'],
+            $this->creatorSuggestionParams['limit']
+        );
+    }
+
+    public function getShareableErrors(): array
+    {
+        $shareableErrors = [];
+        foreach ($this->getErrorBag()->toArray() as $error => $message) {
+            $shareableErrors[] = ['key' => $error, 'messages' => $message];
+        }
+        return $shareableErrors;
     }
 
     /**
@@ -254,17 +278,28 @@ class SourceNew extends Component
         return $this->types[$this->type]['attributes'];
     }
 
-    protected function fillCreatorSuggestions()
+    public function sourceEdit($id)
     {
-        $this->creatorSuggestions = $this->caseOperations->suggestCreators(
-            Auth::user()->id,
-            $this->creatorSuggestionParams['hint'],
-            $this->creatorSuggestionParams['attribute'],
-            $this->creatorSuggestionParams['type'],
-            $this->creatorSuggestionParams['orderBy'],
-            $this->creatorSuggestionParams['asc'],
-            $this->creatorSuggestionParams['limit']
-        );
+        $source = $this->sources->get($id)->toArray('relevance');
+        $this->mountSource($source);
+        $this->dispatchBrowserEvent('mount-source');
+    }
+
+    protected function mountSource(array $source)
+    {
+        $this->sourceID  = $source['id'];
+        $this->key = $source['key'];
+        $this->ownerID = $source['ownerID'];
+        $this->type = $source['type'];
+        $this->attributes = $source['attributes'];
+
+        $participations = [];
+        foreach ($source['participations'] as $role => $roleParticipations) {
+            foreach ($roleParticipations as $relevance => $participationData) {
+                $participations[] = $participationData;
+            }
+        }
+        $this->participations = $participations;
     }
 
     public function creatorInput($type, $attribute, $value)
@@ -276,29 +311,6 @@ class SourceNew extends Component
         ];
         $this->creatorSuggestionParams = array_merge($this->creatorSuggestionParams, $data);
         $this->fillCreatorSuggestions();
-    }
-
-    public function updatedCreatorSuggestionParamsHint($value)
-    {
-        $this->fillCreatorSuggestions();
-    }
-
-    public function computeKey($value)
-    {
-        /** @todo
-         * si la key es de una fuente ya montada no hace falta sugerir una nueva
-         * solo si esta es cambiada. Probablemente, para evitar problemas
-         * si la key es de una fuente existente no debería permitirse el cambio.
-         */
-        $this->key = $this->caseOperations->sugestKey([
-            'ownerID'   => Auth::user()->id,
-            'key'       => $value
-        ]);
-    }
-
-    public function updatedType($type)
-    {
-        $this->mountSourceTypeAttributesFields();
     }
 
     public function save($data)
@@ -353,26 +365,6 @@ class SourceNew extends Component
     }
 
     /**
-     * Updates the public attributes fields to match to the selected source type attributes.
-     *
-     * Also recicles the available data according to attribute type and base type.
-     * It don't deletes the attributes that don't belong to the current type to be available
-     * for an eventual change of source type
-     *
-     * @return void
-     */
-    protected function mountSourceTypeAttributesFields()
-    {
-        $this->deleteEmptyAttributes();
-        foreach ($this->currentSourceTypeAttributes() as $attr) {
-            list('code' => $code, 'base' => $base) = $attr;
-            if (!isset($this->attributes[$code])) {
-                $this->attributes[$code] = $this->attributes[$base] ?? null;
-            }
-        }
-    }
-
-    /**
      * Deletes the attributes that are empty
      *
      * @return void
@@ -420,40 +412,16 @@ class SourceNew extends Component
         }
     }
 
-    public function addCreator()
+    public function computeKey($value)
     {
-        $this->creators[] = [
-            'type' => 'person',
-            'attributes' => [
-                'name'  => '',
-                'lastName'  => ''
-            ]
-        ];
-    }
-
-    public function removeCreator($i)
-    {
-        unset($this->creators[$i]);
-    }
-
-    public function changeCreator()
-    {
-        Log::info('change-creator', $this->creators);
-    }
-
-    public function getSourcesFilterProperty()
-    {
-        if (!isset($this->filter)) {
-            $this->filter = app(FilteredIndexUseCase::class);
-        }
-        return  $this->filter;
-    }
-
-    public function getCaseOperationsProperty()
-    {
-        if (!isset($this->CreateSourceUseCase)) {
-            $this->createSourceUseCase = app(CreateSourceUC::class);
-        }
-        return  $this->createSourceUseCase;
+        /** @todo
+         * si la key es de una fuente ya montada no hace falta sugerir una nueva
+         * solo si esta es cambiada. Probablemente, para evitar problemas
+         * si la key es de una fuente existente no debería permitirse el cambio.
+         */
+        $this->key = $this->caseOperations->sugestKey([
+            'ownerID'   => Auth::user()->id,
+            'key'       => $value
+        ]);
     }
 }
