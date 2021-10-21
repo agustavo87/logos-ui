@@ -10,14 +10,12 @@
 
 {{-- / Source Type Select and Source Key Input Section --}}
     <div>
-    {{-- Source Type Select --}}
-        <select x-bind:class="{'invisible':$store.sourceTypes.list == null}" x-data="selectSourceType({type: @entangle('type').defer })" x-model="type" class="font-medium p-2 rounded text-xs focus:outline-none cursor-pointer hover:text-blue-900">
-            <template x-for="sType in $store.sourceTypes.list">
-                <option x-bind:value="sType.code" x-text="sType.label" x-bind:selected="sType.code == type">
-                </option>
-            </template>
-        </select>
-    {{-- / Source Type Select --}}
+
+        <x-source.type-select wire:model.defer="type"
+            class="font-medium p-2 rounded text-xs focus:outline-none cursor-pointer hover:text-blue-900"
+            types="$store.sourceTypes.list"
+            updatecb="function (value) {this.$store.sourceTypes.updateSelected(value)}"
+        />
 
     {{-- Source Key Input Section --}}
         <div class="flex flex-row gap-2 items-baseline ml-1 pb-1 px-2">
@@ -540,19 +538,6 @@
                 }
             })
 
-            Alpine.data('selectSourceType', function (options) {
-                return {
-                    type: options.type,
-                    init: function () {
-                        this.shareType()
-                        this.$watch('type', () => this.shareType())
-                    },
-
-                    shareType: function () {
-                        this.$store.sourceTypes.updateSelected(this.type)
-                    }
-                }
-            })
 
             Alpine.data('sourceAttributes', () => {
                 return {
