@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
  */
 class SourceNew extends Component
 {
-    protected $listeners = ['sourceEdit'];
+    protected $listeners = ['sourceEdit', 'sourceNew'];
 
     public $sourceID = null;
 
@@ -41,9 +41,7 @@ class SourceNew extends Component
      *
      * @var array
      */
-    public array $attributes = [
-        'title' => 'attributo inicial'
-    ];
+    public array $attributes = [];
 
     /**
      * Current Source attributes validation rules
@@ -282,7 +280,12 @@ class SourceNew extends Component
     {
         $source = $this->sources->get($id)->toArray('relevance');
         $this->mountSource($source);
-        $this->dispatchBrowserEvent('mount-source');
+        $this->dispatchBrowserEvent('mount-source', 'edit');
+    }
+    public function sourceNew()
+    {
+        $this->reset();
+        $this->dispatchBrowserEvent('mount-source', 'new');
     }
 
     protected function mountSource(array $source)

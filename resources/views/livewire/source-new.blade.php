@@ -1,8 +1,8 @@
-<div x-data="alpNewSource"
+<div x-data="alpNewSource({sourceID: @entangle('sourceID') })"
     x-ref="root"
     x-on:lw:message-change.window="loading = $event.detail.loading"
     x-on:add-participation="handleAddParticipation($event, $dispatch)"
-    x-on:mount-source="mountSource(); $store.sourceTypes.updateAttributes()"
+    x-on:mount-source="mountSource($event.detail); $store.sourceTypes.updateAttributes()"
     class="h-full mx-5 flex flex-col border rounded relative"
 >
 
@@ -48,13 +48,13 @@
         <div class="flex flex-row gap-2 items-baseline ml-1 pb-1 px-2">
             <label for="source-key" class="flex-grow-0 text-gray-600 text-sm">{{ __('sources.key') }}</label>
             <div class="flex flex-col flex-grow">
-                <input
-                wire:change="computeKey($event.target.value)"
-                x-bind:disabled="loading"
-                value="{{$key}}"
-                type="text" id="source-key" name="source-key"
-                autocomplete="off"
-                class="border flex-grow focus:outline-none px-2 py-1 rounded text-sm focus:border-blue-400"
+                <input wire:change="computeKey($event.target.value)"
+                    x-bind:disabled="keyDisabled"
+                    x-bind:class="keyDisabled  ? 'bg-white text-gray-600' : 'border'"
+                    value="{{$key}}"
+                    type="text" id="source-key" name="source-key"
+                    autocomplete="off"
+                    class="flex-grow focus:outline-none px-2 py-1 rounded text-sm focus:border-blue-400"
                 >
                 @error("key") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
             </div>
@@ -88,7 +88,7 @@
                 <ul x-data="participationList()"
                     x-on:remove-particpation="handleRemoveParticipation($event, $dispatch)"
                     x-on:add-participation.window="handleAddParticipation($event, $dispatch)"
-                    x-on:source-mounted.window="console.log('ul participationList'); mountParticipations()"
+                    x-on:source-mounted.window="mountParticipations"
                     wire:ignore
                     class="py-1 px-3"
                 >
@@ -290,17 +290,20 @@
                 }
             })
 
-            Alpine.data('alpNewSource', () => {
+            Alpine.data('alpNewSource', (options) => {
                 return {
+                    sourceID: options.sourceID,
                     active: false,
                     loading:false,
                     openParticipations: false,
-                    mountSource: function () {
+                    get keyDisabled() {
+                        return Boolean(this.loading || this.sourceID);
+                    },
+                    mountSource: function (target) {
                         this.$store.source.attributes = JSON.parse(JSON.stringify(this.$wire.attributes))
                         this.$store.source.participations = JSON.parse(JSON.stringify(this.$wire.participations))
-                        console.log('en mountSource')
                         this.$refs.root.dispatchEvent(
-                            new CustomEvent('source-mounted', {bubbles: true, detail: 'edit'})
+                            new CustomEvent('source-mounted', {bubbles: true, detail: target})
                         )
                     },
                     handleEvent: function (event) {
@@ -357,7 +360,6 @@
                         this.mountParticipations();
                     },
                     mountParticipations: function () {
-                        console.log('en participationList.mountParticipations()')
                         let participations = this.$store.source.participations
                         let i = 1;
                         participations.forEach(participation => {
@@ -394,7 +396,6 @@
                     },
                     handleRemoveParticipation: function (event, dispatch) {
                         let index = this.participations.findIndex((c) => c.i == event.detail.participation.i)
-                        console.log('removiendo participación i' + event.detail.participation.i + ' index : ', index)
                         this.$nextTick(() => this.participations.splice(index, 1))
                     }
                 }
@@ -430,7 +431,6 @@
                         if (!this.participation.role) {
                             this.participation.role  = primary.code
                         } else if(roles.find((role) => role.code == this.participation.role) == undefined) {
-                            console.log('no existe ', this.myRole, ' dentro de ', Object.getOwnPropertyNames(this.roles))
                             this.participation.role  = primary.code
                         }
                     },
@@ -495,7 +495,6 @@
                     },
                     handleSuggestion:function ($event, $dispatch) {
                         if ($event.detail.clientParticipation.i == this.participation.i) {
-                            console.log('suggestion is to me - \n\tclient:', $event.detail.clientParticipation, '\n\tme:', this.participation)
                             let creator = event.detail.creator;
                             this.participation.creator.attributes.name  = creator.attributes.name
                             this.participation.creator.attributes.lastName  = creator.attributes.lastName

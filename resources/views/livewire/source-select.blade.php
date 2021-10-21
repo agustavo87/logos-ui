@@ -1,7 +1,7 @@
 <div
     x-data="modalCitation"
     x-show="display" x-on:{{ $listen }}.window="handleInvocation"
-    x-on:source-mounted.window="$event.detail == 'edit' ? (tab = 'edit') : null"
+    x-on:source-mounted.window="tab = $event.detail"
     x-on:keydown.escape.window="handleEscape"
     class="fixed z-10 inset-0 flex flex-col justify-center items-center"
     x-ref="root"
@@ -30,7 +30,7 @@
                     </button>
                 </li>
                 <li>
-                    <button x-on:click="tab = 'new'" x-bind:disabled="tab == 'new'"
+                    <button x-on:click="$wire.emit('sourceNew')" x-bind:disabled="tab == 'new'"
                         class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
                         x-bind:class="tab == 'new' ? 'bg-gray-100' : 'text-black text-opacity-80 hover:bg-blue-100 active:bg-white'"
                     >
