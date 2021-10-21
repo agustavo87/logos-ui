@@ -1,6 +1,7 @@
 <div
-    x-data="modalCitation()"
+    x-data="modalCitation"
     x-show="display" x-on:{{ $listen }}.window="handleInvocation"
+    x-on:source-mounted.window="$event.detail == 'edit' ? (tab = 'edit') : null"
     x-on:keydown.escape.window="handleEscape"
     class="fixed z-10 inset-0 flex flex-col justify-center items-center"
     x-ref="root"
@@ -36,6 +37,14 @@
                         Nueva
                     </button>
                 </li>
+                <li>
+                    <button x-bind:disabled="tab == 'edit'"
+                    class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
+                    x-bind:class="tab == 'edit' ? 'bg-gray-100' : 'invisible'"
+                    >
+                        Editar
+                    </button>
+                </li>
             </ul>
             <div class="relative">
                 {{-- TODO: extraer a un componente --}}
@@ -46,13 +55,13 @@
                         x-on:input:title.debounce.500m="$wire.set('searchFields.title', $event.detail)"
                         x-on:input:key.debounce.500m="$wire.set('searchFields.key', $event.detail)"
                         x-on:order-change="$wire.set('asc', $event.detail)"
-                        x-on:source-edit="$wire.emit('sourceEdit', $event.detail) ; $nextTick(() => { tab = 'new'});"
+                        x-on:source-edit="$wire.emit('sourceEdit', $event.detail);"
                         :max-rows="$maxRows"
                     />
                 </div>
 
                 <div class="absolute inset-0"
-                     x-bind:class="tab != 'new' ? 'invisible' : ''"
+                     x-bind:class="(tab != 'new' && tab != 'edit') ? 'invisible' : ''"
                      x-on:source-new:save="sourceSave($event.detail)"
                 >
                     <livewire:source-new />
@@ -93,7 +102,7 @@
 
     <script>
 
-        function modalCitation() {
+        function modalCitation(options) {
                 return {
                     tab: 'select',
                     selected: null,

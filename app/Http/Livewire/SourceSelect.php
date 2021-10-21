@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class SourceSelect extends Component
 {
-
     public $listen = 'source-get';
 
     public $asc = true;

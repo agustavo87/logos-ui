@@ -300,7 +300,7 @@
                         this.$store.source.participations = JSON.parse(JSON.stringify(this.$wire.participations))
                         console.log('en mountSource')
                         this.$refs.root.dispatchEvent(
-                            new CustomEvent('source-mounted', {bubbles: true})
+                            new CustomEvent('source-mounted', {bubbles: true, detail: 'edit'})
                         )
                     },
                     handleEvent: function (event) {
