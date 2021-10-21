@@ -41,7 +41,9 @@ class SourceNew extends Component
      *
      * @var array
      */
-    public array $attributes = [];
+    public array $attributes = [
+        'title' => ''
+    ];
 
     /**
      * Current Source attributes validation rules

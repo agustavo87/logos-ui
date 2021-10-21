@@ -65,7 +65,7 @@ class SourcesKeyGenerator
 
     protected function getCreatorKeyWord(array $params): string
     {
-        if (!isset($params['participations'])) {
+        if (!isset($params['participations']) || !count($params['participations'])) {
             return '';
         }
 

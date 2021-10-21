@@ -135,8 +135,8 @@
             })
 
             Alpine.store('source', {
-                attributes: @json($attributes, JSON_PRETTY_PRINT),
-                participations: @json($participations, JSON_PRETTY_PRINT),
+                attributes: {},
+                participations:[],
                 mount: function (attributes, participations) {
                     this.attribute = attributes;
                     this.participations = participations;
@@ -161,7 +161,11 @@
                     },
                     handleEvent: function (event) {
                         if (event.type == 'source-select:solve') {
-                            this.$wire.save(this.$store.source)
+                            let data = {
+                                attributes: JSON.parse(JSON.stringify(this.$store.source.attributes)) ,
+                                participations: JSON.parse(JSON.stringify(this.$store.source.participations))
+                            }
+                            this.$wire.save(data)
                                 .then(result => {
                                     this.$refs.root.dispatchEvent(
                                         new CustomEvent(
