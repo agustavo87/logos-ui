@@ -17,22 +17,16 @@
             updatecb="function (value) {this.$store.sourceTypes.updateSelected(value)}"
         />
 
-    {{-- Source Key Input Section --}}
-        <div class="flex flex-row gap-2 items-baseline ml-1 pb-1 px-2">
-            <label for="source-key" class="flex-grow-0 text-gray-600 text-sm">{{ __('sources.key') }}</label>
-            <div class="flex flex-col flex-grow">
-                <input wire:change="computeKey($event.target.value)"
-                    x-bind:disabled="keyDisabled"
-                    x-bind:class="keyDisabled  ? 'bg-white text-gray-600' : 'border'"
-                    value="{{$key}}"
-                    type="text" id="source-key" name="source-key"
-                    autocomplete="off"
-                    class="flex-grow focus:outline-none px-2 py-1 rounded text-sm focus:border-blue-400"
-                >
-                @error("key") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
-            </div>
-        </div>
-    {{-- / Source Key Input Section --}}
+        <x-source.key-input
+            :key="$key"
+            wire:change="computeKey($event.target.value)"
+            x-bind:disabled="keyDisabled"
+            x-bind:class="keyDisabled  ? 'bg-white text-gray-600' : 'border'"
+            class="flex-grow focus:outline-none px-2 py-1 rounded text-sm focus:border-blue-400"
+        >
+            @error("key") <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+        </x-source.key-input>
+
     </div>
 {{-- / Source Type Select and Source Key Input Section --}}
 
