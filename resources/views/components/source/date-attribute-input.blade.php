@@ -1,10 +1,11 @@
+@props(['sourceAttributes'])
 <div x-data="dateAttribute">
     <input type="date"
         x-bind:name="'attribute.' + attribute.code"
         x-bind:id="'input-' + attribute.code"
-        x-effect="_date = $store.source.attributes[attribute.code] ? $store.source.attributes[attribute.code] : ($store.source.attributes[attribute.base] ? $store.source.attributes[attribute.base] : null)"
+        x-effect="_date = {{ $sourceAttributes }}[attribute.code] ? {{ $sourceAttributes }}[attribute.code] : ({{ $sourceAttributes }}[attribute.base] ? {{ $sourceAttributes }}[attribute.base] : null)"
         x-bind:value="mydate"
-        x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
+        x-on:input="{{ $sourceAttributes }}[attribute.code] = $event.target.value"
         {{ $attributes }}
     >
 </div>
