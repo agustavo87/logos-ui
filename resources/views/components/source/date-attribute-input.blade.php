@@ -21,8 +21,10 @@
                             if (this._date == null) return this._date
                             let d = new Date(this._date)
                             let m = (d.getMonth() + 1).toString()
+                            let dd = (d.getDate() +  1).toString()
                             m = m.length < 2 ? '0' + m : m;
-                            return d.getFullYear() + '-' + m + '-' + d.getDate().toString()
+                            dd = dd.length < 2 ? '0' + dd : dd;
+                            return d.getFullYear() + '-' + m + '-' + dd
                         }
                     }
                 })
