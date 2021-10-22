@@ -75,12 +75,13 @@
 {{-- / Creators Section --}}
 
 {{-- Attributes Section --}}
-    <ul x-data="sourceAttributes" class="overflow-y-auto overflow-hidden px-2 pb-2 ">
+    <ul x-data="sourceAttributes" class="overflow-y-auto overflow-hidden px-2 pb-2 " wire:ignore>
         <template x-for="attribute in $store.sourceTypes.attributes">
             <li>
+
                 <div class="flex flex-col mt-2">
                     <label x-bind:for="'attribute.' + attribute.code" x-text="attribute.label" class=" flex-grow-0 text-gray-600 text-sm ml-1"></label>
-                    <input x-show="attribute.code != 'abstractNote'"
+                    <input x-show="attribute.code != 'abstractNote' && attribute.type != 'date'"
                         x-bind:type="type(attribute.type)"
                         x-bind:name="'attribute.' + attribute.code"
                         x-bind:id="'input-' + attribute.code"
@@ -88,6 +89,10 @@
                         x-on:input="$store.source.attributes[attribute.code] = $event.target.value"
                         class=" flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400"
                     >
+
+                    <template x-if="attribute.type == 'date'">
+                        <x-source.date-attribute-input class="flex-grow border text-sm px-1 py-1 rounded focus:outline-none focus:border-blue-400" />
+                    </template>
                     <textarea x-show="attribute.code == 'abstractNote'"
                         x-bind:name="'attribute.' + attribute.code"
                         x-bind:id="'input-' + attribute.code"
@@ -263,6 +268,7 @@
 
             Alpine.data('sourceAttributes', () => {
                 return {
+                    dates: {},
                     attributes: @json($attributes, JSON_PRETTY_PRINT),
                     type: function(typeCode) {
                         switch (typeCode) {

@@ -161,6 +161,7 @@ Route::group([
     );
 
     Route::view('dinamic-store', 'prototypes.dinamic-store');
+    Route::view('data-in-template', 'prototypes.data-in-template');
 });
 
 Route::view('livewire', 'livewire');
