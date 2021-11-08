@@ -195,15 +195,22 @@
                         this.mountParticipations();
                     },
                     mountParticipations: function () {
+                        this.resetList()
+                        this.$nextTick(this.setParticipations.bind(this))
+                    },
+                    setParticipations: function () {
                         let participations = this.$store.source.participations
-                        let i = 1;
-                        participations.forEach(participation => {
-                            participation.i = i++
-                            participation.dirty =  false
-                            participation.creator.dirty =  false
-                        })
-                        this.participations = participations
-                        this.i = i
+                            let i = 1;
+                            participations.forEach(participation => {
+                                participation.i = i++
+                                participation.dirty =  false
+                                participation.creator.dirty =  false
+                            })
+                            this.participations = participations
+                            this.i = i
+                    },
+                    resetList: function () {
+                        this.participations = [];
                     },
                     moveUp: function (i) {
                         let index = this.participations.findIndex((person) => person.i == i)
