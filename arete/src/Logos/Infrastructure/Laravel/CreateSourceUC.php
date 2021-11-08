@@ -166,6 +166,7 @@ class CreateSourceUC implements ICreateSourceUC
             $creatorData = $participation['creator'];
             $role = $participation['role'];
             $hotParticipation = $source->participations()->getByCreatorID($creatorData['id']);
+            $hotParticipation->setRelevance($relevance);
             if ($creatorData['dirty']) {
                 $hotParticipation->creator()->pushAttributes($creatorData['attributes']);
             }

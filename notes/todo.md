@@ -2,7 +2,6 @@
 
 ## Pending
 - Check that saves an already created source ok.
-    - Saves when creator relevance changed
     - Saves when creator removed
     - Saves when type changed
 
@@ -21,6 +20,7 @@
     - Saves when attributes changed
     - Saves when creator attributes changed
     - Saves when creator Role changed
+    - Saves when creator relevance changed
 
 - Check that saves a new source OK
     - Saves attributes
