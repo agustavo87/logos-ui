@@ -163,20 +163,14 @@ class CreateSourceUC implements ICreateSourceUC
     protected function updateParticipations($participations, Source &$source)
     {
         foreach ($participations as $relevance => $participation) {
-            Log::info('participation', $participation);
-            // dd($participation);
             $creatorData = $participation['creator'];
             $role = $participation['role'];
+            $hotParticipation = $source->participations()->getByCreatorID($creatorData['id']);
             if ($creatorData['dirty']) {
-                /** @var \Arete\Logos\Domain\Creator */
-                $creator = $source->participations()->$role[$creatorData['id']]->creator();
-                $creator->pushAttributes($creatorData['attributes']);
+                $hotParticipation->creator()->pushAttributes($creatorData['attributes']);
             }
             if ($participation['dirty']) {
-                // dd('el rol está sucio');
-                /** @var \Arete\Logos\Domain\Contracts\Participation */
-                $dirtyParticipation = $source->participations()->getByCreatorID($creatorData['id']);
-                $dirtyParticipation->setRole($participation['role']);
+                $hotParticipation->setRole($role);
             }
         }
     }
