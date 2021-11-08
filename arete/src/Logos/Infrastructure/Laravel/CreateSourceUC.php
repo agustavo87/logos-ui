@@ -11,6 +11,7 @@ use Arete\Logos\Application\Ports\Interfaces\CreateSourceUC as ICreateSourceUC;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesRepository;
 use Arete\Logos\Application\Ports\Interfaces\SourcesTranslator;
+use Arete\Logos\Domain\Source;
 use Arete\Logos\Infrastructure\Laravel\Common\DB;
 use DateTime;
 use Illuminate\Support\Facades\File;
@@ -86,14 +87,14 @@ class CreateSourceUC implements ICreateSourceUC
          * @todo retornar los roles del tipo correspondiente con RolePresentation
          */
         return $this->db->getRoles($typeCode)
-                ->map(function ($item, $key) {
-                    return new RolePresentation(
-                        $item->code_name,
-                        $this->translator->translate($item->code_name, 'roles') ??
-                                    ($item->label ?? $item->code_name),
-                        (bool) $item->primary
-                    );
-                })->toArray();
+            ->map(function ($item, $key) {
+                return new RolePresentation(
+                    $item->code_name,
+                    $this->translator->translate($item->code_name, 'roles') ??
+                        ($item->label ?? $item->code_name),
+                    (bool) $item->primary
+                );
+            })->toArray();
     }
 
     /**
@@ -114,7 +115,7 @@ class CreateSourceUC implements ICreateSourceUC
         $presentations = [];
         foreach ($attributesData as $attributeData) {
             $label = $this->translator->translate($attributeData->attribute_type_code_name, 'attributes') ??
-                        ($attributeData->label ?? $attributeData->attribute_type_code_name);
+                ($attributeData->label ?? $attributeData->attribute_type_code_name);
             $presentations[$attributeData->attribute_type_code_name] = new AttributePresentation(
                 $attributeData->attribute_type_code_name,
                 $attributeData->base_attribute_type_code_name,
@@ -126,8 +127,13 @@ class CreateSourceUC implements ICreateSourceUC
         return $presentations;
     }
 
-    public function create($ownerID, string $type, array $attributes, array $participations, ?string $key = null): string
-    {
+    public function create(
+        $ownerID,
+        string $type,
+        array $attributes,
+        array $participations,
+        ?string $key = null
+    ): Source {
         // should be validated on adapter, but just to be sure.
         if (isset($attributes['date'])) {
             $attributes['date'] = $this->datesize($attributes['date']);
@@ -143,7 +149,36 @@ class CreateSourceUC implements ICreateSourceUC
         }
         $source = $this->sources->createFromArray($params, $ownerID);
         Log::info('source creado', ['source', $source->toArray()]);
-        return $source->key();
+        return $source;
+    }
+
+    public function save($data)
+    {
+        $source = $this->sources->get($data['id']);
+        $source->pushAttributes($data['attributes']);
+        $this->updateParticipations($data['participations'], $source);
+        $this->sources->save($source);
+    }
+
+    protected function updateParticipations($participations, Source &$source)
+    {
+        foreach ($participations as $relevance => $participation) {
+            Log::info('participation', $participation);
+            // dd($participation);
+            $creatorData = $participation['creator'];
+            $role = $participation['role'];
+            if ($creatorData['dirty']) {
+                /** @var \Arete\Logos\Domain\Creator */
+                $creator = $source->participations()->$role[$creatorData['id']]->creator();
+                $creator->pushAttributes($creatorData['attributes']);
+            }
+            if ($participation['dirty']) {
+                // dd('el rol está sucio');
+                /** @var \Arete\Logos\Domain\Contracts\Participation */
+                $dirtyParticipation = $source->participations()->getByCreatorID($creatorData['id']);
+                $dirtyParticipation->setRole($participation['role']);
+            }
+        }
     }
 
     protected function datesize($date): DateTime

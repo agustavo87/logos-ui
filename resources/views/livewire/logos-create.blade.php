@@ -5,6 +5,51 @@
     margin-bottom: 50px;
 }
 </style>
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('LogosWrapper', ($wire) => {
+            return {
+                title: $wire.entangle('article.title').defer,
+                delta: $wire.entangle('article.delta').defer,
+                meta: $wire.entangle('article.meta').defer,
+                html: $wire.entangle('article.html').defer,
+                transactionStatus: 'Listo',
+
+                init: function () {
+                    this.debounceSave = debounce(this.commitSave, 3000, {trailing: true, maxWait: 10000});
+                },
+
+                save: function (doDebounce = true) {
+                    if (doDebounce) {
+                        this.debounceSave();
+                    } else {
+                        this.commitSave()
+                    }
+                },
+
+                commitSave: function () {
+                    this.transactionStatus = "Guardando..."
+                    this.$wire.save().then(() => {this.transactionStatus = 'Guardado'});
+                },
+
+                debounceSave: null,
+
+                handleQuillInput: function (event) {
+                    this.delta = event.detail.delta();
+                    this.html = event.detail.html();
+                    this.meta = {key: 'value'};
+                    this.transactionStatus = 'Modificado'
+                    this.save()
+                },
+
+                handleSimpleInput: function () {
+                    this.transactionStatus = 'Modificado'
+                    this.save(false)
+                }
+            }
+        })
+    })
+    </script>
 
 @endpush
 <div x-data="LogosWrapper($wire)">
@@ -25,52 +70,4 @@
         <x-logos :initial-delta="$article->delta" />
 
     </div>
-
-@push('head-script')
-<script>
-document.addEventListener('alpine:init', () => {
-    Alpine.data('LogosWrapper', ($wire) => {
-        return {
-            title: $wire.entangle('article.title').defer,
-            delta: $wire.entangle('article.delta').defer,
-            meta: $wire.entangle('article.meta').defer,
-            html: $wire.entangle('article.html').defer,
-            transactionStatus: 'Listo',
-
-            init: function () {
-                this.debounceSave = debounce(this.commitSave, 3000, {trailing: true, maxWait: 10000});
-            },
-
-            save: function (doDebounce = true) {
-                if (doDebounce) {
-                    this.debounceSave();
-                } else {
-                    this.commitSave()
-                }
-            },
-
-            commitSave: function () {
-                this.transactionStatus = "Guardando..."
-                this.$wire.save().then(() => {this.transactionStatus = 'Guardado'});
-            },
-
-            debounceSave: null,
-
-            handleQuillInput: function (event) {
-                this.delta = event.detail.delta();
-                this.html = event.detail.html();
-                this.meta = {key: 'value'};
-                this.transactionStatus = 'Modificado'
-                this.save()
-            },
-
-            handleSimpleInput: function () {
-                this.transactionStatus = 'Modificado'
-                this.save(false)
-            }
-        }
-    })
-})
-</script>
-@endpush
 </div>

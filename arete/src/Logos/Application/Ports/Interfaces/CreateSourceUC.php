@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Arete\Logos\Application\Ports\Interfaces;
 
+use Arete\Logos\Domain\Source;
+
 interface CreateSourceUC
 {
     /**
@@ -20,7 +22,7 @@ interface CreateSourceUC
      * @param array $creators
      * @param string|null $key
      *
-     * @return string key
+     * @return \Arete\Logos\Domain\Source
      */
     public function create(
         $ownerID,
@@ -28,7 +30,7 @@ interface CreateSourceUC
         array $attributes,
         array $participations,
         ?string $key = null
-    ): string;
+    ): Source;
 
     /**
      * Suggest a valid (unique) key.
@@ -54,4 +56,5 @@ interface CreateSourceUC
 
     public function publishSourceTypesPresentationScript();
     public function getSourceTypePresentationsStub();
+    public function save($data);
 }

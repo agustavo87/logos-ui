@@ -76,4 +76,16 @@ trait ExposeAttributes
     {
         $this->attributes[$attribute] = $value;
     }
+
+    /**
+     * @param array $attributes
+     *
+     * @return void
+     */
+    public function pushAttributes(array $attributes)
+    {
+        foreach ($attributes as $attrName => $attrValue) {
+            $this->attributes[$attrName] = $attrValue;
+        }
+    }
 }

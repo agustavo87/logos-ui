@@ -157,7 +157,7 @@
                     init: function () {
                         document.addEventListener(
                             'source-select:tab-change',
-                            (e) => e.detail == 'new' ? this.activate(): (this.active ? this.deactivate(): null)
+                            (e) => ['edit', 'new'].includes(e.detail) ? this.activate(): (this.active ? this.deactivate(): null)
                         )
                     },
                     activate: function () {

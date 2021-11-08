@@ -69,7 +69,6 @@ class SourceNew extends Component
         'complex' => []
     ];
 
-
     /**
      * Participations data
      *
@@ -280,8 +279,9 @@ class SourceNew extends Component
 
     public function sourceEdit($id)
     {
-        $source = $this->sources->get($id)->toArray('relevance');
-        $this->mountSource($source);
+        $this->mountSource(
+            $this->sources->get($id)->toArray('relevance')
+        );
         $this->dispatchBrowserEvent('mount-source', 'edit');
     }
     public function sourceNew()
@@ -320,22 +320,36 @@ class SourceNew extends Component
 
     public function save($data)
     {
-        Log::info('saving source', $data);
-        $participationsData = $this->adaptParticipationsData($data['participations']);
-        Log::info('creators data', $participationsData);
         $this->attributes = $data['attributes'];
         $this->filterTypeAttributes();
         $this->updateValidationRules();
         $this->validate();
         /** @todo elegir si se actualiza o se crea una fuente */
-        $this->key = $this->caseOperations->create(
+        if ($this->sourceID) {
+            // $this->mountSource($source->toArray('relevance'));
+            $this->ownUpdateSource($data['participations']);
+            return $this->key;
+        }
+        $source = $this->caseOperations->create(
             Auth::user()->id,
             $this->type,
             $this->attributes,
-            $participationsData,
+            $this->adaptParticipationsData($data['participations']),
             $this->key
         );
+        $this->mountSource($source->toArray('relevance'));
+
         return $this->key;
+    }
+
+    public function ownUpdateSource($participations)
+    {
+        // dd($participations);
+        $this->caseOperations->save([
+            'id' => $this->sourceID,
+            'participations' => $participations,
+            'attributes' => $this->attributes,
+        ]);
     }
 
     protected function adaptParticipationsData($participations)

@@ -12,6 +12,7 @@ use Arete\Logos\Domain\Contracts\Participation;
 use Arete\Logos\Application\Ports\Interfaces\CreatorsRepository;
 use Arete\Logos\Application\Ports\Interfaces\ParticipationRepository;
 use Arete\Logos\Domain\Source;
+use Illuminate\Support\Facades\Log;
 
 class ParticipationSet implements Arrayable
 {
@@ -85,6 +86,16 @@ class ParticipationSet implements Arrayable
             $this->attributes[$role] = [];
         }
         $this->attributes[$role][$participation->creatorId()] = $participation;
+    }
+
+    public function getByCreatorID($id): ?Participation
+    {
+        foreach ($this->attributes as $role => $participations) {
+            if (in_array($id, array_keys($participations))) {
+                return $participations[$id];
+            }
+        }
+        return null;
     }
 
     public function pushNew(array $creatorData, string $role, int $relevance): Participation

@@ -1,0 +1,17 @@
+{
+    "role": "contributor",
+    "relevance": 1,
+    "creator": {
+        "id": 4,
+        "genus": "creator",
+        "type": "person",
+        "ownerID": 1,
+        "attributes": {
+            "lastName": "Aracaudia",
+            "name": "Aracely Catherine"
+        },
+        "dirty": false
+    },
+    "i": 1,
+    "dirty": false
+}

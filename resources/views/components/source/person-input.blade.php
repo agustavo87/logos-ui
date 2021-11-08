@@ -91,6 +91,7 @@ x-ref="root"
         <script>
             document.addEventListener('alpine:init', () => {
                 Alpine.data('personInput', (options) => {
+                    console.log(options.participation)
                     return {
                         participation: options.participation,
                         i: options.participation.i,
@@ -107,6 +108,10 @@ x-ref="root"
                         },
                         init: function () {
                             this.$watch('roles', this.getRole.bind(this))
+                            this.$watch('participation.role', () => {
+                                console.log('participation change')
+                                this.participation.dirty = true;
+                            });
                         },
                         getRole: function() {
                             let roles = Object.values(this.roles)

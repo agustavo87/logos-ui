@@ -42,6 +42,18 @@ abstract class Attributable implements Arrayable
         return $this->attributes[$name] = $value;
     }
 
+    /**
+     * @param array $attributes
+     *
+     * @return void
+     */
+    public function pushAttributes(array $attributes)
+    {
+        foreach ($attributes as $attrName => $attrValue) {
+            $this->__set($attrName, $attrValue);
+        }
+    }
+
     public function getDirtyAttributes()
     {
         return $this->dirtyAttributes;

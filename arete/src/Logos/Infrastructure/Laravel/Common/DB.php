@@ -842,11 +842,18 @@ class DB
     }
 
     /**
-     * @param mixed $hint
-     * @param mixed $attribute
-     * @param mixed $type
-     * @param mixed $orderBy
-     * @param mixed $asc
+     * Returns Creators Attributes that match criteria
+     *
+     * Returns a collection of creator attributes with the followin
+     * columns/attributes:
+     * [id, type, attribute, value]
+     *
+     * @param mixed $hint       Hint to be searched by
+     * @param mixed $attribute  Attribute where to look the hint
+     * @param mixed $type       The type of the creator
+     * @param mixed $orderBy    The column by wich order
+     * @param mixed $asc        Boolean, if order ascentent or descendent
+     * @param int limit         The amount of suggestions.
      *
      * @return \Illuminate\Support\Collection
      */
@@ -862,38 +869,44 @@ class DB
         $ownerColumn = $this->env->getOwnersTableData()->FK;
         $attrType = $this->getAttributeTypes([$attribute])[$attribute]->value_type;
         $valueColumn = $this::VALUE_COLUMS[$attrType];
-        $direction = $asc ? 'asc' : 'desc';
 
         $creatorsIDs =  $this->db->table('attributes')
             ->join('creators', 'creators.id', 'attributable_id')
-            ->where('creator_type_code_name', $type);
+            ->where('attributable_genus', $this->schema::GENUS['creator'])
+            ->where('creator_type_code_name', $type)
+            ->where('attribute_type_code_name', $attribute)
+            ->where($valueColumn, 'LIKE', "%{$hint}%");
+
+        // If has an owner we socpe to that
         if ($owner) {
             $creatorsIDs->where($ownerColumn, $owner);
         }
-        $creatorsIDs->where('attributable_genus', $this->schema::GENUS['creator'])
-            ->where('attribute_type_code_name', $attribute)
-            ->where($valueColumn, 'LIKE', "%{$hint}%");
+
+        // If has to be ordered
         if (in_array($orderBy, [$attribute, 'created_at', 'updated_at'])) {
+            $direction = $asc ? 'asc' : 'desc';
             if ($orderBy == $attribute) {
                 $creatorsIDs->orderBy($valueColumn, $direction);
             } else {
                 $creatorsIDs->orderBy($orderBy, $direction);
             }
         }
+
+        // We get the ids of the creators that match search criteria
         $creatorsIDs = $creatorsIDs->limit($limit)
             ->get('attributable_id')->pluck('attributable_id')->all();
 
-
-        $query = $this->db
+        // Then we get the data of the creators
+        return $this->db
             ->table('creators')
             ->join('attributes', 'creators.id', '=', 'attributes.attributable_id')
-            ->where('attributable_genus', $this->schema::GENUS['creator']);
-        $query->whereIn('creators.id', $creatorsIDs);
-        return $query->get([
-            "creators.id as id",
-            "creators.creator_type_code_name as type",
-            "attributes.attribute_type_code_name as attribute",
-            "$valueColumn as value"
-        ]);
+            ->where('attributable_genus', $this->schema::GENUS['creator'])
+            ->whereIn('creators.id', $creatorsIDs)
+            ->get([
+                "creators.id as id",
+                "creators.creator_type_code_name as type",
+                "attributes.attribute_type_code_name as attribute",
+                "$valueColumn as value"
+            ]);
     }
 }

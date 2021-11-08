@@ -219,7 +219,7 @@ bg=red</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>324</x>
-      <y>117</y>
+      <y>36</y>
       <w>189</w>
       <h>171</h>
     </coordinates>
@@ -289,23 +289,23 @@ m1=*</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>387</x>
-      <y>279</y>
+      <y>198</y>
       <w>27</w>
-      <h>180</h>
+      <h>261</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;270.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>387</x>
-      <y>279</y>
+      <y>198</y>
       <w>612</w>
-      <h>108</h>
+      <h>189</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0;660.0;70.0;660.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0;660.0;160.0;660.0;190.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -335,10 +335,10 @@ m1=*</panel_attributes>
       <x>504</x>
       <y>54</y>
       <w>162</w>
-      <h>162</h>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>10.0;160.0;30.0;160.0;140.0;10.0;160.0;10.0</additional_attributes>
+    <additional_attributes>10.0;70.0;40.0;70.0;140.0;10.0;160.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>

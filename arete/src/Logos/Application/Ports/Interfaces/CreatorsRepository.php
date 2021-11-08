@@ -61,6 +61,27 @@ interface CreatorsRepository
      */
     public function getNew(int $id): ?Creator;
 
+    /**
+     * Returns the data of the creators that match with a search criteria
+     *
+     * The result structure:
+[
+    [id]    => [
+        'id' => [id],
+        'type' => [type],
+        'attributes' => [
+            [attribute_code] => [attribute_value]
+        ]
+    ]
+]
+     * @param mixed $hint       Hint to be searched by
+     * @param mixed $attribute  Attribute where to look the hint
+     * @param mixed $type       The type of the creator
+     * @param mixed $orderBy    The column by wich order
+     * @param mixed $asc        Boolean, if order ascentent or descendent
+     * @param int   $limit      The ammount of suggestions
+     * @return array
+     */
     public function suggestCreators(
         $owner,
         string $hint,
