@@ -98,6 +98,15 @@ class ParticipationSet implements Arrayable
         return null;
     }
 
+    public function getCreatorsIDs(): array
+    {
+        return array_reduce(
+            array_values($this->attributes),
+            fn($creatorIDs, $participations) => array_merge($creatorIDs, array_keys($participations)),
+            []
+        );
+    }
+
     public function pushNew(array $creatorData, string $role, int $relevance): Participation
     {
         if (array_key_exists('creatorID', $creatorData)) {
@@ -174,6 +183,12 @@ class ParticipationSet implements Arrayable
             }
         });
         return $participations;
+    }
+
+    public function removeByCreatorId($id)
+    {
+        $participation = $this->getByCreatorID($id);
+        $this->remove((string) $participation->role(), $participation->creatorId());
     }
 
     public function remove(string $roleCode, $creatorID): bool

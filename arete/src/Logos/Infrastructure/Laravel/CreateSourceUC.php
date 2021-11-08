@@ -162,6 +162,7 @@ class CreateSourceUC implements ICreateSourceUC
 
     protected function updateParticipations($participations, Source &$source)
     {
+        $this->clearParticipations($participations, $source);
         foreach ($participations as $relevance => $participation) {
             $creatorData = $participation['creator'];
             $role = $participation['role'];
@@ -172,6 +173,18 @@ class CreateSourceUC implements ICreateSourceUC
             }
             if ($participation['dirty']) {
                 $hotParticipation->setRole($role);
+            }
+        }
+    }
+    protected function clearParticipations($participations, Source &$source)
+    {
+        $hotIDs = array_map(
+            fn($participation) => $participation['creator']['id'],
+            $participations
+        );
+        foreach ($source->participations()->getCreatorsIDs() as $id) {
+            if (!in_array($id, $hotIDs)) {
+                $source->participations()->removeByCreatorId($id);
             }
         }
     }

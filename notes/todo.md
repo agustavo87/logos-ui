@@ -1,9 +1,7 @@
 # ToDos:
 
 ## Pending
-- Check that saves an already created source ok.
-    - Saves when creator removed
-    - Saves when type changed
+- Check that all the saving options work by diferent usage path, to look for bugs.
 
 - Creators Input
     - Throttle the 'creatorInput' call in logos editor
@@ -21,6 +19,7 @@
     - Saves when creator attributes changed
     - Saves when creator Role changed
     - Saves when creator relevance changed
+    - Saves when creator removed
 
 - Check that saves a new source OK
     - Saves attributes
