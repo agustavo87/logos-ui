@@ -1,7 +1,13 @@
 # ToDos:
 
 ## Pending
+- BUG: If a reference to an existing source wich has a reference as _first_ in the document inserts
+itself before (i.e. a new _first_ reference of the same source) it don't render it's n (data-n)
+- Create list of references
 - Check that all the saving options work by diferent usage path, to look for bugs.
+
+- Create Image Insertion With Indexed Captions.
+- Personalize formats and CSS
 
 - Creators Input
     - Throttle the 'creatorInput' call in logos editor
@@ -10,7 +16,6 @@
 
 
 ## Ongoin
-- Check that saves an already created source ok.
 
 
 ## Done

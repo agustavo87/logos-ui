@@ -1,11 +1,14 @@
 // import Quill from 'quill'
 import Quill, {SourceTypes} from './quill/quill'
+import lgEvents, {lgTopics} from 'dsm/utils/events'
 
 const debounce = require('lodash/debounce');
 
 window.Quill = Quill;
 window.SourceTypes = SourceTypes;
 window.debounce = debounce;
+window.lgEvents = lgEvents
+window.lgTopics = lgTopics
 
 class Logos {
     constructor(options) {

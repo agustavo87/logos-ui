@@ -107,13 +107,23 @@
     </button> --}}
   </div>
   <livewire:source-select />
+  <div x-data="{list:['a','b']}">
+    <ul x-on:sources-updated.window="list = $event.detail">
+      <template x-for="item in list" x-key="item">
+        <li x-text="item"></li>
+      </template>
+    </ul>
+  </div>
   {{-- <livewire:source-edit /> --}}
 <script>
     function newDialogs() {
       return {
         getSource: () => {
           LogosUI.dialogGet('source-get', {ui: LogosUI})
-                 .then(r => console.log(r))
+                 .then(r => {
+                    console.log(r);
+                    myLogos.Citations.put(r)
+                 })
         },
         // getEditSource: () => {
         //   LogosUI.dialogGet('source-edit', {withBg: true, ui: LogosUI}).then(r => console.log(r))
