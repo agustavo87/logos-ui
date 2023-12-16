@@ -45,3 +45,21 @@
 .blanco {
     background: red;
 }
+
+
+
+.article-show .citation {
+  background: #deac61;
+  font-size: 8px;
+  font-style: normal;
+  vertical-align: super;
+  padding: 2px 3px;
+  border-radius: 5px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0.12rem
+}
+
+.article-show .citation::after {
+  content: attr(data-n);
+}
