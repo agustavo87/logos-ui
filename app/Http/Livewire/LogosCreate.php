@@ -49,4 +49,10 @@ class LogosCreate extends Component
     {
         return view('livewire.logos-create');
     }
+
+    public function saveList($list)
+    {
+        $this->article->source_list = $list;
+        $this->article->save();
+    }
 }

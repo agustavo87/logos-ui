@@ -45,7 +45,11 @@
                 handleSimpleInput: function () {
                     this.transactionStatus = 'Modificado'
                     this.save(false)
-                }
+                }, 
+                
+                handleReferencesUpdate: function (envent) {
+                    this.$wire.saveList(event.detail.list);
+                },
             }
         })
     })
@@ -58,6 +62,7 @@
         <span class=" ml-2 text-xs text-gray-400" x-text="transactionStatus"></span>
     </div>
     <div x-on:quill-input="handleQuillInput"
+         x-on:references-updated="handleReferencesUpdate"
          class="flex flex-col mx-auto logos-container mt-1 max-w-screen-md"
     >
         {{-- Title --}}

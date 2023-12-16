@@ -21,6 +21,7 @@ class CreateArticlesTable extends Migration
             $table->text('html');
             $table->json('delta');
             $table->json('meta');
+            $table->json('source_list')->nullable();
 
             $table->foreignId('user_id')
                 ->constrained()

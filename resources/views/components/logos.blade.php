@@ -118,11 +118,20 @@
 <script>
     function newDialogs() {
       return {
-        getSource: () => {
+        getSource: function() {
           LogosUI.dialogGet('source-get', {ui: LogosUI})
                  .then(r => {
-                    console.log(r);
                     myLogos.Citations.put(r)
+                    this.$el.dispatchEvent(
+                      new CustomEvent('references-updated', {
+                        bubbles: true,
+                        detail: {
+                          type: 'insert',
+                          key:r,
+                          list: myLogos.Citations.data.list
+                        }
+                      })
+                    )
                  })
         },
         // getEditSource: () => {
