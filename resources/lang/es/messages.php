@@ -4,7 +4,7 @@ return [
     'greet' => [
         'me' => '¡Hola!',
         'someone' => '¡Hola :name!',
-        'people' =>'¡Hola!|¡Hola a todos!',
+        'people' => '¡Hola!|¡Hola a todos!',
         'wellcome' => 'Bienvenido'
     ],
     'guest' => 'invitado',

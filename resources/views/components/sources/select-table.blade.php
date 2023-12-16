@@ -45,22 +45,29 @@
         </thead>
         <tbody>
             <template x-for="i in maxRows" x-bind:key="i">
-            <tr x-bind:class="{'cursor-pointer hover:bg-indigo-100 source-row': sources[i-1], 'bg-indigo-100': selected == $el.dataset.key}"
-                    x-on:click="sourceSelected($dispatch)" x-bind:data-key="sources[i-1] ? sources[i-1].key : null "
-                    x-bind:title="sources[i-1] ? sources[i-1].render : '' "
-                >
-                    <td class="text-sm px-2 py-1 border-b border-gray-100">
-                        <span x-text="sources[i-1] ? sources[i-1].key : '&nbsp;' "></span>
-                    </td>
-                    <td class="border-b border-gray-100 flex gap-1 px-2 py-1 text-sm">
-                        <span x-text="sources[i-1] ? sources[i-1].attributes.title : '&nbsp;' " class="flex-1 text-ellipsis"></span>
-                        <span class=" source-controls flex gap-1">
-                            <button x-on:click="$dispatch('source-edit', $el.dataset.id)" x-bind:data-id="sources[i-1] ? sources[i-1].id : null" class="focus:outline-none bg-blue-200 h-5 hover:bg-white rounded-full w-5" style="font-family: sans-serif; transform: rotate(135deg);">
-                                &#x270F;
-                            </button>
-                            <button class=" focus:outline-none bg-blue-200 h-5 rounded-full w-5 hover:bg-white">&#10005;</button>
-                        </span>
-                    </td>
+            <tr 
+                x-bind:class="{'cursor-pointer hover:bg-indigo-100 source-row': sources[i-1], 'bg-indigo-100': selected == $el.dataset.key}"
+                x-on:click="sourceSelected($dispatch)" 
+                x-bind:data-key="sources[i-1] ? sources[i-1].key : null "
+                x-bind:title="sources[i-1] ? sources[i-1].render : '' ">
+                <td class="text-sm px-2 py-1 border-b border-gray-100">
+                    <span x-text="sources[i-1] ? sources[i-1].key : '&nbsp;' "></span>
+                </td>
+                <td class="border-b border-gray-100 flex gap-1 px-2 py-1 text-sm">
+                    <span 
+                        x-text="sources[i-1] ? sources[i-1].attributes.title : '&nbsp;' " 
+                        class="h-5 flex-1 text-ellipsis"></span>
+                    <span class=" source-controls flex gap-1">
+                        <button 
+                            x-on:click="$dispatch('source-edit', $el.dataset.id)" 
+                            x-bind:data-id="sources[i-1] ? sources[i-1].id : null" 
+                            class="focus:outline-none bg-blue-200 h-5 hover:bg-white rounded-full w-5" 
+                            style="font-family: sans-serif; transform: rotate(135deg);">
+                            &#x270F;
+                        </button>
+                        <button class="focus:outline-none bg-blue-200 h-5 rounded-full w-5 hover:bg-white">&#10005;</button>
+                    </span>
+                </td>
                 </tr>
             </template>
         </tbody>
@@ -74,7 +81,7 @@
         display: none
     }
     .source-row:hover .source-controls {
-        display: block;
+        display: flex;
     }
 </style>
 

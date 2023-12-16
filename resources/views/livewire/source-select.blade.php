@@ -6,15 +6,17 @@
     class="fixed z-10 inset-0 flex flex-col justify-center items-center"
     x-ref="root"
     x-transition.opacity
-    >
-
+>
     <div class="absolute inset-0 bg-gray-700 opacity-40"></div>
 
     {{-- modal container --}}
     {{-- <template x-if="showModal"> --}}
-        <div class="relative max-w-lg w-full px-2 py-2" x-show="showModal" x-transition
+        <div 
+            x-show="showModal" 
+            x-transition
             x-on:transitioned="handleEndTransition($event, $dispatch)"
             x-on:transitioncancel="handleEndTransition($event, $dispatch)"
+            class="relative max-w-lg w-full px-2 py-2" 
         >
             {{-- modal --}}
             <div class=" relative bg-white rounded-xl w-full shadow-xl"
@@ -22,25 +24,30 @@
             >
             <ul class="flex gap-2 px-5 pt-5 text-sm">
                 <li>
-                    <button x-on:click="tab = 'select'" x-bind:disabled="tab == 'select'"
-                        class="py-1 px-2 ml-2 rounded-t focus:outline-none disabled:cursor-default"
+                    <button 
+                        x-on:click="tab = 'select'" 
+                        x-bind:disabled="tab == 'select'"
                         x-bind:class="tab == 'select' ?  'bg-gray-100' : ' text-black text-opacity-80 hover:bg-blue-100 active:bg-white'"
+                        class="py-1 px-2 ml-2 rounded-t focus:outline-none disabled:cursor-default"
                     >
                         Seleccionar
                     </button>
                 </li>
                 <li>
-                    <button x-on:click="$wire.emit('sourceNew')" x-bind:disabled="tab == 'new'"
-                        class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
+                    <button 
+                        x-on:click="$wire.emit('sourceNew')" 
+                        x-bind:disabled="tab == 'new'"
                         x-bind:class="tab == 'new' ? 'bg-gray-100' : 'text-black text-opacity-80 hover:bg-blue-100 active:bg-white'"
+                        class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
                     >
                         Nueva
                     </button>
                 </li>
                 <li>
-                    <button x-bind:disabled="tab == 'edit'"
-                    class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
-                    x-bind:class="tab == 'edit' ? 'bg-gray-100' : 'invisible'"
+                    <button 
+                        x-bind:disabled="tab == 'edit'"
+                        x-bind:class="tab == 'edit' ? 'bg-gray-100' : 'invisible'"
+                        class="py-1 px-2 rounded-t focus:outline-none disabled:cursor-default"
                     >
                         Editar
                     </button>

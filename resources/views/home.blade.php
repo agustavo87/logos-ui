@@ -5,7 +5,7 @@
 <x-layout.default
   title="{{ __('messages.home.title')}}"
 >
-  <x-container>
+  <x-container class="mt-10">
     <x-main-heading>
       {{__('messages.greet.someone', ['name' => $user])}}
     </x-main-heading>
