@@ -2,23 +2,25 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Livewire\Traits\HasArticleTrait;
 use App\Models\Article;
 use Livewire\Component;
 
 class ArticleShow extends Component
 {
-    public Article $article;
-    public $articleId;
+    use HasArticleTrait;
 
-    public function mount($articleId)
-    {
-        $this->article = Article::find($articleId);
-    }
+    public $articleId;
 
     public function render()
     {
         return view('livewire.article-show', [
             'article' => $this->article
         ]);
+    }
+
+    public function getRenderedSourcesListProperty()
+    {
+        return array_map(fn($source) => $source->render(), $this->source_list);
     }
 }

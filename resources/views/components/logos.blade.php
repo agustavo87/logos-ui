@@ -92,52 +92,76 @@
 
       </div>
   </div>
-  <div x-data="newDialogs()">
-    <button
+  {{-- <div x-data="newDialogs()"> --}}
+    {{-- <button
       @click="getSource"
       class="px-4 py-2 rounded bg-gray-800 text-white"
     >
       Seleccionar Fuente
-    </button>
+    </button> --}}
     {{-- <button
       @click="getEditSource"
       class="px-4 py-2 rounded bg-gray-800 text-white"
     >
       Editar Fuente
     </button> --}}
-  </div>
+  {{-- </div> --}}
+  
   <livewire:source-select />
-  <div x-data="{list:['a','b']}">
+  {{-- <div x-data="{list:['a','b']}">
     <ul x-on:sources-updated.window="list = $event.detail">
       <template x-for="item in list" x-key="item">
         <li x-text="item"></li>
       </template>
     </ul>
-  </div>
+  </div> --}}
   {{-- <livewire:source-edit /> --}}
 <script>
-    function newDialogs() {
-      return {
-        getSource: function() {
-          LogosUI.dialogGet('source-get', {ui: LogosUI})
-                 .then(r => {
-                    myLogos.Citations.put(r)
-                    this.$el.dispatchEvent(
-                      new CustomEvent('references-updated', {
-                        bubbles: true,
-                        detail: {
-                          type: 'insert',
-                          key:r,
-                          list: myLogos.Citations.data.list
-                        }
-                      })
+    // function newDialogs() {
+    //   return {
+    //     getSource: function() {
+    //       LogosUI.dialogGet('source-get', {ui: LogosUI})
+    //              .then(r => {
+    //               if(r) {
+    //                 myLogos.Citations.put(r)
+    //                 this.$el.dispatchEvent(
+    //                   new CustomEvent('references-updated', {
+    //                     bubbles: true,
+    //                     detail: {
+    //                       type: 'insert',
+    //                       key:r,
+    //                       list: myLogos.Citations.data.list
+    //                     }
+    //                   })
+    //                 )
+    //               }
+    //              })
+    //     },
+    //     // getEditSource: () => {
+    //     //   LogosUI.dialogGet('source-edit', {withBg: true, ui: LogosUI}).then(r => console.log(r))
+    //     // }
+    //   }
+    // }
+    
+    document.getElementById('add-source')
+      .addEventListener('click', (event) => {
+        const range = myLogos.quill.getSelection()
+        LogosUI.dialogGet('source-get', { ui: LogosUI })
+            .then(r => {
+                if (r) {
+                    myLogos.put(r, range)
+                    myLogos.ui.quillContainer.dispatchEvent(
+                        new CustomEvent('references-updated', {
+                            bubbles: true,
+                            detail: {
+                                type: 'insert',
+                                key: r,
+                                list: myLogos.Citations.data.list
+                            }
+                        })
                     )
-                 })
-        },
-        // getEditSource: () => {
-        //   LogosUI.dialogGet('source-edit', {withBg: true, ui: LogosUI}).then(r => console.log(r))
-        // }
-      }
-    }
+                }
+            })
+    })
   </script>
 </div>

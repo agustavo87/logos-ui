@@ -23,7 +23,8 @@ class Article extends Model
      */
     protected $casts = [
         'meta' => 'array',
-        'delta' => 'array'
+        'delta' => 'array',
+        'source_list' => 'array'
     ];
 
     /**

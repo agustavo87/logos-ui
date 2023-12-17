@@ -32,3 +32,19 @@ document.addEventListener("DOMContentLoaded", () => {
     Livewire.hook('message.received', (message, component) => LivewireLiveMsjs.handleEvent('received', component))
     Livewire.hook('message.processed', (message, component) => LivewireLiveMsjs.handleEvent('processed', component))
 })
+
+
+window.inyectReferences = function (references = {}) {
+    document.querySelectorAll('.ed-source').forEach((sourceNode) => {
+        const key = sourceNode.dataset.key
+        const citationNode = sourceNode.querySelector('.citation')
+        
+        citationNode.setAttribute('title', references[key])
+
+        const link = document.createElement('a');
+        link.href = `#ref-${key}`;
+        link.appendChild(sourceNode.cloneNode(true));
+        sourceNode.parentNode.replaceChild(link, sourceNode);
+
+    })
+}

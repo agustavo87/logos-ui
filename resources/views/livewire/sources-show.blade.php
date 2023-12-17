@@ -29,8 +29,8 @@
                 <tr x-data="{source: {{ $source->id }}}">
                     <td class="text-left py-3 px-4"> {{ $source->id }}</td>
                     <td class="text-left py-3 px-4"> {{ $source->key }}</td>
-                    <td class="text-left py-3 px-4"> {{ $source->name() }}</td>
-                    <td class="text-left text-sm py-3 px-4"> {{ $source->render() }}</td>
+                    {{-- <td class="text-left py-3 px-4"> {{ $source->name() }}</td> --}}
+                    {{-- <td class="text-left text-sm py-3 px-4"> {{ $source->render() }}</td> --}}
                     {{-- <td class="text-left py-3 px-4">{{ $source->data['year'] }}</td>
                     <td class="text-left py-3 px-4"> {{ $source->data['title'] }}</td>
                     <td class="text-left py-3 px-4">{{ $source->data['editorial'] }}</td>

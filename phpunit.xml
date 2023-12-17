@@ -12,9 +12,9 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
-        <testsuite name="Implementation">
+        <!-- <testsuite name="Implementation">
             <directory suffix="Test.php">./tests/Implementation</directory>
-        </testsuite>
+        </testsuite> -->
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>

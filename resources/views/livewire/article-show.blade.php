@@ -1,24 +1,22 @@
 <div class="article-show">
     <div class="data">
         <h1 class="title">
-            {{$article->title}}
+            {{$this->article->title}}
         </h1>
         <div class="author">
-            <strong>Author:</strong> {{$article->user->name}}
+            <strong>Author:</strong> {{$this->article->user->name}}
         </div>
     </div>
     <article>
-        {!!$article->html!!}
+        {!!$this->article->html!!}
     </article>
     <footer>
-        {{-- @if ($article->sources->count()) --}}
-        <h2>Referencias</h2>
-        <ul class="references">
-            {{-- @foreach ($article->sources as $source)
-                <li>{{ $source->render() }}</li>
-            @endforeach --}}
-        </ul>
-        {{-- @endif --}}
+        <div class="max-w-screen-md mx-auto mt-t mb-12">
+            <h1 class="text-xl font-bold text-gray-700 mb-2">References</h1>
+            <div class="text-sm">
+                <livewire:document-citations :article-id="$articleId" li-class="py-2" />
+            </div>
+        </div>
     </footer>
     @push('head-script')
     <style>
@@ -72,6 +70,12 @@
             text-indent: -1rem;
         }
     </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            inyectReferences({{ Illuminate\Support\Js::from($this->rendered_sources_list)}})
+        })
+    </script>
 
     @endpush
 </div>

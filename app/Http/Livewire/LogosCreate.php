@@ -8,6 +8,7 @@ use Livewire\Component;
 class LogosCreate extends Component
 {
     protected $queryString = ['articleID'];
+
     public $articleID = null;
 
     /** @todo sacar article como propiedad pública */
@@ -54,5 +55,6 @@ class LogosCreate extends Component
     {
         $this->article->source_list = $list;
         $this->article->save();
+        $this->emit('sourcesUpdated');
     }
 }

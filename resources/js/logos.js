@@ -117,6 +117,11 @@ class Logos {
         })
     }
 
+    put(k, range) {
+        this.quill.setSelection(range.index + range.length, 0);
+        this.Citations.put(k)
+    }
+
     fixOffset () {
         let bounds = this.quill.getBounds(this.quill.getSelection().index);
         let margin = bounds.height * 5;

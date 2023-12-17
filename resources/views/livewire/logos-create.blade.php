@@ -13,7 +13,7 @@
                 delta: $wire.entangle('article.delta').defer,
                 meta: $wire.entangle('article.meta').defer,
                 html: $wire.entangle('article.html').defer,
-                transactionStatus: 'Listo',
+                transactionStatus: 'Ready',
 
                 init: function () {
                     this.debounceSave = debounce(this.commitSave, 3000, {trailing: true, maxWait: 10000});
@@ -28,8 +28,8 @@
                 },
 
                 commitSave: function () {
-                    this.transactionStatus = "Guardando..."
-                    this.$wire.save().then(() => {this.transactionStatus = 'Guardado'});
+                    this.transactionStatus = "Saving..."
+                    this.$wire.save().then(() => {this.transactionStatus = 'Saved!'});
                 },
 
                 debounceSave: null,
@@ -38,15 +38,15 @@
                     this.delta = event.detail.delta();
                     this.html = event.detail.html();
                     this.meta = {key: 'value'};
-                    this.transactionStatus = 'Modificado'
+                    this.transactionStatus = 'Modified'
                     this.save()
                 },
 
                 handleSimpleInput: function () {
-                    this.transactionStatus = 'Modificado'
+                    this.transactionStatus = 'Modified'
                     this.save(false)
                 }, 
-                
+
                 handleReferencesUpdate: function (envent) {
                     this.$wire.saveList(event.detail.list);
                 },
@@ -74,5 +74,9 @@
         {{-- Logos Editor --}}
         <x-logos :initial-delta="$article->delta" />
 
+    </div>
+    <div class="max-w-screen-md mx-auto mt-t mb-12">
+        <h1 class="text-xl font-bold text-gray-700 mb-2">References</h1>
+        <livewire:document-citations :article-id="$articleID" />
     </div>
 </div>
